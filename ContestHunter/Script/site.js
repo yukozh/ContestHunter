@@ -3,6 +3,7 @@
     controlGroup.addClass('error');
     var span = $('span.field-validation-valid, span.field-validation-error', controlGroup);
     span
+        .show()
         .addClass('label')
         .addClass('label-important')
         .css({

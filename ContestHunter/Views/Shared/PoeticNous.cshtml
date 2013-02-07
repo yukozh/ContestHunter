@@ -29,24 +29,30 @@
                     <span style="color: #1fb6ef"><span style="color: red"><b>C</b></span>ontest</span>
                     <span style="color: #00cf00"><span style="color: orange"><b>H</b></span>unter</span>
                 </a>
+                @if (ViewBag.ActivedNav != null)
+                {
+                    <script>
+                        $(function () {
+                            $('#nav' + '@ViewBag.ActivedNav').addClass('active');
+                    });
+                    </script>
+                }
                 <div class="nav-collapse">
                     <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
-                        <li>@Html.ActionLink("主页", "Index", "Home")</li>
-                        <li>@Html.ActionLink("比赛", "Index", "Contest")</li>
-                        <li>@Html.ActionLink("能力排名", "Index", "Rank")</li>
-                        <li>@Html.ActionLink("提交记录", "Index", "Record")</li>
+                        <li id="navHome">@Html.ActionLink("主页", "Index", "Home")</li>
+                        <li id="navContest">@Html.ActionLink("比赛", "Index", "Contest")</li>
+                        <li id="navRank">@Html.ActionLink("能力排名", "Index", "Rank")</li>
+                        <li id="navRecord">@Html.ActionLink("提交记录", "Index", "Record")</li>
                     </ul>
                 </div>
                 <div class="nav-collapse" style="float: right">
                     <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
-                        <li class="dropdown">
-
+                        <li id="navLogin" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">登录<span class="caret" /></a>
                             <ul class="dropdown-menu">
                                 @using (Html.BeginForm("Login", "User"))
                                 {
                                     <li style="padding: 3px 20px">
-
                                         @Html.TextBox("UserName", null, new { id = "", @class = "input-medium", placeholder = "用户名" })
                                     </li>
                                     <li style="padding: 3px 20px">
@@ -59,7 +65,7 @@
                             </ul>
 
                         </li>
-                        <li>@Html.ActionLink("注册", "Register", "User")</li>
+                        <li id="navRegister">@Html.ActionLink("注册", "Register", "User")</li>
                     </ul>
                 </div>
                 <!--<div class="modal" id="myModal">
@@ -86,11 +92,10 @@
         </div>
     </div>
     <hr style="border-top-color: lightgray" />
-    <div style="text-align: center; font-family: 微软雅黑; font-size: 14px">
+    <div style="text-align: center; font-family: 微软雅黑; font-size: 14px; margin-top:10px; margin-bottom:10px;">
         Contest Hunter 信息学自助比赛平台 - Alpha<br />
         Developed by lydrainbowcat, VariantF and onetwogoo<br />
         Server time: @DateTimeOffset.Now<br />
-        <br />
     </div>
 </body>
 </html>
