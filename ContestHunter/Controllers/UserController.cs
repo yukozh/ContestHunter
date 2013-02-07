@@ -19,5 +19,9 @@ namespace ContestHunter.Controllers
         {
             return View();
         }
+        public ActionResult Registered()
+        {
+            return View();
+        }
     }
 }
