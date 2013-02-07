@@ -22,10 +22,25 @@ namespace ContestHunter.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            return View("Validate", model);
+            if (USER.IsNameExisted(model.Name))
+            {
+                ModelState.AddModelError("Name", "用户名已存在");
+                return View(model);
+            }
+
+            try
+            {
+                USER.SendValidationEmail(model.Name, model.Password, model.Email, Url.Action("ValidateEmail", "User", null, "http"));
+            }
+            catch
+            {
+                ModelState.AddModelError("Email", "无法发送到此邮箱");
+                return View(model);
+            }
+            return View("CheckEmail", model);
         }
 
-        public ActionResult Validate()
+        public ActionResult CheckEmail()
         {
             return View();
         }

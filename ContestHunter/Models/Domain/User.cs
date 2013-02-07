@@ -19,7 +19,7 @@ namespace ContestHunter.Models.Domain
             public string name;
         }
 
-        static Dictionary<Guid,OnlineUser> OnlineUsers=new Dictionary<Guid,OnlineUser>();
+        static Dictionary<Guid, OnlineUser> OnlineUsers = new Dictionary<Guid, OnlineUser>();
 
         [ThreadStatic]
         static internal OnlineUser CurrentUser;
@@ -52,18 +52,28 @@ namespace ContestHunter.Models.Domain
         /// <param name="password"></param>
         /// <param name="email"></param>
         /// <param name="url"></param>
-        public static void SendValidationEmail(string name, string password, string email,string url)
+        public static void SendValidationEmail(string name, string password, string email, string url)
         {
-            SmtpClient client = new SmtpClient(); 
-            client.Credentials = new System.Net.NetworkCredential("hellotyvj@gmail.com", "07070078899");
-            client.Port = 587;
-            client.Host = "smtp.gmail.com"; 
-            client.EnableSsl = true;
-            client.Send("Register@ContestHunter.com", email, "ContestHunter注册验证", ""+
-                url+"?name="+HttpUtility.UrlEncode(name)+
-                "&password="+HttpUtility.UrlEncode(DESHelper.Encrypt(Encoding.Unicode.GetBytes(password)))+
-                "&email="+HttpUtility.UrlEncode(name)
-                );
+            url += "?name=" + HttpUtility.UrlEncode(name);
+            url += "&password=" + HttpUtility.UrlEncode(DESHelper.Encrypt(Encoding.Unicode.GetBytes(password)));
+            url += "&email=" + HttpUtility.UrlEncode(email);
+            string link = string.Format("<a href='{0}'>{1}</a>", HttpUtility.HtmlAttributeEncode(url), HttpUtility.HtmlEncode(url));
+            using (MailMessage msg = new MailMessage())
+            {
+                msg.From = new MailAddress("Register@ContestHunter.com");
+                msg.To.Add(email);
+                msg.Subject = "ContestHunter注册验证";
+                msg.Body = "请访问 " + link + " 完成注册";
+                msg.IsBodyHtml = true;
+
+
+                SmtpClient client = new SmtpClient();
+                client.Credentials = new System.Net.NetworkCredential("hellotyvj@gmail.com", "07070078899");
+                client.Port = 587;
+                client.Host = "smtp.gmail.com";
+                client.EnableSsl = true;
+                client.Send(msg);
+            }
         }
         /// <summary>
         /// 验证密码并添加用户
@@ -84,7 +94,7 @@ namespace ContestHunter.Models.Domain
                 {
                     db.USERs.Add(new USER()
                     {
-                        ID=Guid.NewGuid(),
+                        ID = Guid.NewGuid(),
                         Name = name,
                         Password = hash.ComputeHash(Encoding.Unicode.GetBytes(originalPassword)),
                         Email = email
@@ -118,18 +128,18 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="PasswordMismatchException"></exception>
         public static string Login(string name, string password)
         {
-            
+
             using (var sha = SHA256.Create())
             {
                 byte[] pwdInBytes = sha.ComputeHash(Encoding.Unicode.GetBytes(password));
                 using (var db = new CHDB())
                 {
                     var currentUser = (from u in db.USERs
-                                      where u.Name == name
-                                      select u).SingleOrDefault();
+                                       where u.Name == name
+                                       select u).SingleOrDefault();
                     if (null == currentUser)
                         throw new UserNotFoundException();
-                    if (!Enumerable.SequenceEqual<byte>(pwdInBytes,currentUser.Password))
+                    if (!Enumerable.SequenceEqual<byte>(pwdInBytes, currentUser.Password))
                         throw new PasswordMismatchException();
                     var newToken = new OnlineUser()
                         {

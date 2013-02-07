@@ -5,18 +5,19 @@
 }
 
 <div class="span12" style="margin-top: 20px; padding: 10px">
-    
+
     <div id="RegisterContent" class="alert alert-info" style="text-align: center;">
         <h2>用户注册</h2>
-        <div style="margin:100px auto; text-align: center; width:500px">
+        <div style="margin: 100px auto; text-align: center; width: 500px">
             <div class="progress progress-striped progress-success active">
                 <div class="bar" style="width: 66%;"></div>
             </div>
-            系统已向您的邮箱 <b>@Model.Email</b> 发送了一封邮件<br/>
-            请点击邮箱中的链接完成注册！<br/><br />
+            系统已向您的邮箱 <b>@*Model.Email*@</b> 发送了一封邮件<br />
+            请点击邮箱中的链接完成注册！<br />
+            <br />
             <div style="margin: auto">
-                <input class="btn btn-warning" type="submit" value="重新发送" />
-                <input class="btn btn-primary" type="submit" value="返回主页" />
+                @Html.ActionLink("重新发送", "Resend", "User", null, new { style = "display:inline-block;", @class = "btn btn-warning" })
+                @Html.ActionLink("返回主页", "Index", "Home", null, new { style = "display:inline-block;", @class = "btn btn-primary" })
             </div>
         </div>
     </div>
