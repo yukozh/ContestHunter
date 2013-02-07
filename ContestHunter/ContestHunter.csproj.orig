@@ -204,13 +204,8 @@
     <Content Include="Views\User\Validate.cshtml" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\Registered.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
@@ -232,6 +227,12 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
+=======
+    <Content Include="Views\User\Registered.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contest\Index.cshtml" />
+>>>>>>> 1c85f49fa7f4fb4e4d02598e8717ddd6c1fc2b84
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
