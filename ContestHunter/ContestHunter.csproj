@@ -39,10 +39,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -106,10 +112,47 @@
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Database\CHDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CHDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\CHDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\CHDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CHDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Database\CONTEST.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\GROUP.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\PROBLEM.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RECORD.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\sysdiagram.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\TESTDATA.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\USER.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Domain\DESHelper.cs" />
+    <Compile Include="Models\Domain\Exceptions.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -154,6 +197,30 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\Validate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="Database\CHDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Database\CHDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CHDB.edmx</DependentUpon>
+      <LastGenOutput>CHDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Database\CHDB.edmx.diagram">
+      <DependentUpon>CHDB.edmx</DependentUpon>
+    </Content>
+    <Content Include="Database\CHDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CHDB.edmx</DependentUpon>
+      <LastGenOutput>CHDB.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
