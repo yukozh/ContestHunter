@@ -1,20 +1,19 @@
 ﻿@model ContestHunter.Models.View.User.RegisterModel
 @{
-    ViewBag.Title = "邮箱验证";
+    ViewBag.Title = "注册成功";
 }
 
 <div class="span12" style="margin-top: 20px; padding: 10px">
-    
     <div id="RegisterContent" class="alert alert-info" style="text-align: center;">
         <h2>用户注册</h2>
-        <div style="margin:100px auto; text-align: center; width:500px">
+        <div style="margin: 100px auto; text-align: center; width: 500px">
             <div class="progress progress-striped progress-success active">
-                <div class="bar" style="width: 66%;"></div>
+                <div class="bar" style="width: 100%;"></div>
             </div>
-            系统已向您的邮箱 <b>@Model.Email</b> 发送了一封邮件<br/>
-            请点击邮箱中的链接完成注册！<br/><br />
+            您已经成功注册账号 <b>@Model.Name</b><br />
+            接下来您可以在Contest Hunter中参加、举办比赛，祝您愉快！<br />
+            <br />
             <div style="margin: auto">
-                <input class="btn btn-warning" type="submit" value="重新发送" />
                 <input class="btn btn-primary" type="submit" value="返回主页" />
             </div>
         </div>
