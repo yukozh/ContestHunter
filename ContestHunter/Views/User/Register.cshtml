@@ -6,12 +6,30 @@
     function RegSucc() { $('#RegisterContent').removeClass('alert-info').addClass('alert-success') }
     function RegFail() { $('#RegisterContent').removeClass('alert-info').addClass('alert-error') }
 </script>
-<div class="span12">
-    <div id="RegisterContent" class="alert alert-info" style="text-align:center">
-        &#12288;用户名：@Html.TextBox("UserName", null, new { style = "width:200px;" })
-        &#12288;&#12288;密码：@Html.Password("Password", null, new { style = "width:200px;" })
-        重复密码：@Html.Password("PasswordAgain", null, new { style = "width:200px;" })
-        验证邮箱：@Html.TextBox("Email", null, new { style = "width:200px;" })
-        <input class="btn btn-warning" type="submit" value="下一步" />
+<div class="span12" style="margin-top: 20px; padding: 10px">
+    <div id="RegisterContent" class="alert alert-info" style="text-align: center;">
+        <table style="text-align: right; margin: 100px auto;">
+            <tr>
+                <td>用户名：</td>
+                <td>@Html.TextBox("UserName", null, new { style = "width:200px;" })</td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td>@Html.Password("Password", null, new { style = "width:200px;" })</td>
+            </tr>
+            <tr>
+                <td>重复密码：</td>
+                <td>@Html.Password("PasswordAgain", null, new { style = "width:200px;" })</td>
+            </tr>
+            <tr>
+                <td>验证邮箱：</td>
+                <td>@Html.TextBox("Email", null, new { style = "width:200px;" })</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center">
+                    <input class="btn btn-warning" type="submit" value="下一步" />
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

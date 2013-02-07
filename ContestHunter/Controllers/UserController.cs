@@ -15,6 +15,9 @@ namespace ContestHunter.Controllers
         {
             return View();
         }
-
+        public ActionResult Validate()
+        {
+            return View();
+        }
     }
 }
