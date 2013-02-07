@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<script>
+    function RegSucc() { $('#RegisterContent').removeClass('alert-info').addClass('alert-success') }
+    function RegFail() { $('#RegisterContent').removeClass('alert-info').addClass('alert-error') }
+</script>
+<div class="span12">
+    <div id="RegisterContent" class="alert alert-info" style="text-align:center">
+        &#12288;用户名：@Html.TextBox("UserName", null, new { style = "width:200px;" })
+        &#12288;&#12288;密码：@Html.Password("Password", null, new { style = "width:200px;" })
+        重复密码：@Html.Password("PasswordAgain", null, new { style = "width:200px;" })
+        验证邮箱：@Html.TextBox("Email", null, new { style = "width:200px;" })
+        <input class="btn btn-warning" type="submit" value="下一步" />
+    </div>
+</div>
