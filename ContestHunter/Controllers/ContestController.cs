@@ -11,7 +11,7 @@ namespace ContestHunter.Controllers
         //
         // GET: /Contest/
 
-        public ActionResult Contest()
+        public ActionResult Index()
         {
             return View();
         }
