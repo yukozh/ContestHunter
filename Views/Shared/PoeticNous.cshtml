@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <!--[if lt IE 9]>
+        <meta http-equiv="X-UA-Compatible" content="" ie="EmulateIE9">
+        <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Script/jquery.js")"></script>
+    <script src="@Url.Content("~/Script/bootstrap.js")"></script>
+    <title>@ViewBag.Title - Contest Hunter</title>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="navbar-inner">
+            <div class="container" style="width: 1000px">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="@Url.Content("~")" style="font-family: Copperplate Gothic Light">
+                    <span style="color: #1fb6ef"><span style="color: red"><b>C</b></span>ontest</span>
+                    <span style="color: #00cf00"><span style="color: orange"><b>H</b></span>unter</span>
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
+                        <li>@Html.ActionLink("主页", "Index", "Home")</li>
+                        <li>@Html.ActionLink("比赛", "Index", "Contest")</li>
+                        <li>@Html.ActionLink("能力排名", "Index", "Home")</li>
+                        <li>@Html.ActionLink("提交记录", "Index", "Record")</li>
+                    </ul>
+                </div>
+                <div class="nav-collapse" style="float: right">
+                    <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">登录<span class="caret" /></a>
+                            <ul class="dropdown-menu">
+                                @using (Html.BeginForm("Login", "User"))
+                                {
+                                    <li class="nav-header">用户名</li>
+                                    <li style="padding: 0px 20px">
+                                        @Html.TextBox("UserName", null, new { style = "width:150px;" })
+                                    </li>
+                                    <li class="nav-header" style="margin: -5px auto">密码</li>
+                                    <li style="padding: 0px 20px">
+                                        @Html.Password("Password", null, new { style = "width:80px;" })
+                                        <input type="submit" value="登录" class="btn btn-success" style="margin-bottom: 15px" />
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                        <li>@Html.ActionLink("注册", "Register", "User")</li>
+                    </ul>
+                </div>
+                <!--<div class="modal" id="myModal">
+                            <div class="modal-header">
+                                <a class="close" data-dismiss="modal">×</a>
+                                <h3>对话框</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p></p>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn">取消</a>
+                                <a href="#" class="btn btn-primary">确定</a>
+                            </div>
+                        </div><a data-toggle="modal" href="#myModal">弹出</a>-->
+            </div>
+        </div>
+    </div>
+    <div class="MainContent" style="min-height: 400px">
+        <div class="container">
+            <div class="row">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <hr style="border-top-color: lightgray" />
+    <div style="text-align: center; font-family: 微软雅黑; font-size: 14px">
+        Contest Hunter 信息学自助比赛平台 - Alpha<br />
+        Developed by lydrainbowcat, VariantF and onetwogoo<br />
+        Server time: @DateTimeOffset.Now
+    </div>
+</body>
+</html>
