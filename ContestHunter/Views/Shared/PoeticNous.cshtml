@@ -10,9 +10,10 @@
         <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
-    <script src="@Url.Content("~/Script/jquery.js")"></script>
-    <script src="@Url.Content("~/Script/bootstrap.js")"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" type="text/css" />
+    <script src="~/Script/jquery.js"></script>
+    <script src="~/Script/bootstrap.js"></script>
+    <script src="~/Script/site.js"></script>
     <title>@ViewBag.Title - Contest Hunter</title>
 </head>
 <body>
@@ -39,21 +40,24 @@
                 <div class="nav-collapse" style="float: right">
                     <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
                         <li class="dropdown">
+
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">登录<span class="caret" /></a>
                             <ul class="dropdown-menu">
                                 @using (Html.BeginForm("Login", "User"))
                                 {
-                                    <li class="nav-header">用户名</li>
-                                    <li style="padding: 0px 20px">
-                                        @Html.TextBox("UserName", null, new { style = "width:150px;" })
+                                    <li style="padding: 3px 20px">
+
+                                        @Html.TextBox("UserName", null, new { id = "", @class = "input-medium", placeholder = "用户名" })
                                     </li>
-                                    <li class="nav-header" style="margin: -5px auto">密码</li>
-                                    <li style="padding: 0px 20px">
-                                        @Html.Password("Password", null, new { style = "width:80px;" })
-                                        <input type="submit" value="登录" class="btn btn-success" style="margin-bottom: 15px" />
+                                    <li style="padding: 3px 20px">
+                                        @Html.Password("Password", "", new { id = "", @class = "input-medium", placeholder = "密码" })
+                                    </li>
+                                    <li style="padding: 3px 20px; text-align: center;">
+                                        <input type="submit" value="登录" class="btn btn-success" />
                                     </li>
                                 }
                             </ul>
+
                         </li>
                         <li>@Html.ActionLink("注册", "Register", "User")</li>
                     </ul>
@@ -85,7 +89,8 @@
     <div style="text-align: center; font-family: 微软雅黑; font-size: 14px">
         Contest Hunter 信息学自助比赛平台 - Alpha<br />
         Developed by lydrainbowcat, VariantF and onetwogoo<br />
-        Server time: @DateTimeOffset.Now<br /><br />
+        Server time: @DateTimeOffset.Now<br />
+        <br />
     </div>
 </body>
 </html>

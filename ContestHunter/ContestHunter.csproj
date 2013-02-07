@@ -112,7 +112,10 @@
     </Compile>
     <Compile Include="Models\Domain\DESHelper.cs" />
     <Compile Include="Models\Domain\User.cs" />
+    <Compile Include="Models\View\User\LoginModel.cs" />
+    <Compile Include="Models\View\User\RegisterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewHelpers\MvcHtmlHelperExt.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -122,6 +125,7 @@
     <Content Include="Global.asax" />
     <Content Include="Script\bootstrap.js" />
     <Content Include="Script\jquery.js" />
+    <Content Include="Script\site.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -1,42 +1,78 @@
-﻿@{
-    ViewBag.Title = "Register";
+﻿@model ContestHunter.Models.View.User.RegisterModel
+@{
+    ViewBag.Title = "注册";
 }
 
 <script>
     function RegSucc() { $('#RegisterContent').removeClass('alert-info').addClass('alert-success') }
     function RegFail() { $('#RegisterContent').removeClass('alert-info').addClass('alert-error') }
+    function CheckPassword() {
+        if ($('#Password').val() != $('#PasswordAgain').val()) {
+            ShowValidationMessage($('#Password'), '两次输入的密码不匹配');
+            return false;
+        } else {
+            HideValidationMessage($('#Password'));
+        }
+    }
 </script>
 <div class="span12" style="margin-top: 20px; padding: 10px">
-    <div id="RegisterContent" class="alert alert-info" style="text-align: center;">
-        <table style="text-align: right; margin: 100px auto">
-            <tr>
-                <td colspan="2" style="padding-bottom:20px">
-                    <div class="progress progress-striped progress-success active" style="margin:0px -100px">
-                        <div class="bar" style="width: 5%;"></div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>用户名：</td>
-                <td>@Html.TextBox("UserName", null, new { style = "width:200px;" })</td>
-            </tr>
-            <tr>
-                <td>密码：</td>
-                <td>@Html.Password("Password", null, new { style = "width:200px;" })</td>
-            </tr>
-            <tr>
-                <td>重复密码：</td>
-                <td>@Html.Password("PasswordAgain", null, new { style = "width:200px;" })</td>
-            </tr>
-            <tr>
-                <td>验证邮箱：</td>
-                <td>@Html.TextBox("Email", null, new { style = "width:200px;" })</td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align: center">
-                    <input class="btn btn-warning" type="submit" value="下一步" />
-                </td>
-            </tr>
-        </table>
-    </div>
+    @using (Html.BeginForm("Register", "User", FormMethod.Post, new
+    {
+        id = "RegisterContent",
+        @class = "alert alert-info",
+        style = "text-align:center;",
+        onsubmit = "return CheckPassword();"
+    }))
+    {
+        <h2>用户注册</h2>
+        <div style="padding-bottom: 20px">
+            <div class="progress progress-striped progress-success active">
+                <div class="bar" style="width: 33%;"></div>
+            </div>
+        </div>
+        
+        <div class="form-horizontal" style="display: inline-block;">
+
+            <div class="control-group">
+                @Html.LabelFor(x => x.Name, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.TextBoxFor(x => x.Name, new { @class = "input-xlarge" })
+                    @Html.ValidationMessageFor(x => x.Name)
+                    @Html.DescriptionFor(x => x.Name, new { @class = "help-block" })
+                    
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(x => x.Password, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.PasswordFor(x => x.Password, new { @class = "input-xlarge" })
+                    @Html.ValidationMessageFor(x => x.Password)
+                    @Html.DescriptionFor(x => x.Password, new { @class = "help-block" })
+                </div>
+            </div>
+
+            <div id="grpPasswordAgain" class="control-group">
+                @Html.Label("PasswordAgain", "重复密码", new { @class = "control-label" })
+                <div class="controls">
+                    @Html.Password("PasswordAgain", null, new { @class = "input-xlarge" })
+                    <p class="help-block">再次输入您的密码，以供核对</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(x => x.Email, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.TextBoxFor(x => x.Email, new { @class = "input-xlarge", type = "email" })
+                    @Html.ValidationMessageFor(x => x.Email)
+                    @Html.DescriptionFor(x => x.Email, new { @class = "help-block" })
+                </div>
+            </div>
+
+            <div style="text-align: center">
+                <input class="btn btn-primary" type="submit" value="下一步" />
+            </div>
+
+        </div>
+    }
 </div>
