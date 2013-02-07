@@ -164,7 +164,7 @@
     <Content Include="Views\User\Registered.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Contest\Contest.cshtml" />
+    <Content Include="Views\Contest\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
