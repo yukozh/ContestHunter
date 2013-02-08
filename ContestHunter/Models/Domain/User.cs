@@ -59,7 +59,7 @@ namespace ContestHunter.Models.Domain
 
             url += "?name=" + HttpUtility.UrlEncode(name);
             url += "&password=" + HttpUtility.UrlEncode(encryptedPassword);
-            url += "&email=" + HttpUtility.UrlEncode(DESHelper.Encrypt(Encoding.Unicode.GetBytes(email)));
+            url += "&email=" + HttpUtility.UrlEncode(email);
             url += "&emailHash=" + HttpUtility.UrlEncode(emailHash);
 
             string link = string.Format("<a href='{0}'>{1}</a>", HttpUtility.HtmlAttributeEncode(url), HttpUtility.HtmlEncode(url));
