@@ -26,7 +26,7 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            @Html.CheckBoxFor(x => x.KeepOnline, new { @class = "input-xlarge",@checked="checked" })
+            @Html.CheckBoxFor(x => x.KeepOnline)
             @Html.LabelFor(x => x.KeepOnline)
             @Html.ValidationMessageFor(x => x.KeepOnline)
             @Html.DescriptionFor(x => x.KeepOnline, new { @class = "help-block" })

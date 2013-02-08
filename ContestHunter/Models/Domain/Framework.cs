@@ -7,7 +7,7 @@ namespace ContestHunter.Models.Domain
 {
     public class Framework
     {
-        static DomainInstallation()
+        static void DomainInstallation()
         {
 
         }
