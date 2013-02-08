@@ -25,7 +25,7 @@
 
 <div class="span12">
     <div class="alert alert-success" style="margin-top: 20px; padding: 0px">
-        <h5 style="margin: 0px 5px">进行中的比赛</h5>
+        <h5 style="margin: 0px 5px">进行中的比赛</h5> <!--比赛前五分钟变为“进行中”，赛后测评结束后变为“已举办”-->
         <table class="table table-bordered table-striped table-hover">
             <colgroup>
                 <col style="width: 420px">
@@ -49,7 +49,10 @@
                         <h5 style="margin: 0px"><a href="#">Contest Hunter Beta Round #2</a></h5>
                         <h6 style="margin: 0px">From liouzhou_101</h6>
                     </td>
-                    <td><div style="padding: 8px">ACM/ICPC</div></td>
+                    <td>
+                        <div>ACM/ICPC</div> <!--OI、ACM/ICPC、Codeforces三种赛制-->
+                        <div style="color:red">Official</div> <!--Official和Unofficial两种，前者计入rating，后者不计rating-->
+                    </td>
                     <td>2013/02/20 19:00:00<br />
                         持续5小时
                     </td>
@@ -91,33 +94,18 @@
                 <tr>
                     <td>
                         <h5 style="margin: 0px"><a href="#">Contest Hunter Beta Round #3</a></h5>
-                        <h6 style="margin: 0px">From This_poet,lydrainbowcat</h6>
+                        <h6 style="margin: 0px">From This_poet</h6>
                     </td>
-                    <td><div style="padding: 8px">Codeforces</div></td>
+                    <td>
+                        <div>Codeforces</div>
+                        <div style="color:red">Official</div>
+                    </td>
                     <td>2013/02/20 19:00:00<br />
                         持续2小时
                     </td>
                     <td>
                         <div class="btn-group" style="padding: 5px">
-                            <button class="btn btn-info">报名参赛</button>
-                        </div>
-                    </td>
-                    <td>
-                        <div style="padding: 7px"><code>1234</code></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5 style="margin: 0px"><a href="#">Contest Hunter Beta Round #4</a></h5>
-                        <h6 style="margin: 0px">From VariantF,onetwogoo</h6>
-                    </td>
-                    <td><div style="padding: 8px">NOIP</div></td>
-                    <td>2013/02/20 19:00:00<br />
-                        持续3小时
-                    </td>
-                    <td>
-                        <div class="btn-group" style="padding: 5px">
-                            <button class="btn btn-info">报名参赛</button>
+                            <button class="btn btn-info">查看预告</button>
                         </div>
                     </td>
                     <td>
@@ -155,9 +143,12 @@
                         <h5 style="margin: 0px"><a href="#">Contest Hunter Beta Round #1</a></h5>
                         <h6 style="margin: 0px">From applepi, Vani</h6>
                     </td>
-                    <td><div style="padding: 8px">NOI</div></td>
+                    <td>
+                        <div>OI</div>
+                        <div style="color:blue">Unofficial</div>
+                    </td>
                     <td>2013/02/20 19:00:00<br />
-                        持续5小时
+                        持续3小时
                     </td>
                     <td>
                         <div class="btn-group" style="padding: 5px 0px">
