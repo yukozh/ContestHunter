@@ -6,15 +6,12 @@ using System.Web.Mvc;
 
 namespace ContestHunter.Controllers
 {
-    public class HomeController : Controller
+    public class SharedController : Controller
     {
-        //
-        // GET: /Home/
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Error(string msg)
         {
-            return View();
+            return View("Error",(object)msg);
         }
-
     }
 }

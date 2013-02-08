@@ -14,6 +14,7 @@ namespace ContestHunter.Models.View.User
         public string Name { get; set; }
 
         [Required]
+        [DataType(DataType.Password)]
         [Display(Name = "密码", Description = "找一个安全的密码，并牢记它")]
         public string Password { get; set; }
 

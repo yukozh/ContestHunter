@@ -1,0 +1,36 @@
+﻿@model ContestHunter.Models.View.User.LoginModel
+
+@{
+    ViewBag.Title = "登录";
+}
+
+<h2>此页面有待美化</h2>
+@using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="control-group">
+        @Html.LabelFor(x => x.UserName, new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(x => x.UserName, new { @class = "input-xlarge" })
+            @Html.ValidationMessageFor(x => x.UserName)
+            @Html.DescriptionFor(x => x.UserName, new { @class = "help-block" })
+        </div>
+    </div>
+    <div class="control-group">
+        @Html.LabelFor(x => x.Password, new { @class = "control-label" })
+        <div class="controls">
+            @Html.PasswordFor(x => x.Password, new { @class = "input-xlarge" })
+            @Html.ValidationMessageFor(x => x.Password)
+            @Html.DescriptionFor(x => x.Password, new { @class = "help-block" })
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            @Html.CheckBoxFor(x => x.KeepOnline, new { @class = "input-xlarge",@checked="checked" })
+            @Html.LabelFor(x => x.KeepOnline)
+            @Html.ValidationMessageFor(x => x.KeepOnline)
+            @Html.DescriptionFor(x => x.KeepOnline, new { @class = "help-block" })
+        </div>
+    </div>
+    <input type="submit" value="登录" class="btn btn-primary" />
+}

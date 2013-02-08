@@ -54,10 +54,16 @@ namespace ContestHunter.Models.Domain
         /// <param name="url"></param>
         public static void SendValidationEmail(string name, string password, string email, string url)
         {
+            string encryptedPassword = Convert.ToBase64String(DESHelper.Encrypt(Encoding.UTF8.GetBytes(password)));
+            string emailHash = Convert.ToBase64String(DESHelper.Encrypt(Encoding.UTF8.GetBytes(email.Trim().ToLower())));
+
             url += "?name=" + HttpUtility.UrlEncode(name);
-            url += "&password=" + HttpUtility.UrlEncode(DESHelper.Encrypt(Encoding.Unicode.GetBytes(password)));
+            url += "&password=" + HttpUtility.UrlEncode(encryptedPassword);
             url += "&email=" + HttpUtility.UrlEncode(DESHelper.Encrypt(Encoding.Unicode.GetBytes(email)));
+            url += "&emailHash=" + HttpUtility.UrlEncode(emailHash);
+
             string link = string.Format("<a href='{0}'>{1}</a>", HttpUtility.HtmlAttributeEncode(url), HttpUtility.HtmlEncode(url));
+
             using (MailMessage msg = new MailMessage())
             {
                 msg.From = new MailAddress("Register@ContestHunter.com");
@@ -65,7 +71,6 @@ namespace ContestHunter.Models.Domain
                 msg.Subject = "ContestHunter注册验证";
                 msg.Body = "请访问 " + link + " 完成注册";
                 msg.IsBodyHtml = true;
-
 
                 SmtpClient client = new SmtpClient();
                 client.Credentials = new System.Net.NetworkCredential("hellotyvj@gmail.com", "07070078899");
@@ -83,11 +88,14 @@ namespace ContestHunter.Models.Domain
         /// <param name="encryptedPassword"></param>
         /// <param name="email"></param>
         /// <exception cref="PasswordMismatchException"></exception>
-        /// <exception cref="DatabaseException"></exception>
-        public static void Register(string name, string originalPassword, string encryptedPassword, string email)
+        /// <exception cref="EmailMismatchException"></exception>
+        public static void Register(string name, string originalPassword, string encryptedPassword, string email, string emailHash)
         {
-            if (originalPassword != Encoding.Unicode.GetString(DESHelper.Decrypt(HttpUtility.UrlDecodeToBytes(encryptedPassword))))
+            if (originalPassword != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(encryptedPassword))))
                 throw new PasswordMismatchException();
+            if(email!=Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(emailHash))))
+                throw new EmailMismatchException();
+
             using (var db = new CHDB())
             {
                 using (SHA256 hash = SHA256.Create())
@@ -113,7 +121,24 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                return (from u in db.USERs where u.Name == name select u).Any();
+                return (from u in db.USERs
+                        where u.Name == name
+                        select u).Any();
+            }
+        }
+
+        /// <summary>
+        /// 返回指定的Email是否存在
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static bool IsEmailExisted(string email)
+        {
+            using (var db = new CHDB())
+            {
+                return (from u in db.USERs
+                        where u.Email == email
+                        select u).Any();
             }
         }
 
