@@ -22,6 +22,7 @@ namespace ContestHunter.Models.Domain
             public Guid Token;
             public string name;
             public string email;
+            public string[] groups;
         }
 
         static Dictionary<Guid, OnlineUser> OnlineUsers = new Dictionary<Guid, OnlineUser>();
@@ -90,6 +91,7 @@ namespace ContestHunter.Models.Domain
                 client.Send(msg);
             }
         }
+
         /// <summary>
         /// 验证密码并添加用户
         /// </summary>
@@ -103,7 +105,7 @@ namespace ContestHunter.Models.Domain
         {
             if (originalPassword != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(encryptedPassword))))
                 throw new PasswordMismatchException();
-            if(email!=Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(emailHash))))
+            if (email != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(emailHash))))
                 throw new EmailMismatchException();
 
             using (var db = new CHDB())
@@ -180,7 +182,9 @@ namespace ContestHunter.Models.Domain
                             ID = currentUser.ID,
                             Token = Guid.NewGuid(),
                             name = currentUser.Name,
-                            email = currentUser.Email
+                            email = currentUser.Email,
+                            groups = (from g in currentUser.GROUPs
+                                      select g.Name).ToArray()
                         };
                     lock (OnlineUsers)
                     {
@@ -224,15 +228,6 @@ namespace ContestHunter.Models.Domain
                 if (null == result)
                     throw new UserNotFoundException();
                 return new User() { Name = result.Name, Email = result.Email };
-            }
-        }
-
-        public static string[] SelectGroups()
-        {
-            using(var db = new CHDB())
-            {
-                return  (from g in db.GROUPs
-                                 select g.Name).ToArray();
             }
         }
     }

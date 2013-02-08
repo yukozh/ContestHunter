@@ -18,7 +18,7 @@ namespace DomainTest
         [TestMethod]
         public void TestUser()
         {
-            string token=User.Login("123", "123");
+            string token=User.Login("Administrator", "07070078899");
             string[] guids = token.Split(new char[] { '|' });
             Assert.AreEqual(2, guids.Length);
             Guid guid1 = Guid.Parse(guids[0]), guid2 = Guid.Parse(guids[1]);
@@ -26,8 +26,27 @@ namespace DomainTest
             User info = User.SelectByName("name");
             Assert.AreEqual("name", info.Name);
             Assert.AreEqual("variantf@gmail.com", info.Email);
-            Assert.AreEqual("123", User.CurrentUserName);
+            Assert.AreEqual("Administrator", User.CurrentUserName);
+            var groups = Group.All();
+            Assert.AreEqual(1, groups.Length);
+            Assert.AreEqual("Administrators", groups[0]);
+            groups = Group.ByUsername("Administrator");
+            Assert.AreEqual(1, groups.Length);
+            Assert.AreEqual("Administrators", groups[0]);
+            Assert.AreEqual(1, Group.Users("Administrators").Length);
+            Group.Add("blabla");
+            Group.AddUser("blabla", "name");
+            Assert.AreEqual("blabla", Group.ByUsername("name")[0]);
+            Group.RemoveUser("blabla", "name");
+            Assert.AreEqual(0, Group.ByUsername("name").Length);
+            Group.Remove("blabla");
             User.Logout();
+        }
+
+        [TestMethod]
+        public void TestFramework()
+        {
+            Framework.DomainInstallation();
         }
     }
 }

@@ -4,18 +4,19 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="d72cf8f97ac24a85af7f5720a337259f" Name="关系图1">
-        <EntityTypeShape EntityType="ContestHunterModel.CONTEST" Width="1.5" PointX="5.25" PointY="2.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.GROUP" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.PROBLEM" Width="1.5" PointX="7.5" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.RECORD" Width="1.5" PointX="9.75" PointY="2.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.TESTDATA" Width="1.5" PointX="9.75" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.USER" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
-        <AssociationConnector Association="ContestHunterModel.FK_CONTEST_USER" ManuallyRouted="false" />
+      <Diagram DiagramId="8901c45e726f4e41a61d00dd77fe53cb" Name="关系图1">
+        <EntityTypeShape EntityType="ContestHunterModel.CONTEST" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.GROUP" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.PROBLEM" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.RECORD" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.TESTDATA" Width="1.5" PointX="5.25" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.USER" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="ContestHunterModel.FK_PROBLEM_CONTEST1" ManuallyRouted="false" />
         <AssociationConnector Association="ContestHunterModel.FK_RECORD_PROBLEM" ManuallyRouted="false" />
         <AssociationConnector Association="ContestHunterModel.FK_TESTDATA_PROBLEM" ManuallyRouted="false" />
         <AssociationConnector Association="ContestHunterModel.FK_RECORD_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="ContestHunterModel.CONTEST_ATTEND" ManuallyRouted="false" />
+        <AssociationConnector Association="ContestHunterModel.CONTEST_OWNER" ManuallyRouted="false" />
         <AssociationConnector Association="ContestHunterModel.USER_GROUP" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>

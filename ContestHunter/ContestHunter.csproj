@@ -153,6 +153,7 @@
     <Compile Include="Models\Domain\DESHelper.cs" />
     <Compile Include="Models\Domain\Exceptions.cs" />
     <Compile Include="Models\Domain\Framework.cs" />
+    <Compile Include="Models\Domain\Group.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Models\View\User\LoginModel.cs" />
     <Compile Include="Models\View\User\RegisterModel.cs" />
