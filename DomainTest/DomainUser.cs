@@ -23,6 +23,9 @@ namespace DomainTest
             Assert.AreEqual(2, guids.Length);
             Guid guid1 = Guid.Parse(guids[0]), guid2 = Guid.Parse(guids[1]);
             User.Authenticate(token);
+            User info = User.SelectByName("name");
+            Assert.AreEqual("name", info.name);
+            Assert.AreEqual("variantf@gmail.com", info.email);
             User.Logout();
         }
     }

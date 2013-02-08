@@ -29,6 +29,11 @@ namespace ContestHunter.Models.Domain
         [ThreadStatic]
         static internal OnlineUser CurrentUser;
 
+        static public string CurrentUserName
+        {
+            get { return CurrentUser.name; }
+        }
+
         /// <summary>
         /// 验证Token
         /// </summary>
@@ -210,10 +215,6 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         public static User SelectByName(string name)
         {
-            if (name == CurrentUser.name)
-            {
-                return new User() { name = CurrentUser.name, email = CurrentUser.email };
-            }
             using (var db = new CHDB())
             {
                 var result = (from u in db.USERs
@@ -223,6 +224,10 @@ namespace ContestHunter.Models.Domain
                     throw new UserNotFoundException();
                 return new User() { name = result.Name, email = result.Email };
             }
+        }
+        public static User SelectByName()
+        {
+            return new User() { name = CurrentUser.name, email = CurrentUser.email };
         }
     }
 }
