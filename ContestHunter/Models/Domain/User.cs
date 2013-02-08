@@ -56,7 +56,7 @@ namespace ContestHunter.Models.Domain
         {
             url += "?name=" + HttpUtility.UrlEncode(name);
             url += "&password=" + HttpUtility.UrlEncode(DESHelper.Encrypt(Encoding.Unicode.GetBytes(password)));
-            url += "&email=" + HttpUtility.UrlEncode(email);
+            url += "&email=" + HttpUtility.UrlEncode(DESHelper.Encrypt(Encoding.Unicode.GetBytes(email)));
             string link = string.Format("<a href='{0}'>{1}</a>", HttpUtility.HtmlAttributeEncode(url), HttpUtility.HtmlEncode(url));
             using (MailMessage msg = new MailMessage())
             {
@@ -100,8 +100,7 @@ namespace ContestHunter.Models.Domain
                         Email = email
                     });
                 }
-                if (1 != db.SaveChanges())
-                    throw new DatabaseException();
+                db.SaveChanges();
             }
         }
 
@@ -158,7 +157,7 @@ namespace ContestHunter.Models.Domain
                     return currentUser.ID.ToString() + "|" + newToken.Token.ToString();
                 }
             }
-            throw new UndefineException();
+            throw new UndefinedException();
         }
 
         /// <summary>

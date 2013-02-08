@@ -17,7 +17,7 @@ namespace ContestHunter.Models.Domain
     {
     }
 
-    public class UndefineException : Exception
+    public class UndefinedException : Exception
     {
     }
 

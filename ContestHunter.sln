@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContestHunter", "ContestHunter\ContestHunter.csproj", "{FF6A73F9-D7E0-464C-9527-7D17A1B9200E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainTest", "DomainTest\DomainTest.csproj", "{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{FF6A73F9-D7E0-464C-9527-7D17A1B9200E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF6A73F9-D7E0-464C-9527-7D17A1B9200E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF6A73F9-D7E0-464C-9527-7D17A1B9200E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

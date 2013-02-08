@@ -10,7 +10,7 @@ namespace DomainTest
         [TestMethod]
         public void TestSendEmail()
         {
-//            User.SendValidationEmail("123", "123", "variantf@gmail.com", "0.0");
+            User.SendValidationEmail("name", "password", "variantf@gmail.com", "http://contesthunter.com/regiser");
 //            User.Register("123", "123", ".%a5%16%85%f3%810%93", "123");
         }
         [TestMethod]
