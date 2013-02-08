@@ -34,7 +34,7 @@
                     <script>
                         $(function () {
                             $('#nav' + '@ViewBag.ActivedNav').addClass('active');
-                    });
+                        });
                     </script>
                 }
                 <div class="nav-collapse">
@@ -58,7 +58,7 @@
                                     <li style="padding: 3px 20px">
                                         @Html.Password("Password", "", new { id = "", @class = "input-medium", placeholder = "密码" })
                                     </li>
-                                    <li style="padding: 3px 20px; text-align: center;">
+                                    <li style="padding: 0px 20px; text-align: center; margin-top:-5px; margin-bottom:-15px">
                                         <input type="submit" value="登录" class="btn btn-success" />
                                     </li>
                                 }
@@ -92,7 +92,7 @@
         </div>
     </div>
     <hr style="border-top-color: lightgray" />
-    <div style="text-align: center; font-family: 微软雅黑; font-size: 14px; margin-top:10px; margin-bottom:10px;">
+    <div style="text-align: center; font-family: 微软雅黑; font-size: 14px; margin-top: 10px; margin-bottom: 10px;">
         Contest Hunter 信息学自助比赛平台 - Alpha<br />
         Developed by lydrainbowcat, VariantF and onetwogoo<br />
         Server time: @DateTimeOffset.Now<br />
