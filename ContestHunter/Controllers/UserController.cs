@@ -140,5 +140,18 @@ namespace ContestHunter.Controllers
             return Redirect("~");
         }
         #endregion
+
+        public ActionResult Show(string id)
+        {
+            User user;
+
+            try{
+                user=USER.SelectByName(id);
+            }catch(UserNotFoundException){
+                return RedirectToAction("Error", "Shared", "找不到指定的用户");
+            }
+
+            return View(user);
+        }
     }
 }
