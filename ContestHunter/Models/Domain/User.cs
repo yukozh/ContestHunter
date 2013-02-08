@@ -13,8 +13,8 @@ namespace ContestHunter.Models.Domain
     public class User
     {
 
-        public string name;
-        public string email;
+        public string Name;
+        public string Email;
 
         internal class OnlineUser
         {
@@ -213,6 +213,7 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
         public static User SelectByName(string name)
         {
             using (var db = new CHDB())
@@ -222,12 +223,17 @@ namespace ContestHunter.Models.Domain
                               select u).SingleOrDefault();
                 if (null == result)
                     throw new UserNotFoundException();
-                return new User() { name = result.Name, email = result.Email };
+                return new User() { Name = result.Name, Email = result.Email };
             }
         }
-        public static User SelectByName()
+
+        public static string[] SelectGroups()
         {
-            return new User() { name = CurrentUser.name, email = CurrentUser.email };
+            using(var db = new CHDB())
+            {
+                return  (from g in db.GROUPs
+                                 select g.Name).ToArray();
+            }
         }
     }
 }

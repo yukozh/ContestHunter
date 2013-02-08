@@ -141,9 +141,6 @@
     <Compile Include="Database\RECORD.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\sysdiagram.cs">
-      <DependentUpon>CHDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Database\TESTDATA.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
@@ -215,6 +212,15 @@
     <Content Include="Views\Contest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\User\CheckPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Login.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -234,15 +240,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\CheckPassword.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\Error.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\Login.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -23,4 +23,8 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class PermissionDeniedException : Exception
+    {
+    }
+
 }
