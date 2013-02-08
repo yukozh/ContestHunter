@@ -12,11 +12,16 @@ namespace ContestHunter.Models.Domain
 {
     public class User
     {
+
+        public string name;
+        public string email;
+
         internal class OnlineUser
         {
             public Guid ID;
             public Guid Token;
             public string name;
+            public string email;
         }
 
         static Dictionary<Guid, OnlineUser> OnlineUsers = new Dictionary<Guid, OnlineUser>();
@@ -169,7 +174,8 @@ namespace ContestHunter.Models.Domain
                         {
                             ID = currentUser.ID,
                             Token = Guid.NewGuid(),
-                            name = currentUser.Name
+                            name = currentUser.Name,
+                            email = currentUser.Email
                         };
                     lock (OnlineUsers)
                     {
@@ -194,6 +200,28 @@ namespace ContestHunter.Models.Domain
             lock (OnlineUsers)
             {
                 OnlineUsers.Remove(CurrentUser.ID);
+            }
+        }
+
+        /// <summary>
+        /// 获得用户信息
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static User SelectByName(string name)
+        {
+            if (name == CurrentUser.name)
+            {
+                return new User() { name = CurrentUser.name, email = CurrentUser.email };
+            }
+            using (var db = new CHDB())
+            {
+                var result = (from u in db.USERs
+                              where u.Name == name
+                              select u).SingleOrDefault();
+                if (null == result)
+                    throw new UserNotFoundException();
+                return new User() { name = result.Name, email = result.Email };
             }
         }
     }
