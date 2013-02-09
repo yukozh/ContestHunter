@@ -51,6 +51,20 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
+        /// 返回 Pending 比赛个数
+        /// </summary>
+        /// <returns></returns>
+        public static int PendingCount()
+        {
+            using (var db = new CHDB())
+            {
+                return (from c in db.CONTESTs
+                        where c.StartTime > DateTime.Now
+                        select c).Count();
+            }
+        }
+
+        /// <summary>
         /// 返回正在进行的比赛列表
         /// </summary>
         /// <param name="skip"></param>
@@ -80,6 +94,20 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
+        /// 返回 Testing 比赛个数
+        /// </summary>
+        /// <returns></returns>
+        public static int TestingCount()
+        {
+            using (var db = new CHDB())
+            {
+                return (from c in db.CONTESTs
+                        where c.StartTime <= DateTime.Now && c.EndTime >= DateTime.Now
+                        select c).Count();
+            }
+        }
+
+        /// <summary>
         /// 返回已经结束的比赛列表
         /// </summary>
         /// <param name="skip"></param>
@@ -105,6 +133,20 @@ namespace ContestHunter.Models.Domain
                             Owner = (from u in c.OWNERs
                                      select u.Name).ToList()
                         }).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 返回 Done 比赛个数
+        /// </summary>
+        /// <returns></returns>
+        public static int DoneCount()
+        {
+            using (var db = new CHDB())
+            {
+                return (from c in db.CONTESTs
+                        where c.EndTime < DateTime.Now
+                        select c).Count();
             }
         }
 
