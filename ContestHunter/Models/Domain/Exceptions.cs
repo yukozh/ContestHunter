@@ -27,4 +27,7 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class UserNotLoginException : Exception
+    {
+    }
 }

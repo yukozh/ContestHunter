@@ -23,7 +23,7 @@ namespace ContestHunter.Database
         public System.Guid ID { get; set; }
         public System.Guid Contest { get; set; }
         public string Name { get; set; }
-        public byte[] Content { get; set; }
+        public string Content { get; set; }
         public string Comparer { get; set; }
     
         public virtual CONTEST CONTEST1 { get; set; }

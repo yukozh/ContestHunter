@@ -150,6 +150,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Domain\Contest.cs" />
     <Compile Include="Models\Domain\DESHelper.cs" />
     <Compile Include="Models\Domain\Exceptions.cs" />
     <Compile Include="Models\Domain\Framework.cs" />
@@ -169,7 +170,9 @@
     <Content Include="Script\bootstrap.js" />
     <Content Include="Script\jquery.js" />
     <Content Include="Script\site.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -222,6 +225,9 @@
     <Content Include="Views\User\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\User\Show.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -241,9 +247,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\Show.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

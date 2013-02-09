@@ -17,19 +17,20 @@ namespace ContestHunter.Database
         public CONTEST()
         {
             this.PROBLEMs = new HashSet<PROBLEM>();
-            this.USERs = new HashSet<USER>();
-            this.USERs1 = new HashSet<USER>();
+            this.ATTENDERs = new HashSet<USER>();
+            this.OWNERs = new HashSet<USER>();
         }
     
         public System.Guid ID { get; set; }
         public string Name { get; set; }
         public System.DateTime StartTime { get; set; }
-        public int Duration { get; set; }
+        public System.DateTime EndTime { get; set; }
         public string Description { get; set; }
         public int Type { get; set; }
+        public bool IsOfficial { get; set; }
     
         public virtual ICollection<PROBLEM> PROBLEMs { get; set; }
-        public virtual ICollection<USER> USERs { get; set; }
-        public virtual ICollection<USER> USERs1 { get; set; }
+        public virtual ICollection<USER> ATTENDERs { get; set; }
+        public virtual ICollection<USER> OWNERs { get; set; }
     }
 }

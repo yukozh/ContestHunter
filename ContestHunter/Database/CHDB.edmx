@@ -63,9 +63,10 @@
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="StartTime" Type="datetime" Nullable="false" />
-          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="IsOfficial" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CONTEST_ATTEND">
           <Key>
@@ -97,7 +98,7 @@
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Contest" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
-          <Property Name="Content" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Comparer" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="RECORD">
@@ -322,12 +323,13 @@
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="IsOfficial" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="CONTEST" ToRole="PROBLEM" />
-          <NavigationProperty Name="USERs" Relationship="ContestHunterModel.CONTEST_ATTEND" FromRole="CONTEST" ToRole="USER" />
-          <NavigationProperty Name="USERs1" Relationship="ContestHunterModel.CONTEST_OWNER" FromRole="CONTEST" ToRole="USER" />
+          <NavigationProperty Name="ATTENDERs" Relationship="ContestHunterModel.CONTEST_ATTEND" FromRole="CONTEST" ToRole="USER" />
+          <NavigationProperty Name="OWNERs" Relationship="ContestHunterModel.CONTEST_OWNER" FromRole="CONTEST" ToRole="USER" />
         </EntityType>
         <EntityType Name="GROUP">
           <Key>
@@ -344,7 +346,7 @@
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="Contest" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Content" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Comparer" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="CONTEST1" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="PROBLEM" ToRole="CONTEST" />
           <NavigationProperty Name="RECORDs" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="PROBLEM" ToRole="RECORD" />
@@ -463,9 +465,10 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="IsOfficial" ColumnName="IsOfficial" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -561,7 +564,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

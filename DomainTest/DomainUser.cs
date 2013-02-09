@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ContestHunter.Models.Domain;
 using System.Web;
+using System.Collections.Generic;
 
 namespace DomainTest
 {
@@ -47,6 +48,15 @@ namespace DomainTest
         public void TestFramework()
         {
             Framework.DomainInstallation();
+        }
+
+        [TestMethod]
+        public void TestContest()
+        {
+            User.Authenticate(User.Login("123", "123"));
+            Assert.AreEqual(0, Contest.Pending(0, 10).Count);
+            Assert.AreEqual(2, Contest.Testing(0, 10).Count);
+            Assert.AreEqual(0, Contest.Done(0, 10).Count);
         }
     }
 }
