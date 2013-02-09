@@ -30,4 +30,16 @@ namespace ContestHunter.Models.Domain
     public class UserNotLoginException : Exception
     {
     }
+
+    public class AlreadyAttendedContestException : Exception
+    {
+    }
+
+    public class NotAttendedContestException : Exception
+    {
+    }
+
+    public class ContestStartedException : Exception
+    {
+    }
 }

@@ -54,9 +54,28 @@ namespace DomainTest
         public void TestContest()
         {
             User.Authenticate(User.Login("123", "123"));
-            Assert.AreEqual(0, Contest.Pending(0, 10).Count);
-            Assert.AreEqual(2, Contest.Testing(0, 10).Count);
-            Assert.AreEqual(0, Contest.Done(0, 10).Count);
+            var Start = TimeSpan.FromMinutes(1.0);
+            var Duration = TimeSpan.FromHours(1.0);
+            Contest.Add(new Contest()
+            {
+                Name = "Test 1",
+                Description = "This is Description",
+                StartTime = DateTime.Now + Start,
+                EndTime = DateTime.Now + Duration,
+                IsOfficial = false,
+                Owner = new List<string>() { "123" },
+                Type = Contest.ContestType.OI
+            });
+            var nowtest = Contest.ByName("Test 1");
+            Assert.AreEqual(0,nowtest.AttendedUsersCount());
+            nowtest.Attend();
+            Assert.AreEqual(true, nowtest.IsAttended());
+            Assert.AreEqual(1, nowtest.AttendedUsersCount());
+            Assert.AreEqual("123", nowtest.AttendedUsers(0, 10)[0]);
+            nowtest.Disattended();
+            Assert.AreEqual(0, nowtest.AttendedUsersCount());
+            Assert.AreEqual(false, nowtest.IsAttended());
+
         }
     }
 }

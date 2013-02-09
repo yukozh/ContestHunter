@@ -15,7 +15,7 @@ namespace ContestHunter.Models.Domain
             CF,
             OI
         }
-        public ContestType Tp;
+        public ContestType Type;
         public DateTime StartTime, EndTime;
         public string Description;
         public bool IsOfficial;
@@ -40,7 +40,7 @@ namespace ContestHunter.Models.Domain
                          {
                              Name = c.Name,
                              Description = c.Description,
-                             Tp = (ContestType)c.Type,
+                             Type = (ContestType)c.Type,
                              StartTime = c.StartTime,
                              EndTime = c.EndTime,
                              IsOfficial = c.IsOfficial,
@@ -83,7 +83,7 @@ namespace ContestHunter.Models.Domain
                         {
                             Name = c.Name,
                             Description = c.Description,
-                            Tp = (ContestType)c.Type,
+                            Type = (ContestType)c.Type,
                             StartTime = c.StartTime,
                             EndTime = c.EndTime,
                             IsOfficial = c.IsOfficial,
@@ -126,7 +126,7 @@ namespace ContestHunter.Models.Domain
                         {
                             Name = c.Name,
                             Description = c.Description,
-                            Tp = (ContestType)c.Type,
+                            Type = (ContestType)c.Type,
                             StartTime = c.StartTime,
                             EndTime = c.EndTime,
                             IsOfficial = c.IsOfficial,
@@ -168,7 +168,7 @@ namespace ContestHunter.Models.Domain
                     StartTime = contest.StartTime,
                     EndTime = contest.EndTime,
                     Description = contest.Description,
-                    Type = (int)contest.Tp,
+                    Type = (int)contest.Type,
                     IsOfficial = contest.IsOfficial,
                 });
 
@@ -182,6 +182,139 @@ namespace ContestHunter.Models.Domain
                 }
 
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取指定名称比赛实例
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Contest ByName(string name)
+        {
+            using (var db = new CHDB())
+            {
+                return (from c in
+                            (from c in db.CONTESTs
+                             where c.Name == name
+                             select c).ToList()
+                        select new Contest
+                    {
+                        Name = c.Name,
+                        Description = c.Description,
+                        StartTime = c.StartTime,
+                        EndTime = c.EndTime,
+                        IsOfficial = c.IsOfficial,
+                        Type = (ContestType)c.Type,
+                        Owner = (from u in c.OWNERs
+                                 select u.Name).ToList()
+                    }).Single();
+            }
+        }
+
+        /// <summary>
+        /// 报名参加比赛
+        /// </summary>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="AlreadyAttendedContestException"></exception>
+        /// <exception cref="ContestStartedException"></exception>
+        public void Attend()
+        {
+            if(null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (IsAttended())
+                throw new AlreadyAttendedContestException();
+            if (DateTime.Now > StartTime)
+                throw new ContestStartedException();
+            using (var db = new CHDB())
+            {
+                (from c in db.CONTESTs
+                 where c.Name == Name
+                 select c).Single().ATTENDERs.Add(
+                 (from u in db.USERs
+                  where u.ID == User.CurrentUser.ID
+                  select u).Single()
+                  );
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 取消参加比赛
+        /// </summary>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        /// <exception cref="ContestStartedException"></exception>
+        public void Disattended()
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!IsAttended())
+                throw new NotAttendedContestException();
+            if (DateTime.Now > StartTime)
+                throw new ContestStartedException();
+            using (var db = new CHDB())
+            {
+                (from c in db.CONTESTs
+                 where c.Name == Name
+                 select c).Single().ATTENDERs.Remove(
+                 (from u in db.USERs
+                  where u.ID == User.CurrentUser.ID
+                  select u).Single()
+                  );
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 判断是否报名比赛
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAttended()
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            using (var db = new CHDB())
+            {
+                return (from u in
+                            (from c in db.CONTESTs
+                             where c.Name == Name
+                             select c).Single().ATTENDERs
+                        where u.Name == User.CurrentUser.name
+                        select u).Any();
+            }
+        }
+
+        /// <summary>
+        /// 获得报名人数
+        /// </summary>
+        /// <returns></returns>
+        public int AttendedUsersCount()
+        {
+            using (var db = new CHDB())
+            {
+                return (from c in db.CONTESTs
+                        where c.Name == Name
+                        select c.ATTENDERs).Single().Count();
+            }
+        }
+
+        /// <summary>
+        /// 获得比赛报名名单
+        /// </summary>
+        /// <param name="skip"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
+        public List<string> AttendedUsers(int skip, int top)
+        {
+            using (var db = new CHDB())
+            {
+                return (from u in
+                            (from c in db.CONTESTs
+                             where c.Name == Name
+                             select c.ATTENDERs).Single()
+                        select u.Name).OrderBy(u =>u).Skip(skip).Take(top).ToList();
+
             }
         }
 
