@@ -9,19 +9,21 @@ namespace ContestHunter.Models.Domain
     {
     }
 
-    public class DatabaseException : Exception
-    {
-    }
+    public class EmailMismatchException : Exception { }
 
     public class UserNotFoundException : Exception
     {
     }
 
-    public class UndefineException : Exception
+    public class UndefinedException : Exception
     {
     }
 
     public class BadTokenException : Exception
+    {
+    }
+
+    public class PermissionDeniedException : Exception
     {
     }
 

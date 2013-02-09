@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ContestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Database\CHDB.Context.cs">
       <AutoGen>True</AutoGen>
@@ -140,9 +141,6 @@
     <Compile Include="Database\RECORD.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Database\sysdiagram.cs">
-      <DependentUpon>CHDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Database\TESTDATA.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
@@ -154,6 +152,8 @@
     </Compile>
     <Compile Include="Models\Domain\DESHelper.cs" />
     <Compile Include="Models\Domain\Exceptions.cs" />
+    <Compile Include="Models\Domain\Framework.cs" />
+    <Compile Include="Models\Domain\Group.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Models\View\User\LoginModel.cs" />
     <Compile Include="Models\View\User\RegisterModel.cs" />
@@ -213,6 +213,15 @@
     <Content Include="Views\Contest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\User\CheckPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Login.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -232,6 +241,9 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Contest\List.cshtml" />

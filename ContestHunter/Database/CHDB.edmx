@@ -4,41 +4,54 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ContestHunterDB.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="ContestHunterDBStoreContainer">
-          <EntitySet Name="CONTEST" EntityType="ContestHunterDB.Store.CONTEST" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="GROUP" EntityType="ContestHunterDB.Store.GROUP" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PROBLEM" EntityType="ContestHunterDB.Store.PROBLEM" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="RECORD" EntityType="ContestHunterDB.Store.RECORD" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="sysdiagrams" EntityType="ContestHunterDB.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="TESTDATA" EntityType="ContestHunterDB.Store.TESTDATA" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="USER" EntityType="ContestHunterDB.Store.USER" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="USER_GROUP" EntityType="ContestHunterDB.Store.USER_GROUP" store:Type="Tables" Schema="dbo" />
-          <AssociationSet Name="FK_CONTEST_USER" Association="ContestHunterDB.Store.FK_CONTEST_USER">
-            <End Role="USER" EntitySet="USER" />
+      <Schema Namespace="ContestHunterModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="ContestHunterModelStoreContainer">
+          <EntitySet Name="CONTEST" EntityType="ContestHunterModel.Store.CONTEST" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterModel.Store.CONTEST_ATTEND" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CONTEST_OWNER" EntityType="ContestHunterModel.Store.CONTEST_OWNER" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GROUP" EntityType="ContestHunterModel.Store.GROUP" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PROBLEM" EntityType="ContestHunterModel.Store.PROBLEM" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RECORD" EntityType="ContestHunterModel.Store.RECORD" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TESTDATA" EntityType="ContestHunterModel.Store.TESTDATA" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="USER" EntityType="ContestHunterModel.Store.USER" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="USER_GROUP" EntityType="ContestHunterModel.Store.USER_GROUP" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_CONTEST_ATTEND_CONTEST" Association="ContestHunterModel.Store.FK_CONTEST_ATTEND_CONTEST">
             <End Role="CONTEST" EntitySet="CONTEST" />
+            <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
           </AssociationSet>
-          <AssociationSet Name="FK_PROBLEM_CONTEST1" Association="ContestHunterDB.Store.FK_PROBLEM_CONTEST1">
+          <AssociationSet Name="FK_CONTEST_ATTEND_USER" Association="ContestHunterModel.Store.FK_CONTEST_ATTEND_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CONTEST_OWNER_CONTEST" Association="ContestHunterModel.Store.FK_CONTEST_OWNER_CONTEST">
+            <End Role="CONTEST" EntitySet="CONTEST" />
+            <End Role="CONTEST_OWNER" EntitySet="CONTEST_OWNER" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CONTEST_OWNER_USER" Association="ContestHunterModel.Store.FK_CONTEST_OWNER_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="CONTEST_OWNER" EntitySet="CONTEST_OWNER" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PROBLEM_CONTEST1" Association="ContestHunterModel.Store.FK_PROBLEM_CONTEST1">
             <End Role="CONTEST" EntitySet="CONTEST" />
             <End Role="PROBLEM" EntitySet="PROBLEM" />
           </AssociationSet>
-          <AssociationSet Name="FK_RECORD_PROBLEM" Association="ContestHunterDB.Store.FK_RECORD_PROBLEM">
+          <AssociationSet Name="FK_RECORD_PROBLEM" Association="ContestHunterModel.Store.FK_RECORD_PROBLEM">
             <End Role="PROBLEM" EntitySet="PROBLEM" />
             <End Role="RECORD" EntitySet="RECORD" />
           </AssociationSet>
-          <AssociationSet Name="FK_RECORD_USER" Association="ContestHunterDB.Store.FK_RECORD_USER">
+          <AssociationSet Name="FK_RECORD_USER" Association="ContestHunterModel.Store.FK_RECORD_USER">
             <End Role="USER" EntitySet="USER" />
             <End Role="RECORD" EntitySet="RECORD" />
           </AssociationSet>
-          <AssociationSet Name="FK_TESTDATA_PROBLEM" Association="ContestHunterDB.Store.FK_TESTDATA_PROBLEM">
+          <AssociationSet Name="FK_TESTDATA_PROBLEM" Association="ContestHunterModel.Store.FK_TESTDATA_PROBLEM">
             <End Role="PROBLEM" EntitySet="PROBLEM" />
             <End Role="TESTDATA" EntitySet="TESTDATA" />
           </AssociationSet>
-          <AssociationSet Name="FK_USER_GROUP_GROUP" Association="ContestHunterDB.Store.FK_USER_GROUP_GROUP">
+          <AssociationSet Name="FK_USER_GROUP_GROUP" Association="ContestHunterModel.Store.FK_USER_GROUP_GROUP">
             <End Role="GROUP" EntitySet="GROUP" />
             <End Role="USER_GROUP" EntitySet="USER_GROUP" />
           </AssociationSet>
-          <AssociationSet Name="FK_USER_GROUP_USER" Association="ContestHunterDB.Store.FK_USER_GROUP_USER">
+          <AssociationSet Name="FK_USER_GROUP_USER" Association="ContestHunterModel.Store.FK_USER_GROUP_USER">
             <End Role="USER" EntitySet="USER" />
             <End Role="USER_GROUP" EntitySet="USER_GROUP" />
           </AssociationSet>
@@ -49,7 +62,26 @@
           </Key>
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
-          <Property Name="Owner" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CONTEST_ATTEND">
+          <Key>
+            <PropertyRef Name="Contest" />
+            <PropertyRef Name="User" />
+          </Key>
+          <Property Name="Contest" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="User" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CONTEST_OWNER">
+          <Key>
+            <PropertyRef Name="Contest" />
+            <PropertyRef Name="User" />
+          </Key>
+          <Property Name="Contest" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="User" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="GROUP">
           <Key>
@@ -80,16 +112,6 @@
           <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Detail" Type="nvarchar(max)" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="128" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <EntityType Name="TESTDATA">
           <Key>
             <PropertyRef Name="ID" />
@@ -116,25 +138,67 @@
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Group" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <Association Name="FK_CONTEST_USER">
-          <End Role="USER" Type="ContestHunterDB.Store.USER" Multiplicity="1">
+        <Association Name="FK_CONTEST_ATTEND_CONTEST">
+          <End Role="CONTEST" Type="ContestHunterModel.Store.CONTEST" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CONTEST" Type="ContestHunterDB.Store.CONTEST" Multiplicity="*" />
+          <End Role="CONTEST_ATTEND" Type="ContestHunterModel.Store.CONTEST_ATTEND" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONTEST">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONTEST_ATTEND">
+              <PropertyRef Name="Contest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CONTEST_ATTEND_USER">
+          <End Role="USER" Type="ContestHunterModel.Store.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CONTEST_ATTEND" Type="ContestHunterModel.Store.CONTEST_ATTEND" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USER">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="CONTEST">
-              <PropertyRef Name="Owner" />
+            <Dependent Role="CONTEST_ATTEND">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CONTEST_OWNER_CONTEST">
+          <End Role="CONTEST" Type="ContestHunterModel.Store.CONTEST" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CONTEST_OWNER" Type="ContestHunterModel.Store.CONTEST_OWNER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONTEST">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONTEST_OWNER">
+              <PropertyRef Name="Contest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CONTEST_OWNER_USER">
+          <End Role="USER" Type="ContestHunterModel.Store.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CONTEST_OWNER" Type="ContestHunterModel.Store.CONTEST_OWNER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONTEST_OWNER">
+              <PropertyRef Name="User" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PROBLEM_CONTEST1">
-          <End Role="CONTEST" Type="ContestHunterDB.Store.CONTEST" Multiplicity="1">
+          <End Role="CONTEST" Type="ContestHunterModel.Store.CONTEST" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="PROBLEM" Type="ContestHunterDB.Store.PROBLEM" Multiplicity="*" />
+          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CONTEST">
               <PropertyRef Name="ID" />
@@ -145,8 +209,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RECORD_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterDB.Store.PROBLEM" Multiplicity="1" />
-          <End Role="RECORD" Type="ContestHunterDB.Store.RECORD" Multiplicity="*" />
+          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1" />
+          <End Role="RECORD" Type="ContestHunterModel.Store.RECORD" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
               <PropertyRef Name="ID" />
@@ -157,10 +221,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RECORD_USER">
-          <End Role="USER" Type="ContestHunterDB.Store.USER" Multiplicity="1">
+          <End Role="USER" Type="ContestHunterModel.Store.USER" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="RECORD" Type="ContestHunterDB.Store.RECORD" Multiplicity="*" />
+          <End Role="RECORD" Type="ContestHunterModel.Store.RECORD" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USER">
               <PropertyRef Name="ID" />
@@ -171,8 +235,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TESTDATA_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterDB.Store.PROBLEM" Multiplicity="1" />
-          <End Role="TESTDATA" Type="ContestHunterDB.Store.TESTDATA" Multiplicity="*" />
+          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1" />
+          <End Role="TESTDATA" Type="ContestHunterModel.Store.TESTDATA" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
               <PropertyRef Name="ID" />
@@ -183,10 +247,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_USER_GROUP_GROUP">
-          <End Role="GROUP" Type="ContestHunterDB.Store.GROUP" Multiplicity="1">
+          <End Role="GROUP" Type="ContestHunterModel.Store.GROUP" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="USER_GROUP" Type="ContestHunterDB.Store.USER_GROUP" Multiplicity="*" />
+          <End Role="USER_GROUP" Type="ContestHunterModel.Store.USER_GROUP" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="GROUP">
               <PropertyRef Name="ID" />
@@ -197,10 +261,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_USER_GROUP_USER">
-          <End Role="USER" Type="ContestHunterDB.Store.USER" Multiplicity="1">
+          <End Role="USER" Type="ContestHunterModel.Store.USER" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="USER_GROUP" Type="ContestHunterDB.Store.USER_GROUP" Multiplicity="*" />
+          <End Role="USER_GROUP" Type="ContestHunterModel.Store.USER_GROUP" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USER">
               <PropertyRef Name="ID" />
@@ -214,36 +278,39 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ContestHunterDB" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="ContestHunterModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="CHDB" p1:LazyLoadingEnabled="true">
-          <EntitySet Name="CONTESTs" EntityType="ContestHunterDB.CONTEST" />
-          <EntitySet Name="GROUPs" EntityType="ContestHunterDB.GROUP" />
-          <EntitySet Name="PROBLEMs" EntityType="ContestHunterDB.PROBLEM" />
-          <EntitySet Name="RECORDs" EntityType="ContestHunterDB.RECORD" />
-          <EntitySet Name="sysdiagrams" EntityType="ContestHunterDB.sysdiagram" />
-          <EntitySet Name="TESTDATAs" EntityType="ContestHunterDB.TESTDATA" />
-          <EntitySet Name="USERs" EntityType="ContestHunterDB.USER" />
-          <AssociationSet Name="FK_CONTEST_USER" Association="ContestHunterDB.FK_CONTEST_USER">
-            <End Role="USER" EntitySet="USERs" />
-            <End Role="CONTEST" EntitySet="CONTESTs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PROBLEM_CONTEST1" Association="ContestHunterDB.FK_PROBLEM_CONTEST1">
+          <EntitySet Name="CONTESTs" EntityType="ContestHunterModel.CONTEST" />
+          <EntitySet Name="GROUPs" EntityType="ContestHunterModel.GROUP" />
+          <EntitySet Name="PROBLEMs" EntityType="ContestHunterModel.PROBLEM" />
+          <EntitySet Name="RECORDs" EntityType="ContestHunterModel.RECORD" />
+          <EntitySet Name="TESTDATAs" EntityType="ContestHunterModel.TESTDATA" />
+          <EntitySet Name="USERs" EntityType="ContestHunterModel.USER" />
+          <AssociationSet Name="FK_PROBLEM_CONTEST1" Association="ContestHunterModel.FK_PROBLEM_CONTEST1">
             <End Role="CONTEST" EntitySet="CONTESTs" />
             <End Role="PROBLEM" EntitySet="PROBLEMs" />
           </AssociationSet>
-          <AssociationSet Name="FK_RECORD_PROBLEM" Association="ContestHunterDB.FK_RECORD_PROBLEM">
+          <AssociationSet Name="FK_RECORD_PROBLEM" Association="ContestHunterModel.FK_RECORD_PROBLEM">
             <End Role="PROBLEM" EntitySet="PROBLEMs" />
             <End Role="RECORD" EntitySet="RECORDs" />
           </AssociationSet>
-          <AssociationSet Name="FK_TESTDATA_PROBLEM" Association="ContestHunterDB.FK_TESTDATA_PROBLEM">
+          <AssociationSet Name="FK_TESTDATA_PROBLEM" Association="ContestHunterModel.FK_TESTDATA_PROBLEM">
             <End Role="PROBLEM" EntitySet="PROBLEMs" />
             <End Role="TESTDATA" EntitySet="TESTDATAs" />
           </AssociationSet>
-          <AssociationSet Name="FK_RECORD_USER" Association="ContestHunterDB.FK_RECORD_USER">
+          <AssociationSet Name="FK_RECORD_USER" Association="ContestHunterModel.FK_RECORD_USER">
             <End Role="USER" EntitySet="USERs" />
             <End Role="RECORD" EntitySet="RECORDs" />
           </AssociationSet>
-          <AssociationSet Name="USER_GROUP" Association="ContestHunterDB.USER_GROUP">
+          <AssociationSet Name="CONTEST_ATTEND" Association="ContestHunterModel.CONTEST_ATTEND">
+            <End Role="CONTEST" EntitySet="CONTESTs" />
+            <End Role="USER" EntitySet="USERs" />
+          </AssociationSet>
+          <AssociationSet Name="CONTEST_OWNER" Association="ContestHunterModel.CONTEST_OWNER">
+            <End Role="CONTEST" EntitySet="CONTESTs" />
+            <End Role="USER" EntitySet="USERs" />
+          </AssociationSet>
+          <AssociationSet Name="USER_GROUP" Association="ContestHunterModel.USER_GROUP">
             <End Role="GROUP" EntitySet="GROUPs" />
             <End Role="USER" EntitySet="USERs" />
           </AssociationSet>
@@ -254,9 +321,13 @@
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Owner" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="USER" Relationship="ContestHunterDB.FK_CONTEST_USER" FromRole="CONTEST" ToRole="USER" />
-          <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterDB.FK_PROBLEM_CONTEST1" FromRole="CONTEST" ToRole="PROBLEM" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="CONTEST" ToRole="PROBLEM" />
+          <NavigationProperty Name="USERs" Relationship="ContestHunterModel.CONTEST_ATTEND" FromRole="CONTEST" ToRole="USER" />
+          <NavigationProperty Name="USERs1" Relationship="ContestHunterModel.CONTEST_OWNER" FromRole="CONTEST" ToRole="USER" />
         </EntityType>
         <EntityType Name="GROUP">
           <Key>
@@ -264,7 +335,7 @@
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="USERs" Relationship="ContestHunterDB.USER_GROUP" FromRole="GROUP" ToRole="USER" />
+          <NavigationProperty Name="USERs" Relationship="ContestHunterModel.USER_GROUP" FromRole="GROUP" ToRole="USER" />
         </EntityType>
         <EntityType Name="PROBLEM">
           <Key>
@@ -275,9 +346,9 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Content" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="Comparer" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="CONTEST1" Relationship="ContestHunterDB.FK_PROBLEM_CONTEST1" FromRole="PROBLEM" ToRole="CONTEST" />
-          <NavigationProperty Name="RECORDs" Relationship="ContestHunterDB.FK_RECORD_PROBLEM" FromRole="PROBLEM" ToRole="RECORD" />
-          <NavigationProperty Name="TESTDATAs" Relationship="ContestHunterDB.FK_TESTDATA_PROBLEM" FromRole="PROBLEM" ToRole="TESTDATA" />
+          <NavigationProperty Name="CONTEST1" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="PROBLEM" ToRole="CONTEST" />
+          <NavigationProperty Name="RECORDs" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="PROBLEM" ToRole="RECORD" />
+          <NavigationProperty Name="TESTDATAs" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="PROBLEM" ToRole="TESTDATA" />
         </EntityType>
         <EntityType Name="RECORD">
           <Key>
@@ -290,18 +361,8 @@
           <Property Name="SubmitTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Detail" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterDB.FK_RECORD_PROBLEM" FromRole="RECORD" ToRole="PROBLEM" />
-          <NavigationProperty Name="USER1" Relationship="ContestHunterDB.FK_RECORD_USER" FromRole="RECORD" ToRole="USER" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="RECORD" ToRole="PROBLEM" />
+          <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_RECORD_USER" FromRole="RECORD" ToRole="USER" />
         </EntityType>
         <EntityType Name="TESTDATA">
           <Key>
@@ -311,7 +372,7 @@
           <Property Name="Problem" Type="Guid" Nullable="false" />
           <Property Name="Input" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterDB.FK_TESTDATA_PROBLEM" FromRole="TESTDATA" ToRole="PROBLEM" />
+          <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="TESTDATA" ToRole="PROBLEM" />
         </EntityType>
         <EntityType Name="USER">
           <Key>
@@ -321,29 +382,16 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Password" Type="Binary" Nullable="false" MaxLength="32" FixedLength="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="CONTESTs" Relationship="ContestHunterDB.FK_CONTEST_USER" FromRole="USER" ToRole="CONTEST" />
-          <NavigationProperty Name="RECORDs" Relationship="ContestHunterDB.FK_RECORD_USER" FromRole="USER" ToRole="RECORD" />
-          <NavigationProperty Name="GROUPs" Relationship="ContestHunterDB.USER_GROUP" FromRole="USER" ToRole="GROUP" />
+          <NavigationProperty Name="RECORDs" Relationship="ContestHunterModel.FK_RECORD_USER" FromRole="USER" ToRole="RECORD" />
+          <NavigationProperty Name="CONTESTs" Relationship="ContestHunterModel.CONTEST_ATTEND" FromRole="USER" ToRole="CONTEST" />
+          <NavigationProperty Name="CONTESTs1" Relationship="ContestHunterModel.CONTEST_OWNER" FromRole="USER" ToRole="CONTEST" />
+          <NavigationProperty Name="GROUPs" Relationship="ContestHunterModel.USER_GROUP" FromRole="USER" ToRole="GROUP" />
         </EntityType>
-        <Association Name="FK_CONTEST_USER">
-          <End Role="USER" Type="ContestHunterDB.USER" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="CONTEST" Type="ContestHunterDB.CONTEST" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USER">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="CONTEST">
-              <PropertyRef Name="Owner" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_PROBLEM_CONTEST1">
-          <End Role="CONTEST" Type="ContestHunterDB.CONTEST" Multiplicity="1">
+          <End Role="CONTEST" Type="ContestHunterModel.CONTEST" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="PROBLEM" Type="ContestHunterDB.PROBLEM" Multiplicity="*" />
+          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CONTEST">
               <PropertyRef Name="ID" />
@@ -354,8 +402,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RECORD_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterDB.PROBLEM" Multiplicity="1" />
-          <End Role="RECORD" Type="ContestHunterDB.RECORD" Multiplicity="*" />
+          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1" />
+          <End Role="RECORD" Type="ContestHunterModel.RECORD" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
               <PropertyRef Name="ID" />
@@ -366,8 +414,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TESTDATA_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterDB.PROBLEM" Multiplicity="1" />
-          <End Role="TESTDATA" Type="ContestHunterDB.TESTDATA" Multiplicity="*" />
+          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1" />
+          <End Role="TESTDATA" Type="ContestHunterModel.TESTDATA" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
               <PropertyRef Name="ID" />
@@ -378,10 +426,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RECORD_USER">
-          <End Role="USER" Type="ContestHunterDB.USER" Multiplicity="1">
+          <End Role="USER" Type="ContestHunterModel.USER" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="RECORD" Type="ContestHunterDB.RECORD" Multiplicity="*" />
+          <End Role="RECORD" Type="ContestHunterModel.RECORD" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USER">
               <PropertyRef Name="ID" />
@@ -391,27 +439,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="CONTEST_ATTEND">
+          <End Role="CONTEST" Type="ContestHunterModel.CONTEST" Multiplicity="*" />
+          <End Role="USER" Type="ContestHunterModel.USER" Multiplicity="*" />
+        </Association>
+        <Association Name="CONTEST_OWNER">
+          <End Role="CONTEST" Type="ContestHunterModel.CONTEST" Multiplicity="*" />
+          <End Role="USER" Type="ContestHunterModel.USER" Multiplicity="*" />
+        </Association>
         <Association Name="USER_GROUP">
-          <End Role="GROUP" Type="ContestHunterDB.GROUP" Multiplicity="*" />
-          <End Role="USER" Type="ContestHunterDB.USER" Multiplicity="*" />
+          <End Role="GROUP" Type="ContestHunterModel.GROUP" Multiplicity="*" />
+          <End Role="USER" Type="ContestHunterModel.USER" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ContestHunterDBStoreContainer" CdmEntityContainer="CHDB">
+        <EntityContainerMapping StorageEntityContainer="ContestHunterModelStoreContainer" CdmEntityContainer="CHDB">
           <EntitySetMapping Name="CONTESTs">
-            <EntityTypeMapping TypeName="ContestHunterDB.CONTEST">
+            <EntityTypeMapping TypeName="ContestHunterModel.CONTEST">
               <MappingFragment StoreEntitySet="CONTEST">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="GROUPs">
-            <EntityTypeMapping TypeName="ContestHunterDB.GROUP">
+            <EntityTypeMapping TypeName="ContestHunterModel.GROUP">
               <MappingFragment StoreEntitySet="GROUP">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -419,7 +478,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PROBLEMs">
-            <EntityTypeMapping TypeName="ContestHunterDB.PROBLEM">
+            <EntityTypeMapping TypeName="ContestHunterModel.PROBLEM">
               <MappingFragment StoreEntitySet="PROBLEM">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Contest" ColumnName="Contest" />
@@ -430,7 +489,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RECORDs">
-            <EntityTypeMapping TypeName="ContestHunterDB.RECORD">
+            <EntityTypeMapping TypeName="ContestHunterModel.RECORD">
               <MappingFragment StoreEntitySet="RECORD">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="User" ColumnName="User" />
@@ -442,19 +501,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="ContestHunterDB.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TESTDATAs">
-            <EntityTypeMapping TypeName="ContestHunterDB.TESTDATA">
+            <EntityTypeMapping TypeName="ContestHunterModel.TESTDATA">
               <MappingFragment StoreEntitySet="TESTDATA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Problem" ColumnName="Problem" />
@@ -464,7 +512,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="USERs">
-            <EntityTypeMapping TypeName="ContestHunterDB.USER">
+            <EntityTypeMapping TypeName="ContestHunterModel.USER">
               <MappingFragment StoreEntitySet="USER">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -473,7 +521,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="USER_GROUP" TypeName="ContestHunterDB.USER_GROUP" StoreEntitySet="USER_GROUP">
+          <AssociationSetMapping Name="CONTEST_ATTEND" TypeName="ContestHunterModel.CONTEST_ATTEND" StoreEntitySet="CONTEST_ATTEND">
+            <EndProperty Name="CONTEST">
+              <ScalarProperty Name="ID" ColumnName="Contest" />
+            </EndProperty>
+            <EndProperty Name="USER">
+              <ScalarProperty Name="ID" ColumnName="User" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="CONTEST_OWNER" TypeName="ContestHunterModel.CONTEST_OWNER" StoreEntitySet="CONTEST_OWNER">
+            <EndProperty Name="CONTEST">
+              <ScalarProperty Name="ID" ColumnName="Contest" />
+            </EndProperty>
+            <EndProperty Name="USER">
+              <ScalarProperty Name="ID" ColumnName="User" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="USER_GROUP" TypeName="ContestHunterModel.USER_GROUP" StoreEntitySet="USER_GROUP">
             <EndProperty Name="GROUP">
               <ScalarProperty Name="ID" ColumnName="Group" />
             </EndProperty>
