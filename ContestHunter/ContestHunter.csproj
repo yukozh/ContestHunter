@@ -166,6 +166,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Global.asax" />
+    <Content Include="Image\Error.gif" />
+    <Content Include="Image\Login.png" />
     <Content Include="Script\bootstrap.js" />
     <Content Include="Script\jquery.js" />
     <Content Include="Script\site.js" />
