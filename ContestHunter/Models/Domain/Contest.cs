@@ -15,7 +15,7 @@ namespace ContestHunter.Models.Domain
             CF,
             OI
         }
-        public ContestType Tp;
+        public ContestType Type;
         public DateTime StartTime, EndTime;
         public string Description;
         public bool IsOfficial;
@@ -40,7 +40,7 @@ namespace ContestHunter.Models.Domain
                          {
                              Name = c.Name,
                              Description = c.Description,
-                             Tp = (ContestType)c.Type,
+                             Type = (ContestType)c.Type,
                              StartTime = c.StartTime,
                              EndTime = c.EndTime,
                              IsOfficial = c.IsOfficial,
@@ -83,7 +83,7 @@ namespace ContestHunter.Models.Domain
                         {
                             Name = c.Name,
                             Description = c.Description,
-                            Tp = (ContestType)c.Type,
+                            Type = (ContestType)c.Type,
                             StartTime = c.StartTime,
                             EndTime = c.EndTime,
                             IsOfficial = c.IsOfficial,
@@ -126,7 +126,7 @@ namespace ContestHunter.Models.Domain
                         {
                             Name = c.Name,
                             Description = c.Description,
-                            Tp = (ContestType)c.Type,
+                            Type = (ContestType)c.Type,
                             StartTime = c.StartTime,
                             EndTime = c.EndTime,
                             IsOfficial = c.IsOfficial,
@@ -168,7 +168,7 @@ namespace ContestHunter.Models.Domain
                     StartTime = contest.StartTime,
                     EndTime = contest.EndTime,
                     Description = contest.Description,
-                    Type = (int)contest.Tp,
+                    Type = (int)contest.Type,
                     IsOfficial = contest.IsOfficial,
                 });
 

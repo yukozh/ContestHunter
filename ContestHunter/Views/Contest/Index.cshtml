@@ -1,4 +1,5 @@
-﻿@{
+﻿@using ContestHunter.Models.Domain
+@{
     ViewBag.Title = "比赛";
     ViewBag.ActivedNav = "Contest";
 }
@@ -26,7 +27,7 @@
     <div class="span12">
         <div class="alert alert-success" style="margin-top: 20px; padding: 0px">
             <h5 style="margin: 0px 5px">进行中的比赛</h5>
-            @*比赛前五分钟变为“进行中”，赛后测评结束后变为“已举办”  ?? 毫无道理，不予执行!*@
+            @*比赛前五分钟变为“进行中”，赛后测评结束后变为“已举办”  ?? 不理解*@
             <table class="table table-bordered table-striped table-hover">
                 <colgroup>
                     <col style="width: 420px">
@@ -45,139 +46,425 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <h5 style="margin: 0px"><a href="#">Contest Hunter Beta Round #2</a></h5>
-                            <h6 style="margin: 0px">From liouzhou_101</h6>
-                        </td>
-                        <td>
-                            <div>ACM/ICPC</div>
-                            @*OI、ACM/ICPC、Codeforces三种赛制*@
-                            <div style="color: red">Official</div>
-                            @*Official和Unofficial两种，前者计入rating，后者不计rating*@
-                        </td>
-                        <td>2013/02/20 19:00:00<br />
-                            持续5小时
-                        </td>
-                        <td>
-                            <div class="btn-group" style="padding: 5px">
-                                <button class="btn btn-danger">进入比赛</button>
-                            </div>
-                        </td>
-                        <td>
-                            <div style="padding: 7px"><code>1234</code></div>
-                        </td>
-                    </tr>
+                    @foreach (Contest contest in ViewBag.Testing)
+                    {
+                        <tr>
+                            <td>
+                                <h5 style="margin: 0px">@Html.ActionLink(contest.Name, "Show", new { id = contest.Name })</h5>
+                                @if (contest.Owner.Count > 0)
+                                {
+                                    <h6 style="margin: 0px">From
+                                        @for (int i = 0; i < contest.Owner.Count; i++)
+                                        {
+                                            if (i != 0)
+                                            {
+                                            @:,
+                                            }
+                                            @Html.ActionLink(contest.Owner[i], "Show", "User", new { id = contest.Owner[i] }, null)
+                                        }
+                                    </h6>
+                                }
+                            </td>
+                            <td>
+                                <div>
+                                    @switch (contest.Type)
+                                    {
+                                        case Contest.ContestType.ACM:
+                                        @:ACM/ICPC
+                                            break;
+                                        case Contest.ContestType.CF:
+                                        @:Codeforces
+                                            break;
+                                        case Contest.ContestType.OI:
+                                        @:OI
+                                            break;
+                                    }
+                                </div>
+                                @*OI、ACM/ICPC、Codeforces三种赛制*@
+                                @if (contest.IsOfficial)
+                                {
+                                    <div style="color: red">Official</div>
+                                }
+                                else
+                                {
+                                    <div style="color: blue">Unofficial</div>
+                                }
+                                @*Official和Unofficial两种，前者计入rating，后者不计rating*@
+                            </td>
+                            <td>@contest.StartTime<br />
+                                持续<b>@((contest.EndTime - contest.StartTime).TotalHours)</b>小时
+                            </td>
+                            <td>
+                                <div class="btn-group" style="padding: 5px">
+                                    @Html.ActionLink("进入比赛", "Show", new { id = contest.Name }, new { @class = "btn btn-danger" })
+                                    @*<button class="btn btn-danger">进入比赛</button>*@
+                                </div>
+                            </td>
+                            <td>
+                                <div style="padding: 7px">
+                                    <code>未提供接口，无法实现!</code>
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
+                @if (ViewBag.TestingPageCount > 1)
+                {
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" style="text-align: center">
+                                <div class="pagination" style="margin: 0px">
+                                    @using (Html.BeginForm())
+                                    {
+                                        <ul>
+                                            @if (ViewBag.TestingPageIndex != 0)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink("«", "Index", new
+                                                    {
+                                                        pendingPageIndex = ViewBag.PendingPageIndex,
+                                                        donePageIndex = ViewBag.DonePageIndex
+                                                    })
+                                                </li>
+                                            }
+                                            @for (int i = 0; i < ViewBag.TestingPageCount; i++)
+                                            {
+                                                if (ViewBag.TestingPageIndex == i)
+                                                {
+                                                <li class="active">
+                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
+                                                          {
+                                                              pendingPageIndex = ViewBag.PendingPageIndex,
+                                                              donePageIndex = ViewBag.DonePageIndex,
+                                                              testingPageIndex = i
+                                                          })
+                                                </li>
+                                                }
+                                                else
+                                                {
+                                                <li>
+                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
+                                                          {
+                                                              pendingPageIndex = ViewBag.PendingPageIndex,
+                                                              donePageIndex = ViewBag.DonePageIndex,
+                                                              testingPageIndex = i
+                                                          })
+                                                </li>
+                                                }
+                                            }
+                                            @if (ViewBag.TestingPageIndex != ViewBag.TestingPageCount - 1)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink("»", "Index", new
+                                                    {
+                                                        pendingPageIndex = ViewBag.PendingPageIndex,
+                                                        donePageIndex = ViewBag.DonePageIndex,
+                                                        testingPageIndex = ViewBag.TestingPageCount - 1
+                                                    })
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
             </table>
         </div>
     </div>
 }
-@if(ViewBag.
-<div class="span12">
-    <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
-        <h5 style="margin: 0px 5px">计划中的比赛</h5>
-        <table class="table table-bordered table-striped table-hover">
-            <colgroup>
-                <col style="width: 420px">
-                <col style="width: 100px">
-                <col style="width: 180px">
-                <col style="width: 200px">
-                <col style="width: 80px">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>比赛名称</th>
-                    <th>赛制</th>
-                    <th>开始时刻/时长</th>
-                    <th>操作</th>
-                    <th>报名人数</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <h5 style="margin: 0px"><a href="#">Contest Hunter Beta Round #3</a></h5>
-                        <h6 style="margin: 0px">From This_poet</h6>
-                    </td>
-                    <td>
-                        <div>Codeforces</div>
-                        <div style="color: red">Official</div>
-                    </td>
-                    <td>2013/02/20 19:00:00<br />
-                        持续2小时
-                    </td>
-                    <td>
-                        <div class="btn-group" style="padding: 5px">
-                            <button class="btn btn-info">查看预告</button>
-                        </div>
-                    </td>
-                    <td>
-                        <div style="padding: 7px"><code>1234</code></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+@if (ViewBag.Pending.Count > 0)
+{
+    <div class="span12">
+        <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
+            <h5 style="margin: 0px 5px">计划中的比赛</h5>
+            <table class="table table-bordered table-striped table-hover">
+                <colgroup>
+                    <col style="width: 420px">
+                    <col style="width: 100px">
+                    <col style="width: 180px">
+                    <col style="width: 200px">
+                    <col style="width: 80px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>比赛名称</th>
+                        <th>赛制</th>
+                        <th>开始时刻/时长</th>
+                        <th>操作</th>
+                        <th>报名人数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Contest contest in ViewBag.Pending)
+                    {
+                        <tr>
+                            <td>
+                                <h5 style="margin: 0px">@Html.ActionLink(contest.Name, "Show", new { id = contest.Name })</h5>
+                                @if (contest.Owner.Count > 0)
+                                {
+                                    <h6 style="margin: 0px">From
+                                        @for (int i = 0; i < contest.Owner.Count; i++)
+                                        {
+                                            if (i != 0)
+                                            {
+                                            @:,
+                                            }
+                                            @Html.ActionLink(contest.Owner[i], "Show", "User", new { id = contest.Owner[i] }, null)
+                                        }
+                                    </h6>
+                                }
+                            </td>
+                            <td>
+                                <div>
+                                    @switch (contest.Type)
+                                    {
+                                        case Contest.ContestType.ACM:
+                                        @:ACM/ICPC
+                                            break;
+                                        case Contest.ContestType.CF:
+                                        @:Codeforces
+                                            break;
+                                        case Contest.ContestType.OI:
+                                        @:OI
+                                            break;
+                                    }
+                                </div>
+                                @if (contest.IsOfficial)
+                                {
+                                    <div style="color: red">Official</div>
+                                }
+                                else
+                                {
+                                    <div style="color: blue">Unofficial</div>
+                                }
+                            </td>
+                            <td>@contest.StartTime<br />
+                                持续<b>@((contest.EndTime - contest.StartTime).TotalHours)</b>小时
+                            </td>
+                            <td>
+                                <div class="btn-group" style="padding: 5px">
+                                    @Html.ActionLink("查看预告", "Show", new { id = contest.Name }, new { @class = "btn btn-info" })
+                                </div>
+                            </td>
+                            <td>
+                                <div style="padding: 7px"><code>未提供接口，无法实现!</code></div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                @if (ViewBag.PendingPageCount > 1)
+                {
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" style="text-align: center">
+                                <div class="pagination" style="margin: 0px">
+                                    @using (Html.BeginForm())
+                                    {
+                                        <ul>
+                                            @if (ViewBag.PendingPageIndex != 0)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink("«", "Index", new
+                                                    {
+                                                        testingPageIndex = ViewBag.TestingPageIndex,
+                                                        donePageIndex = ViewBag.DonePageIndex
+                                                    })
+                                                </li>
+                                            }
+                                            @for (int i = 0; i < ViewBag.PendingPageCount; i++)
+                                            {
+                                                if (ViewBag.PendingPageIndex == i)
+                                                {
+                                                <li class="active">
+                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
+                                                          {
+                                                              testingPageIndex = ViewBag.TestingPageIndex,
+                                                              donePageIndex = ViewBag.DonePageIndex,
+                                                              pendingPageIndex = i
+                                                          })
+                                                </li>
+                                                }
+                                                else
+                                                {
+                                                <li>
+                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
+                                                          {
+                                                              testingPageIndex = ViewBag.TestingPageIndex,
+                                                              donePageIndex = ViewBag.DonePageIndex,
+                                                              pendingPageIndex = i
+                                                          })
+                                                </li>
+                                                }
+                                            }
+                                            @if (ViewBag.PendingPageIndex != ViewBag.PendingPageCount - 1)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink("»", "Index", new
+                                                    {
+                                                        testingPageIndex = ViewBag.TestingPageIndex,
+                                                        donePageIndex = ViewBag.DonePageIndex,
+                                                        pendingPageIndex = ViewBag.PendingPageCount - 1
+                                                    })
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
+            </table>
+        </div>
     </div>
-</div>
-
-<div class="span12">
-    <div class="alert" style="margin-top: 20px; padding: 0px">
-        <h5 style="margin: 0px 5px">已举办的比赛</h5>
-        <table class="table table-bordered table-striped table-hover">
-            <colgroup>
-                <col style="width: 420px">
-                <col style="width: 100px">
-                <col style="width: 180px">
-                <col style="width: 200px">
-                <col style="width: 80px">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>比赛名称</th>
-                    <th>赛制</th>
-                    <th>开始时刻/时长</th>
-                    <th>操作</th>
-                    <th>报名人数</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <h5 style="margin: 0px"><a href="#">Contest Hunter Beta Round #1</a></h5>
-                        <h6 style="margin: 0px">From applepi, Vani</h6>
-                    </td>
-                    <td>
-                        <div>OI</div>
-                        <div style="color: blue">Unofficial</div>
-                    </td>
-                    <td>2013/02/20 19:00:00<br />
-                        持续3小时
-                    </td>
-                    <td>
-                        <div class="btn-group" style="padding: 5px 0px">
-                            <button class="btn btn-success">模拟比赛</button>
-                            <button class="btn btn-warning">赛题练习</button>
-                        </div>
-                    </td>
-                    <td>
-                        <div style="padding: 7px"><code>1234</code></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5" style="text-align: center">
-                        <div class="pagination" style="margin: 0px">
-                            <ul>
-                                <li><a href="#"><<</a></li>
-                                <li class="active"><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">>></a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+}
+@if (ViewBag.Done.Count > 0)
+{
+    <div class="span12">
+        <div class="alert" style="margin-top: 20px; padding: 0px">
+            <h5 style="margin: 0px 5px">已举办的比赛</h5>
+            <table class="table table-bordered table-striped table-hover">
+                <colgroup>
+                    <col style="width: 420px">
+                    <col style="width: 100px">
+                    <col style="width: 180px">
+                    <col style="width: 200px">
+                    <col style="width: 80px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>比赛名称</th>
+                        <th>赛制</th>
+                        <th>开始时刻/时长</th>
+                        <th>操作</th>
+                        <th>报名人数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Contest contest in ViewBag.Done)
+                    {
+                        <tr>
+                            <td>
+                                <h5 style="margin: 0px">@Html.ActionLink(contest.Name, "Show", new { id = contest.Name })</h5>
+                                @if (contest.Owner.Count > 0)
+                                {
+                                    <h6 style="margin: 0px">From
+                                        @for (int i = 0; i < contest.Owner.Count; i++)
+                                        {
+                                            if (i != 0)
+                                            {
+                                            @:,
+                                            }
+                                            @Html.ActionLink(contest.Owner[i], "Show", "User", new { id = contest.Owner[i] }, null)
+                                        }
+                                    </h6>
+                                }
+                            </td>
+                            <td>
+                                <div>
+                                    @switch (contest.Type)
+                                    {
+                                        case Contest.ContestType.ACM:
+                                        @:ACM/ICPC
+                                            break;
+                                        case Contest.ContestType.CF:
+                                        @:Codeforces
+                                            break;
+                                        case Contest.ContestType.OI:
+                                        @:OI
+                                            break;
+                                    }
+                                </div>
+                                @if (contest.IsOfficial)
+                                {
+                                    <div style="color: red">Official</div>
+                                }
+                                else
+                                {
+                                    <div style="color: blue">Unofficial</div>
+                                }
+                            </td>
+                            <td>@contest.StartTime<br />
+                                持续<b>@((contest.EndTime - contest.StartTime).TotalHours)</b>小时
+                            </td>
+                            <td>
+                                <div class="btn-group" style="padding: 5px 0px">
+                                    s
+                                <button class="btn btn-success">模拟比赛</button>
+                                    <button class="btn btn-warning">赛题练习</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="padding: 7px"><code>未提供接口，无法实现!</code></div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                @if (ViewBag.DonePageCount > 1)
+                {
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" style="text-align: center">
+                                <div class="pagination" style="margin: 0px">
+                                    @using (Html.BeginForm())
+                                    {
+                                        <ul>
+                                            @if (ViewBag.DonePageIndex != 0)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink("«", "Index", new
+                                                    {
+                                                        pendingPageIndex = ViewBag.PendingPageIndex,
+                                                        testingPageIndex = ViewBag.TestingPageIndex
+                                                    })
+                                                </li>
+                                            }
+                                            @for (int i = 0; i < ViewBag.DonePageCount; i++)
+                                            {
+                                                if (ViewBag.DonePageIndex == i)
+                                                {
+                                                <li class="active">
+                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
+                                                          {
+                                                              pendingPageIndex = ViewBag.PendingPageIndex,
+                                                              testingPageIndex = ViewBag.TestingPageIndex,
+                                                              donePageIndex = i
+                                                          })
+                                                </li>
+                                                }
+                                                else
+                                                {
+                                                <li>
+                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
+                                                          {
+                                                              pendingPageIndex = ViewBag.PendingPageIndex,
+                                                              testingPageIndex = ViewBag.TestingPageIndex,
+                                                              donePageIndex = i
+                                                          })
+                                                </li>
+                                                }
+                                            }
+                                            @if (ViewBag.DonePageIndex != ViewBag.DonePageCount - 1)
+                                            {
+                                                <li>
+                                                    @Html.ActionLink("»", "Index", new
+                                                    {
+                                                        pendingPageIndex = ViewBag.PendingPageIndex,
+                                                        testingPageIndex = ViewBag.TestingPageIndex,
+                                                        donePageIndex = ViewBag.DonePageCount - 1
+                                                    })
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
+            </table>
+        </div>
     </div>
-</div>
+}
