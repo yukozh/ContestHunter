@@ -10,22 +10,25 @@
         color: black;
         margin: 0px;
     }
-    .table th,
-    .table td
-    {
-        text-align: center;
-        vertical-align: central;
-        font-family: 微软雅黑;
-    }
-    .table td h6
-    {
-        font-weight:normal;
-    }
+
+        .table th,
+        .table td
+        {
+            text-align: center;
+            vertical-align: central;
+            font-family: 微软雅黑;
+        }
+
+            .table td h6
+            {
+                font-weight: normal;
+            }
 </style>
 
 <div class="span12">
     <div class="alert alert-success" style="margin-top: 20px; padding: 0px">
-        <h5 style="margin: 0px 5px">进行中的比赛</h5> <!--比赛前五分钟变为“进行中”，赛后测评结束后变为“已举办”-->
+        <h5 style="margin: 0px 5px">进行中的比赛</h5>
+        <!--比赛前五分钟变为“进行中”，赛后测评结束后变为“已举办”-->
         <table class="table table-bordered table-striped table-hover">
             <colgroup>
                 <col style="width: 420px">
@@ -50,8 +53,10 @@
                         <h6 style="margin: 0px">From liouzhou_101</h6>
                     </td>
                     <td>
-                        <div>ACM/ICPC</div> <!--OI、ACM/ICPC、Codeforces三种赛制-->
-                        <div style="color:red">Official</div> <!--Official和Unofficial两种，前者计入rating，后者不计rating-->
+                        <div>ACM/ICPC</div>
+                        <!--OI、ACM/ICPC、Codeforces三种赛制-->
+                        <div style="color: red">Official</div>
+                        <!--Official和Unofficial两种，前者计入rating，后者不计rating-->
                     </td>
                     <td>2013/02/20 19:00:00<br />
                         持续5小时
@@ -98,7 +103,7 @@
                     </td>
                     <td>
                         <div>Codeforces</div>
-                        <div style="color:red">Official</div>
+                        <div style="color: red">Official</div>
                     </td>
                     <td>2013/02/20 19:00:00<br />
                         持续2小时
@@ -145,7 +150,7 @@
                     </td>
                     <td>
                         <div>OI</div>
-                        <div style="color:blue">Unofficial</div>
+                        <div style="color: blue">Unofficial</div>
                     </td>
                     <td>2013/02/20 19:00:00<br />
                         持续3小时
@@ -158,6 +163,19 @@
                     </td>
                     <td>
                         <div style="padding: 7px"><code>1234</code></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="text-align:center">
+                        <div class="pagination" style="margin:0px">
+                            <ul>
+                                <li><a href="#"><<</a></li>
+                                <li class="active"><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">>></a></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             </tbody>
