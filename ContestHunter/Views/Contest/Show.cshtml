@@ -1,0 +1,154 @@
+﻿@model ContestHunter.Models.Domain.Contest
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<style type="text/css">
+    .table {
+        background-color: white;
+    }
+
+        .table td h2,
+        .table td h4,
+        .table td h5 {
+            margin: 0px;
+            text-align: center;
+        }
+
+        .table td h5 {
+            font-weight: normal;
+        }
+
+        .table td code {
+            margin-left: 5px;
+        }
+</style>
+
+<div class="span12" style="margin-top: 30px">
+    <table class="table">
+        <colgroup>
+            <col style="width: 280px">
+            <col style="width: 700px">
+        </colgroup>
+        <tbody>
+            <tr>
+                <td colspan="2" style="border: 0px">
+                    <h2>@Model.Name</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 0px">
+                    <table class="table table-bordered table-striped table-hover">
+                        <colgroup>
+                            <col>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <h4>
+                                        @switch (Model.Type)
+                                        {
+                                            case Contest.ContestType.ACM:
+                                            @:ACM/ICPC
+                                            break;
+                                            case Contest.ContestType.CF:
+                                            @:Codeforces
+                                            break;
+                                            case Contest.ContestType.OI:
+                                            @:OI
+                                            break;
+                                        } - 
+                                        @if (Model.IsOfficial)
+                                        {
+                                            @:Official
+                                        }
+                                        else
+                                        {
+                                            @:Unofficial
+                                        }
+                                    </h4>
+                                    @if (Model.Owner.Count > 0)
+                                    {
+                                        <h5>From 
+                                        @for (int i = 0; i < Model.Owner.Count; i++)
+                                        {
+                                            if (i != 0)
+                                            {
+                                            @:,
+                                            }
+                                            @Html.ActionLink(Model.Owner[i], "Show", "User", new { id = Model.Owner[i] }, null)
+                                        }
+                                        </h5>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="progress progress-striped active" style="margin: 5px">
+                                        @{
+                                            if (Model.StartTime > DateTime.Now)
+                                            {
+                                                ViewBag.Progress = 0;
+                                            }
+                                            else if (Model.EndTime < DateTime.Now)
+                                            {
+                                                ViewBag.Progress = 100;
+                                            }
+                                            else
+                                            {
+                                                ViewBag.Progress = (DateTime.Now - Model.StartTime).TotalSeconds / (Model.EndTime - Model.StartTime).TotalSeconds * 100;
+                                            }
+                                        }
+                                        <div class="bar" style="width: @ViewBag.Progress%; text-align: center"></div>
+                                    </div>
+                                    <h4>01:30:02尼玛这是干嘛的啊！</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ul class="nav nav-list">
+                                        <li><a href="#">实时排名版</a></li>
+                                        <li><a href="#">我的提交记录</a></li>
+                                        <li><a href="#">所有提交记录</a></li>
+                                        <li><a href="#">比赛预告</a></li>
+                                        <li><a href="#">参考题解与试题分析</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="border: 0px">
+                    <table class="table table-bordered table-striped table-hover">
+                        <colgroup>
+                            <col>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td><a href="#">OrzSJY Problem</a><code>12/34</code></td>
+                                <td style="text-align: right; border-left: 0px">From <a href="#">VariantF</a></td>
+
+                            </tr>
+                            <tr>
+                                <td><a href="#">OrzCYF Problem</a><code>56/78</code></td>
+                                <td style="text-align: right; border-left: 0px">From <a href="#">onetwogoo</a></td>
+                            </tr>
+                            @if (!string.IsNullOrEmpty(Model.Description))
+                            {
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="alert alert-info" style="margin: 0px">
+                                            @*此处为Html*@
+                                            @Html.Raw(Model.Description)
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,7 +1,7 @@
 ﻿@model string
 
 @{
-    ViewBag.Title = "Error";
+    ViewBag.Title = "出问题了";
 }
 @* TODO 本页显示不可恢复的错误，通常它们是由于用户非法修改页面参数引起的 *@
 
@@ -11,6 +11,7 @@
             <h3><Img src="/Image/Error.gif" style="margin-right:20px"/>Oh,Shit~!</h3>
             <h4>系统傲娇了，乃对Ta捉了神马>_<？</h4>
         </div>
-        <div style="padding-left:50px">错误信息：@Model</div>
+        <div class="alert alert-warning" style="font-size: large;padding-left:50px">@Model</div>
+        <div style="text-align:center;">@Html.ActionLink("返回主页","Index","Home",null,new{@class="btn btn-warning",style="display:inline-block;"})</div>
     </div>
 </div>

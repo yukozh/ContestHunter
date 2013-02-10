@@ -96,13 +96,12 @@
                             </td>
                             <td>
                                 <div class="btn-group" style="padding: 5px">
-                                    @Html.ActionLink("进入比赛", "Show", new { id = contest.Name }, new { @class = "btn btn-danger" })
-                                    @*<button class="btn btn-danger">进入比赛</button>*@
+                                    @Html.ActionLink("进入比赛", "Show", new { id = contest.Name }, new { @class = "btn btn-danger", style = "display:inline-block;" })
                                 </div>
                             </td>
                             <td>
                                 <div style="padding: 7px">
-                                    <code>未提供接口，无法实现!</code>
+                                    <code>@contest.AttendedUsersCount()</code>
                                 </div>
                             </td>
                         </tr>
@@ -245,11 +244,11 @@
                             </td>
                             <td>
                                 <div class="btn-group" style="padding: 5px">
-                                    @Html.ActionLink("查看预告", "Show", new { id = contest.Name }, new { @class = "btn btn-info" })
+                                    @Html.ActionLink("查看预告", "Show", new { id = contest.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
                                 </div>
                             </td>
                             <td>
-                                <div style="padding: 7px"><code>未提供接口，无法实现!</code></div>
+                                <div style="padding: 7px"><code>@contest.AttendedUsersCount()</code></div>
                             </td>
                         </tr>
                     }
@@ -397,7 +396,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div style="padding: 7px"><code>未提供接口，无法实现!</code></div>
+                                <div style="padding: 7px"><code>@contest.AttendedUsersCount()</code></div>
                             </td>
                         </tr>
                     }

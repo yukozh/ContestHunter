@@ -85,7 +85,7 @@ namespace ContestHunter.Controllers
             }
             catch (EmailMismatchException)
             {
-                return RedirectToAction("Error", "Shared", "验证邮件非法");
+                return RedirectToAction("Error", "Shared", new { msg = "验证邮件非法" });
             }
 
             return View("Registered", model);
@@ -145,10 +145,13 @@ namespace ContestHunter.Controllers
         {
             User user;
 
-            try{
-                user=USER.ByName(id);
-            }catch(UserNotFoundException){
-                return RedirectToAction("Error", "Shared", "找不到指定的用户");
+            try
+            {
+                user = USER.SelectByName(id);
+            }
+            catch (UserNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到指定的用户" });
             }
 
             return View(user);
