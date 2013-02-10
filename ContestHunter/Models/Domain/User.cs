@@ -22,7 +22,7 @@ namespace ContestHunter.Models.Domain
             public Guid Token;
             public string name;
             public string email;
-            public string[] groups;
+            public List<string> groups;
         }
 
         static Dictionary<Guid, OnlineUser> OnlineUsers = new Dictionary<Guid, OnlineUser>();
@@ -184,7 +184,7 @@ namespace ContestHunter.Models.Domain
                             name = currentUser.Name,
                             email = currentUser.Email,
                             groups = (from g in currentUser.GROUPs
-                                      select g.Name).ToArray()
+                                      select g.Name).ToList()
                         };
                     lock (OnlineUsers)
                     {
@@ -209,6 +209,7 @@ namespace ContestHunter.Models.Domain
             lock (OnlineUsers)
             {
                 OnlineUsers.Remove(CurrentUser.ID);
+                CurrentUser = null;
             }
         }
 
@@ -218,7 +219,7 @@ namespace ContestHunter.Models.Domain
         /// <param name="name"></param>
         /// <returns></returns>
         /// <exception cref="UserNotFoundException"></exception>
-        public static User SelectByName(string name)
+        public static User ByName(string name)
         {
             using (var db = new CHDB())
             {
@@ -229,6 +230,34 @@ namespace ContestHunter.Models.Domain
                     throw new UserNotFoundException();
                 return new User() { Name = result.Name, Email = result.Email };
             }
+        }
+
+        /// <summary>
+        /// 返回用户所有用户组
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="PermissionDeniedException"></exception>
+        public List<Group> Groups()
+        {
+            Group.CheckPriviledge();
+            using (var db = new CHDB())
+            {
+                return (from g in
+                            (from u in db.USERs
+                             where u.Name == Name
+                             select u.GROUPs).Single()
+                        select new Group
+                        {
+                            Name = g.Name
+                        }).ToList();
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is User)
+                return Name == ((User)obj).Name;
+            return base.Equals(obj);
         }
     }
 }

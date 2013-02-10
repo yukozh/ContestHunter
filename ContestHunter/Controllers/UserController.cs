@@ -146,7 +146,7 @@ namespace ContestHunter.Controllers
             User user;
 
             try{
-                user=USER.SelectByName(id);
+                user=USER.ByName(id);
             }catch(UserNotFoundException){
                 return RedirectToAction("Error", "Shared", "找不到指定的用户");
             }
