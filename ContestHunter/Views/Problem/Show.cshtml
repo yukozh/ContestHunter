@@ -1,19 +1,21 @@
-﻿@{
-    ViewBag.Title = "Show";
+﻿@model ContestHunter.Models.Domain.Problem
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = Model.Name;
+    ViewBag.ActivedNav = "Contest";
 }
 
 <style type="text/css">
-    .table td
-    {
+    .table td {
         font-family: 微软雅黑;
-        text-align:center;
+        text-align: center;
     }
 </style>
 
 <div class="span12">
     <div style="width: 980px; text-align: center">
-        <h3>OrzCYF Problem</h3>
-        <table class="table table-striped table-bordered" style="background-color: white; width: 400px; margin:10px auto">
+        <h3>@Model.Name</h3>
+        <table class="table table-striped table-bordered" style="background-color: white; width: 400px; margin: 10px auto">
             <colgroup>
                 <col style="width: 100px">
                 <col style="width: 100px">
@@ -23,25 +25,32 @@
             <tbody>
                 <tr>
                     <td><b>总时限</b></td>
-                    <td>10s</td>
+                    <td>@(Math.Round(ViewBag.TotalTimeLimit/1000.0,1))s</td>
                     <td><b>内存限制</b></td>
-                    <td>256MB</td>
+                    <td>
+                        @if (ViewBag.MinimumMemoryLimit == ViewBag.MaximumMemoryLimit)
+                        {
+                            @(ViewBag.MinimumMemoryLimit / 1024 / 1024)@:MB
+                        }
+                        else
+                        {
+                            @(ViewBag.MinimumMemoryLimit/1024/1024)@:~@(ViewBag.MaximumMemoryLimit/1024/1024)
+                        }
+                    </td>
                 </tr>
                 <tr>
                     <td><b>出题人</b></td>
-                    <td>onetwogoo</td>
+                    <td>暂不支持</td>
                     <td><b>提交情况</b></td>
-                    <td>78/90</td>
+                    <td>暂不支持</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div class="btn-group" style="margin:10px auto; text-align:center; padding-left:30px">
+    <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 30px">
         <button class="btn btn-success">提交</button>
         <button class="btn btn-info">状态</button>
         <button class="btn btn-warning">数据</button>
     </div>
-    <div style="width: 980px">
-        <embed src="http://www.codeforces.com/gym/100134/attachments/download/1331/20122013-acmicpc-northeastern-european-regional-contest-neerc-12-en.pdf" width="980" height="1350" />
-    </div>
+    <div style="width: 980px">@Html.Raw(Model.Content)</div>
 </div>
