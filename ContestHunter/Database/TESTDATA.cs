@@ -18,6 +18,8 @@ namespace ContestHunter.Database
         public System.Guid Problem { get; set; }
         public byte[] Input { get; set; }
         public byte[] Data { get; set; }
+        public int TimeLimit { get; set; }
+        public long MemoryLimit { get; set; }
     
         public virtual PROBLEM PROBLEM1 { get; set; }
     }

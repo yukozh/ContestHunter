@@ -147,7 +147,7 @@ namespace ContestHunter.Controllers
 
             try
             {
-                user = USER.SelectByName(id);
+                user = USER.ByName(id);
             }
             catch (UserNotFoundException)
             {

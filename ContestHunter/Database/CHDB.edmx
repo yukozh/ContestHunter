@@ -121,6 +121,8 @@
           <Property Name="Problem" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Input" Type="varbinary(max)" Nullable="false" />
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
+          <Property Name="TimeLimit" Type="int" Nullable="false" />
+          <Property Name="MemoryLimit" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="USER">
           <Key>
@@ -236,7 +238,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TESTDATA_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1" />
+          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="TESTDATA" Type="ContestHunterModel.Store.TESTDATA" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
@@ -374,6 +378,8 @@
           <Property Name="Problem" Type="Guid" Nullable="false" />
           <Property Name="Input" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="TimeLimit" Type="Int32" Nullable="false" />
+          <Property Name="MemoryLimit" Type="Int64" Nullable="false" />
           <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="TESTDATA" ToRole="PROBLEM" />
         </EntityType>
         <EntityType Name="USER">
@@ -416,7 +422,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TESTDATA_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1" />
+          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="TESTDATA" Type="ContestHunterModel.TESTDATA" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
@@ -511,6 +519,8 @@
                 <ScalarProperty Name="Problem" ColumnName="Problem" />
                 <ScalarProperty Name="Input" ColumnName="Input" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="TimeLimit" ColumnName="TimeLimit" />
+                <ScalarProperty Name="MemoryLimit" ColumnName="MemoryLimit" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

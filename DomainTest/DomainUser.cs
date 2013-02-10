@@ -98,6 +98,25 @@ namespace DomainTest
             Assert.AreEqual("pilapila",nowtest.ProblemByName("Name").Content);
 
         }
+
+        [TestMethod]
+        public void TestTestCase()
+        {
+            User.Authenticate(User.Login("123", "123"));
+            var prob = Contest.ByName("Test 10").ProblemByName("Name");
+            var tid=prob.AddTestCase(new TestCase()
+            {
+                Input = new byte[] { 1, 2, 1, 3, 8 },
+                Data = new byte[] { 1, 2, 1, 3, 8 },
+                TimeLimit = 1000,
+                MemoryLimit = 1000
+            });
+            Assert.AreEqual(1, prob.TestCases().Count);
+            Assert.AreEqual(tid, prob.TestCases()[0]);
+            Assert.AreEqual(1000, prob.TestCaseByID(tid).TimeLimit);
+            prob.RemoveTestCase(tid);
+            Assert.AreEqual(0, prob.TestCases().Count);
+        }
     }
 }
 

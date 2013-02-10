@@ -156,6 +156,7 @@
     <Compile Include="Models\Domain\Framework.cs" />
     <Compile Include="Models\Domain\Group.cs" />
     <Compile Include="Models\Domain\Problem.cs" />
+    <Compile Include="Models\Domain\TestCase.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Models\View\User\LoginModel.cs" />
     <Compile Include="Models\View\User\RegisterModel.cs" />
@@ -231,6 +232,9 @@
     <Content Include="Views\User\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Contest\Show.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -250,9 +254,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contest\Show.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
