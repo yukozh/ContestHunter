@@ -29,9 +29,20 @@ namespace ContestHunter.Controllers
 
             return View();
         }
-        public ActionResult List()
+
+        [AllowAnonymous]
+        public ActionResult Show(string id)
         {
-            return View();
+            Contest contest;
+            try
+            {
+                contest = Contest.ByName(id);
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有相应的比赛" });
+            }
+            return View(contest);
         }
     }
 }

@@ -251,7 +251,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Contest\List.cshtml" />
+    <Content Include="Views\Contest\Show.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
