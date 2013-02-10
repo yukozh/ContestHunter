@@ -60,7 +60,7 @@ namespace DomainTest
             var Duration = TimeSpan.FromHours(1.0);
             Contest.Add(new Contest()
             {
-                Name = "Test 10",
+                Name = "Test 12",
                 Description = "This is Description",
                 StartTime = DateTime.Now + Start,
                 EndTime = DateTime.Now + Duration,
@@ -68,7 +68,7 @@ namespace DomainTest
                 Owner = new List<string>() { "123" },
                 Type = Contest.ContestType.OI
             });
-            var nowtest = Contest.ByName("Test 10");
+            var nowtest = Contest.ByName("Test 12");
             Assert.AreEqual(0,nowtest.AttendedUsersCount());
             nowtest.Attend();
             Assert.AreEqual(true, nowtest.IsAttended());
@@ -94,8 +94,14 @@ namespace DomainTest
             nowtest.RemoveProblem("Name2");
             Assert.AreEqual(1, nowtest.Problems().Count);
             nowtest.Attend();
+            nowtest.ProblemByName("Name").Submit(new Record() { Code = "This is the code.", Language = Record.LanguageType.CPP });
+            User.Authenticate(User.Login("Mr.Phone", "chshcan"));
+            nowtest.Attend();
             Thread.Sleep(60000);
             Assert.AreEqual("pilapila",nowtest.ProblemByName("Name").Content);
+
+            nowtest.ProblemByName("Name").Submit(new Record() { Code = "This is the code.", Language = Record.LanguageType.CPP });
+
 
         }
 

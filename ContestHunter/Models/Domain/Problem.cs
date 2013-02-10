@@ -129,5 +129,52 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 提交题目 record只需要填充 Code 和 Language
+        /// </summary>
+        /// <param name="record"></param>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="ContestNotStartedException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        public void Submit(Record record)
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            using (var db = new CHDB())
+            {
+                var currpro = (from p in db.PROBLEMs
+                               where p.ID == ID
+                               select p).Single();
+                if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
+                {
+                    if (DateTime.Now < currpro.CONTEST1.StartTime)
+                        throw new ContestNotStartedException();
+                    if (DateTime.Now <= currpro.CONTEST1.EndTime && !(from u in currpro.CONTEST1.ATTENDERs
+                                                                      where u.Name == User.CurrentUser.name
+                                                                      select u).Any())
+                        throw new NotAttendedContestException();
+                }
+                db.RECORDs.Add(new RECORD()
+                {
+                    Code = record.Code,
+                    CodeLength = record.Code.Length,
+                    Detail = null,
+                    ExecutedTime = null,
+                    ID = Guid.NewGuid(),
+                    Language = (int)record.Language,
+                    MemoryUsed = null,
+                    PROBLEM1 = (from p in db.PROBLEMs
+                                where p.ID == ID
+                                select p).Single(),
+                    USER1 = (from u in db.USERs
+                             where u.Name == User.CurrentUser.name
+                             select u).Single(),
+                    Status = (int)Record.StatusType.Pending,
+                    SubmitTime = DateTime.Now
+                });
+                db.SaveChanges();
+            }
+
+        }
     }
 }
