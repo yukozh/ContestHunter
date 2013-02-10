@@ -91,7 +91,7 @@
                                 @*Official和Unofficial两种，前者计入rating，后者不计rating*@
                             </td>
                             <td>@contest.StartTime<br />
-                                持续<b>@((contest.EndTime - contest.StartTime).TotalHours)</b>小时
+                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours,1))</b>小时
                             </td>
                             <td>
                                 <div class="btn-group" style="padding: 5px">
@@ -239,7 +239,7 @@
                                 }
                             </td>
                             <td>@contest.StartTime<br />
-                                持续<b>@((contest.EndTime - contest.StartTime).TotalHours)</b>小时
+                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours,1))</b>小时
                             </td>
                             <td>
                                 <div class="btn-group" style="padding: 5px">
@@ -385,7 +385,7 @@
                                 }
                             </td>
                             <td>@contest.StartTime<br />
-                                持续<b>@((contest.EndTime - contest.StartTime).TotalHours)</b>小时
+                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours,1))</b>小时
                             </td>
                             <td>
                                 <div class="btn-group" style="padding: 5px 0px">

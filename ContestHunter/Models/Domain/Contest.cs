@@ -318,5 +318,115 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 获取比赛题目名称列表
+        /// </summary>
+        /// <returns></returns>
+        public List<string> Problems()
+        {
+            using (var db = new CHDB())
+            {
+                return (from p in db.PROBLEMs
+                        where p.CONTEST1.Name==Name
+                        select p.Name).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 获得相应比赛的指定名称的题目
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="ContestNotStartedException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="ProblemNotFoundException"></exception>
+        public Problem ProblemByName(string name)
+        {
+            if (DateTime.Now < StartTime)
+                throw new ContestNotStartedException();
+            if (DateTime.Now <= EndTime && !IsAttended())
+                throw new NotAttendedContestException();
+            using (var db = new CHDB())
+            {
+                var result = (from p in db.PROBLEMs
+                              where p.Name == name && p.CONTEST1.Name == Name
+                              select new Problem
+                              {
+                                  Name=p.Name,
+                                  Content=p.Content,
+                                  Comparer=p.Comparer
+                              }).SingleOrDefault();
+                if (null == result)
+                    throw new ProblemNotFoundException();
+                
+                return result;
+            }
+
+        }
+
+        /// <summary>
+        /// 添加题目
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="PermissionDeniedException"></exception>
+        public void AddProblem(Problem problem)
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!Owner.Contains(User.CurrentUser.name)
+                && !User.CurrentUser.groups.Contains("Administrators"))
+                throw new PermissionDeniedException();
+            using (var db = new CHDB())
+            {
+                db.PROBLEMs.Add(new PROBLEM()
+                {
+                    ID = Guid.NewGuid(),
+                    Name = problem.Name,
+                    Content = problem.Content,
+                    Comparer = problem.Comparer,
+                    CONTEST1 = (from c in db.CONTESTs
+                                where c.Name == Name
+                                select c).Single()
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除指定名称的题目
+        /// </summary>
+        /// <param name="name"></param>
+        /// <exception cref="ContestNotStartedException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="ProblemNotFoundException"></exception>
+        public void RemoveProblem(string name)
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!Owner.Contains(User.CurrentUser.name)
+                && !User.CurrentUser.groups.Contains("Administrators"))
+                throw new PermissionDeniedException();
+
+            using (var db = new CHDB())
+            {
+                var prob = (from p in db.PROBLEMs
+                            where p.Name == name && p.CONTEST1.Name == Name
+                            select p).SingleOrDefault();
+                if (null == prob)
+                    throw new ProblemNotFoundException();
+                db.PROBLEMs.Remove(prob);
+                db.SaveChanges();
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Contest)
+                return Name == ((Contest)obj).Name;
+            return base.Equals(obj);
+        }
     }
 }
