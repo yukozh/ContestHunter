@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ContestHunter.Models.Domain;
 using System.Web;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace DomainTest
 {
@@ -24,23 +25,24 @@ namespace DomainTest
             Assert.AreEqual(2, guids.Length);
             Guid guid1 = Guid.Parse(guids[0]), guid2 = Guid.Parse(guids[1]);
             User.Authenticate(token);
-            User info = User.SelectByName("name");
+            User info = User.ByName("name");
             Assert.AreEqual("name", info.Name);
             Assert.AreEqual("variantf@gmail.com", info.Email);
             Assert.AreEqual("Administrator", User.CurrentUserName);
             var groups = Group.All();
-            Assert.AreEqual(1, groups.Length);
-            Assert.AreEqual("Administrators", groups[0]);
-            groups = Group.ByUsername("Administrator");
-            Assert.AreEqual(1, groups.Length);
-            Assert.AreEqual("Administrators", groups[0]);
-            Assert.AreEqual(1, Group.Users("Administrators").Length);
-            Group.Add("blabla");
-            Group.AddUser("blabla", "name");
-            Assert.AreEqual("blabla", Group.ByUsername("name")[0]);
-            Group.RemoveUser("blabla", "name");
-            Assert.AreEqual(0, Group.ByUsername("name").Length);
-            Group.Remove("blabla");
+            Assert.AreEqual(1, groups.Count);
+            Assert.AreEqual(new Group() { Name = "Administrators" }, groups[0]);
+            groups = User.ByName("Administrator").Groups();
+            Assert.AreEqual(1, groups.Count);
+            Assert.AreEqual("Administrators", groups[0].Name);
+            Group grp=Group.ByName("Administrators");
+            Assert.AreEqual(1, grp.UserCount());
+            Group.Add(new Group() { Name = "blabla" });
+            Group.ByName("blabla").AddUser(User.ByName("name"));
+            Assert.AreEqual("blabla", User.ByName("name").Groups()[0].Name);
+            Group.ByName("blabla").RemoveUser(User.ByName("name"));
+            Assert.AreEqual(0, Group.ByName("blabla").Users(0,10).Count);
+            Group.ByName("blabla").Remove();
             User.Logout();
         }
 
@@ -58,7 +60,7 @@ namespace DomainTest
             var Duration = TimeSpan.FromHours(1.0);
             Contest.Add(new Contest()
             {
-                Name = "Test 1",
+                Name = "Test 10",
                 Description = "This is Description",
                 StartTime = DateTime.Now + Start,
                 EndTime = DateTime.Now + Duration,
@@ -66,7 +68,7 @@ namespace DomainTest
                 Owner = new List<string>() { "123" },
                 Type = Contest.ContestType.OI
             });
-            var nowtest = Contest.ByName("Test 1");
+            var nowtest = Contest.ByName("Test 10");
             Assert.AreEqual(0,nowtest.AttendedUsersCount());
             nowtest.Attend();
             Assert.AreEqual(true, nowtest.IsAttended());
@@ -75,6 +77,25 @@ namespace DomainTest
             nowtest.Disattended();
             Assert.AreEqual(0, nowtest.AttendedUsersCount());
             Assert.AreEqual(false, nowtest.IsAttended());
+
+            nowtest.AddProblem(new Problem()
+            {
+                Comparer = "blabla",
+                Content = "pilapila",
+                Name = "Name"
+            });
+            nowtest.AddProblem(new Problem()
+            {
+                Comparer = "blabla",
+                Content = "pilapila",
+                Name = "Name2"
+            });
+            Assert.AreEqual(2, nowtest.Problems().Count);
+            nowtest.RemoveProblem("Name2");
+            Assert.AreEqual(1, nowtest.Problems().Count);
+            nowtest.Attend();
+            Thread.Sleep(60000);
+            Assert.AreEqual("pilapila",nowtest.ProblemByName("Name").Content);
 
         }
     }

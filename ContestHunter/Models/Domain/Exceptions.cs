@@ -42,4 +42,17 @@ namespace ContestHunter.Models.Domain
     public class ContestStartedException : Exception
     {
     }
+
+    public class ContestNotStartedException : Exception
+    {
+    }
+
+    public class ProblemNotFoundException : Exception
+    {
+    }
+
+    public class GroupNotFoundException : Exception
+    {
+    }
+
 }

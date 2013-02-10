@@ -7,7 +7,9 @@ namespace ContestHunter.Models.Domain
 {
     public class Group
     {
-        static void CheckPriviledge()
+        public string Name;
+
+        internal static void CheckPriviledge()
         {
             if (!User.CurrentUser.groups.Contains("Administrators"))
                 throw new PermissionDeniedException();
@@ -18,47 +20,54 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <returns></returns>
         /// <exception cref="PermissionDeniedException"></exception>
-        public static string[] All()
+        public static List<Group> All()
         {
             CheckPriviledge();
             using(var db = new CHDB())
             {
-                return  (from g in db.GROUPs
-                                 select g.Name).ToArray();
+                return (from g in db.GROUPs
+                        select new Group
+                        {
+                            Name = g.Name
+                        }).ToList();
             }
         }
 
         /// <summary>
-        /// 获得指定用户名所属所有用户组
+        /// 获得指定用户组的用户
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         /// <exception cref="PermissionDeniedException"></exception>
-        public static string[] ByUsername(string name)
+        public List<User> Users(int skip,int top)
         {
             CheckPriviledge();
             using (var db = new CHDB())
             {
-                return (from u in db.USERs
-                       where u.Name==name
-                       select u.GROUPs.Select(g=>g.Name)).Single().ToArray();
+                return (from u in
+                            (from g in db.GROUPs
+                             where g.Name == Name
+                             select g.USERs).Single()
+                        select new User
+                        {
+                            Name = u.Name,
+                            Email = u.Email
+                        }).OrderBy(u => u.Name).Skip(skip).Take(top).ToList();
             }
         }
 
         /// <summary>
-        /// 获得指定用户组的所有用户
+        /// 返回用户数量
         /// </summary>
-        /// <param name="name"></param>
         /// <returns></returns>
-        /// <exception cref="PermissionDeniedException"></exception>
-        public static string[] Users(string name)
+        public int UserCount()
         {
             CheckPriviledge();
             using (var db = new CHDB())
             {
                 return (from g in db.GROUPs
-                        where g.Name == name
-                        select g.USERs.Select(u => u.Name)).Single().ToArray();
+                        where g.Name == Name
+                        select g.USERs).Single().Count();
             }
         }
 
@@ -67,7 +76,7 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="name"></param>
         /// <exception cref="PermissionDeniedException"></exception>
-        public static void Add(string name)
+        public static void Add(Group group)
         {
             CheckPriviledge();
             using (var db = new CHDB())
@@ -75,7 +84,7 @@ namespace ContestHunter.Models.Domain
                 db.GROUPs.Add(new GROUP()
                 {
                     ID = Guid.NewGuid(),
-                    Name = name
+                    Name =group.Name
                 });
                 db.SaveChanges();
             }
@@ -86,14 +95,14 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="name"></param>
         /// <exception cref="PermissionDeniedException"></exception>
-        public static void Remove(string name)
+        public void Remove()
         {
             CheckPriviledge();
             using (var db = new CHDB())
             {
                 db.GROUPs.Remove(
                     (from g in db.GROUPs
-                     where g.Name == name
+                     where g.Name == Name
                      select g).Single()
                     );
                 db.SaveChanges();
@@ -106,17 +115,17 @@ namespace ContestHunter.Models.Domain
         /// <param name="grp"></param>
         /// <param name="user"></param>
         /// <exception cref="PermissionDeniedException"></exception>
-        public static void AddUser(string grp, string user)
+        public void AddUser(User user)
         {
             CheckPriviledge();
             using (var db = new CHDB())
             {
                 (from u in db.USERs
-                 where u.Name==user
+                 where u.Name==user.Name
                  select u).Single().GROUPs.Add
                  (
                     (from g in db.GROUPs
-                    where g.Name==grp
+                    where g.Name==Name
                     select g).Single()
                     );
                 db.SaveChanges();
@@ -129,23 +138,53 @@ namespace ContestHunter.Models.Domain
         /// <param name="grp"></param>
         /// <param name="user"></param>
         /// <exception cref="PermissionDeniedException"></exception>
-        public static void RemoveUser(string grp, string user)
+        public void RemoveUser(User user)
         {
             CheckPriviledge();
             using (var db = new CHDB())
             {
                 (from u in db.USERs
-                 where u.Name == user
+                 where u.Name == user.Name
                  select u).Single().GROUPs.Remove
                  (
                     (from g in db.GROUPs
-                     where g.Name == grp
+                     where g.Name == Name
                      select g).Single()
                      );
                 db.SaveChanges();
             }
         }
 
+        /// <summary>
+        /// 返回指定名称的用户组
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="PermissionDeniedException"></exception>
+        /// <exception cref="GroupNotFoundException"></exception>
+        public static Group ByName(string name)
+        {
+            CheckPriviledge();
+            using (var db = new CHDB())
+            {
+                var result = (from g in db.GROUPs
+                              where g.Name == name
+                              select new Group
+                              {
+                                  Name = g.Name
+                              }).SingleOrDefault();
+                if (null == result)
+                    throw new GroupNotFoundException();
 
+                return result;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Group)
+                return Name == ((Group)obj).Name;
+            return base.Equals(obj);
+        }
     } 
 }
