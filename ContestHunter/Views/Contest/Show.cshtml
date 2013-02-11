@@ -6,25 +6,84 @@
 }
 
 <style type="text/css">
-    .table {
+    .table
+    {
         background-color: white;
     }
 
         .table td h2,
         .table td h4,
-        .table td h5 {
+        .table td h5
+        {
             margin: 0px;
             text-align: center;
         }
 
-        .table td h5 {
+        .table td h5
+        {
             font-weight: normal;
         }
 
-        .table td code {
+        .table td code
+        {
             margin-left: 5px;
         }
 </style>
+
+<script type="text/javascript">
+    var DiffDay = -1
+    var DiffHour = -1
+    var DiffMin = -1
+    var DiffSec = -1
+    var TotHour = 24 * 60 * 60 * 1000
+    var TotMin = 60 * 60 * 1000
+    var TotSec = 60 * 1000
+    var TotMs = 1000
+    var DiffMs = 0
+    var LastTime = 0
+    function clock() {
+        LastTime = DiffMs
+        DiffDay = Math.floor(DiffMs / TotHour)
+        DiffMs -= DiffDay * TotHour
+        DiffHour = Math.floor(DiffMs / TotMin)
+        DiffMs -= DiffHour * TotMin
+        DiffMin = Math.floor(DiffMs / TotSec)
+        DiffMs -= DiffMin * TotSec
+        DiffSec = Math.floor(DiffMs / TotMs)
+        document.getElementById('Day').innerHTML = DiffDay
+        document.getElementById('Hour').innerHTML = DiffHour
+        document.getElementById('Min').innerHTML = DiffMin
+        document.getElementById('Sec').innerHTML = DiffSec
+        document.getElementById('bar').style.width = @((DateTime.Now - Model.StartTime).TotalSeconds / (Model.EndTime - Model.StartTime).TotalSeconds * 100) + '%'
+        DiffMs = LastTime - 1000
+        if (DiffMs < 0) history.go(0)
+        setTimeout("clock()", 1000)
+    }
+    $(function () {
+        @if (Model.StartTime > DateTime.Now)
+        {
+            TimeSpan span = Model.StartTime - DateTime.Now;
+            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
+            @:document.getElementById('Pre').innerHTML = '距离比赛开始还有'
+            @:DiffMs =@span.TotalMilliseconds
+            @:clock();
+        }
+        else if (Model.EndTime < DateTime.Now)
+        {
+            @:document.getElementById('Pre').innerHTML = '比赛已结束'
+            @:document.getElementById('Next').innerHTML = ''
+        }
+        else
+        {
+            TimeSpan span = Model.EndTime - DateTime.Now;
+            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
+            @:document.getElementById('Pre').innerHTML = '距离比赛结束还有'
+            @:DiffMs =@span.TotalMilliseconds
+            @:clock();
+        }
+    });
+
+</script>
 
 <div class="span12" style="margin-top: 30px">
     <table class="table">
@@ -47,7 +106,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <h4>
+                                    <h4 style="font-weight: normal">
                                         @switch (Model.Type)
                                         {
                                             case Contest.ContestType.ACM:
@@ -62,11 +121,11 @@
                                         } - 
                                         @if (Model.IsOfficial)
                                         {
-                                            <span style="color:red;">Official</span>
+                                            <span style="color: red">Official</span>
                                         }
                                         else
                                         {
-                                            <span style="color:blue;">Unofficial</span>
+                                            <span style="color: blue">Unofficial</span>
                                         }
                                     </h4>
                                     @if (Model.Owner.Count > 0)
@@ -101,25 +160,16 @@
                                                 ViewBag.Progress = (DateTime.Now - Model.StartTime).TotalSeconds / (Model.EndTime - Model.StartTime).TotalSeconds * 100;
                                             }
                                         }
-                                        <div class="bar" style="width: @ViewBag.Progress%; text-align: center"></div>
+                                        <div id="bar" class="bar" style="width: @ViewBag.Progress%; text-align: center"></div>
                                     </div>
                                     <h4>
-                                        @if (Model.StartTime > DateTime.Now)
-                                        {
-                                            TimeSpan span = Model.StartTime - DateTime.Now;
-                                            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
-                                            @:距离比赛开始还有@(span.ToString("g"))
-                                        }
-                                        else if (Model.EndTime < DateTime.Now)
-                                        {
-                                            @:比赛已结束
-                                        }
-                                        else
-                                        {
-                                            TimeSpan span = Model.EndTime - DateTime.Now;
-                                            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
-                                            @:距离比赛结束还有@(span.ToString("g"))
-                                        }
+                                        <span id="Pre" style="font-weight: normal">?</span><br />
+                                        <span id="Next">
+                                            <span id="Day">?</span>天
+	                                        <span id="Hour">?</span>小时
+	                                        <span id="Min">?</span>分
+	                                        <span id="Sec">?</span>秒
+                                        </span>
                                     </h4>
                                 </td>
                             </tr>
