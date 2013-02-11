@@ -68,4 +68,9 @@ namespace ContestHunter.Models.Domain
     public class ContestNotFoundException : Exception
     {
     }
+
+    public class RecordNotFoundException : Exception
+    {
+    }
+
 }

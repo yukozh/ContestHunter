@@ -21,7 +21,7 @@ namespace ContestHunter.Database
         public int Language { get; set; }
         public System.DateTime SubmitTime { get; set; }
         public Nullable<int> ExecutedTime { get; set; }
-        public Nullable<int> MemoryUsed { get; set; }
+        public Nullable<long> MemoryUsed { get; set; }
         public int CodeLength { get; set; }
         public int Status { get; set; }
         public string Detail { get; set; }
