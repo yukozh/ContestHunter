@@ -90,6 +90,7 @@ namespace ContestHunter.Models.Domain
                         break;
                     default:
                         records.OrderBy(r => r.ID);
+                        break;
                 }
                 return (from r in records.Skip(skip).Take(top).ToList()
                         select new Record
