@@ -110,6 +110,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CKEditorController.cs" />
     <Compile Include="Controllers\ContestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProblemController.cs" />
@@ -174,6 +175,7 @@
     <Content Include="Image\Error.gif" />
     <Content Include="Image\Login.png" />
     <Content Include="Script\bootstrap.js" />
+    <Content Include="Script\ckeditor\config.js" />
     <Content Include="Script\jquery.js" />
     <Content Include="Script\site.js" />
     <Content Include="Web.config">
@@ -259,6 +261,9 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CKEditor\Upload.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
