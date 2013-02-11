@@ -60,7 +60,7 @@ namespace DomainTest
             var Duration = TimeSpan.FromHours(1.0);
             Contest.Add(new Contest()
             {
-                Name = "Test 10",
+                Name = "Test 12",
                 Description = "This is Description",
                 StartTime = DateTime.Now + Start,
                 EndTime = DateTime.Now + Duration,
@@ -68,7 +68,7 @@ namespace DomainTest
                 Owner = new List<string>() { "123" },
                 Type = Contest.ContestType.OI
             });
-            var nowtest = Contest.ByName("Test 10");
+            var nowtest = Contest.ByName("Test 12");
             Assert.AreEqual(0,nowtest.AttendedUsersCount());
             nowtest.Attend();
             Assert.AreEqual(true, nowtest.IsAttended());
@@ -94,9 +94,34 @@ namespace DomainTest
             nowtest.RemoveProblem("Name2");
             Assert.AreEqual(1, nowtest.Problems().Count);
             nowtest.Attend();
+            nowtest.ProblemByName("Name").Submit(new Record() { Code = "This is the code.", Language = Record.LanguageType.CPP });
+            User.Authenticate(User.Login("Mr.Phone", "chshcan"));
+            nowtest.Attend();
             Thread.Sleep(60000);
             Assert.AreEqual("pilapila",nowtest.ProblemByName("Name").Content);
 
+            nowtest.ProblemByName("Name").Submit(new Record() { Code = "This is the code.", Language = Record.LanguageType.CPP });
+
+
+        }
+
+        [TestMethod]
+        public void TestTestCase()
+        {
+            User.Authenticate(User.Login("123", "123"));
+            var prob = Contest.ByName("Test 10").ProblemByName("Name");
+            var tid=prob.AddTestCase(new TestCase()
+            {
+                Input = new byte[] { 1, 2, 1, 3, 8 },
+                Data = new byte[] { 1, 2, 1, 3, 8 },
+                TimeLimit = 1000,
+                MemoryLimit = 1000
+            });
+            Assert.AreEqual(1, prob.TestCases().Count);
+            Assert.AreEqual(tid, prob.TestCases()[0]);
+            Assert.AreEqual(1000, prob.TestCaseByID(tid).TimeLimit);
+            prob.RemoveTestCase(tid);
+            Assert.AreEqual(0, prob.TestCases().Count);
         }
     }
 }

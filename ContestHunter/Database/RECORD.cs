@@ -18,8 +18,12 @@ namespace ContestHunter.Database
         public System.Guid User { get; set; }
         public System.Guid Problem { get; set; }
         public string Code { get; set; }
+        public int Language { get; set; }
         public System.DateTime SubmitTime { get; set; }
-        public string Status { get; set; }
+        public Nullable<int> ExecutedTime { get; set; }
+        public Nullable<int> MemoryUsed { get; set; }
+        public int CodeLength { get; set; }
+        public int Status { get; set; }
         public string Detail { get; set; }
     
         public virtual PROBLEM PROBLEM1 { get; set; }

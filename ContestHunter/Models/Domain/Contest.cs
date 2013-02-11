@@ -120,8 +120,9 @@ namespace ContestHunter.Models.Domain
                 return (from c in
                             (from contest in db.CONTESTs
                              where contest.EndTime < DateTime.Now
+                             orderby contest.StartTime descending
                              select contest
-                                ).OrderBy(x=>x.StartTime).Skip(skip).Take(top).ToList()
+                                ).Skip(skip).Take(top).ToList()
                         select new Contest
                         {
                             Name = c.Name,
@@ -190,25 +191,29 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
+        /// <exception cref="ContestNotFoundException"></exception>
         public static Contest ByName(string name)
         {
             using (var db = new CHDB())
             {
-                return (from c in
-                            (from c in db.CONTESTs
-                             where c.Name == name
-                             select c).ToList()
-                        select new Contest
-                    {
-                        Name = c.Name,
-                        Description = c.Description,
-                        StartTime = c.StartTime,
-                        EndTime = c.EndTime,
-                        IsOfficial = c.IsOfficial,
-                        Type = (ContestType)c.Type,
-                        Owner = (from u in c.OWNERs
-                                 select u.Name).ToList()
-                    }).Single();
+                var result = (from c in
+                                  (from c in db.CONTESTs
+                                   where c.Name == name
+                                   select c).ToList()
+                              select new Contest
+                          {
+                              Name = c.Name,
+                              Description = c.Description,
+                              StartTime = c.StartTime,
+                              EndTime = c.EndTime,
+                              IsOfficial = c.IsOfficial,
+                              Type = (ContestType)c.Type,
+                              Owner = (from u in c.OWNERs
+                                       select u.Name).ToList()
+                          }).SingleOrDefault();
+                if (null == result)
+                    throw new ContestNotFoundException();
+                return result;
             }
         }
 
@@ -341,26 +346,34 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="NotAttendedContestException"></exception>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="ProblemNotFoundException"></exception>
+        /// <exception cref="UserNotLoginException"></exception>
         public Problem ProblemByName(string name)
         {
-            if (DateTime.Now < StartTime)
-                throw new ContestNotStartedException();
-            if (DateTime.Now <= EndTime && !IsAttended())
-                throw new NotAttendedContestException();
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
+            {
+                if (DateTime.Now < StartTime)
+                    throw new ContestNotStartedException();
+                if (DateTime.Now <= EndTime && !IsAttended())
+                    throw new NotAttendedContestException();
+            }
             using (var db = new CHDB())
             {
                 var result = (from p in db.PROBLEMs
                               where p.Name == name && p.CONTEST1.Name == Name
-                              select new Problem
-                              {
-                                  Name=p.Name,
-                                  Content=p.Content,
-                                  Comparer=p.Comparer
-                              }).SingleOrDefault();
+                              select p).SingleOrDefault();
                 if (null == result)
                     throw new ProblemNotFoundException();
-                
-                return result;
+
+                return new Problem()
+                              {
+                                  Name = result.Name,
+                                  Content = result.Content,
+                                  Comparer = result.Comparer,
+                                  ID = result.ID,
+                                  Owner = new List<string>(Owner)
+                              };
             }
 
         }

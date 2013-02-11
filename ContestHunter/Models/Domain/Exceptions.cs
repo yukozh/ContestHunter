@@ -9,7 +9,9 @@ namespace ContestHunter.Models.Domain
     {
     }
 
-    public class EmailMismatchException : Exception { }
+    public class EmailMismatchException : Exception 
+    {
+    }
 
     public class UserNotFoundException : Exception
     {
@@ -55,4 +57,15 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class ContestNotEndedException : Exception
+    {
+    }
+
+    public class TestCaseNotFoundException : Exception
+    {
+    }
+
+    public class ContestNotFoundException : Exception
+    {
+    }
 }

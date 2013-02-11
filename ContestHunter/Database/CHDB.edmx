@@ -109,8 +109,12 @@
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Problem" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Code" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Language" Type="int" Nullable="false" />
           <Property Name="SubmitTime" Type="datetime" Nullable="false" />
-          <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ExecutedTime" Type="int" />
+          <Property Name="MemoryUsed" Type="int" />
+          <Property Name="CodeLength" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="Detail" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="TESTDATA">
@@ -121,6 +125,8 @@
           <Property Name="Problem" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Input" Type="varbinary(max)" Nullable="false" />
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
+          <Property Name="TimeLimit" Type="int" Nullable="false" />
+          <Property Name="MemoryLimit" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="USER">
           <Key>
@@ -210,7 +216,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RECORD_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1" />
+          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="RECORD" Type="ContestHunterModel.Store.RECORD" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
@@ -236,7 +244,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TESTDATA_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1" />
+          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="TESTDATA" Type="ContestHunterModel.Store.TESTDATA" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
@@ -360,8 +370,12 @@
           <Property Name="User" Type="Guid" Nullable="false" />
           <Property Name="Problem" Type="Guid" Nullable="false" />
           <Property Name="Code" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Language" Type="Int32" Nullable="false" />
           <Property Name="SubmitTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ExecutedTime" Type="Int32" />
+          <Property Name="MemoryUsed" Type="Int32" />
+          <Property Name="CodeLength" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="Detail" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="RECORD" ToRole="PROBLEM" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_RECORD_USER" FromRole="RECORD" ToRole="USER" />
@@ -374,6 +388,8 @@
           <Property Name="Problem" Type="Guid" Nullable="false" />
           <Property Name="Input" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="TimeLimit" Type="Int32" Nullable="false" />
+          <Property Name="MemoryLimit" Type="Int64" Nullable="false" />
           <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="TESTDATA" ToRole="PROBLEM" />
         </EntityType>
         <EntityType Name="USER">
@@ -404,7 +420,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RECORD_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1" />
+          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="RECORD" Type="ContestHunterModel.RECORD" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
@@ -416,7 +434,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TESTDATA_PROBLEM">
-          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1" />
+          <End Role="PROBLEM" Type="ContestHunterModel.PROBLEM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="TESTDATA" Type="ContestHunterModel.TESTDATA" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PROBLEM">
@@ -498,7 +518,11 @@
                 <ScalarProperty Name="User" ColumnName="User" />
                 <ScalarProperty Name="Problem" ColumnName="Problem" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="SubmitTime" ColumnName="SubmitTime" />
+                <ScalarProperty Name="ExecutedTime" ColumnName="ExecutedTime" />
+                <ScalarProperty Name="MemoryUsed" ColumnName="MemoryUsed" />
+                <ScalarProperty Name="CodeLength" ColumnName="CodeLength" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Detail" ColumnName="Detail" />
               </MappingFragment>
@@ -511,6 +535,8 @@
                 <ScalarProperty Name="Problem" ColumnName="Problem" />
                 <ScalarProperty Name="Input" ColumnName="Input" />
                 <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="TimeLimit" ColumnName="TimeLimit" />
+                <ScalarProperty Name="MemoryLimit" ColumnName="MemoryLimit" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
