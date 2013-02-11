@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .table
+    {
+        background-color: white;
+        color: black;
+        margin: 0px;
+    }
+
+        .table th,
+        .table td
+        {
+            text-align: center;
+            vertical-align: middle;
+            font-family: 微软雅黑;
+        }
+</style>
+
+<div class="span12">
+    <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
+        <form class="form-search" style="text-align: right; margin:5px">
+            <h4 style="float: left; font-family: 微软雅黑; font-weight: normal; padding:4px">提交记录</h4>
+            <div style="float: right">
+                <input class="input-small search-query" type="text" placeholder=" 用户名" />
+                <input class="input-small search-query" type="text" placeholder=" 题目名称" />
+                <input class="input-small search-query" type="text" placeholder=" 比赛名称" />
+                <select class="input-small">
+                    <option value="">语言</option>
+                    <option value=".cpp">C++</option>
+                    <option value=".pas">Pascal</option>
+                    <option value=".c">C</option>
+                </select>
+                <select class="input-small">
+                    <option value="">状态</option>
+                    <option value="0">通过</option>
+                    <option value="1">答案错误</option>
+                    <option value="2">超过时间限制</option>
+                    <option value="3">程序崩溃</option>
+                    <option value="4">超过内存限制</option>
+                    <option value="5">校验器出错</option>
+                    <option value="6">输出过长</option>
+                    <option value="7">编译失败</option>
+                    <option value="8">正在评测</option>
+                    <option value="9">等待评测</option>
+                    <option value="10">系统错误</option>
+                </select>
+            </div>
+            <div style="clear:both"></div>
+        </form>
+        <table class="table table-bordered table-striped table-hover" style="background-color: white">
+            <colgroup>
+                <col style="width: 300px">
+                <col style="width: 150px">
+                <col style="width: 80px">
+                <col style="width: 300px">
+                <col style="width: 150px">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>题目名称/提交者</th>
+                    <th>评测结果</th>
+                    <th>得分</th>
+                    <th>用时/内存/代码长度</th>
+                    <th>提交时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="#">标题要短</a><br />
+                        From <a href="#">onetwogoo</a>
+                    </td>
+                    <td><span class="label label-success" style="font-size: 15px">通过</span></td>
+                    <!--
+                        label label-success:通过
+                        label label-important：答案错误、程序崩溃
+                        label label-warning：超过时间限制、超过内存限制、输出过长
+                        label label-info：正在评测、等待评测、OI比赛中“结果被隐藏”
+                        label：编译失败
+                        label label-inverse：校验器出错、系统错误
+                    -->
+                    <td><span class="score_100"><b>100</b></span></td>
+                    <td>
+                        <span style="color: orange"><b>235</b></span><span style="color: blue"> ms</span> / 
+                        <span style="color: orange"><b>16789</b></span><span style="color: blue"> KB</span> / 
+                        <span style="color: orange"><b>1240</b></span><span style="color: blue"> B</span>
+                    </td>
+                    <td>2013/2/11<br />
+                        16:57:00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#">我是神犇孙嘉裕</a><br />
+                        From <a href="#">onetwogoo</a>
+                    </td>
+                    <td><span class="label label-important" style="font-size: 15px">答案错误</span></td>
+                    <td><span class="score_25"><b>25</b></span></td>
+                    <td>
+                        <span style="color: orange"><b>235</b></span><span style="color: blue"> ms</span> / 
+                        <span style="color: orange"><b>16789</b></span><span style="color: blue"> KB</span> / 
+                        <span style="color: orange"><b>1240</b></span><span style="color: blue"> B</span>
+                    </td>
+                    <td>2013/2/11<br />
+                        16:57:00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#">我是神犇孙嘉裕标题要长</a><br />
+                        From <a href="#">onetwogooooooooooxx</a>
+                    </td>
+                    <td><span class="label label-warning" style="font-size: 15px">超过时间限制</span></td>
+                    <td><span class="score_70"><b>70</b></span></td>
+                    <td>
+                        <span style="color: orange"><b>999999</b></span><span style="color: blue"> ms</span> / 
+                        <span style="color: orange"><b>1024000</b></span><span style="color: blue"> KB</span> / 
+                        <span style="color: orange"><b>63579</b></span><span style="color: blue"> B</span>
+                    </td>
+                    <td>2013/2/11<br />
+                        16:52:00</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination" style="text-align:center; margin:3px">
+            <ul>
+                <li><a href="#"><<</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">>></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
