@@ -125,6 +125,7 @@
     <Compile Include="Controllers\ContestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProblemController.cs" />
+    <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Database\CHDB.Context.cs">
@@ -183,6 +184,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\ScoreColor.css" />
     <Content Include="Global.asax" />
     <Content Include="Image\Error.gif" />
     <Content Include="Image\Login.png" />
@@ -279,6 +281,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\TestRichText.cshtml" />
+    <Content Include="Views\Problem\Submit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Record\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

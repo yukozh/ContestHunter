@@ -1,8 +1,5 @@
-﻿@model ContestHunter.Models.Domain.Problem
-@using ContestHunter.Models.Domain
-@{
-    ViewBag.Title = Model.Name;
-    ViewBag.ActivedNav = "Contest";
+﻿@{
+    ViewBag.Title = "Submit";
 }
 
 <style type="text/css">
@@ -47,10 +44,10 @@
             </tbody>
         </table>
     </div>
+    <div style="width: 980px">大家好，这里是代码提交框哦，using namespace sjy;可以直接AC哦~</div>
     <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
-        <button class="btn btn-success">提交</button>
-        <button class="btn btn-info">状态</button>
-        <button class="btn btn-warning">数据</button>
+        <button class="btn btn-success">提交代码</button>
+        <button class="btn btn-info">返回题目</button>
+        <button class="btn btn-warning">返回比赛</button>
     </div>
-    <div style="width: 980px">@Html.Raw(Model.Content)</div>
 </div>
