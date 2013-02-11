@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "富文本测试";
+}
+<h3>请在此测试富文本，具体分为三方面：</h3>
+<ol>
+    <li>编辑器有没有功能bug或功能缺失</li>
+    <li>点击渲染后，是否有些效果无法在下面显示</li>
+    <li>尝试点击编辑器的“源码”，编辑Html源码，输入恶意Html，点击渲染，看恶意html是否奏效。</li>
+</ol>
+@using (Html.BeginForm())
+{
+    <textarea name="html" class="ckeditor">@ViewBag.Html</textarea>
+    <input type="submit" value="渲染" />
+    <fieldset>
+        <legend>效果</legend>
+        <div style="border: 2px black solid;">
+            @Html.Raw(HtmlFilter.Filter(ViewBag.Html))
+        </div>
+    </fieldset>
+}

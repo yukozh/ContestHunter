@@ -24,11 +24,10 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
 		{ name: 'styles' },
 		{ name: 'colors' },
-		{ name: 'about' }
 	];
     
 	config.filebrowserUploadUrl = '/CKEditor/Upload';
-	config.extraPlugins = 'equation';
+	config.extraPlugins = 'equation,syntaxhighlight';
 
 	// Remove some buttons, provided by the standard plugins, which we don't
 	// need to have in the Standard(s) toolbar.

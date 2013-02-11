@@ -16,5 +16,11 @@ namespace ContestHunter.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public ActionResult TestRichText(string html = "")
+        {
+            ViewBag.Html = html;
+            return View();
+        }
     }
 }

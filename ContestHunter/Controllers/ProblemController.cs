@@ -24,6 +24,10 @@ namespace ContestHunter.Controllers
             {
                 problem = Contest.ByName(contest).ProblemByName(id);
             }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛不存在" });
+            }
             catch (ContestNotStartedException)
             {
                 return RedirectToAction("Error", "Shared", new { msg = "比赛尚未开始，题目不予显示" });
