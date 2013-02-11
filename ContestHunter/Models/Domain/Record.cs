@@ -73,18 +73,7 @@ namespace ContestHunter.Models.Domain
                                (null == contest ? true : r.PROBLEM1.CONTEST1.Name == contest) &&
                                (null == language ? true : r.Language == (int)language) &&
                                (null == status ? true : r.Status == (int)status)
-                               select new Record
-                               {
-                                   CodeLength=r.CodeLength,
-                                   ExecutedTime=TimeSpan.FromMilliseconds((double)r.ExecutedTime),
-                                   Contest=r.PROBLEM1.CONTEST1.Name,
-                                   Language=(LanguageType)r.Language,
-                                   Memory=r.MemoryUsed,
-                                   Problem=r.PROBLEM1.Name,
-                                   Status=(StatusType)r.Status,
-                                   SubmitTime=r.SubmitTime,
-                                   User=r.USER1.Name
-                               });
+                               select r);
                 switch (order)
                 {
                     case OrderByType.CodeLength:
@@ -94,13 +83,25 @@ namespace ContestHunter.Models.Domain
                         records.OrderBy(r => r.ExecutedTime);
                         break;
                     case OrderByType.MemoryUsed:
-                        records.OrderBy(r => r.Memory);
+                        records.OrderBy(r => r.MemoryUsed);
                         break;
                     case OrderByType.SubmitTime:
                         records.OrderBy(r => r.SubmitTime);
                         break;
                 }
-                return records.Skip(skip).Take(top).ToList();
+                return (from r in records.Skip(skip).Take(top).ToList()
+                        select new Record
+                        {
+                            CodeLength = r.CodeLength,
+                            ExecutedTime = TimeSpan.FromMilliseconds((double)r.ExecutedTime),
+                            Contest = r.PROBLEM1.CONTEST1.Name,
+                            Language = (LanguageType)r.Language,
+                            Memory = r.MemoryUsed,
+                            Problem = r.PROBLEM1.Name,
+                            Status = (StatusType)r.Status,
+                            SubmitTime = r.SubmitTime,
+                            User = r.USER1.Name
+                        }).ToList();
             }
         }
 
