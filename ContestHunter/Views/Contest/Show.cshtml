@@ -63,7 +63,6 @@
         @if (Model.StartTime > DateTime.Now)
         {
             TimeSpan span = Model.StartTime - DateTime.Now;
-            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
             @:document.getElementById('Pre').innerHTML = '距离比赛开始还有'
             @:DiffMs =@span.TotalMilliseconds
             @:clock();
@@ -76,7 +75,6 @@
         else
         {
             TimeSpan span = Model.EndTime - DateTime.Now;
-            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
             @:document.getElementById('Pre').innerHTML = '距离比赛结束还有'
             @:DiffMs =@span.TotalMilliseconds
             @:clock();

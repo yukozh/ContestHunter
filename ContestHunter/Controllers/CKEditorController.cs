@@ -10,6 +10,7 @@ namespace ContestHunter.Controllers
     public class CKEditorController : Controller
     {
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Upload(string CKEditorFuncNum, HttpPostedFileBase upload)
         {
             ViewBag.FuncName = CKEditorFuncNum;
