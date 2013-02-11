@@ -5,20 +5,23 @@
 }
 
 <style type="text/css">
-    .table {
+    .table
+    {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
     .table th,
-    .table td {
+    .table td
+    {
         text-align: center;
-        vertical-align: central;
+        vertical-align: middle;
         font-family: 微软雅黑;
     }
 
-    .table td h6 {
+    .table td h6
+    {
         font-weight: normal;
     }
 </style>
@@ -91,15 +94,15 @@
                                 @*Official和Unofficial两种，前者计入rating，后者不计rating*@
                             </td>
                             <td>@contest.StartTime<br />
-                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours,1))</b>小时
+                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours, 1))</b>小时
                             </td>
                             <td>
-                                <div class="btn-group" style="padding: 5px">
+                                <div class="btn-group">
                                     @Html.ActionLink("进入比赛", "Show", new { id = contest.Name }, new { @class = "btn btn-danger", style = "display:inline-block;" })
                                 </div>
                             </td>
                             <td>
-                                <div style="padding: 7px">
+                                <div>
                                     <code>@contest.AttendedUsersCount()</code>
                                 </div>
                             </td>
@@ -239,15 +242,15 @@
                                 }
                             </td>
                             <td>@contest.StartTime<br />
-                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours,1))</b>小时
+                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours, 1))</b>小时
                             </td>
                             <td>
-                                <div class="btn-group" style="padding: 5px">
+                                <div class="btn-group">
                                     @Html.ActionLink("查看预告", "Show", new { id = contest.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
                                 </div>
                             </td>
                             <td>
-                                <div style="padding: 7px"><code>@contest.AttendedUsersCount()</code></div>
+                                <div><code>@contest.AttendedUsersCount()</code></div>
                             </td>
                         </tr>
                     }
@@ -385,17 +388,16 @@
                                 }
                             </td>
                             <td>@contest.StartTime<br />
-                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours,1))</b>小时
+                                持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours, 1))</b>小时
                             </td>
                             <td>
-                                <div class="btn-group" style="padding: 5px 0px">
-                                    s
-                                <button class="btn btn-success">模拟比赛</button>
+                                <div class="btn-group">
+                                    <button class="btn btn-success">模拟比赛</button>
                                     <button class="btn btn-warning">赛题练习</button>
                                 </div>
                             </td>
                             <td>
-                                <div style="padding: 7px"><code>@contest.AttendedUsersCount()</code></div>
+                                <div><code>@contest.AttendedUsersCount()</code></div>
                             </td>
                         </tr>
                     }
