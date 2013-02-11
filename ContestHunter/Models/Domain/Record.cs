@@ -88,6 +88,8 @@ namespace ContestHunter.Models.Domain
                     case OrderByType.SubmitTime:
                         records.OrderBy(r => r.SubmitTime);
                         break;
+                    default:
+                        records.OrderBy(r => r.ID);
                 }
                 return (from r in records.Skip(skip).Take(top).ToList()
                         select new Record
