@@ -259,6 +259,19 @@
     <Content Include="Views\Problem\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\CKEditor\Upload.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\TestRichText.cshtml" />
+    <Content Include="Views\Problem\Submit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Record\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Record\Show.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -278,19 +291,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\CKEditor\Upload.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Home\TestRichText.cshtml" />
-    <Content Include="Views\Problem\Submit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Record\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Record\Show.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

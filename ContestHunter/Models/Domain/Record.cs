@@ -13,7 +13,8 @@ namespace ContestHunter.Models.Domain
         public string Contest;
         public string Problem;
         public string Code;
-        public string Detail;
+        public string? Detail;
+        public int? Score;
 
         public enum LanguageType
         {
@@ -108,7 +109,11 @@ namespace ContestHunter.Models.Domain
                             Problem = r.PROBLEM1.Name,
                             Status = (StatusType)r.Status,
                             SubmitTime = r.SubmitTime,
-                            User = r.USER1.Name
+                            User = r.USER1.Name,
+                            Score = (null == r.TestPassed) ? null :
+                            (int?)((int)r.TestPassed / (from t in db.TESTDATAs
+                                                        where t.PROBLEM1 == r.PROBLEM1
+                                                        select t).Count() * 100)
                         }).ToList();
             }
         }
@@ -138,13 +143,17 @@ namespace ContestHunter.Models.Domain
                     CodeLength = result.CodeLength,
                     Contest = result.PROBLEM1.CONTEST1.Name,
                     Detail = result.Detail,
-                    ExecutedTime = TimeSpan.FromMilliseconds((double)result.ExecutedTime),
+                    ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime),
                     Language = (LanguageType)result.Language,
                     Memory = result.MemoryUsed,
                     Problem = result.PROBLEM1.Name,
                     Status = (StatusType)result.Status,
                     SubmitTime = result.SubmitTime,
-                    User = result.USER1.Name
+                    User = result.USER1.Name,
+                    Score = (null == result.TestPassed) ? null :
+                                    (int?)((int)result.TestPassed / (from t in db.TESTDATAs
+                                                                     where t.PROBLEM1 == result.PROBLEM1
+                                                                     select t).Count() * 100)
                 };
             }
         }

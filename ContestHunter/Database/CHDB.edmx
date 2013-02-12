@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ContestHunterModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="ContestHunterModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ContestHunterModelStoreContainer">
           <EntitySet Name="CONTEST" EntityType="ContestHunterModel.Store.CONTEST" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterModel.Store.CONTEST_ATTEND" store:Type="Tables" Schema="dbo" />
@@ -34,6 +34,10 @@
           <AssociationSet Name="FK_PROBLEM_CONTEST1" Association="ContestHunterModel.Store.FK_PROBLEM_CONTEST1">
             <End Role="CONTEST" EntitySet="CONTEST" />
             <End Role="PROBLEM" EntitySet="PROBLEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RECORD_PROBLEM" Association="ContestHunterModel.Store.FK_RECORD_PROBLEM">
+            <End Role="PROBLEM" EntitySet="PROBLEM" />
+            <End Role="RECORD" EntitySet="RECORD" />
           </AssociationSet>
           <AssociationSet Name="FK_RECORD_USER" Association="ContestHunterModel.Store.FK_RECORD_USER">
             <End Role="USER" EntitySet="USER" />
@@ -111,6 +115,8 @@
           <Property Name="MemoryUsed" Type="bigint" />
           <Property Name="CodeLength" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Score" Type="int" />
+          <Property Name="TestPassed" Type="int" />
           <Property Name="Detail" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="TESTDATA">
@@ -211,6 +217,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RECORD_PROBLEM">
+          <End Role="PROBLEM" Type="ContestHunterModel.Store.PROBLEM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RECORD" Type="ContestHunterModel.Store.RECORD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROBLEM">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RECORD">
+              <PropertyRef Name="Problem" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RECORD_USER">
           <End Role="USER" Type="ContestHunterModel.Store.USER" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -267,7 +287,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ContestHunterModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -357,6 +378,8 @@
           <Property Name="MemoryUsed" Type="Int64" />
           <Property Name="CodeLength" Type="Int32" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Int32" />
+          <Property Name="TestPassed" Type="Int32" />
           <Property Name="Detail" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="RECORD" ToRole="PROBLEM" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_RECORD_USER" FromRole="RECORD" ToRole="USER" />
@@ -505,6 +528,8 @@
                 <ScalarProperty Name="MemoryUsed" ColumnName="MemoryUsed" />
                 <ScalarProperty Name="CodeLength" ColumnName="CodeLength" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="TestPassed" ColumnName="TestPassed" />
                 <ScalarProperty Name="Detail" ColumnName="Detail" />
               </MappingFragment>
             </EntityTypeMapping>

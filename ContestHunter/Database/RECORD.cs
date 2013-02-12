@@ -24,6 +24,8 @@ namespace ContestHunter.Database
         public Nullable<long> MemoryUsed { get; set; }
         public int CodeLength { get; set; }
         public int Status { get; set; }
+        public Nullable<int> Score { get; set; }
+        public Nullable<int> TestPassed { get; set; }
         public string Detail { get; set; }
     
         public virtual PROBLEM PROBLEM1 { get; set; }

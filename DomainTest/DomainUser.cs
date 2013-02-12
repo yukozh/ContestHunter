@@ -101,8 +101,6 @@ namespace DomainTest
             Assert.AreEqual("pilapila",nowtest.ProblemByName("Name").Content);
 
             nowtest.ProblemByName("Name").Submit(new Record() { Code = "This is the code.", Language = Record.LanguageType.CPP });
-
-
         }
 
         [TestMethod]
