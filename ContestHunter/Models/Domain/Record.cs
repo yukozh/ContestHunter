@@ -147,5 +147,18 @@ namespace ContestHunter.Models.Domain
                 };
             }
         }
+
+        /// <summary>
+        /// 返回记录总条数
+        /// </summary>
+        /// <returns></returns>
+        public static int Count()
+        {
+            using (var db = new CHDB())
+            {
+                return (from r in db.RECORDs
+                        select r).Count();
+            }
+        }
     }
 }

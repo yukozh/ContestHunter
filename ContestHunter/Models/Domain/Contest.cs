@@ -372,6 +372,7 @@ namespace ContestHunter.Models.Domain
                                   Content = result.Content,
                                   Comparer = result.Comparer,
                                   ID = result.ID,
+                                  Contest=result.CONTEST1.Name,
                                   Owner = new List<string>(Owner)
                               };
             }
