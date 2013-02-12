@@ -123,6 +123,14 @@ namespace DomainTest
             prob.RemoveTestCase(tid);
             Assert.AreEqual(0, prob.TestCases().Count);
         }
+
+        [TestMethod]
+        public void TestStanding()
+        {
+            var con = Contest.ByName("Test 12");
+            var stand = con.GetACMStanding(0, 10);
+            Assert.AreEqual(0, (int)Record.StatusType.Accept);
+        }
     }
 }
 

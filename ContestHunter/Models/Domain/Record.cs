@@ -39,7 +39,8 @@ namespace ContestHunter.Models.Domain
             CMP_Error,
             Output_Limit_Execeeded,
             System_Error = -1,
-            Pending = -2
+            Pending = -2,
+            Compile_Error = -3
         }
 
         public StatusType Status;
