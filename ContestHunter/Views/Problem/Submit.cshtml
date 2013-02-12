@@ -1,56 +1,33 @@
-﻿@{
-    ViewBag.Title = "Submit";
+﻿@model ContestHunter.Models.View.ProblemSubmitModel
+@{
+    ViewBag.Title = "提交代码";
 }
 
 <style type="text/css">
-    .table td
-    {
+    .table td {
         font-family: 微软雅黑;
         text-align: center;
     }
 </style>
 
-<div class="span12">
-    <div style="width: 980px; text-align: center">
-        <h3>@Model.Name</h3>
-        <table class="table table-striped table-bordered" style="background-color: white; width: 400px; margin: 10px auto">
-            <colgroup>
-                <col style="width: 100px">
-                <col style="width: 100px">
-                <col style="width: 100px">
-                <col style="width: 100px">
-            </colgroup>
-            <tbody>
-                <tr>
-                    <td><b>总时限</b></td>
-                    <td>@(Math.Round(ViewBag.TotalTimeLimit / 1000.0, 1))s</td>
-                    <td><b>内存限制</b></td>
-                    <td>
-                        @if (ViewBag.MinimumMemoryLimit == ViewBag.MaximumMemoryLimit)
-                        {
-                            @(ViewBag.MinimumMemoryLimit / 1024 / 1024)@:MB
-                        }
-                        else
-                        {
-                            @(ViewBag.MinimumMemoryLimit / 1024 / 1024)@:~@(ViewBag.MaximumMemoryLimit / 1024 / 1024)
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>出题人</b></td>
-                    <td>暂不支持</td>
-                    <td><b>提交情况</b></td>
-                    <td>暂不支持</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <textarea style="width: 940px; height: 600px">
-        大家好，这里是代码提交框哦，using namespace sjy;可以直接AC哦~
-    </textarea>
-    <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
-        <button class="btn btn-success">提交代码</button>
-        <button class="btn btn-info">返回题目</button>
-        <button class="btn btn-warning">返回比赛</button>
-    </div>
+<div class="span12" style="text-align: center;">
+    <h3>@Model.Problem</h3>
+    @using (Html.BeginForm())
+    {
+        <div class="btn-group" style="margin: 10px;">
+            @Html.ActionLink("返回题目", "Show", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-info", style = "display:inline-block" })
+            @Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest }, new { @class = "btn btn-warning", style = "display:inline-block" })
+        </div>
+        @Html.TextAreaFor(x => x.Code, new { style = "width: 800px; height: 400px; margin: auto; display: block;", autofocus = "autofocus" })
+        <div style="margin: 10px;">
+            @Html.DropDownListFor(x => x.Language, new SelectListItem[]
+                {
+                    new SelectListItem{Text="语言",Value=""},
+                    new SelectListItem{Text="C++",Value="CPP"},
+                    new SelectListItem{Text="C",Value="C"},
+                    new SelectListItem{Text="Pascal",Value="Pascal"}
+                });
+            <input type="submit" value="提交代码" class="btn btn-success" />
+        </div>
+    }
 </div>

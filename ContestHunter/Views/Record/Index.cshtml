@@ -155,7 +155,20 @@
                                 /
                             <span style="color: orange"><b>@record.CodeLength</b></span><span style="color: blue"> B</span>
                             </td>
-                            <td>C++</td><!--C++/C/Pascal-->
+                            <td>
+                                @switch (Model.Language)
+                                {
+                                    case Record.LanguageType.C:
+                                    @:C
+                                        break;
+                                    case Record.LanguageType.CPP:
+                                    @:C++
+                                        break;
+                                    case Record.LanguageType.Pascal:
+                                    @:Pascal
+                                        break;
+                                }
+                            </td>
                             <td>@record.SubmitTime</td>
                         </tr>
                     }
