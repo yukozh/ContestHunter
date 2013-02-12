@@ -11,6 +11,7 @@ namespace ContestHunter.Models.Domain
         public string Name;
         public string Content;
         public string Comparer;
+        public string Contest;
 
         internal Guid ID;
         internal List<string> Owner;
