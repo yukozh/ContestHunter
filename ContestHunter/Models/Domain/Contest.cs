@@ -442,5 +442,56 @@ namespace ContestHunter.Models.Domain
                 return Name == ((Contest)obj).Name;
             return base.Equals(obj);
         }
+
+        /// <summary>
+        /// 返回ACM比赛Standing
+        /// </summary>
+        /// <param name="skip"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
+        /// <exception cref="ContestTypeMismatchException"></exception>
+        public List<ACMStanding> GetACMStanding(int skip, int top)
+        {
+            if (Type != ContestType.ACM)
+                throw new ContestTypeMismatchException();
+            using (var db = new CHDB())
+            {
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                var result = (from u in con.ATTENDERs
+                              let des = from p in con.PROBLEMs
+                                        orderby p.Name ascending
+                                        let ACTimeList = (from r in p.RECORDs
+                                                          where r.USER1 == u
+                                                          && r.SubmitTime >= con.StartTime
+                                                          && r.SubmitTime <= con.EndTime
+                                                          && r.Status == (int)Record.StatusType.Accept
+                                                          select r.SubmitTime)
+                                        let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Min() : null
+                                        let FailedTimes = (from r in p.RECORDs
+                                                           where r.USER1 == u
+                                                           && r.SubmitTime >= con.StartTime
+                                                           && r.SubmitTime <= (ACTime == null ? con.EndTime : ACTime)
+                                                           && r.Status > 0
+                                                           select r).Count()
+                                        select new ACMStanding.DescriptionClass()
+                                        {
+                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
+                                            isAC = null != ACTime,
+                                            FailedTimes = FailedTimes
+                                        }
+                              select new ACMStanding
+                              {
+                                  User = u.Name,
+                                  TotalTime = des.Sum(d => d.isAC ? d.FailedTimes * 20 + (int)d.ACTime : 0),
+                                  Description = des.ToList(),
+                                  CountAC = des.Sum(d => d.isAC ? 1 : 0)
+                              });
+                return result.OrderByDescending(s => s.CountAC).ThenBy(s => s.TotalTime).ToList();
+            }
+        }
+
+
     }
 }

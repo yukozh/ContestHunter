@@ -137,7 +137,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="ContestNotStartedException"></exception>
         /// <exception cref="NotAttendedContestException"></exception>
-        public void Submit(Record record)
+        public Guid Submit(Record record)
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
@@ -155,13 +155,14 @@ namespace ContestHunter.Models.Domain
                                                                       select u).Any())
                         throw new NotAttendedContestException();
                 }
+                Guid ret;
                 db.RECORDs.Add(new RECORD()
                 {
                     Code = record.Code,
                     CodeLength = record.Code.Length,
                     Detail = null,
                     ExecutedTime = null,
-                    ID = Guid.NewGuid(),
+                    ID = ret = Guid.NewGuid(),
                     Language = (int)record.Language,
                     MemoryUsed = null,
                     PROBLEM1 = (from p in db.PROBLEMs
@@ -174,6 +175,7 @@ namespace ContestHunter.Models.Domain
                     SubmitTime = DateTime.Now
                 });
                 db.SaveChanges();
+                return ret;
             }
 
         }

@@ -73,4 +73,8 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class ContestTypeMismatchException : Exception
+    {
+    }
+
 }
