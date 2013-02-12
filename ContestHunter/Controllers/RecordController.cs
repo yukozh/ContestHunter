@@ -19,9 +19,23 @@ namespace ContestHunter.Controllers
             model.PageCount = Record.Count() / INDEX_PAGE_SIZE;
             return View(model);
         }
-        public ActionResult Show()
+
+        public ActionResult Show(Guid id)
         {
-            return View();
+            Record record;
+            try
+            {
+                record = Record.ByID(id);
+            }
+            catch (ContestNotEndedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，信息不予显示" });
+            }
+            catch (RecordNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有这个记录" });
+            }
+            return View(record);
         }
     }
 }

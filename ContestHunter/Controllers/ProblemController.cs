@@ -100,7 +100,7 @@ namespace ContestHunter.Controllers
             try
             {
                 Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
-                problem.Submit(new Record
+                recordID=problem.Submit(new Record
                 {
                     Code = model.Code,
                     Language = (Record.LanguageType)model.Language
@@ -127,7 +127,7 @@ namespace ContestHunter.Controllers
                 return RedirectToAction("Error", "Shared", new { msg = "题目不存在" });
             }
 
-            throw new NotImplementedException();
+            return RedirectToAction("Show", "Record", new { id = recordID });
         }
     }
 }

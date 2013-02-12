@@ -138,7 +138,7 @@ namespace ContestHunter.Models.Domain
                     CodeLength = result.CodeLength,
                     Contest = result.PROBLEM1.CONTEST1.Name,
                     Detail = result.Detail,
-                    ExecutedTime = TimeSpan.FromMilliseconds((double)result.ExecutedTime),
+                    ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
                     Language = (LanguageType)result.Language,
                     Memory = result.MemoryUsed,
                     Problem = result.PROBLEM1.Name,

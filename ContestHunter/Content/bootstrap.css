@@ -813,7 +813,7 @@ address {
   font-style: normal;
   line-height: 20px;
 }
-
+/*
 code,
 pre {
   padding: 0 3px 2px;
@@ -849,18 +849,18 @@ pre {
      -moz-border-radius: 4px;
           border-radius: 4px;
 }
-
+*/
 pre.prettyprint {
   margin-bottom: 20px;
 }
-
+/*
 pre code {
   padding: 0;
   color: inherit;
   background-color: transparent;
   border: 0;
 }
-
+*/
 .pre-scrollable {
   max-height: 340px;
   overflow-y: scroll;

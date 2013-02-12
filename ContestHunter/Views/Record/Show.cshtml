@@ -1,5 +1,7 @@
-﻿@{
-    ViewBag.Title = "Show";
+﻿@model ContestHunter.Models.Domain.Record
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = Model.Problem + "的一条记录";
 }
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
@@ -15,45 +17,111 @@
                 <tbody>
                     <tr>
                         <td><b>题目名称</b></td>
-                        <td><a href="#">我是神犇孙嘉裕标题要长</a></td>
+                        <td>@Html.ActionLink(Model.Problem, "Show", "Problem", new { id = Model.Problem, contest = Model.Contest }, null)</td>
                     </tr>
                     <tr>
                         <td><b>提交者</b></td>
-                        <td><a href="#">onetwogoo</a></td>
+                        <td>@Html.ActionLink(Model.User, "Show", "User", new { id = Model.User }, null)</td>
                     </tr>
                     <tr>
                         <td><b>评测结果</b></td>
-                        <td><span class="label label-success" style="font-size: 15px">通过</span></td>
+                        @switch (Model.Status)
+                        {
+                            case Record.StatusType.Accept:
+                                ViewBag.Label = "label-success";
+                                ViewBag.Message = "通过";
+                                break;
+                            case Record.StatusType.CMP_Error:
+                                ViewBag.Label = "label-inverse";
+                                ViewBag.Message = "校验器出错";
+                                break;
+                            case Record.StatusType.Memory_Limit_Execeeded:
+                                ViewBag.Label = "label-warning";
+                                ViewBag.Message = "超过时间限制";
+                                break;
+                            case Record.StatusType.Output_Limit_Execeeded:
+                                ViewBag.Label = "label-warning";
+                                ViewBag.Message = "输出过长";
+                                break;
+                            case Record.StatusType.Pending:
+                                ViewBag.Label = "label-info";
+                                ViewBag.Message = "正在评测";
+                                break;
+                            case Record.StatusType.Runtime_Error:
+                                ViewBag.Label = "label-important";
+                                ViewBag.Message = "程序崩溃";
+                                break;
+                            case Record.StatusType.System_Error:
+                                ViewBag.Label = "label-inverse";
+                                ViewBag.Message = "系统错误";
+                                break;
+                            case Record.StatusType.Time_Limit_Execeeded:
+                                ViewBag.Label = "label-warning";
+                                ViewBag.Message = "超过时间限制";
+                                break;
+                            case Record.StatusType.Wrong_Answer:
+                                ViewBag.Label = "label-important";
+                                ViewBag.Message = "答案错误";
+                                break;
+                            case Record.StatusType.Compile_Error:
+                                ViewBag.Label = "";
+                                ViewBag.Message = "编译失败";
+                                break;
+                            default:
+                                throw new Exception("错误的类型");
+                        }
+                        <td><span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span></td>
                     </tr>
                     <tr>
                         <td><b>得分</b></td>
-                        <td><span class="score_100"><b>100</b></span></td>
+                        <td><span class="score_100"><b>暂不支持</b></span></td>
                     </tr>
-                    <tr>
-                        <td><b>用时</b></td>
-                        <td><span style="color: orange"><b>987654</b></span><span style="color: blue"> ms</span></td>
-                    </tr>
-                    <tr>
-                        <td><b>占用内存</b></td>
-                        <td><span style="color: orange"><b>262144</b></span><span style="color: blue"> KB</span></td>
-                    </tr>
+                    @if (Model.ExecutedTime.HasValue)
+                    {
+                        <tr>
+                            <td><b>用时</b></td>
+                            <td><span style="color: orange"><b>@Model.ExecutedTime.Value.Milliseconds</b></span><span style="color: blue"> ms</span></td>
+                        </tr>
+                    }
+                    @if (Model.Memory.HasValue)
+                    {
+                        <tr>
+                            <td><b>占用内存</b></td>
+                            <td><span style="color: orange"><b>@(Model.Memory / 1024 / 1024)</b></span><span style="color: blue"> KB</span></td>
+                        </tr>
+                    }
                     <tr>
                         <td><b>代码长度</b></td>
-                        <td><span style="color: orange"><b>12306</b></span><span style="color: blue"> B</span></td>
+                        <td><span style="color: orange"><b>@Model.CodeLength</b></span><span style="color: blue"> B</span></td>
                     </tr>
                     <tr>
                         <td><b>语言</b></td>
-                        <td>Pascal</td>
+                        <td>
+                            @switch (Model.Language)
+                            {
+                                case Record.LanguageType.C:
+                                @:C
+                                    break;
+                                case Record.LanguageType.CPP:
+                                @:C++
+                                    break;
+                                case Record.LanguageType.Pascal:
+                                @:Pascal
+                                    break;
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td><b>提交时间</b></td>
-                        <td>2013/2/12 17:39:00</td>
+                        <td>@Model.SubmitTime</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="alert" style="float: right; width: 550px">
             <h5 style="color: red; float: right">v-Judge-Kernel @@ Contest Hunter</h5>
+            @Html.Raw(HtmlFilter.Filter(Model.Detail == null ? "" : Model.Detail))
+            @*
             <h5>编译信息：</h5>
             <div style="padding-left: 10px">
                 Warning blablabla<br />
@@ -72,9 +140,22 @@
                 #9：<span class="score_0">超过时间限制</span> (????? ms / ????? KB)<br />
                 #10：<span class="score_100"><b>通过</b></span> (????? ms / ????? KB)<br />
             </div>
+            *@
         </div>
-        <div style="clear: both; width: 925px">
-            大家好，我是代码高亮插件。
+        <div style="clear: both; padding: 5px;">
+            @switch (Model.Language)
+            {
+                case Record.LanguageType.C:
+                    ViewBag.Brush = "c";
+                    break;
+                case Record.LanguageType.CPP:
+                    ViewBag.Brush = "cpp";
+                    break;
+                case Record.LanguageType.Pascal:
+                    ViewBag.Brush = "pascal";
+                    break;
+            }
+            <pre class="brush:@ViewBag.Brush;">@Model.Code</pre>
         </div>
     </div>
 </div>

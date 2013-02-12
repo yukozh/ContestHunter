@@ -9,8 +9,10 @@ namespace ContestHunter.Models.View
     public class ProblemSubmitModel
     {
         [Required]
+        [Display(Name="代码")]
         public string Code { get; set; }
         [Required]
+        [Display(Name="语言")]
         public Record.LanguageType? Language { get; set; }
 
         public string Problem { get; set; }
