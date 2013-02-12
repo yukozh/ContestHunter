@@ -1,19 +1,20 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@model ContestHunter.Models.View.RecordListModel
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = "记录列表";
+    ViewBag.ActivedNav = "Record";
 }
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td
-        {
+        .table td {
             text-align: center;
             vertical-align: middle;
             font-family: 微软雅黑;
@@ -22,118 +23,175 @@
 
 <div class="span12">
     <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
-        <form class="form-search" style="text-align: right; margin:5px">
-            <h4 style="float: left; font-family: 微软雅黑; font-weight: normal; padding:4px">提交记录</h4>
-            <div style="float: right">
-                <input class="input-small search-query" type="text" placeholder=" 用户名" />
-                <input class="input-small search-query" type="text" placeholder=" 题目名称" />
-                <input class="input-small search-query" type="text" placeholder=" 比赛名称" />
-                <select class="input-small">
-                    <option value="">语言</option>
-                    <option value=".cpp">C++</option>
-                    <option value=".pas">Pascal</option>
-                    <option value=".c">C</option>
-                </select>
-                <select class="input-small">
-                    <option value="">状态</option>
-                    <option value="0">通过</option>
-                    <option value="1">答案错误</option>
-                    <option value="2">超过时间限制</option>
-                    <option value="3">程序崩溃</option>
-                    <option value="4">超过内存限制</option>
-                    <option value="5">校验器出错</option>
-                    <option value="6">输出过长</option>
-                    <option value="7">编译失败</option>
-                    <option value="8">正在评测</option>
-                    <option value="9">等待评测</option>
-                    <option value="10">系统错误</option>
-                </select>
+        @using (Html.BeginForm("Index", "Record", FormMethod.Get, new { id = "frmList" }))
+        {
+            <div class="form-search" style="text-align: right; margin: 5px">
+                <h4 style="float: left; font-family: 微软雅黑; font-weight: normal; padding: 4px">提交记录</h4>
+                <div style="float: right">
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "input-small search-query", placeholder = "用户名" })
+                    @Html.TextBoxFor(x => x.ProblemName, new { @class = "input-small search-query", placeholder = "题目名称" })
+                    @Html.TextBoxFor(x => x.ContestName, new { @class = "input-small search-query", placeholder = "比赛名称" })
+                    @Html.DropDownListFor(x => x.Language, new SelectListItem[]
+                        {
+                            new SelectListItem{Text="语言",Value=""},
+                            new SelectListItem{Text="C++",Value="CPP"},
+                            new SelectListItem{Text="Pascal",Value="Pascal"},
+                            new SelectListItem{Text="C",Value="C"}
+                        }, new { @class = "input-small" })
+                    @Html.DropDownListFor(x => x.Status, new SelectListItem[]
+                        {
+                            new SelectListItem{Text="状态",Value=""},
+                            new SelectListItem{Text="通过",Value="Accept"},
+                            new SelectListItem{Text="答案错误",Value="Wrong_Answer"},
+                            new SelectListItem{Text="超过时间限制",Value="Time_Limit_Execeeded"},
+                            new SelectListItem{Text="程序崩溃",Value="Runtime_Error"},
+                            new SelectListItem{Text="超过内存限制",Value="Memory_Limit_Execeeded"},
+                            new SelectListItem{Text="校验器错误",Value="CMP_Error"},
+                            new SelectListItem{Text="输出过长",Value="Output_Limit_Execeeded"},
+                            new SelectListItem{Text="系统错误",Value="System_Error"},
+                            new SelectListItem{Text="等待评测",Value="Pending"}
+                        }, new { @class = "input-small" })
+                    <input type="submit" class="btn btn-primary" value="查询" />
+                </div>
+                <div style="clear: both"></div>
             </div>
-            <div style="clear:both"></div>
-        </form>
-        <table class="table table-bordered table-striped table-hover" style="background-color: white">
-            <colgroup>
-                <col style="width: 300px">
-                <col style="width: 150px">
-                <col style="width: 80px">
-                <col style="width: 300px">
-                <col style="width: 150px">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>题目名称/提交者</th>
-                    <th>评测结果</th>
-                    <th>得分</th>
-                    <th>用时/内存/代码长度</th>
-                    <th>提交时间</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <a href="#">标题要短</a><br />
-                        From <a href="#">onetwogoo</a>
-                    </td>
-                    <td><span class="label label-success" style="font-size: 15px">通过</span></td>
-                    <!--
+            <table class="table table-bordered table-striped table-hover" style="background-color: white">
+                <colgroup>
+                    <col style="width: 300px">
+                    <col style="width: 150px">
+                    <col style="width: 80px">
+                    <col style="width: 300px">
+                    <col style="width: 150px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>题目名称/提交者</th>
+                        <th>评测结果</th>
+                        <th>得分</th>
+                        <th>用时/内存/代码长度</th>
+                        <th>提交时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in Model.Records)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(record.Problem, "Show", "Problem", new { id = record.Problem, contest = record.Contest }, null)<br />
+                                From @Html.ActionLink(record.User, "Show", "User", new { id = record.User }, null)
+                            </td>
+                            @switch (record.Status)
+                            {
+                                case Record.StatusType.Accept:
+                                    ViewBag.Label = "label-success";
+                                    ViewBag.Message = "通过";
+                                    break;
+                                case Record.StatusType.CMP_Error:
+                                    ViewBag.Label = "label-inverse";
+                                    ViewBag.Message = "校验器出错";
+                                    break;
+                                case Record.StatusType.Memory_Limit_Execeeded:
+                                    ViewBag.Label = "label-warning";
+                                    ViewBag.Message = "超过时间限制";
+                                    break;
+                                case Record.StatusType.Output_Limit_Execeeded:
+                                    ViewBag.Label = "label-warning";
+                                    ViewBag.Message = "输出过长";
+                                    break;
+                                case Record.StatusType.Pending:
+                                    ViewBag.Label = "label-info";
+                                    ViewBag.Message = "正在评测";
+                                    break;
+                                case Record.StatusType.Runtime_Error:
+                                    ViewBag.Label = "label-important";
+                                    ViewBag.Message = "程序崩溃";
+                                    break;
+                                case Record.StatusType.System_Error:
+                                    ViewBag.Label = "label-inverse";
+                                    ViewBag.Message = "系统错误";
+                                    break;
+                                case Record.StatusType.Time_Limit_Execeeded:
+                                    ViewBag.Label = "label-warning";
+                                    ViewBag.Message = "超过时间限制";
+                                    break;
+                                case Record.StatusType.Wrong_Answer:
+                                    ViewBag.Label = "label-important";
+                                    ViewBag.Message = "答案错误";
+                                    break;
+                                default:
+                                    throw new Exception("错误的类型");
+                            }
+                            <td>
+                                @Html.ActionLink((string)ViewBag.Message, "Show", "Record", new { id = record.ID }, new { @class = "label " + ViewBag.Label, style = "font-size: 15px;" })
+                            </td>
+                            @*
                         label label-success:通过
                         label label-important：答案错误、程序崩溃
                         label label-warning：超过时间限制、超过内存限制、输出过长
                         label label-info：正在评测、等待评测、OI比赛中“结果被隐藏”
                         label：编译失败
                         label label-inverse：校验器出错、系统错误
-                    -->
-                    <td><span class="score_100"><b>100</b></span></td>
-                    <td>
-                        <span style="color: orange"><b>235</b></span><span style="color: blue"> ms</span> / 
-                        <span style="color: orange"><b>16789</b></span><span style="color: blue"> KB</span> / 
-                        <span style="color: orange"><b>1240</b></span><span style="color: blue"> B</span>
-                    </td>
-                    <td>2013/2/11<br />
-                        16:57:00</td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#">我是神犇孙嘉裕</a><br />
-                        From <a href="#">onetwogoo</a>
-                    </td>
-                    <td><span class="label label-important" style="font-size: 15px">答案错误</span></td>
-                    <td><span class="score_25"><b>25</b></span></td>
-                    <td>
-                        <span style="color: orange"><b>235</b></span><span style="color: blue"> ms</span> / 
-                        <span style="color: orange"><b>16789</b></span><span style="color: blue"> KB</span> / 
-                        <span style="color: orange"><b>1240</b></span><span style="color: blue"> B</span>
-                    </td>
-                    <td>2013/2/11<br />
-                        16:57:00</td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#">我是神犇孙嘉裕标题要长</a><br />
-                        From <a href="#">onetwogooooooooooxx</a>
-                    </td>
-                    <td><span class="label label-warning" style="font-size: 15px">超过时间限制</span></td>
-                    <td><span class="score_70"><b>70</b></span></td>
-                    <td>
-                        <span style="color: orange"><b>999999</b></span><span style="color: blue"> ms</span> / 
-                        <span style="color: orange"><b>1024000</b></span><span style="color: blue"> KB</span> / 
-                        <span style="color: orange"><b>63579</b></span><span style="color: blue"> B</span>
-                    </td>
-                    <td>2013/2/11<br />
-                        16:52:00</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="pagination" style="text-align:center; margin:3px">
-            <ul>
-                <li><a href="#"><<</a></li>
-                <li class="active"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">>></a></li>
-            </ul>
-        </div>
+                        *@
+                            <td><span class="score_100"><b>不支持</b></span></td>
+                            <td>
+                                @if (record.ExecutedTime != null)
+                                {
+                                    <span style="color: orange"><b>@record.ExecutedTime.Value.TotalMilliseconds</b></span><span style="color: blue"> ms</span>
+                                }
+                                else
+                                {
+                                    @:?
+                            }
+                                /
+                            @if (record.Memory != null)
+                            {
+                                <span style="color: orange"><b>@(record.Memory.Value / 1024)</b></span><span style="color: blue"> KB</span>
+                            }
+                            else
+                            {
+                                @:?
+                            }
+                                /
+                            <span style="color: orange"><b>@record.CodeLength</b></span><span style="color: blue"> B</span>
+                            </td>
+                            <td>@record.SubmitTime</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+                    if (Model.PageCount > 1)
+                    {
+            <div class="pagination" style="text-align: center; margin: 3px">
+                @Html.HiddenFor(x => x.PageIndex)
+                <script>
+                    function ChangePage(index) {
+                        $('#PageIndex').val(index);
+                        $('#frmList').submit();
+                    }
+                </script>
+                <ul>
+                    @if (Model.PageIndex != 0)
+                    {
+                        <li><a href="#" onclick="ChangePage(0)">«</a></li>
+                    }
+                    @for (int i = Math.Max(0, Model.PageIndex - 5); i < Math.Min(Model.PageCount, Model.PageIndex + 5); i++)
+                    {
+                        if (i == Model.PageIndex)
+                        {
+                        <li class="active"><a href="#" onclick="ChangePage( @i )">@(i + 1)</a></li>
+                        }
+                        else
+                        {
+                        <li><a href="#" onclick="ChangePage( @i )">@(i + 1)</a></li>
+                        }
+                    }
+                    @if (Model.PageIndex != Model.PageCount - 1)
+                    {
+                        <li><a href="#" onclick="ChangePage(@(Model.PageCount - 1))">»</a></li>
+                    }
+                </ul>
+            </div>
+                    }
+        }
     </div>
 </div>

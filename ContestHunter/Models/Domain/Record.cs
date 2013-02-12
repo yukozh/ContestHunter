@@ -8,12 +8,13 @@ namespace ContestHunter.Models.Domain
 {
     public class Record
     {
+        public Guid ID;
         public string User;
         public string Contest;
         public string Problem;
         public string Code;
         public string Detail;
-        
+
         public enum LanguageType
         {
             C,
@@ -23,10 +24,10 @@ namespace ContestHunter.Models.Domain
         public LanguageType Language;
         public DateTime SubmitTime;
 
-        public TimeSpan ExecutedTime;
+        public TimeSpan? ExecutedTime;
 
-        long? Memory;
-        int CodeLength;
+        public long? Memory;
+        public int CodeLength;
 
         public enum StatusType
         {
@@ -37,8 +38,8 @@ namespace ContestHunter.Models.Domain
             Memory_Limit_Execeeded,
             CMP_Error,
             Output_Limit_Execeeded,
-            System_Error=-1,
-            Pending=-2
+            System_Error = -1,
+            Pending = -2
         }
 
         public StatusType Status;
@@ -63,40 +64,43 @@ namespace ContestHunter.Models.Domain
         /// <param name="status"></param>
         /// <param name="order"></param>
         /// <returns></returns>
-        public static List<Record> Select(int skip, int top, string user, string problem, string contest, LanguageType? language, StatusType? status,OrderByType? order)
+        public static List<Record> Select(int skip, int top, string user, string problem, string contest, LanguageType? language, StatusType? status, OrderByType order)
         {
             using (var db = new CHDB())
             {
-                var records = (from r in db.RECORDs
-                               where (null == user ? true : r.USER1.Name == user) &&
-                               (null == problem ? true : r.PROBLEM1.Name == problem) &&
-                               (null == contest ? true : r.PROBLEM1.CONTEST1.Name == contest) &&
-                               (null == language ? true : r.Language == (int)language) &&
-                               (null == status ? true : r.Status == (int)status)
-                               select r);
+                IQueryable<RECORD> records = db.RECORDs;
+                if (user != null)
+                    records = records.Where(r => r.USER1.Name == user);
+                if (problem != null)
+                    records = records.Where(r => r.PROBLEM1.Name == problem);
+                if (contest != null)
+                    records = records.Where(r => r.PROBLEM1.CONTEST1.Name == contest);
+                if (language != null)
+                    records = records.Where(r => r.Language == (int)language);
+                if (status != null)
+                    records = records.Where(r => r.Status == (int)status);
                 switch (order)
                 {
                     case OrderByType.CodeLength:
-                        records.OrderBy(r => r.CodeLength);
+                        records = records.OrderBy(r => r.CodeLength);
                         break;
                     case OrderByType.ExecutedTime:
-                        records.OrderBy(r => r.ExecutedTime);
+                        records = records.OrderBy(r => r.ExecutedTime);
                         break;
                     case OrderByType.MemoryUsed:
-                        records.OrderBy(r => r.MemoryUsed);
+                        records = records.OrderBy(r => r.MemoryUsed);
                         break;
                     case OrderByType.SubmitTime:
-                        records.OrderBy(r => r.SubmitTime);
-                        break;
-                    default:
-                        records.OrderBy(r => r.ID);
+                        records = records.OrderByDescending(r => r.SubmitTime);
                         break;
                 }
-                return (from r in records.Skip(skip).Take(top).ToList()
+                var tmp = records.Skip(skip).Take(top).ToList();
+                return (from r in tmp
                         select new Record
                         {
+                            ID = r.ID,
                             CodeLength = r.CodeLength,
-                            ExecutedTime = TimeSpan.FromMilliseconds((double)r.ExecutedTime),
+                            ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime),
                             Contest = r.PROBLEM1.CONTEST1.Name,
                             Language = (LanguageType)r.Language,
                             Memory = r.MemoryUsed,
@@ -128,6 +132,7 @@ namespace ContestHunter.Models.Domain
                     throw new ContestNotEndedException();
                 return new Record()
                 {
+                    ID = result.ID,
                     Code = result.Code,
                     CodeLength = result.CodeLength,
                     Contest = result.PROBLEM1.CONTEST1.Name,

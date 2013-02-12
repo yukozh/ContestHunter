@@ -12,10 +12,14 @@ namespace ContestHunter.Controllers
     {
         static readonly int INDEX_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Record.Index.PageSize"]);
 
-        public ActionResult Index()
+        [AllowAnonymous]
+        public ActionResult Index(RecordListModel model)
         {
-            ViewBag.Message = Record.Select(0, 10, null, null, null, null, null, null);
-            return View();
+            List<Record> records;
+            records = Record.Select(model.PageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE, model.UserName, model.ProblemName, model.ContestName, model.Language, model.Status, Record.OrderByType.SubmitTime);
+            model.Records = records;
+            model.PageCount = 123;
+            return View(model);
         }
 
     }
