@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ContestHunter.Models.Domain;
+using ContestHunter.Models.View;
 using USER = ContestHunter.Models.Domain.User;
 
 namespace ContestHunter.Controllers
@@ -52,12 +53,22 @@ namespace ContestHunter.Controllers
             ViewBag.MaximumMemoryLimit = testCases.Select(t => t.MemoryLimit).DefaultIfEmpty().Max();
             return View(problem);
         }
-        public ActionResult Submit(string id,string contest)
+
+        [HttpGet]
+        public ActionResult Submit(string id, string contest)
         {
+            ProblemSubmitModel model = new ProblemSubmitModel();
+            model.Problem = id;
+            model.Contest = contest;
+
             Problem problem;
             try
             {
-                problem = Contest.ByName(contest).ProblemByName(id);
+                problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛不存在" });
             }
             catch (ContestNotStartedException)
             {
@@ -75,13 +86,48 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "题目不存在" });
             }
-            var testCases = from tid in problem.TestCases()
-                            select problem.TestCaseByID(tid);
 
-            ViewBag.TotalTimeLimit = testCases.Select(t => t.TimeLimit).DefaultIfEmpty().Sum();
-            ViewBag.MinimumMemoryLimit = testCases.Select(t => t.MemoryLimit).DefaultIfEmpty().Min();
-            ViewBag.MaximumMemoryLimit = testCases.Select(t => t.MemoryLimit).DefaultIfEmpty().Max();
-            return View(problem);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Submit(ProblemSubmitModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            Guid recordID;
+            try
+            {
+                Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
+                recordID=problem.Submit(new Record
+                {
+                    Code = model.Code,
+                    Language = (Record.LanguageType)model.Language
+                });
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛不存在" });
+            }
+            catch (ContestNotStartedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未开始，不能提交代码" });
+            }
+            catch (NotAttendedContestException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有报名比赛，不能提交代码" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "题目不存在" });
+            }
+
+            return RedirectToAction("Show", "Record", new { id = recordID });
         }
     }
 }

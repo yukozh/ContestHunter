@@ -49,7 +49,8 @@
                             new SelectListItem{Text="校验器错误",Value="CMP_Error"},
                             new SelectListItem{Text="输出过长",Value="Output_Limit_Execeeded"},
                             new SelectListItem{Text="系统错误",Value="System_Error"},
-                            new SelectListItem{Text="等待评测",Value="Pending"}
+                            new SelectListItem{Text="等待评测",Value="Pending"},
+                            new SelectListItem{Text="编译失败",Value="Compile_Error"}
                         }, new { @class = "input-small" })
                     <input type="submit" class="btn btn-primary" value="查询" />
                 </div>
@@ -118,20 +119,16 @@
                                     ViewBag.Label = "label-important";
                                     ViewBag.Message = "答案错误";
                                     break;
+                                case Record.StatusType.Compile_Error:
+                                    ViewBag.Label = "";
+                                    ViewBag.Message = "编译失败";
+                                    break;
                                 default:
                                     throw new Exception("错误的类型");
                             }
                             <td>
                                 @Html.ActionLink((string)ViewBag.Message, "Show", "Record", new { id = record.ID }, new { @class = "label " + ViewBag.Label, style = "font-size: 15px;" })
                             </td>
-                            @*
-                        label label-success:通过
-                        label label-important：答案错误、程序崩溃
-                        label label-warning：超过时间限制、超过内存限制、输出过长
-                        label label-info：正在评测、等待评测、OI比赛中“结果被隐藏”
-                        label：编译失败
-                        label label-inverse：校验器出错、系统错误
-                        *@
                             <td>
                                 <span class="score_100"><b>不支持</b></span>
                                 /
@@ -155,7 +152,20 @@
                                 /
                             <span style="color: orange"><b>@record.CodeLength</b></span><span style="color: blue"> B</span>
                             </td>
-                            <td>C++</td><!--C++/C/Pascal-->
+                            <td>
+                                @switch (Model.Language)
+                                {
+                                    case Record.LanguageType.C:
+                                    @:C
+                                        break;
+                                    case Record.LanguageType.CPP:
+                                    @:C++
+                                        break;
+                                    case Record.LanguageType.Pascal:
+                                    @:Pascal
+                                        break;
+                                }
+                            </td>
                             <td>@record.SubmitTime</td>
                         </tr>
                     }
