@@ -173,6 +173,7 @@
     <Compile Include="Models\Domain\Record.cs" />
     <Compile Include="Models\Domain\TestCase.cs" />
     <Compile Include="Models\Domain\User.cs" />
+    <Compile Include="Models\View\ContestListModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />
     <Compile Include="Models\View\User\LoginModel.cs" />
     <Compile Include="Models\View\User\RegisterModel.cs" />

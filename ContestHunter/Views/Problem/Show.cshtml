@@ -25,7 +25,7 @@
             <tbody>
                 <tr>
                     <td><b>总时限</b></td>
-                    <td>@(Math.Round(ViewBag.TotalTimeLimit/1000.0,1))s</td>
+                    <td>@(Math.Round(ViewBag.TotalTimeLimit / 1000.0, 1))s</td>
                     <td><b>内存限制</b></td>
                     <td>
                         @if (ViewBag.MinimumMemoryLimit == ViewBag.MaximumMemoryLimit)
@@ -34,7 +34,7 @@
                         }
                         else
                         {
-                            @(ViewBag.MinimumMemoryLimit/1024/1024)@:~@(ViewBag.MaximumMemoryLimit/1024/1024)
+                            @(ViewBag.MinimumMemoryLimit / 1024 / 1024)@:~@(ViewBag.MaximumMemoryLimit / 1024 / 1024)
                         }
                     </td>
                 </tr>
@@ -48,9 +48,9 @@
         </table>
     </div>
     <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
-        <button class="btn btn-success">提交</button>
-        <button class="btn btn-info">状态</button>
+        @Html.ActionLink("提交", "Submit", "Problem", new { id = Model.Name, contest = "fuckingContest" }, new { @class = "btn btn-success", style = "display:inline-block;" })
+        @Html.ActionLink("状态", "Index", "Record", new { ProblemName = Model.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
         <button class="btn btn-warning">数据</button>
     </div>
-    <div style="width: 980px">@Html.Raw(Model.Content)</div>
+    <div style="width: 980px">@Html.Raw(HtmlFilter.Filter(Model.Content))</div>
 </div>

@@ -1,32 +1,32 @@
 ﻿@using ContestHunter.Models.Domain
+@model ContestHunter.Models.View.ContestListModel
 @{
     ViewBag.Title = "比赛";
     ViewBag.ActivedNav = "Contest";
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
-    .table th,
-    .table td
-    {
-        text-align: center;
-        vertical-align: middle;
-        font-family: 微软雅黑;
-    }
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+            font-family: 微软雅黑;
+        }
 
-    .table td h6
-    {
-        font-weight: normal;
-    }
+            .table td h6 {
+                font-weight: normal;
+            }
 </style>
-@if (ViewBag.Testing.Count > 0)
+@using (Html.BeginForm("Index", "Contest", null, FormMethod.Get, new { id = "frmList" }))
 {
+    if (Model.Testing.Count > 0)
+    {
     <div class="span12">
         <div class="alert alert-success" style="margin-top: 20px; padding: 0px">
             <h5 style="margin: 0px 5px">进行中的比赛</h5>
@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Contest contest in ViewBag.Testing)
+                    @foreach (Contest contest in Model.Testing)
                     {
                         <tr>
                             <td>
@@ -111,61 +111,38 @@
                 </tbody>
                 @if (ViewBag.TestingPageCount > 1)
                 {
+                    @Html.HiddenFor(x => x.TestingPageIndex)
+                    <script>
+                        function ChangeTestingPage(index) {
+                            $('#TestingPageIndex').val(index);
+                            $('#frmList').submit();
+                        }
+                    </script>
                     <tfoot>
                         <tr>
                             <td colspan="5" style="text-align: center">
                                 <div class="pagination" style="margin: 0px">
-                                    @using (Html.BeginForm())
-                                    {
-                                        <ul>
-                                            @if (ViewBag.TestingPageIndex != 0)
+                                    <ul>
+                                        @if (Model.TestingPageIndex != 0)
+                                        {
+                                            <li><a href="javascript:ChangeTestingPage(0)">«</a></li>
+                                        }
+                                        @for (int i = 0; i < Model.TestingPageCount; i++)
+                                        {
+                                            if (Model.TestingPageIndex == i)
                                             {
-                                                <li>
-                                                    @Html.ActionLink("«", "Index", new
-                                                    {
-                                                        pendingPageIndex = ViewBag.PendingPageIndex,
-                                                        donePageIndex = ViewBag.DonePageIndex
-                                                    })
-                                                </li>
+                                            <li class="active"><a href="javascript:ChangeTestingPage( @i )">@(i + 1)</a></li>
                                             }
-                                            @for (int i = 0; i < ViewBag.TestingPageCount; i++)
+                                            else
                                             {
-                                                if (ViewBag.TestingPageIndex == i)
-                                                {
-                                                <li class="active">
-                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
-                                                          {
-                                                              pendingPageIndex = ViewBag.PendingPageIndex,
-                                                              donePageIndex = ViewBag.DonePageIndex,
-                                                              testingPageIndex = i
-                                                          })
-                                                </li>
-                                                }
-                                                else
-                                                {
-                                                <li>
-                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
-                                                          {
-                                                              pendingPageIndex = ViewBag.PendingPageIndex,
-                                                              donePageIndex = ViewBag.DonePageIndex,
-                                                              testingPageIndex = i
-                                                          })
-                                                </li>
-                                                }
+                                            <li><a href="javascript:ChangeTestingPage( @i )">@(i + 1)</a></li>
                                             }
-                                            @if (ViewBag.TestingPageIndex != ViewBag.TestingPageCount - 1)
-                                            {
-                                                <li>
-                                                    @Html.ActionLink("»", "Index", new
-                                                    {
-                                                        pendingPageIndex = ViewBag.PendingPageIndex,
-                                                        donePageIndex = ViewBag.DonePageIndex,
-                                                        testingPageIndex = ViewBag.TestingPageCount - 1
-                                                    })
-                                                </li>
-                                            }
-                                        </ul>
-                                    }
+                                        }
+                                        @if (Model.TestingPageIndex != Model.TestingPageCount - 1)
+                                        {
+                                            <li><a href="javascript:ChangeTestingPage(@(Model.TestingPageCount - 1))" >»</a></li>
+                                        }
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
@@ -174,9 +151,9 @@
             </table>
         </div>
     </div>
-}
-@if (ViewBag.Pending.Count > 0)
-{
+    }
+    if (Model.Pending.Count > 0)
+    {
     <div class="span12">
         <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
             <h5 style="margin: 0px 5px">计划中的比赛</h5>
@@ -198,7 +175,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Contest contest in ViewBag.Pending)
+                    @foreach (Contest contest in Model.Pending)
                     {
                         <tr>
                             <td>
@@ -257,61 +234,38 @@
                 </tbody>
                 @if (ViewBag.PendingPageCount > 1)
                 {
+                    @Html.HiddenFor(x => x.PendingPageIndex)
+                    <script>
+                        function ChangePendingPage(index) {
+                            $('#PendingPageIndex').val(index);
+                            $('#frmList').submit();
+                        }
+                    </script>
                     <tfoot>
                         <tr>
                             <td colspan="5" style="text-align: center">
                                 <div class="pagination" style="margin: 0px">
-                                    @using (Html.BeginForm())
-                                    {
-                                        <ul>
-                                            @if (ViewBag.PendingPageIndex != 0)
+                                    <ul>
+                                        @if (Model.PendingPageIndex != 0)
+                                        {
+                                            <li><a href="javascript:ChangePendingPage(0)">«</a></li>
+                                        }
+                                        @for (int i = 0; i < Model.PendingPageCount; i++)
+                                        {
+                                            if (Model.PendingPageIndex == i)
                                             {
-                                                <li>
-                                                    @Html.ActionLink("«", "Index", new
-                                                    {
-                                                        testingPageIndex = ViewBag.TestingPageIndex,
-                                                        donePageIndex = ViewBag.DonePageIndex
-                                                    })
-                                                </li>
+                                            <li class="active"><a href="javascript:ChangePendingPage( @i )">@(i + 1)</a></li>
                                             }
-                                            @for (int i = 0; i < ViewBag.PendingPageCount; i++)
+                                            else
                                             {
-                                                if (ViewBag.PendingPageIndex == i)
-                                                {
-                                                <li class="active">
-                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
-                                                          {
-                                                              testingPageIndex = ViewBag.TestingPageIndex,
-                                                              donePageIndex = ViewBag.DonePageIndex,
-                                                              pendingPageIndex = i
-                                                          })
-                                                </li>
-                                                }
-                                                else
-                                                {
-                                                <li>
-                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
-                                                          {
-                                                              testingPageIndex = ViewBag.TestingPageIndex,
-                                                              donePageIndex = ViewBag.DonePageIndex,
-                                                              pendingPageIndex = i
-                                                          })
-                                                </li>
-                                                }
+                                            <li><a href="javascript:ChangePendingPage( @i )">@(i + 1)</a></li>
                                             }
-                                            @if (ViewBag.PendingPageIndex != ViewBag.PendingPageCount - 1)
-                                            {
-                                                <li>
-                                                    @Html.ActionLink("»", "Index", new
-                                                    {
-                                                        testingPageIndex = ViewBag.TestingPageIndex,
-                                                        donePageIndex = ViewBag.DonePageIndex,
-                                                        pendingPageIndex = ViewBag.PendingPageCount - 1
-                                                    })
-                                                </li>
-                                            }
-                                        </ul>
-                                    }
+                                        }
+                                        @if (Model.PendingPageIndex != Model.PendingPageCount - 1)
+                                        {
+                                            <li><a href="javascript:ChangeTestingPage(@(Model.PendingPageCount - 1))" >»</a></li>
+                                        }
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
@@ -320,9 +274,9 @@
             </table>
         </div>
     </div>
-}
-@if (ViewBag.Done.Count > 0)
-{
+    }
+    if (Model.Done.Count > 0)
+    {
     <div class="span12">
         <div class="alert" style="margin-top: 20px; padding: 0px">
             <h5 style="margin: 0px 5px">已举办的比赛</h5>
@@ -344,7 +298,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Contest contest in ViewBag.Done)
+                    @foreach (Contest contest in Model.Done)
                     {
                         <tr>
                             <td>
@@ -402,63 +356,40 @@
                         </tr>
                     }
                 </tbody>
-                @if (ViewBag.DonePageCount > 1)
+                @if (Model.DonePageCount > 1)
                 {
+                    @Html.HiddenFor(x => x.DonePageIndex)
+                    <script>
+                        function ChangeDonePage(index) {
+                            $('#DonePageIndex').val(index);
+                            $('#frmList').submit();
+                        }
+                    </script>
                     <tfoot>
                         <tr>
                             <td colspan="5" style="text-align: center">
                                 <div class="pagination" style="margin: 0px">
-                                    @using (Html.BeginForm())
-                                    {
-                                        <ul>
-                                            @if (ViewBag.DonePageIndex != 0)
+                                    <ul>
+                                        @if (Model.DonePageIndex != 0)
+                                        {
+                                            <li><a href="javascript:ChangeDonePage(0)">«</a></li>
+                                        }
+                                        @for (int i = 0; i < Model.DonePageCount; i++)
+                                        {
+                                            if (Model.DonePageIndex == i)
                                             {
-                                                <li>
-                                                    @Html.ActionLink("«", "Index", new
-                                                    {
-                                                        pendingPageIndex = ViewBag.PendingPageIndex,
-                                                        testingPageIndex = ViewBag.TestingPageIndex
-                                                    })
-                                                </li>
+                                            <li class="active"><a href="javascript:ChangeDonePage( @i )">@(i + 1)</a></li>
                                             }
-                                            @for (int i = 0; i < ViewBag.DonePageCount; i++)
+                                            else
                                             {
-                                                if (ViewBag.DonePageIndex == i)
-                                                {
-                                                <li class="active">
-                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
-                                                          {
-                                                              pendingPageIndex = ViewBag.PendingPageIndex,
-                                                              testingPageIndex = ViewBag.TestingPageIndex,
-                                                              donePageIndex = i
-                                                          })
-                                                </li>
-                                                }
-                                                else
-                                                {
-                                                <li>
-                                                    @Html.ActionLink((i + 1).ToString(), "Index", new
-                                                          {
-                                                              pendingPageIndex = ViewBag.PendingPageIndex,
-                                                              testingPageIndex = ViewBag.TestingPageIndex,
-                                                              donePageIndex = i
-                                                          })
-                                                </li>
-                                                }
+                                            <li><a href="javascript:ChangeDonePage( @i )">@(i + 1)</a></li>
                                             }
-                                            @if (ViewBag.DonePageIndex != ViewBag.DonePageCount - 1)
-                                            {
-                                                <li>
-                                                    @Html.ActionLink("»", "Index", new
-                                                    {
-                                                        pendingPageIndex = ViewBag.PendingPageIndex,
-                                                        testingPageIndex = ViewBag.TestingPageIndex,
-                                                        donePageIndex = ViewBag.DonePageCount - 1
-                                                    })
-                                                </li>
-                                            }
-                                        </ul>
-                                    }
+                                        }
+                                        @if (Model.DonePageIndex != Model.DonePageCount - 1)
+                                        {
+                                            <li><a href="javascript:ChangeDonePage(@(Model.DonePageCount - 1))" >»</a></li>
+                                        }
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
@@ -467,4 +398,5 @@
             </table>
         </div>
     </div>
+    }
 }

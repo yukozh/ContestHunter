@@ -12,6 +12,14 @@
             <h4>系统傲娇了，乃对Ta捉了神马>_<？</h4>
         </div>
         <div class="alert alert-warning" style="font-size: large;padding-left:50px">@Model</div>
-        <div style="text-align:center;">@Html.ActionLink("返回主页","Index","Home",null,new{@class="btn btn-warning",style="display:inline-block;"})</div>
+        <div style="text-align:center;">
+            @Html.ActionLink("主页","Index","Home",null,new{@class="btn btn-warning",style="display:inline-block;"})
+            <script>
+                if (history.length > 1) {
+                    document.write('<button onclick="history.back()" class="btn btn-primary">后退</button>');
+                }
+            </script>
+        </div>
+        
     </div>
 </div>

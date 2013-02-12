@@ -6,26 +6,22 @@
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
     }
 
         .table td h2,
         .table td h4,
-        .table td h5
-        {
+        .table td h5 {
             margin: 0px;
             text-align: center;
         }
 
-        .table td h5
-        {
+        .table td h5 {
             font-weight: normal;
         }
 
-        .table td code
-        {
+        .table td code {
             margin-left: 5px;
         }
 </style>
@@ -64,21 +60,21 @@
         {
             TimeSpan span = Model.StartTime - DateTime.Now;
             @:document.getElementById('Pre').innerHTML = '距离比赛开始还有'
-            @:DiffMs =@span.TotalMilliseconds
+                    @:DiffMs =@span.TotalMilliseconds
             @:clock();
         }
         else if (Model.EndTime < DateTime.Now)
         {
             @:document.getElementById('Pre').innerHTML = '比赛已结束'
-            @:document.getElementById('Next').innerHTML = ''
+                    @:document.getElementById('Next').innerHTML = ''
         }
         else
         {
             TimeSpan span = Model.EndTime - DateTime.Now;
             @:document.getElementById('Pre').innerHTML = '距离比赛结束还有'
-            @:DiffMs =@span.TotalMilliseconds
+                    @:DiffMs =@span.TotalMilliseconds
             @:clock();
-        }
+                }
     });
 </script>
 
@@ -202,8 +198,7 @@
                                 <tr>
                                     <td colspan="2">
                                         <div class="alert alert-info" style="margin: 0px">
-                                            @*此处为Html*@
-                                            @Html.Raw(Model.Description)
+                                            @Html.Raw(HtmlFilter.Filter(Model.Description))
                                         </div>
                                     </td>
                                 </tr>

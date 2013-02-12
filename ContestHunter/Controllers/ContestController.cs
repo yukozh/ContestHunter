@@ -5,7 +5,7 @@ using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 using ContestHunter.Models.Domain;
-
+using ContestHunter.Models.View;
 namespace ContestHunter.Controllers
 {
     public class ContestController : Controller
@@ -13,21 +13,17 @@ namespace ContestHunter.Controllers
         static readonly int INDEX_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Contest.Index.PageSize"]);
 
         [AllowAnonymous]
-        public ActionResult Index(int pendingPageIndex = 0, int testingPageIndex = 0, int donePageIndex = 0)
+        public ActionResult Index(ContestListModel model)
         {
-            ViewBag.Pending = Contest.Pending(pendingPageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
-            ViewBag.Testing = Contest.Testing(testingPageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
-            ViewBag.Done = Contest.Done(donePageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
+            model.Pending = Contest.Pending(model.PendingPageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
+            model.Testing = Contest.Testing(model.TestingPageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
+            model.Done = Contest.Done(model.DonePageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
 
-            ViewBag.PendingPageCount = (int)Math.Ceiling(Contest.PendingCount() / (double)INDEX_PAGE_SIZE);
-            ViewBag.TestingPageCount = (int)Math.Ceiling(Contest.TestingCount() / (double)INDEX_PAGE_SIZE);
-            ViewBag.DonePageCount = (int)Math.Ceiling(Contest.DoneCount() / (double)INDEX_PAGE_SIZE);
+            model.PendingPageCount = (int)Math.Ceiling(Contest.PendingCount() / (double)INDEX_PAGE_SIZE);
+            model.TestingPageCount = (int)Math.Ceiling(Contest.TestingCount() / (double)INDEX_PAGE_SIZE);
+            model.DonePageCount = (int)Math.Ceiling(Contest.DoneCount() / (double)INDEX_PAGE_SIZE);
 
-            ViewBag.PendingPageIndex = pendingPageIndex;
-            ViewBag.TestingPageIndex = testingPageIndex;
-            ViewBag.DonePageIndex = donePageIndex;
-
-            return View();
+            return View(model);
         }
 
         [AllowAnonymous]
