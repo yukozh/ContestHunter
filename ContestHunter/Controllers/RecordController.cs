@@ -15,10 +15,8 @@ namespace ContestHunter.Controllers
         [AllowAnonymous]
         public ActionResult Index(RecordListModel model)
         {
-            List<Record> records;
-            records = Record.Select(model.PageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE, model.UserName, model.ProblemName, model.ContestName, model.Language, model.Status, Record.OrderByType.SubmitTime);
-            model.Records = records;
-            model.PageCount = 123;
+            model.Records = Record.Select(model.PageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE, model.UserName, model.ProblemName, model.ContestName, model.Language, model.Status, Record.OrderByType.SubmitTime);
+            model.PageCount = Record.Count() / INDEX_PAGE_SIZE;
             return View(model);
         }
 

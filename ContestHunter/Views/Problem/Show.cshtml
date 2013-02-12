@@ -48,7 +48,7 @@
         </table>
     </div>
     <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
-        @Html.ActionLink("提交", "Submit", "Problem", new { id = Model.Name, contest = "fuckingContest" }, new { @class = "btn btn-success", style = "display:inline-block;" })
+        @Html.ActionLink("提交", "Submit", "Problem", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-success", style = "display:inline-block;" })
         @Html.ActionLink("状态", "Index", "Record", new { ProblemName = Model.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
         <button class="btn btn-warning">数据</button>
     </div>
