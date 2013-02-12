@@ -3,7 +3,8 @@
 }
 
 <style type="text/css">
-    .table td {
+    .table td
+    {
         font-family: 微软雅黑;
         text-align: center;
     }
@@ -22,7 +23,7 @@
             <tbody>
                 <tr>
                     <td><b>总时限</b></td>
-                    <td>@(Math.Round(ViewBag.TotalTimeLimit/1000.0,1))s</td>
+                    <td>@(Math.Round(ViewBag.TotalTimeLimit / 1000.0, 1))s</td>
                     <td><b>内存限制</b></td>
                     <td>
                         @if (ViewBag.MinimumMemoryLimit == ViewBag.MaximumMemoryLimit)
@@ -31,7 +32,7 @@
                         }
                         else
                         {
-                            @(ViewBag.MinimumMemoryLimit/1024/1024)@:~@(ViewBag.MaximumMemoryLimit/1024/1024)
+                            @(ViewBag.MinimumMemoryLimit / 1024 / 1024)@:~@(ViewBag.MaximumMemoryLimit / 1024 / 1024)
                         }
                     </td>
                 </tr>
@@ -44,7 +45,9 @@
             </tbody>
         </table>
     </div>
-    <div style="width: 980px">大家好，这里是代码提交框哦，using namespace sjy;可以直接AC哦~</div>
+    <textarea style="width: 940px; height: 600px">
+        大家好，这里是代码提交框哦，using namespace sjy;可以直接AC哦~
+    </textarea>
     <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
         <button class="btn btn-success">提交代码</button>
         <button class="btn btn-info">返回题目</button>

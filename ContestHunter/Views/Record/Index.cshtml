@@ -28,9 +28,9 @@
             <div class="form-search" style="text-align: right; margin: 5px">
                 <h4 style="float: left; font-family: 微软雅黑; font-weight: normal; padding: 4px">提交记录</h4>
                 <div style="float: right">
-                    @Html.TextBoxFor(x => x.UserName, new { @class = "input-small search-query", placeholder = "用户名" })
-                    @Html.TextBoxFor(x => x.ProblemName, new { @class = "input-small search-query", placeholder = "题目名称" })
-                    @Html.TextBoxFor(x => x.ContestName, new { @class = "input-small search-query", placeholder = "比赛名称" })
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "input-small search-query", placeholder = " 用户名" })
+                    @Html.TextBoxFor(x => x.ProblemName, new { @class = "input-small search-query", placeholder = " 题目名称" })
+                    @Html.TextBoxFor(x => x.ContestName, new { @class = "input-small search-query", placeholder = " 比赛名称" })
                     @Html.DropDownListFor(x => x.Language, new SelectListItem[]
                         {
                             new SelectListItem{Text="语言",Value=""},
@@ -59,16 +59,16 @@
                 <colgroup>
                     <col style="width: 300px">
                     <col style="width: 150px">
+                    <col style="width: 330px">
                     <col style="width: 80px">
-                    <col style="width: 300px">
-                    <col style="width: 150px">
+                    <col style="width: 120px">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>题目名称/提交者</th>
                         <th>评测结果</th>
-                        <th>得分</th>
-                        <th>用时/内存/代码长度</th>
+                        <th>得分/用时/内存/代码长度</th>
+                        <th>语言</th>
                         <th>提交时间</th>
                     </tr>
                 </thead>
@@ -132,8 +132,9 @@
                         label：编译失败
                         label label-inverse：校验器出错、系统错误
                         *@
-                            <td><span class="score_100"><b>不支持</b></span></td>
                             <td>
+                                <span class="score_100"><b>不支持</b></span>
+                                /
                                 @if (record.ExecutedTime != null)
                                 {
                                     <span style="color: orange"><b>@record.ExecutedTime.Value.TotalMilliseconds</b></span><span style="color: blue"> ms</span>
@@ -154,6 +155,7 @@
                                 /
                             <span style="color: orange"><b>@record.CodeLength</b></span><span style="color: blue"> B</span>
                             </td>
+                            <td>C++</td><!--C++/C/Pascal-->
                             <td>@record.SubmitTime</td>
                         </tr>
                     }

@@ -19,6 +19,9 @@ namespace ContestHunter.Controllers
             model.PageCount = Record.Count() / INDEX_PAGE_SIZE;
             return View(model);
         }
-
+        public ActionResult Show()
+        {
+            return View();
+        }
     }
 }
