@@ -527,7 +527,7 @@ namespace ContestHunter.Models.Domain
                             Scores = des.Select(x => (null == x ? null : x.Score)).ToList(),
                             TotalScore = des.Sum(x => (null == x ? 0 : (int)x.Score)),
                             User = u.Name,
-                            TotalTime = des.Sum(x => (null == x ? 0 : (int)x.ExecutedTime))
+                            TotalTime = des.Sum(x => (null == x ? 0 : (null == x.ExecutedTime ? 0 : (int)x.ExecutedTime)))
                         }).ToList();
             }
         }
