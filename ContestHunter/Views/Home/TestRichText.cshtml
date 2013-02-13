@@ -14,7 +14,7 @@
     <fieldset>
         <legend>效果</legend>
         <div style="border: 2px black solid;">
-            @Html.Raw(HtmlFilter.Filter(ViewBag.Html))
+            @Html.Sanitized((string)ViewBag.Html)
         </div>
     </fieldset>
 }

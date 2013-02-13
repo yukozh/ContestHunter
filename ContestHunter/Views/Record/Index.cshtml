@@ -79,7 +79,7 @@
                         <tr>
                             <td>
                                 @Html.ActionLink(record.Problem, "Show", "Problem", new { id = record.Problem, contest = record.Contest }, null)<br />
-                                From @Html.ActionLink(record.User, "Show", "User", new { id = record.User }, null)
+                                From @Html.UserLink(record.User)
                             </td>
                             @switch (record.Status)
                             {
@@ -130,7 +130,14 @@
                                 @Html.ActionLink((string)ViewBag.Message, "Show", "Record", new { id = record.ID }, new { @class = "label " + ViewBag.Label, style = "font-size: 15px;" })
                             </td>
                             <td>
-                                <span class="score_100"><b>不支持</b></span>
+                                @if (record.Score != null)
+                                {
+                                    <span class="score_@record.Score"><b>@record.Score</b></span>
+                                }
+                                else
+                                {
+                                    @:?
+                                }
                                 /
                                 @if (record.ExecutedTime != null)
                                 {
@@ -139,16 +146,16 @@
                                 else
                                 {
                                     @:?
-                            }
+                                }
                                 /
-                            @if (record.Memory != null)
-                            {
-                                <span style="color: orange"><b>@(record.Memory.Value / 1024)</b></span><span style="color: blue"> KB</span>
-                            }
-                            else
-                            {
-                                @:?
-                            }
+                                @if (record.Memory != null)
+                                {
+                                    <span style="color: orange"><b>@(record.Memory.Value / 1024)</b></span><span style="color: blue"> KB</span>
+                                }
+                                else
+                                {
+                                    @:?
+                                }
                                 /
                             <span style="color: orange"><b>@record.CodeLength</b></span><span style="color: blue"> B</span>
                             </td>

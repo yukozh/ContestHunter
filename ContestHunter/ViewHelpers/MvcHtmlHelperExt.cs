@@ -5,11 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using System.Web.Mvc.Html;
 namespace ContestHunter.ViewHelpers
 {
     public static class MvcHtmlHelperExt
     {
+        public static MvcHtmlString Sanitized<TModel>(this HtmlHelper<TModel> self, string html)
+        {
+            if (html == null) return new MvcHtmlString("");
+            return new MvcHtmlString(HtmlFilter.Instance.SanitizeHtml(html));
+        }
+
+        public static MvcHtmlString UserLink<TModel>(this HtmlHelper<TModel> self, string userName)
+        {
+            return self.ActionLink(userName, "Show", "User", new { id = userName }, null);
+        }
+
         public static MvcHtmlString DescriptionFor<TModel, TValue>(this HtmlHelper<TModel> self, Expression<Func<TModel, TValue>> expression)
         {
             return DescriptionFor(self, expression, new object());

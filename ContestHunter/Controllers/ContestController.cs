@@ -11,6 +11,7 @@ namespace ContestHunter.Controllers
     public class ContestController : Controller
     {
         static readonly int INDEX_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Contest.Index.PageSize"]);
+        static readonly int STANDING_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Contest.Standing.PageSize"]);
 
         [AllowAnonymous]
         public ActionResult Index(ContestListModel model)
@@ -39,6 +40,27 @@ namespace ContestHunter.Controllers
                 return RedirectToAction("Error", "Shared", new { msg = "没有相应的比赛" });
             }
             return View(contest);
+        }
+
+        public ActionResult Standing(string id, ContestStandingModel model)
+        {
+            Contest contest = Contest.ByName(id);
+            model.Problems = contest.Problems().OrderBy(n => n).ToList();
+            model.PageCount = 10;
+            model.Contest = id;
+            model.Type = contest.Type;
+            model.StartIndex = model.PageIndex * STANDING_PAGE_SIZE;
+
+            switch (contest.Type)
+            {
+                case Contest.ContestType.ACM:
+                    model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            return View(model);
         }
     }
 }

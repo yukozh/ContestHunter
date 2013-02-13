@@ -130,7 +130,7 @@
                                             {
                                             @:,
                                             }
-                                            @Html.ActionLink(Model.Owner[i], "Show", "User", new { id = Model.Owner[i] }, null)
+                                            @Html.UserLink(Model.Owner[i])
                                         }
                                         </h5>
                                     }
@@ -198,7 +198,7 @@
                                 <tr>
                                     <td colspan="2">
                                         <div class="alert alert-info" style="margin: 0px">
-                                            @Html.Raw(HtmlFilter.Filter(Model.Description))
+                                            @Html.Sanitized(Model.Description)
                                         </div>
                                     </td>
                                 </tr>

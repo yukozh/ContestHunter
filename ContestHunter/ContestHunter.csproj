@@ -175,6 +175,7 @@
     <Compile Include="Models\Domain\TestCase.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Models\View\ContestListModel.cs" />
+    <Compile Include="Models\View\ContestStandingModel.cs" />
     <Compile Include="Models\View\ProblemSubmitModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />
     <Compile Include="Models\View\User\LoginModel.cs" />
@@ -292,6 +293,9 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contest\Standing.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

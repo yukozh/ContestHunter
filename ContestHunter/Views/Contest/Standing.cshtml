@@ -1,0 +1,108 @@
+﻿@model ContestHunter.Models.View.ContestStandingModel
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = Model.Contest + "的排名";
+}
+
+<link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    table {
+        background-color: white;
+        font-family: 微软雅黑;
+    }
+
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="span12" style="margin-top: 30px">
+    <h2 style="text-align: center">@Model.Contest</h2>
+    <table class="table table-bordered table-striped table-hover">
+        <colgroup>
+            <col style="width: 50px">
+            <col style="width: 150px">
+            <col style="width: 80px">
+            @for (int i = 0; i < Model.Problems.Count; i++)
+            {
+                <col />
+            }
+            <col style="width: 100px">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>排名</th>
+                <th>用户名</th>
+                @if (Model.Type == Contest.ContestType.ACM)
+                {
+                    <th>通过题数</th>
+                }
+                else
+                {   
+                    <th>总分</th>
+                }
+                @foreach (var p in Model.Problems)
+                {
+                    <th>@p</th>
+                }
+                @switch (Model.Type)
+                {
+                    case Contest.ContestType.OI:
+                    <th>总用时</th>
+                        break;
+                    case Contest.ContestType.ACM:
+                    <th>总罚时</th>
+                        break;
+                    case Contest.ContestType.CF:
+                    <th>猎杀数</th>
+                        break;
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Type == Contest.ContestType.ACM)
+            {
+                for (int i = 0; i < Model.ACM.Count; i++)
+                {
+                    ACMStanding standing = Model.ACM[i];
+                <tr>
+                    <td><b>@(i + Model.StartIndex + 1)</b></td>
+                    <td>@Html.UserLink(standing.User)</td>
+                    <td><b>@standing.CountAC</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
+                    @foreach (var desc in standing.Description)
+                    {
+                        <!--
+                        <td>@*OI赛制的情况，显示该题得分，class="score_该题得分"*@
+                            <span class="score_65"><b>65</b></span>
+                        </td>
+                            -->
+                        <td>
+                            @if (desc.isAC)
+                            {
+                                <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)).(@desc.FailedTimes)</span>
+                            }
+                            else if (desc.FailedTimes > 0)
+                            {
+                                <span style="color: red">-@desc.FailedTimes</span>
+                            }
+                        </td>
+                        <!--
+                        <td>@*CF赛制的情况，如果通过则显示该题得分，如果提交未通过显示-X（X为提交次数），如果未提交则空着"*@
+                            <span style="color: #50C350"><b>1680</b></span>
+                            @*未通过时：<span style="color:red"><b>-3</b></span>*@
+                        </td>
+                            -->
+@*有多少个题，这里就有多少个<td></td>*@
+                    }
+                    <td>
+                        @*OI: <span style="color: orange"><b>16028</b></span><span style="color: blue"> ms</span>*@
+                        <span style="color: blue">@(new TimeSpan(0, standing.TotalTime, 0))</span>
+                        @*CF：（+X:-Y，X为成功hunt次数，Y为失败次数，有一项为0则只显示一项，都为0则不显示）<span style="color: green">+2</span> : <span style="color:gray">-1</span>*@
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

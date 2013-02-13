@@ -13,7 +13,7 @@ namespace ContestHunter.Models.Domain
         public string Contest;
         public string Problem;
         public string Code;
-        public string? Detail;
+        public string Detail;
         public int? Score;
 
         public enum LanguageType

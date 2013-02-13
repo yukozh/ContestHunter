@@ -15,13 +15,8 @@ namespace ContestHunter.ViewHelpers
     /// Additionally it uses a list created by Robert Beal to limit
     /// the number of allowed tags and attributes to a sensible level
     /// </summary>
-    public sealed class HtmlFilter
+    sealed class HtmlFilter
     {
-        public static string Filter(string html)
-        {
-            return Instance.SanitizeHtml(html);
-        }
-
         private static volatile HtmlFilter _instance;
         private static object _root = new object();
 

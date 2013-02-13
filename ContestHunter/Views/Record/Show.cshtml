@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <td><b>提交者</b></td>
-                        <td>@Html.ActionLink(Model.User, "Show", "User", new { id = Model.User }, null)</td>
+                        <td>@Html.UserLink(Model.User)</td>
                     </tr>
                     <tr>
                         <td><b>评测结果</b></td>
@@ -72,10 +72,13 @@
                         }
                         <td><span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span></td>
                     </tr>
-                    <tr>
-                        <td><b>得分</b></td>
-                        <td><span class="score_100"><b>暂不支持</b></span></td>
-                    </tr>
+                    @if (Model.Score.HasValue)
+                    {
+                        <tr>
+                            <td><b>得分</b></td>
+                            <td><span class="score_@Model.Score"><b>@Model.Score</b></span></td>
+                        </tr>
+                    }
                     @if (Model.ExecutedTime.HasValue)
                     {
                         <tr>
@@ -120,7 +123,7 @@
         </div>
         <div class="alert" style="float: right; width: 550px">
             <h5 style="color: red; float: right">v-Judge-Kernel @@ Contest Hunter</h5>
-            @Html.Raw(HtmlFilter.Filter(Model.Detail == null ? "" : Model.Detail))
+            @Html.Sanitized(Model.Detail)
             @*
             <h5>编译信息：</h5>
             <div style="padding-left: 10px">
@@ -142,7 +145,7 @@
             </div>
             *@
         </div>
-        <div style="clear: both; padding: 5px;">
+        <div style="clear: both; padding: 5px">
             @switch (Model.Language)
             {
                 case Record.LanguageType.C:
