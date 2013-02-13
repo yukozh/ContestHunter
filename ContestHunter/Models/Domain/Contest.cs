@@ -512,21 +512,22 @@ namespace ContestHunter.Models.Domain
                 if (DateTime.Now <= con.EndTime)
                     throw new ContestNotEndedException();
                 return (from u in con.ATTENDERs
-                        let scores = (from p in con.PROBLEMs
-                                      orderby p.Name ascending
-                                      let score = (from r in p.RECORDs
-                                                   where r.USER1 == u
-                                                   && r.PROBLEM1 == p
-                                                   && r.SubmitTime >= con.StartTime
-                                                   && r.SubmitTime <= con.EndTime
-                                                   orderby r.SubmitTime descending
-                                                   select r.Score).FirstOrDefault()
-                                      select score)
+                        let des = (from p in con.PROBLEMs
+                                   orderby p.Name ascending
+                                   let score = (from r in p.RECORDs
+                                                where r.USER1 == u
+                                                && r.PROBLEM1 == p
+                                                && r.SubmitTime >= con.StartTime
+                                                && r.SubmitTime <= con.EndTime
+                                                orderby r.SubmitTime descending
+                                                select r).FirstOrDefault()
+                                   select score)
                         select new OIStanding
                         {
-                            Scores = scores.ToList(),
-                            ToTalScore = scores.Sum(x => (null == x ? 0 : (int)x)),
-                            User = u.Name
+                            Scores = des.Select(x => x.Score).ToList(),
+                            TotalScore = des.Sum(x => (null == x ? 0 : (int)x.Score)),
+                            User = u.Name,
+                            TotalTime = des.Sum(x => (null == x ? 0 : (int)x.ExecutedTime))
                         }).ToList();
             }
         }
