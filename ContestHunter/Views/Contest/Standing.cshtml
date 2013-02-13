@@ -105,7 +105,7 @@
                 <tr>
                     <td><b>@(i + Model.StartIndex + 1)</b></td>
                     <td>@Html.UserLink(standing.User)</td>
-                    <td><b>@standing.ToTalScore</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
+                    <td><b>@standing.TotalScore</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
                     @foreach (var score in standing.Scores)
                     {
                         <td>
@@ -113,7 +113,7 @@
                         </td>
                     }
                     <td>
-                        <span style="color: orange"><b>不支持</b></span><span style="color: blue"> ms</span>
+                        <span style="color: orange"><b>@standing.TotalTime</b></span><span style="color: blue"> ms</span>
                     </td>
                 </tr>
                 }

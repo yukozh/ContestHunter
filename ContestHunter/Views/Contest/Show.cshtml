@@ -1,5 +1,6 @@
 ﻿@model ContestHunter.Models.Domain.Contest
 @using ContestHunter.Models.Domain
+@using USER = ContestHunter.Models.Domain.User
 @{
     ViewBag.Title = Model.Name;
     ViewBag.ActivedNav = "Contest";
@@ -60,21 +61,21 @@
         {
             TimeSpan span = Model.StartTime - DateTime.Now;
             @:document.getElementById('Pre').innerHTML = '距离比赛开始还有'
-                    @:DiffMs =@span.TotalMilliseconds
+                                                    @:DiffMs =@span.TotalMilliseconds
             @:clock();
         }
         else if (Model.EndTime < DateTime.Now)
         {
             @:document.getElementById('Pre').innerHTML = '比赛已结束'
-                    @:document.getElementById('Next').innerHTML = ''
+                                                    @:document.getElementById('Next').innerHTML = ''
         }
         else
         {
             TimeSpan span = Model.EndTime - DateTime.Now;
             @:document.getElementById('Pre').innerHTML = '距离比赛结束还有'
-                    @:DiffMs =@span.TotalMilliseconds
+                                                    @:DiffMs =@span.TotalMilliseconds
             @:clock();
-                }
+                                                }
     });
 </script>
 
@@ -169,9 +170,9 @@
                             <tr>
                                 <td>
                                     <ul class="nav nav-list">
-                                        <li><a href="#">实时排名版</a></li>
-                                        <li><a href="#">我的提交记录</a></li>
-                                        <li><a href="#">所有提交记录</a></li>
+                                        <li>@Html.ActionLink("实时排名版", "Standing", new { id = Model.Name })</li>
+                                        <li>@Html.ActionLink("我的提交记录", "Index", "Record", new { ContestName = Model.Name, UserName = USER.CurrentUserName }, null)</li>
+                                        <li>@Html.ActionLink("所有提交记录", "Index", "Record", new { ContestName = Model.Name }, null)</li>
                                         <li><a href="#">比赛预告</a></li>
                                         <li><a href="#">参考题解与试题分析</a></li>
                                     </ul>
