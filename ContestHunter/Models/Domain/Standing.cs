@@ -38,7 +38,8 @@ namespace ContestHunter.Models.Domain
     {
         public string User;
         public List<int?> Scores;
-        public int ToTalScore;
+        public int TotalScore;
+        public int TotalTime;
     }
 
 }
