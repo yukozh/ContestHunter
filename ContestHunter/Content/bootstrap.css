@@ -218,7 +218,7 @@ a:hover {
   margin-left: 20px;
 }
 
-.container,
+/*.container,*/
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
@@ -813,8 +813,8 @@ address {
   font-style: normal;
   line-height: 20px;
 }
-/*
-code,
+
+/*code,*/
 pre {
   padding: 0 3px 2px;
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
@@ -825,12 +825,12 @@ pre {
           border-radius: 3px;
 }
 
-code {
+/*code {
   padding: 2px 4px;
   color: #d14;
   background-color: #f7f7f9;
   border: 1px solid #e1e1e8;
-}
+}*/
 
 pre {
   display: block;
@@ -849,18 +849,18 @@ pre {
      -moz-border-radius: 4px;
           border-radius: 4px;
 }
-*/
+
 pre.prettyprint {
   margin-bottom: 20px;
 }
-/*
+
 pre code {
   padding: 0;
   color: inherit;
   background-color: transparent;
   border: 0;
 }
-*/
+
 .pre-scrollable {
   max-height: 340px;
   overflow-y: scroll;
