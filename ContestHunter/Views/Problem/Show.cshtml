@@ -52,5 +52,5 @@
         @Html.ActionLink("状态", "Index", "Record", new { ProblemName = Model.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
         <button class="btn btn-warning">数据</button>
     </div>
-    <div style="width: 980px">@Html.Raw(HtmlFilter.Filter(Model.Content))</div>
+    <div style="width: 980px">@Html.Sanitized(Model.Content)</div>
 </div>

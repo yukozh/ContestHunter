@@ -1,5 +1,4 @@
 ﻿@model ContestHunter.Models.Domain.User
-
 @{
     ViewBag.Title = Model.Name;
 }
@@ -44,7 +43,7 @@
                     （这里是头像 200*200）
                 </td>
                 <td style="padding-top: 10px; padding-right: 20px; width: 350px; vertical-align: top;">
-                    <h4 style="color: #ff0000">国际首席猎手，VariantF</h4>
+                    <h4 style="color: #ff0000">国际首席猎手，@Model.Name</h4>
                     @*
                     管理员(Administrator)  color:#000000
                     国际首席猎手(International Chief Hunter)  rating=2600~3000  color:#FF0000
