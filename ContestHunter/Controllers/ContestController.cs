@@ -40,5 +40,10 @@ namespace ContestHunter.Controllers
             }
             return View(contest);
         }
+
+        public ActionResult Standing()
+        {
+            return View();
+        }
     }
 }
