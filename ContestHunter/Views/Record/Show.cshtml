@@ -72,10 +72,13 @@
                         }
                         <td><span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span></td>
                     </tr>
-                    <tr>
-                        <td><b>得分</b></td>
-                        <td><span class="score_100"><b>暂不支持</b></span></td>
-                    </tr>
+                    @if (Model.Score.HasValue)
+                    {
+                        <tr>
+                            <td><b>得分</b></td>
+                            <td><span class="score_@Model.Score"><b>@Model.Score</b></span></td>
+                        </tr>
+                    }
                     @if (Model.ExecutedTime.HasValue)
                     {
                         <tr>
