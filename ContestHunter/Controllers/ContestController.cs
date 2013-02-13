@@ -56,6 +56,9 @@ namespace ContestHunter.Controllers
                 case Contest.ContestType.ACM:
                     model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE);
                     break;
+                case Contest.ContestType.OI:
+                    model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE);
+                    break;
                 default:
                     throw new NotImplementedException();
             }

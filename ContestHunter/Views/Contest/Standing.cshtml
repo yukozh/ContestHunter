@@ -72,11 +72,6 @@
                     <td><b>@standing.CountAC</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
                     @foreach (var desc in standing.Description)
                     {
-                        <!--
-                        <td>@*OI赛制的情况，显示该题得分，class="score_该题得分"*@
-                            <span class="score_65"><b>65</b></span>
-                        </td>
-                            -->
                         <td>
                             @if (desc.isAC)
                             {
@@ -96,9 +91,29 @@
 @*有多少个题，这里就有多少个<td></td>*@
                     }
                     <td>
-                        @*OI: <span style="color: orange"><b>16028</b></span><span style="color: blue"> ms</span>*@
                         <span style="color: blue">@(new TimeSpan(0, standing.TotalTime, 0))</span>
                         @*CF：（+X:-Y，X为成功hunt次数，Y为失败次数，有一项为0则只显示一项，都为0则不显示）<span style="color: green">+2</span> : <span style="color:gray">-1</span>*@
+                    </td>
+                </tr>
+                }
+            }
+            else if (Model.Type == Contest.ContestType.OI)
+            {
+                for (int i = 0; i < Model.OI.Count; i++)
+                {
+                    OIStanding standing = Model.OI[i];
+                <tr>
+                    <td><b>@(i + Model.StartIndex + 1)</b></td>
+                    <td>@Html.UserLink(standing.User)</td>
+                    <td><b>@standing.ToTalScore</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
+                    @foreach (var score in standing.Scores)
+                    {
+                        <td>
+                            <span class="score_@score"><b>@score</b></span>
+                        </td>
+                    }
+                    <td>
+                        <span style="color: orange"><b>不支持</b></span><span style="color: blue"> ms</span>
                     </td>
                 </tr>
                 }
