@@ -488,7 +488,46 @@ namespace ContestHunter.Models.Domain
                                   Description = des.ToList(),
                                   CountAC = des.Sum(d => d.isAC ? 1 : 0)
                               });
-                return result.OrderByDescending(s => s.CountAC).ThenBy(s => s.TotalTime).ToList();
+                return result.OrderByDescending(s => s.CountAC).ThenBy(s => s.TotalTime).Skip(skip).Take(top).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 返回OI比赛Standing
+        /// </summary>
+        /// <param name="skip"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
+        /// <exception cref="ContestTypeMismatchException"></exception>
+        /// <exception cref="ContestNotEndedException"></exception>
+        public List<OIStanding> GetOIStanding(int skip, int top)
+        {
+            if (Type != ContestType.OI)
+                throw new ContestTypeMismatchException();
+            using (var db = new CHDB())
+            {
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                if (DateTime.Now <= con.EndTime)
+                    throw new ContestNotEndedException();
+                return (from u in con.ATTENDERs
+                        let scores = (from p in con.PROBLEMs
+                                      orderby p.Name ascending
+                                      let score = (from r in p.RECORDs
+                                                   where r.USER1 == u
+                                                   && r.PROBLEM1 == p
+                                                   && r.SubmitTime >= con.StartTime
+                                                   && r.SubmitTime <= con.EndTime
+                                                   orderby r.SubmitTime descending
+                                                   select r.Score).FirstOrDefault()
+                                      select score)
+                        select new OIStanding
+                        {
+                            Scores = scores.ToList(),
+                            ToTalScore = scores.Sum(x => (null == x ? 0 : (int)x)),
+                            User = u.Name
+                        }).ToList();
             }
         }
 

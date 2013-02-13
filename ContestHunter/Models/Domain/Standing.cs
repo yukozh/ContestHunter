@@ -34,4 +34,11 @@ namespace ContestHunter.Models.Domain
         public int FailedHack;
     }
 
+    public class OIStanding
+    {
+        public string User;
+        public List<int?> Scores;
+        public int ToTalScore;
+    }
+
 }

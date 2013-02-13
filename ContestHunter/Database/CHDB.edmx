@@ -116,7 +116,6 @@
           <Property Name="CodeLength" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="Score" Type="int" />
-          <Property Name="TestPassed" Type="int" />
           <Property Name="Detail" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="TESTDATA">
@@ -379,7 +378,6 @@
           <Property Name="CodeLength" Type="Int32" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="Score" Type="Int32" />
-          <Property Name="TestPassed" Type="Int32" />
           <Property Name="Detail" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="RECORD" ToRole="PROBLEM" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_RECORD_USER" FromRole="RECORD" ToRole="USER" />
@@ -529,7 +527,6 @@
                 <ScalarProperty Name="CodeLength" ColumnName="CodeLength" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Score" ColumnName="Score" />
-                <ScalarProperty Name="TestPassed" ColumnName="TestPassed" />
                 <ScalarProperty Name="Detail" ColumnName="Detail" />
               </MappingFragment>
             </EntityTypeMapping>

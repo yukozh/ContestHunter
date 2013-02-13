@@ -110,10 +110,7 @@ namespace ContestHunter.Models.Domain
                             Status = (StatusType)r.Status,
                             SubmitTime = r.SubmitTime,
                             User = r.USER1.Name,
-                            Score = (null == r.TestPassed) ? null :
-                            (int?)((int)r.TestPassed / (from t in db.TESTDATAs
-                                                        where t.PROBLEM1 == r.PROBLEM1
-                                                        select t).Count() * 100)
+                            Score = r.Score
                         }).ToList();
             }
         }
@@ -150,10 +147,7 @@ namespace ContestHunter.Models.Domain
                     Status = (StatusType)result.Status,
                     SubmitTime = result.SubmitTime,
                     User = result.USER1.Name,
-                    Score = (null == result.TestPassed) ? null :
-                                    (int?)((int)result.TestPassed / (from t in db.TESTDATAs
-                                                                     where t.PROBLEM1 == result.PROBLEM1
-                                                                     select t).Count() * 100)
+                    Score = result.Score
                 };
             }
         }
