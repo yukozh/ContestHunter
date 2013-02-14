@@ -15,7 +15,6 @@
 <div class="span12">
     <div style="width: 980px; text-align: center">
         <h3>@Model.Name</h3>
-        <h5 style="font-weight:normal"><a href="/Contest/Show?id=@Model.Contest">@Model.Contest</a></h5>
         <table class="table table-striped table-bordered" style="background-color: white; width: 400px; margin: 10px auto">
             <colgroup>
                 <col style="width: 100px">
@@ -48,10 +47,11 @@
             </tbody>
         </table>
     </div>
+    <div style="width: 980px">@Html.Sanitized(Model.Content)</div>
     <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
         @Html.ActionLink("提交", "Submit", "Problem", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-success", style = "display:inline-block;" })
         @Html.ActionLink("状态", "Index", "Record", new { ProblemName = Model.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
         <button class="btn btn-warning">数据</button>
+        @Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
     </div>
-    <div style="width: 980px">@Html.Sanitized(Model.Content)</div>
 </div>
