@@ -307,7 +307,7 @@ namespace ContestHunter.Models.Domain
                              where u.ID == User.CurrentUser.ID
                              select u).Single(),
                     Type = (int)AttendType.Virtual,
-                    Time = DateTime.Now
+                    Time = startTime
                 });
                 db.SaveChanges();
             }
