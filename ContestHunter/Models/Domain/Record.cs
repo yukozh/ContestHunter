@@ -147,9 +147,11 @@ namespace ContestHunter.Models.Domain
                               select r).SingleOrDefault();
                 if (null == result)
                     throw new RecordNotFoundException();
-                if (result.Status != (int)Record.StatusType.Compile_Error || result.USER1.Name != Domain.User.CurrentUser.name)
+                if (result.USER1.Name != Domain.User.CurrentUser.name)
+                {
                     if (DateTime.Now <= result.PROBLEM1.CONTEST1.EndTime)
                         throw new ContestNotEndedException();
+                }
                 return new Record()
                 {
                     ID = result.ID,
