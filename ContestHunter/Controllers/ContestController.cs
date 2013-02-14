@@ -33,6 +33,10 @@ namespace ContestHunter.Controllers
             try
             {
                 contest = Contest.ByName(id);
+                if (!contest.IsAttended())
+                {
+                    return RedirectToAction("Signup", new { id = id });
+                }
             }
             catch (ContestNotFoundException)
             {
@@ -87,6 +91,10 @@ namespace ContestHunter.Controllers
             try
             {
                 contest = Contest.ByName(id);
+                if (contest.IsAttended())
+                {
+                    return RedirectToAction("Show", new { id = id });
+                }
             }
             catch (ContestNotFoundException)
             {
@@ -120,8 +128,9 @@ namespace ContestHunter.Controllers
                         }
                         Contest.ByName(id).VirtualAttend(model.StartTime.Value);
                         break;
-                    default:
-                        throw new NotImplementedException();
+                    case ContestSignupModel.SignupType.Practice:
+                        Contest.ByName(id).PracticeAttend();
+                        break;
                 }
             }
             catch (ContestNotFoundException)
@@ -136,10 +145,16 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "不可重复参加比赛" });
             }
-            catch (ContestNotEndedException)
+            catch (ContestEndedException)
             {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛已结束，不可报名" });
             }
-            catch(Contest
+            catch (ContestNotStartedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未开始" });
+            }
+
+            return RedirectToAction("Show", new { id = id });
         }
     }
 }
