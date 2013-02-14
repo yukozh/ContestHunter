@@ -79,5 +79,19 @@ namespace ContestHunter.Controllers
 
             return View(model);
         }
+
+        public ActionResult Signup(string id)
+        {
+            Contest contest;
+            try
+            {
+                contest = Contest.ByName(id);
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有相应的比赛" });
+            }
+            return View(contest);
+        }
     }
 }
