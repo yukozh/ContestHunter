@@ -40,148 +40,185 @@
 </style>
 
 <div class="span12" style="margin-top: 30px">
-    <table class="table">
-        <colgroup>
-            <col style="width: 280px">
-            <col style="width: 700px">
-        </colgroup>
-        <tbody>
-            <tr>
-                <td colspan="2" style="border: 0px">
-                    <h2>@Model.Contest.Name</h2>
-                </td>
-            </tr>
-            <tr>
-                <td style="border: 0px">
-                    <table class="table table-bordered table-striped table-hover">
-                        <colgroup>
-                            <col>
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <h4>
-                                        @switch (Model.Contest.Type)
-                                        {
-                                            case Contest.ContestType.ACM:
-                                            @:ACM/ICPC
-                                            break;
-                                            case Contest.ContestType.CF:
-                                            @:Codeforces
-                                            break;
-                                            case Contest.ContestType.OI:
-                                            @:OI
-                                            break;
-                                        } - 
-                                        @if (Model.Contest.IsOfficial)
-                                        {
-                                            <span style="color: red">Official</span>
-                                        }
-                                        else
-                                        {
-                                            <span style="color: blue">Unofficial</span>
-                                        }
-                                    </h4>
-                                    @if (Model.Contest.Owner.Count > 0)
-                                    {
-                                        <h5>From 
-                                        @for (int i = 0; i < Model.Contest.Owner.Count; i++)
-                                        {
-                                            if (i != 0)
-                                            {
-                                            @:,
-                                            }
-                                            @Html.UserLink(Model.Contest.Owner[i])
-                                        }
-                                        </h5>
-                                    }
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h4>
-                                        @Model.StartTime<br />
-                                        持续<b> @(Math.Round((Model.Contest.EndTime - Model.Contest.StartTime).TotalHours, 1)) </b>小时 
-                                    </h4>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h5>有<code>@Model.Contest.AttendedUsersCount()</code>人报名参加此比赛</h5>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center">
-                                    @using (Html.BeginForm("Signup", "Contest", FormMethod.Post, new { @class = "xxx" }))
-                                    {
-                                        @Html.HiddenFor(x => x.Type)
-                                        if (Model.Contest.EndTime > DateTime.Now)
-                                        {
-                                        <input type="submit" value="报名参赛" onclick="$('#Type').val('Attend')" class="btn btn-primary" />
-                                        }
-                                        else
-                                        {
-                                        <span style="font-size: 12px; color: gray">*比赛已经结束了，您可以选择参加一场模拟当时情境的比赛，或者查看赛题并进行练习</span>
-                                        <div class="accordion" id="accordion2">
-                                            <div class="accordion-group">
-                                                <div class="accordion-heading">
-                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">注册一场模拟比赛</a>
-                                                </div>
-                                                <div id="collapseOne" class="accordion-body collapse">
-                                                    <div class="accordion-inner" style="text-align: left">
-                                                        <div class="control-group">
-                                                            @Html.LabelFor(x => x.StartTime, new { @class = "control-label" })
-                                                            <div class="controls">
-                                                                @Html.TextBoxFor(x => x.StartTime)
-                                                                @Html.ValidationMessageFor(x => x.StartTime)
-                                                                @Html.DescriptionFor(x => x.StartTime, new { @class = "help-block" })
-                                                            </div>
-                                                        </div>
-                                                        <div style="text-align: center;">
-                                                            <input type="submit" value="确认" class="btn btn-primary btn-small" onclick="$('#Type').val('Virtual')" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="accordion-group">
-                                                <div class="accordion-heading">
-                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">赛题练习</a>
-                                                </div>
-                                                <div id="collapseTwo" class="accordion-body collapse">
-                                                    <div class="accordion-inner">
-                                                        您将可以浏览比赛题目并提交代码进行练习，但不能再注册模拟比赛。<br />
-                                                        <input type="submit" value="确认" class="btn btn-warning btn-small" onclick="$('#Type').val('Practice')" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        }
-                                    }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-                <td style="border: 0px">
-                    <table class="table table-bordered table-striped table-hover">
-                        <colgroup>
-                            <col>
-                        </colgroup>
-                        <tbody>
-                            @if (!string.IsNullOrEmpty(Model.Contest.Description))
-                            {
+    @using (Html.BeginForm("Signup", "Contest", FormMethod.Post, new { @class = "xxx" }))
+    {
+        @Html.HiddenFor(x => x.Type)
+        <table class="table">
+            <colgroup>
+                <col style="width: 280px">
+                <col style="width: 700px">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td colspan="2" style="border: 0px">
+                        <h2>@Model.Contest.Name</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 0px">
+                        <table class="table table-bordered table-striped table-hover">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <tbody>
                                 <tr>
-                                    <td colspan="2">
-                                        <div class="alert alert-info" style="margin: 0px">
-                                            @Html.Sanitized(Model.Contest.Description)
+                                    <td>
+                                        <h4>
+                                            @switch (Model.Contest.Type)
+                                            {
+                                                case Contest.ContestType.ACM:
+                                                @:ACM/ICPC
+                                                    break;
+                                                case Contest.ContestType.CF:
+                                                @:Codeforces
+                                                    break;
+                                                case Contest.ContestType.OI:
+                                                @:OI
+                                                    break;
+                                            }
+                                            - 
+                                            @if (Model.Contest.IsOfficial)
+                                            {
+                                                <span style="color: red">Official</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: blue">Unofficial</span>
+                                            }
+                                        </h4>
+                                        @if (Model.Contest.Owner.Count > 0)
+                                        {
+                                            <h5>From 
+                                                @for (int i = 0; i < Model.Contest.Owner.Count; i++)
+                                                {
+                                                    if (i != 0)
+                                                    {
+                                                    @:,
+                                                    }
+                                                    @Html.UserLink(Model.Contest.Owner[i])
+                                                }
+                                            </h5>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-size: large; text-align: center;">
+                                            @Model.Contest.AbsoluteStartTime<br />
+                                            持续<b> @(Math.Round((Model.Contest.AbsoluteEndTime - Model.Contest.AbsoluteStartTime).TotalHours, 1)) </b>小时 
+                                            @if (Model.Contest.IsVirtual())
+                                            {
+                                                <div style="font-size: small; color: red;">
+                                                    模拟比赛于 @Model.Contest.RelativeStartTime 开始
+                                                </div>
+                                            }
                                         </div>
                                     </td>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                                <tr>
+                                    <td>
+                                        <h5>有<code>@Model.Contest.AttendedUsersCount()</code>人报名参加此比赛</h5>
+                                    </td>
+                                </tr>
+                                @if (Model.Contest.IsAttended())
+                                {
+                                    <tr>
+                                        <td style="text-align:center;">您已报名参加此次比赛
+                                            @if (Model.Contest.RelativeStartTime > DateTime.Now)
+                                            {
+                                                <div>
+                                                    <input type="submit" class="btn btn-danger" value="取消报名" onclick="$('#Type').val('Cancel')" />
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td style="text-align: center">
+                                            <span style="font-size: 12px; color: gray">您可以从下方选择一种参赛方式</span>
+                                            <div class="accordion" id="accordion2">
+                                                @if (Model.Contest.AbsoluteEndTime > DateTime.Now)
+                                                {
+                                                    <div class="accordion-group">
+                                                        <div class="accordion-heading">
+                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseZero">正式参与比赛</a>
+                                                        </div>
+                                                        <div id="collapseZero" class="accordion-body collapse">
+                                                            <div class="accordion-inner">
+                                                                <input type="submit" value="报名参赛" onclick="$('#Type').val('Attend')" class="btn btn-primary" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                                @if (Model.Contest.AbsoluteStartTime < DateTime.Now)
+                                                {
+                                                    <div class="accordion-group">
+                                                        <div class="accordion-heading">
+                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">注册一场模拟比赛</a>
+                                                        </div>
+                                                        <div id="collapseOne" class="accordion-body collapse">
+                                                            <div class="accordion-inner" style="text-align: left">
+                                                                <div class="control-group">
+                                                                    @Html.LabelFor(x => x.StartTime, new { @class = "control-label" })
+                                                                    <div class="controls">
+                                                                        @Html.TextBoxFor(x => x.StartTime)
+                                                                        @Html.ValidationMessageFor(x => x.StartTime)
+                                                                        @Html.DescriptionFor(x => x.StartTime, new { @class = "help-block" })
+                                                                    </div>
+                                                                </div>
+                                                                <div style="text-align: center;">
+                                                                    <input type="submit" value="确认" class="btn btn-primary btn-small" onclick="$('#Type').val('Virtual')" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                                @if (Model.Contest.AbsoluteEndTime < DateTime.Now)
+                                                {
+                                                    <div class="accordion-group">
+                                                        <div class="accordion-heading">
+                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">赛题练习</a>
+                                                        </div>
+                                                        <div id="collapseTwo" class="accordion-body collapse">
+                                                            <div class="accordion-inner">
+                                                                您将可以浏览比赛题目并提交代码进行练习，但不能再注册模拟比赛。<br />
+                                                                <input type="submit" value="确认" class="btn btn-warning btn-small" onclick="$('#Type').val('Practice')" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                    <td style="border: 0px">
+                        <table class="table table-bordered table-striped table-hover">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <tbody>
+                                @if (!string.IsNullOrEmpty(Model.Contest.Description))
+                                {
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="alert alert-info" style="margin: 0px">
+                                                @Html.Sanitized(Model.Contest.Description)
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
 </div>

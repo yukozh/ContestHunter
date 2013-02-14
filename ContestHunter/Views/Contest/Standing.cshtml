@@ -25,7 +25,9 @@
     <div class="alert alert-info" style="padding: 0px">
         <table class="table" style="margin:0px; border:0px; background-color:rgb(217,237,247)">
             <tr>
-                <td style="text-align:left; color:green">@Model.Contest 的最终排名@*在比赛进行 2:15:08 时的排名（为了支持virtual以后需要加入时间）*@</td>
+                <td style="text-align:left; color:green">
+                    @Model.Contest 的最终排名@*在比赛进行 2:15:08 时的排名（为了支持virtual以后需要加入时间）*@
+                </td>
                 <td style="text-align:right">
                     <input type="checkbox"/>显示模拟比赛用户 
                     <b>@Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest },null)</b>
