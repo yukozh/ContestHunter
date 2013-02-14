@@ -34,7 +34,7 @@ namespace ContestHunter.Controllers
             {
                 contest = Contest.ByName(id);
             }
-            catch
+            catch (ContestNotFoundException)
             {
                 return RedirectToAction("Error", "Shared", new { msg = "没有相应的比赛" });
             }
@@ -80,6 +80,7 @@ namespace ContestHunter.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public ActionResult Signup(string id)
         {
             Contest contest;
@@ -87,11 +88,58 @@ namespace ContestHunter.Controllers
             {
                 contest = Contest.ByName(id);
             }
-            catch
+            catch (ContestNotFoundException)
             {
                 return RedirectToAction("Error", "Shared", new { msg = "没有相应的比赛" });
             }
-            return View(contest);
+
+            ContestSignupModel model = new ContestSignupModel
+            {
+                Contest = contest,
+                StartTime = DateTime.Now.AddMinutes(5)
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Signup(string id, ContestSignupModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                switch (model.Type.Value)
+                {
+                    case ContestSignupModel.SignupType.Attend:
+                        Contest.ByName(id).Attend();
+                        break;
+                    case ContestSignupModel.SignupType.Virtual:
+                        if (model.StartTime == null)
+                        {
+                            ModelState.AddModelError("StartTime", "开始时间非法");
+                            return View(model);
+                        }
+                        Contest.ByName(id).VirtualAttend(model.StartTime.Value);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有这场比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (AlreadyAttendedContestException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "不可重复参加比赛" });
+            }
+            catch (ContestNotEndedException)
+            {
+            }
+            catch(Contest
         }
     }
 }

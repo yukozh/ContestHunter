@@ -180,6 +180,7 @@
     <Compile Include="Models\Domain\TesterDaemon.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Models\View\ContestListModel.cs" />
+    <Compile Include="Models\View\ContestSignupModel.cs" />
     <Compile Include="Models\View\ContestStandingModel.cs" />
     <Compile Include="Models\View\ProblemSubmitModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />

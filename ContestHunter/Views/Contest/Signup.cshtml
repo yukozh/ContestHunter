@@ -1,34 +1,30 @@
-﻿@model ContestHunter.Models.Domain.Contest
+﻿@model ContestHunter.Models.View.ContestSignupModel
 @using ContestHunter.Models.Domain
 @using USER = ContestHunter.Models.Domain.User
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Contest.Name;
     ViewBag.ActivedNav = "Contest";
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         font-family: 微软雅黑;
     }
 
         .table td h2,
         .table td h4,
-        .table td h5
-        {
+        .table td h5 {
             margin: 0px;
             text-align: center;
         }
 
         .table td h4,
-        .table td h5
-        {
+        .table td h5 {
             font-weight: normal;
         }
 
-    code
-    {
+    code {
         padding: 0 3px 2px;
         font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
         font-size: 12px;
@@ -52,7 +48,7 @@
         <tbody>
             <tr>
                 <td colspan="2" style="border: 0px">
-                    <h2>@Model.Name</h2>
+                    <h2>@Model.Contest.Name</h2>
                 </td>
             </tr>
             <tr>
@@ -65,7 +61,7 @@
                             <tr>
                                 <td>
                                     <h4>
-                                        @switch (Model.Type)
+                                        @switch (Model.Contest.Type)
                                         {
                                             case Contest.ContestType.ACM:
                                             @:ACM/ICPC
@@ -77,7 +73,7 @@
                                             @:OI
                                             break;
                                         } - 
-                                        @if (Model.IsOfficial)
+                                        @if (Model.Contest.IsOfficial)
                                         {
                                             <span style="color: red">Official</span>
                                         }
@@ -86,16 +82,16 @@
                                             <span style="color: blue">Unofficial</span>
                                         }
                                     </h4>
-                                    @if (Model.Owner.Count > 0)
+                                    @if (Model.Contest.Owner.Count > 0)
                                     {
                                         <h5>From 
-                                        @for (int i = 0; i < Model.Owner.Count; i++)
+                                        @for (int i = 0; i < Model.Contest.Owner.Count; i++)
                                         {
                                             if (i != 0)
                                             {
                                             @:,
                                             }
-                                            @Html.UserLink(Model.Owner[i])
+                                            @Html.UserLink(Model.Contest.Owner[i])
                                         }
                                         </h5>
                                     }
@@ -105,27 +101,26 @@
                                 <td>
                                     <h4>
                                         @Model.StartTime<br />
-                                        持续<b> @(Math.Round((Model.EndTime - Model.StartTime).TotalHours, 1)) </b>小时 
+                                        持续<b> @(Math.Round((Model.Contest.EndTime - Model.Contest.StartTime).TotalHours, 1)) </b>小时 
                                     </h4>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <h5>有<code>@Model.AttendedUsersCount()</code>人报名参加此比赛</h5>
+                                    <h5>有<code>@Model.Contest.AttendedUsersCount()</code>人报名参加此比赛</h5>
                                 </td>
                             </tr>
-                            @if (Model.EndTime > DateTime.Now)
-                            {
-                                <tr>
-                                    <td style="text-align: center">
-                                        <input class="btn btn-danger" value="报名参赛" type="submit" />
-                                    </td>
-                                </tr>
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td style="text-align:center">
+                            <tr>
+                                <td style="text-align: center">
+                                    @using (Html.BeginForm("Signup", "Contest", FormMethod.Post, new { @class = "xxx" }))
+                                    {
+                                        @Html.HiddenFor(x => x.Type)
+                                        if (Model.Contest.EndTime > DateTime.Now)
+                                        {
+                                        <input type="submit" value="报名参赛" onclick="$('#Type').val('Attend')" class="btn btn-primary" />
+                                        }
+                                        else
+                                        {
                                         <span style="font-size: 12px; color: gray">*比赛已经结束了，您可以选择参加一场模拟当时情境的比赛，或者查看赛题并进行练习</span>
                                         <div class="accordion" id="accordion2">
                                             <div class="accordion-group">
@@ -133,9 +128,18 @@
                                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">注册一场模拟比赛</a>
                                                 </div>
                                                 <div id="collapseOne" class="accordion-body collapse">
-                                                    <div class="accordion-inner" style="text-align:left">
-                                                        开始时间：<input type="text" value="@DateTime.Now"/><br/>@*默认值为当前时间后五分钟，秒钟数取整*@
-                                                        <h5 style="text-align:center"><input type="submit" value="确认" class="btn btn-primary btn-small" /></h5>
+                                                    <div class="accordion-inner" style="text-align: left">
+                                                        <div class="control-group">
+                                                            @Html.LabelFor(x => x.StartTime, new { @class = "control-label" })
+                                                            <div class="controls">
+                                                                @Html.TextBoxFor(x => x.StartTime)
+                                                                @Html.ValidationMessageFor(x => x.StartTime)
+                                                                @Html.DescriptionFor(x => x.StartTime, new { @class = "help-block" })
+                                                            </div>
+                                                        </div>
+                                                        <div style="text-align: center;">
+                                                            <input type="submit" value="确认" class="btn btn-primary btn-small" onclick="$('#Type').val('Virtual')" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -145,15 +149,16 @@
                                                 </div>
                                                 <div id="collapseTwo" class="accordion-body collapse">
                                                     <div class="accordion-inner">
-                                                        您将可以浏览比赛题目并提交代码进行练习，但不能再注册模拟比赛。<br/>
-                                                        <input type="submit" value="确认" class="btn btn-warning btn-small" />
+                                                        您将可以浏览比赛题目并提交代码进行练习，但不能再注册模拟比赛。<br />
+                                                        <input type="submit" value="确认" class="btn btn-warning btn-small" onclick="$('#Type').val('Practice')" />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            }
+                                        }
+                                    }
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </td>
@@ -163,13 +168,12 @@
                             <col>
                         </colgroup>
                         <tbody>
-                            @if (!string.IsNullOrEmpty(Model.Description))
+                            @if (!string.IsNullOrEmpty(Model.Contest.Description))
                             {
                                 <tr>
                                     <td colspan="2">
                                         <div class="alert alert-info" style="margin: 0px">
-                                            <h4>比赛预告</h4>
-                                            @Html.Sanitized(Model.Description)
+                                            @Html.Sanitized(Model.Contest.Description)
                                         </div>
                                     </td>
                                 </tr>
