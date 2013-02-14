@@ -341,6 +341,7 @@ namespace ContestHunter.Models.Domain
                     Type = (int)AttendType.Practice,
                     Time = DateTime.Now
                 });
+                db.SaveChanges();
             }
         }
 
