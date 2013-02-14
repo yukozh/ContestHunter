@@ -27,7 +27,6 @@ namespace ContestHunter.Controllers
             return View(model);
         }
 
-        [AllowAnonymous]
         public ActionResult Show(string id)
         {
             Contest contest;
