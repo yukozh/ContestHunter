@@ -16,7 +16,26 @@ namespace ContestHunter.Models.Domain
             OI
         }
         public ContestType Type;
-        public DateTime StartTime, EndTime;
+        public DateTime StartTime
+        {
+            get
+            {
+                if (IsVirtual())
+                    return VirtualStartTime();
+                return StartTime;
+            }
+            set;
+        }
+        public DateTime EndTime
+        {
+            get
+            {
+                if (IsVirtual())
+                    return VirtualEndTime();
+                return EndTime;
+            }
+            set;
+        }
         public string Description;
         public bool IsOfficial;
         public List<string> Owner;
@@ -233,13 +252,48 @@ namespace ContestHunter.Models.Domain
                 throw new ContestStartedException();
             using (var db = new CHDB())
             {
-                (from c in db.CONTESTs
-                 where c.Name == Name
-                 select c).Single().ATTENDERs.Add(
-                 (from u in db.USERs
-                  where u.ID == User.CurrentUser.ID
-                  select u).Single()
-                  );
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                con.CONTEST_ATTEND.Add(new CONTEST_ATTEND()
+                 {
+                     USER1 = (from u in db.USERs
+                              where u.ID == User.CurrentUser.ID
+                              select u).Single(),
+                     IsVirtual = false,
+                 });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 虚拟报名比赛
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="AlreadyAttendedContestException"></exception>
+        /// <exception cref="ContestNotStartedException"></exception>
+        public void VirtualAttend(DateTime startTime)
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (IsAttended())
+                throw new AlreadyAttendedContestException();
+            if (DateTime.Now <= StartTime)
+                throw new ContestNotStartedException();
+            using (var db = new CHDB())
+            {
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                con.CONTEST_ATTEND.Add(new CONTEST_ATTEND()
+                {
+                    USER1 = (from u in db.USERs
+                             where u.ID == User.CurrentUser.ID
+                             select u).Single(),
+                    IsVirtual = true,
+                    Time = DateTime.Now
+                });
                 db.SaveChanges();
             }
         }
@@ -256,17 +310,18 @@ namespace ContestHunter.Models.Domain
                 throw new UserNotLoginException();
             if (!IsAttended())
                 throw new NotAttendedContestException();
-            if (DateTime.Now > StartTime)
-                throw new ContestStartedException();
             using (var db = new CHDB())
             {
-                (from c in db.CONTESTs
-                 where c.Name == Name
-                 select c).Single().ATTENDERs.Remove(
-                 (from u in db.USERs
-                  where u.ID == User.CurrentUser.ID
-                  select u).Single()
-                  );
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                var con_att = (from u in con.CONTEST_ATTEND
+                               where u.USER1.Name == User.CurrentUser.name
+                               select u).Single();
+                if ((con_att.IsVirtual && DateTime.Now > con_att.Time) ||
+                    (!con_att.IsVirtual && DateTime.Now > StartTime))
+                    throw new ContestStartedException();
+                con.CONTEST_ATTEND.Remove(con_att);
                 db.SaveChanges();
             }
         }
@@ -275,6 +330,7 @@ namespace ContestHunter.Models.Domain
         /// 判断是否报名比赛
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="UserNotLoginException"></exception>
         public bool IsAttended()
         {
             if (null == User.CurrentUser)
@@ -284,8 +340,8 @@ namespace ContestHunter.Models.Domain
                 return (from u in
                             (from c in db.CONTESTs
                              where c.Name == Name
-                             select c).Single().ATTENDERs
-                        where u.Name == User.CurrentUser.name
+                             select c).Single().CONTEST_ATTEND
+                        where u.USER1.Name == User.CurrentUser.name
                         select u).Any();
             }
         }
@@ -300,7 +356,7 @@ namespace ContestHunter.Models.Domain
             {
                 return (from c in db.CONTESTs
                         where c.Name == Name
-                        select c.ATTENDERs).Single().Count();
+                        select c.CONTEST_ATTEND).Single().Count();
             }
         }
 
@@ -317,8 +373,9 @@ namespace ContestHunter.Models.Domain
                 return (from u in
                             (from c in db.CONTESTs
                              where c.Name == Name
-                             select c.ATTENDERs).Single()
-                        select u.Name).OrderBy(u =>u).Skip(skip).Take(top).ToList();
+                             select c.CONTEST_ATTEND).Single()
+                        orderby u.USER1.Name ascending
+                        select u.USER1.Name).Skip(skip).Take(top).ToList();
 
             }
         }
@@ -349,17 +406,36 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="UserNotLoginException"></exception>
         public Problem ProblemByName(string name)
         {
-            if (null == User.CurrentUser)
-                throw new UserNotLoginException();
-            if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
-            {
-                if (DateTime.Now < StartTime)
-                    throw new ContestNotStartedException();
-                if (DateTime.Now <= EndTime && !IsAttended())
-                    throw new NotAttendedContestException();
-            }
             using (var db = new CHDB())
             {
+                if (null == User.CurrentUser)
+                {
+                    if (DateTime.Now <= EndTime)
+                        throw new UserNotLoginException();
+                }
+                else
+                {
+                    if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
+                    {
+                        var con = (from c in db.CONTESTs
+                                   where c.Name == Name
+                                   select c).Single();
+                        if (!IsAttended())
+                        {
+                            if (DateTime.Now <= EndTime)
+                                throw new ContestNotEndedException();
+                        }
+                        else
+                        {
+                            var con_att = (from ca in con.CONTEST_ATTEND
+                                           where ca.USER1.Name == User.CurrentUser.name
+                                           select ca).Single();
+                            var _StartTime = con_att.IsVirtual ? con_att.Time : DateTime.Now;
+                            if (DateTime.Now < _StartTime)
+                                throw new ContestNotStartedException();
+                        }
+                    }
+                }
                 var result = (from p in db.PROBLEMs
                               where p.Name == name && p.CONTEST1.Name == Name
                               select p).SingleOrDefault();
@@ -372,8 +448,8 @@ namespace ContestHunter.Models.Domain
                                   Content = result.Content,
                                   Comparer = result.Comparer,
                                   ID = result.ID,
-                                  Contest=result.CONTEST1.Name,
-                                  Owner = new List<string>(Owner)
+                                  Contest = result.CONTEST1.Name,
+                                  contest = this
                               };
             }
 
@@ -459,20 +535,20 @@ namespace ContestHunter.Models.Domain
                 var con = (from c in db.CONTESTs
                            where c.Name == Name
                            select c).Single();
-                var result = (from u in con.ATTENDERs
+                var result = (from u in con.CONTEST_ATTEND.Select(x=>x.USER1)
                               let des = from p in con.PROBLEMs
                                         orderby p.Name ascending
                                         let ACTimeList = (from r in p.RECORDs
                                                           where r.USER1 == u
-                                                          && r.SubmitTime >= con.StartTime
-                                                          && r.SubmitTime <= con.EndTime
+                                                          && r.VirtualSubmitTime >= con.StartTime
+                                                          && r.VirtualSubmitTime <= con.EndTime
                                                           && r.Status == (int)Record.StatusType.Accept
-                                                          select r.SubmitTime)
+                                                          select r.VirtualSubmitTime)
                                         let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Min() : null
                                         let FailedTimes = (from r in p.RECORDs
                                                            where r.USER1 == u
-                                                           && r.SubmitTime >= con.StartTime
-                                                           && r.SubmitTime <= (ACTime == null ? con.EndTime : ACTime)
+                                                           && r.VirtualSubmitTime >= con.StartTime
+                                                           && r.VirtualSubmitTime <= (ACTime == null ? con.EndTime : ACTime)
                                                            && r.Status > 0
                                                            select r).Count()
                                         select new ACMStanding.DescriptionClass()
@@ -511,15 +587,15 @@ namespace ContestHunter.Models.Domain
                            select c).Single();
                 if (DateTime.Now <= con.EndTime)
                     throw new ContestNotEndedException();
-                return (from u in con.ATTENDERs
+                return (from u in con.CONTEST_ATTEND.Select(x=>x.USER1)
                         let des = (from p in con.PROBLEMs
                                    orderby p.Name ascending
                                    let score = (from r in p.RECORDs
                                                 where r.USER1 == u
                                                 && r.PROBLEM1 == p
-                                                && r.SubmitTime >= con.StartTime
-                                                && r.SubmitTime <= con.EndTime
-                                                orderby r.SubmitTime descending
+                                                && r.VirtualSubmitTime >= con.StartTime
+                                                && r.VirtualSubmitTime <= con.EndTime
+                                                orderby r.VirtualSubmitTime descending
                                                 select r).FirstOrDefault()
                                    select score)
                         select new OIStanding
@@ -532,6 +608,81 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 判断是否为虚拟报名此比赛
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        public bool IsVirtual()
+        {
+            if (null == User.CurrentUser)
+                return false;
+            if (!IsAttended())
+                return false;
+            using (var db = new CHDB())
+            {
+                var con_att = (from c in db.CONTESTs
+                               where c.Name == Name
+                               select c.CONTEST_ATTEND).Single();
+                return (from u in con_att
+                        where u.USER1.Name == User.CurrentUser.name
+                        select u.IsVirtual).Single();
+            }
+        }
 
+        /// <summary>
+        /// 获得虚拟比赛开始时间
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        /// <exception cref="AttendedNotVirtualException"></exception>
+        DateTime VirtualStartTime()
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!IsAttended())
+                throw new NotAttendedContestException();
+            using (var db = new CHDB())
+            {
+                var con_atts = (from c in db.CONTESTs
+                               where c.Name == Name
+                               select c.CONTEST_ATTEND).Single();
+                var  con_att=(from u in con_atts
+                        where u.USER1.Name == User.CurrentUser.name
+                        select u).Single();
+                if (!con_att.IsVirtual)
+                    throw new AttendedNotVirtualException();
+                return con_att.Time;
+            }
+        }
+
+        /// <summary>
+        /// 获得虚拟比赛结束时间
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        /// <exception cref="AttendedNotVirtualException"></exception>
+        DateTime VirtualEndTime()
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!IsAttended())
+                throw new NotAttendedContestException();
+            using (var db = new CHDB())
+            {
+                var con = (from c in db.CONTESTs
+                                where c.Name == Name
+                                select c).Single();
+                var con_att = (from u in con.CONTEST_ATTEND
+                               where u.USER1.Name == User.CurrentUser.name
+                               select u).Single();
+                if (!con_att.IsVirtual)
+                    throw new AttendedNotVirtualException();
+                return con_att.Time+(con.EndTime-con.StartTime);
+            }
+        }
     }
 }

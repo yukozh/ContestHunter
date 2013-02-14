@@ -77,4 +77,8 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class AttendedNotVirtualException : Exception
+    {
+    }
+
 }

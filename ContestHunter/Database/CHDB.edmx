@@ -75,6 +75,8 @@
           </Key>
           <Property Name="Contest" Type="uniqueidentifier" Nullable="false" />
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsVirtual" Type="bit" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="CONTEST_OWNER">
           <Key>
@@ -111,6 +113,7 @@
           <Property Name="Code" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Language" Type="int" Nullable="false" />
           <Property Name="SubmitTime" Type="datetime" Nullable="false" />
+          <Property Name="VirtualSubmitTime" Type="datetime" Nullable="false" />
           <Property Name="ExecutedTime" Type="int" />
           <Property Name="MemoryUsed" Type="bigint" />
           <Property Name="CodeLength" Type="int" Nullable="false" />
@@ -293,14 +296,23 @@
       <Schema Namespace="ContestHunterModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="CHDB" p1:LazyLoadingEnabled="true">
           <EntitySet Name="CONTESTs" EntityType="ContestHunterModel.CONTEST" />
+          <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterModel.CONTEST_ATTEND" />
           <EntitySet Name="GROUPs" EntityType="ContestHunterModel.GROUP" />
           <EntitySet Name="PROBLEMs" EntityType="ContestHunterModel.PROBLEM" />
           <EntitySet Name="RECORDs" EntityType="ContestHunterModel.RECORD" />
           <EntitySet Name="TESTDATAs" EntityType="ContestHunterModel.TESTDATA" />
           <EntitySet Name="USERs" EntityType="ContestHunterModel.USER" />
+          <AssociationSet Name="FK_CONTEST_ATTEND_CONTEST" Association="ContestHunterModel.FK_CONTEST_ATTEND_CONTEST">
+            <End Role="CONTEST" EntitySet="CONTESTs" />
+            <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
+          </AssociationSet>
           <AssociationSet Name="FK_PROBLEM_CONTEST1" Association="ContestHunterModel.FK_PROBLEM_CONTEST1">
             <End Role="CONTEST" EntitySet="CONTESTs" />
             <End Role="PROBLEM" EntitySet="PROBLEMs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CONTEST_ATTEND_USER" Association="ContestHunterModel.FK_CONTEST_ATTEND_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
           </AssociationSet>
           <AssociationSet Name="FK_RECORD_PROBLEM" Association="ContestHunterModel.FK_RECORD_PROBLEM">
             <End Role="PROBLEM" EntitySet="PROBLEMs" />
@@ -313,10 +325,6 @@
           <AssociationSet Name="FK_RECORD_USER" Association="ContestHunterModel.FK_RECORD_USER">
             <End Role="USER" EntitySet="USERs" />
             <End Role="RECORD" EntitySet="RECORDs" />
-          </AssociationSet>
-          <AssociationSet Name="CONTEST_ATTEND" Association="ContestHunterModel.CONTEST_ATTEND">
-            <End Role="CONTEST" EntitySet="CONTESTs" />
-            <End Role="USER" EntitySet="USERs" />
           </AssociationSet>
           <AssociationSet Name="CONTEST_OWNER" Association="ContestHunterModel.CONTEST_OWNER">
             <End Role="CONTEST" EntitySet="CONTESTs" />
@@ -338,9 +346,21 @@
           <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="IsOfficial" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_CONTEST" FromRole="CONTEST" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="CONTEST" ToRole="PROBLEM" />
-          <NavigationProperty Name="ATTENDERs" Relationship="ContestHunterModel.CONTEST_ATTEND" FromRole="CONTEST" ToRole="USER" />
           <NavigationProperty Name="OWNERs" Relationship="ContestHunterModel.CONTEST_OWNER" FromRole="CONTEST" ToRole="USER" />
+        </EntityType>
+        <EntityType Name="CONTEST_ATTEND">
+          <Key>
+            <PropertyRef Name="Contest" />
+            <PropertyRef Name="User" />
+          </Key>
+          <Property Name="Contest" Type="Guid" Nullable="false" />
+          <Property Name="User" Type="Guid" Nullable="false" />
+          <Property Name="IsVirtual" Type="Boolean" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CONTEST1" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_CONTEST" FromRole="CONTEST_ATTEND" ToRole="CONTEST" />
+          <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_USER" FromRole="CONTEST_ATTEND" ToRole="USER" />
         </EntityType>
         <EntityType Name="GROUP">
           <Key>
@@ -373,6 +393,7 @@
           <Property Name="Code" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Language" Type="Int32" Nullable="false" />
           <Property Name="SubmitTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="VirtualSubmitTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ExecutedTime" Type="Int32" />
           <Property Name="MemoryUsed" Type="Int64" />
           <Property Name="CodeLength" Type="Int32" Nullable="false" />
@@ -402,11 +423,25 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Password" Type="Binary" Nullable="false" MaxLength="32" FixedLength="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_USER" FromRole="USER" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="RECORDs" Relationship="ContestHunterModel.FK_RECORD_USER" FromRole="USER" ToRole="RECORD" />
-          <NavigationProperty Name="CONTESTs" Relationship="ContestHunterModel.CONTEST_ATTEND" FromRole="USER" ToRole="CONTEST" />
-          <NavigationProperty Name="CONTESTs1" Relationship="ContestHunterModel.CONTEST_OWNER" FromRole="USER" ToRole="CONTEST" />
+          <NavigationProperty Name="CONTESTs" Relationship="ContestHunterModel.CONTEST_OWNER" FromRole="USER" ToRole="CONTEST" />
           <NavigationProperty Name="GROUPs" Relationship="ContestHunterModel.USER_GROUP" FromRole="USER" ToRole="GROUP" />
         </EntityType>
+        <Association Name="FK_CONTEST_ATTEND_CONTEST">
+          <End Role="CONTEST" Type="ContestHunterModel.CONTEST" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CONTEST_ATTEND" Type="ContestHunterModel.CONTEST_ATTEND" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONTEST">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONTEST_ATTEND">
+              <PropertyRef Name="Contest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PROBLEM_CONTEST1">
           <End Role="CONTEST" Type="ContestHunterModel.CONTEST" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -418,6 +453,20 @@
             </Principal>
             <Dependent Role="PROBLEM">
               <PropertyRef Name="Contest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CONTEST_ATTEND_USER">
+          <End Role="USER" Type="ContestHunterModel.USER" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CONTEST_ATTEND" Type="ContestHunterModel.CONTEST_ATTEND" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONTEST_ATTEND">
+              <PropertyRef Name="User" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -463,10 +512,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="CONTEST_ATTEND">
-          <End Role="CONTEST" Type="ContestHunterModel.CONTEST" Multiplicity="*" />
-          <End Role="USER" Type="ContestHunterModel.USER" Multiplicity="*" />
-        </Association>
         <Association Name="CONTEST_OWNER">
           <End Role="CONTEST" Type="ContestHunterModel.CONTEST" Multiplicity="*" />
           <End Role="USER" Type="ContestHunterModel.USER" Multiplicity="*" />
@@ -491,6 +536,16 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="IsOfficial" ColumnName="IsOfficial" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CONTEST_ATTEND">
+            <EntityTypeMapping TypeName="ContestHunterModel.CONTEST_ATTEND">
+              <MappingFragment StoreEntitySet="CONTEST_ATTEND">
+                <ScalarProperty Name="Contest" ColumnName="Contest" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -522,6 +577,7 @@
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="SubmitTime" ColumnName="SubmitTime" />
+                <ScalarProperty Name="VirtualSubmitTime" ColumnName="VirtualSubmitTime" />
                 <ScalarProperty Name="ExecutedTime" ColumnName="ExecutedTime" />
                 <ScalarProperty Name="MemoryUsed" ColumnName="MemoryUsed" />
                 <ScalarProperty Name="CodeLength" ColumnName="CodeLength" />
@@ -553,14 +609,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="CONTEST_ATTEND" TypeName="ContestHunterModel.CONTEST_ATTEND" StoreEntitySet="CONTEST_ATTEND">
-            <EndProperty Name="CONTEST">
-              <ScalarProperty Name="ID" ColumnName="Contest" />
-            </EndProperty>
-            <EndProperty Name="USER">
-              <ScalarProperty Name="ID" ColumnName="User" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="CONTEST_OWNER" TypeName="ContestHunterModel.CONTEST_OWNER" StoreEntitySet="CONTEST_OWNER">
             <EndProperty Name="CONTEST">
               <ScalarProperty Name="ID" ColumnName="Contest" />

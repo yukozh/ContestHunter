@@ -20,6 +20,7 @@ namespace ContestHunter.Database
         public string Code { get; set; }
         public int Language { get; set; }
         public System.DateTime SubmitTime { get; set; }
+        public System.DateTime VirtualSubmitTime { get; set; }
         public Nullable<int> ExecutedTime { get; set; }
         public Nullable<long> MemoryUsed { get; set; }
         public int CodeLength { get; set; }

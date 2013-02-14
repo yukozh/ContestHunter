@@ -146,6 +146,9 @@
     <Compile Include="Database\CONTEST.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\CONTEST_ATTEND.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\GROUP.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
@@ -274,6 +277,9 @@
     <Content Include="Views\Record\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Contest\Standing.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -293,9 +299,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contest\Standing.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -16,8 +16,8 @@ namespace ContestHunter.Database
     {
         public CONTEST()
         {
+            this.CONTEST_ATTEND = new HashSet<CONTEST_ATTEND>();
             this.PROBLEMs = new HashSet<PROBLEM>();
-            this.ATTENDERs = new HashSet<USER>();
             this.OWNERs = new HashSet<USER>();
         }
     
@@ -29,8 +29,8 @@ namespace ContestHunter.Database
         public int Type { get; set; }
         public bool IsOfficial { get; set; }
     
+        public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<PROBLEM> PROBLEMs { get; set; }
-        public virtual ICollection<USER> ATTENDERs { get; set; }
         public virtual ICollection<USER> OWNERs { get; set; }
     }
 }

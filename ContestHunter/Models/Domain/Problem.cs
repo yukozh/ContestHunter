@@ -14,7 +14,7 @@ namespace ContestHunter.Models.Domain
         public string Contest;
 
         internal Guid ID;
-        internal List<string> Owner;
+        internal Contest contest;
 
         public override bool Equals(object obj)
         {
@@ -47,7 +47,7 @@ namespace ContestHunter.Models.Domain
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
-            if (!Owner.Contains(User.CurrentUser.name) &&
+            if (!contest.Owner.Contains(User.CurrentUser.name) &&
                 !User.CurrentUser.groups.Contains("Administrators"))
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
@@ -78,7 +78,7 @@ namespace ContestHunter.Models.Domain
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
-            if (!Owner.Contains(User.CurrentUser.name) &&
+            if (!contest.Owner.Contains(User.CurrentUser.name) &&
                 !User.CurrentUser.groups.Contains("Administrators"))
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
@@ -104,7 +104,7 @@ namespace ContestHunter.Models.Domain
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
             bool flag = false;
-            if (Owner.Contains(User.CurrentUser.name) || User.CurrentUser.groups.Contains("Administrators"))
+            if (contest.Owner.Contains(User.CurrentUser.name) || User.CurrentUser.groups.Contains("Administrators"))
                 flag = true;
             using (var db = new CHDB())
             {
@@ -146,13 +146,11 @@ namespace ContestHunter.Models.Domain
                 var currpro = (from p in db.PROBLEMs
                                where p.ID == ID
                                select p).Single();
-                if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
+                if (!contest.Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
                 {
-                    if (DateTime.Now < currpro.CONTEST1.StartTime)
+                    if (DateTime.Now < contest.StartTime)
                         throw new ContestNotStartedException();
-                    if (DateTime.Now <= currpro.CONTEST1.EndTime && !(from u in currpro.CONTEST1.ATTENDERs
-                                                                      where u.Name == User.CurrentUser.name
-                                                                      select u).Any())
+                    if (DateTime.Now <= contest.EndTime && !contest.IsAttended())
                         throw new NotAttendedContestException();
                 }
                 Guid ret;
@@ -172,7 +170,8 @@ namespace ContestHunter.Models.Domain
                              where u.Name == User.CurrentUser.name
                              select u).Single(),
                     Status = (int)Record.StatusType.Pending,
-                    SubmitTime = DateTime.Now
+                    SubmitTime = DateTime.Now,
+                    VirtualSubmitTime = contest.IsVirtual() ? currpro.CONTEST1.StartTime + (DateTime.Now - contest.StartTime) : DateTime.Now
                 });
                 db.SaveChanges();
                 return ret;

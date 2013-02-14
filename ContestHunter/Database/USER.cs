@@ -16,9 +16,9 @@ namespace ContestHunter.Database
     {
         public USER()
         {
+            this.CONTEST_ATTEND = new HashSet<CONTEST_ATTEND>();
             this.RECORDs = new HashSet<RECORD>();
             this.CONTESTs = new HashSet<CONTEST>();
-            this.CONTESTs1 = new HashSet<CONTEST>();
             this.GROUPs = new HashSet<GROUP>();
         }
     
@@ -27,9 +27,9 @@ namespace ContestHunter.Database
         public byte[] Password { get; set; }
         public string Email { get; set; }
     
+        public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<RECORD> RECORDs { get; set; }
         public virtual ICollection<CONTEST> CONTESTs { get; set; }
-        public virtual ICollection<CONTEST> CONTESTs1 { get; set; }
         public virtual ICollection<GROUP> GROUPs { get; set; }
     }
 }
