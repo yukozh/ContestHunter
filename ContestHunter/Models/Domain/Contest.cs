@@ -61,7 +61,7 @@ namespace ContestHunter.Models.Domain
                             (from contest in db.CONTESTs
                              where contest.StartTime > DateTime.Now
                              select contest
-                                ).OrderBy(x=>x.StartTime).Skip(skip).Take(top).ToList()
+                                ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList()
                         select new Contest
                          {
                              Name = c.Name,
@@ -102,9 +102,9 @@ namespace ContestHunter.Models.Domain
             {
                 return (from c in
                             (from contest in db.CONTESTs
-                             where contest.StartTime <= DateTime.Now && contest.EndTime>=DateTime.Now
+                             where contest.StartTime <= DateTime.Now && contest.EndTime >= DateTime.Now
                              select contest
-                                ).OrderBy(x=>x.StartTime).Skip(skip).Take(top).ToList()
+                                ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList()
                         select new Contest
                         {
                             Name = c.Name,
@@ -251,7 +251,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestStartedException"></exception>
         public void Attend()
         {
-            if(null == User.CurrentUser)
+            if (null == User.CurrentUser)
                 throw new UserNotLoginException();
             if (IsAttended())
                 throw new AlreadyAttendedContestException();
@@ -396,7 +396,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 return (from p in db.PROBLEMs
-                        where p.CONTEST1.Name==Name
+                        where p.CONTEST1.Name == Name
                         select p.Name).ToList();
             }
         }
@@ -542,7 +542,7 @@ namespace ContestHunter.Models.Domain
                 var con = (from c in db.CONTESTs
                            where c.Name == Name
                            select c).Single();
-                var result = (from u in con.CONTEST_ATTEND.Select(x=>x.USER1)
+                var result = (from u in con.CONTEST_ATTEND.Select(x => x.USER1)
                               let des = from p in con.PROBLEMs
                                         orderby p.Name ascending
                                         let ACTimeList = (from r in p.RECORDs
@@ -594,7 +594,7 @@ namespace ContestHunter.Models.Domain
                            select c).Single();
                 if (DateTime.Now <= con.EndTime)
                     throw new ContestNotEndedException();
-                return (from u in con.CONTEST_ATTEND.Select(x=>x.USER1)
+                return (from u in con.CONTEST_ATTEND.Select(x => x.USER1)
                         let des = (from p in con.PROBLEMs
                                    orderby p.Name ascending
                                    let score = (from r in p.RECORDs
@@ -608,7 +608,7 @@ namespace ContestHunter.Models.Domain
                         select new OIStanding
                         {
                             Scores = des.Select(x => (null == x ? null : x.Score)).ToList(),
-                            TotalScore = des.Sum(x => (null == x ? 0 : (int)x.Score)),
+                            TotalScore = des.Sum(x => x == null || x.Score == null ? 0 : (int)x.Score),
                             User = u.Name,
                             TotalTime = des.Sum(x => (null == x ? 0 : (null == x.ExecutedTime ? 0 : (int)x.ExecutedTime)))
                         }).OrderByDescending(x => x.TotalScore).ThenBy(x => x.TotalTime).Skip(skip).Take(top).ToList();
@@ -654,11 +654,11 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con_atts = (from c in db.CONTESTs
-                               where c.Name == Name
-                               select c.CONTEST_ATTEND).Single();
-                var  con_att=(from u in con_atts
-                        where u.USER1.Name == User.CurrentUser.name
-                        select u).Single();
+                                where c.Name == Name
+                                select c.CONTEST_ATTEND).Single();
+                var con_att = (from u in con_atts
+                               where u.USER1.Name == User.CurrentUser.name
+                               select u).Single();
                 if (!con_att.IsVirtual)
                     throw new AttendedNotVirtualException();
                 return (DateTime)con_att.Time;
@@ -681,14 +681,14 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                                where c.Name == Name
-                                select c).Single();
+                           where c.Name == Name
+                           select c).Single();
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
                 if (!con_att.IsVirtual)
                     throw new AttendedNotVirtualException();
-                return (DateTime)con_att.Time+(con.EndTime-con.StartTime);
+                return (DateTime)con_att.Time + (con.EndTime - con.StartTime);
             }
         }
     }
