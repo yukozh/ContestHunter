@@ -16,23 +16,27 @@
     {
         @Html.HiddenFor(x=>x.Problem)
         @Html.HiddenFor(x=>x.Contest)
-        <div class="btn-group" style="margin: 10px;">
-            @Html.ActionLink("返回题目", "Show", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-info", style = "display:inline-block" })
-            @Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest }, new { @class = "btn btn-warning", style = "display:inline-block" })
+        <div style="float:left; margin-left:80px">
+            @Html.DropDownListFor(x => x.Language, new SelectListItem[]
+            {
+                new SelectListItem{Text="语言",Value=""},
+                new SelectListItem{Text="C++",Value="CPP"},
+                new SelectListItem{Text="C",Value="C"},
+                new SelectListItem{Text="Pascal",Value="Pascal"}
+            }, new { @class = "input-small" })
+            <span style="font-size:12px; color:gray">*标准输入输出，C/C++代码中的long long(%lld)和__int64(%I64d)均可使用</span>
         </div>
+        <div class="btn-group" style="float:right; margin-right: 80px">
+            @Html.ActionLink("返回题目", "Show", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-info btn-small", style = "display:inline-block" })
+            @Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest }, new { @class = "btn btn-warning btn-small", style = "display:inline-block" })
+        </div>
+        <div style="clear:both"></div>
         @Html.TextAreaFor(x => x.Code, new { style = "width: 800px; height: 400px; margin: auto; display: block;", autofocus = "autofocus" })
         <div style="color: red;">
             @Html.ValidationSummary()
         </div>
         <div style="margin: 10px;">
             <input type="submit" value="提交代码" class="btn btn-success" />
-            @Html.DropDownListFor(x => x.Language, new SelectListItem[]
-                {
-                    new SelectListItem{Text="语言",Value=""},
-                    new SelectListItem{Text="C++",Value="CPP"},
-                    new SelectListItem{Text="C",Value="C"},
-                    new SelectListItem{Text="Pascal",Value="Pascal"}
-                }, new { @class = "input-small" })
         </div>
     }
 </div>

@@ -17,5 +17,6 @@ namespace ContestHunter.Models.View
 
         public List<ACMStanding> ACM { get; set; }
         public List<CFStanding> CF { get; set; }
+        public List<OIStanding> OI { get; set; }
     }
 }

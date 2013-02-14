@@ -44,20 +44,38 @@ namespace ContestHunter.Controllers
 
         public ActionResult Standing(string id, ContestStandingModel model)
         {
-            Contest contest = Contest.ByName(id);
-            model.Problems = contest.Problems().OrderBy(n => n).ToList();
-            model.PageCount = 10;
-            model.Contest = id;
-            model.Type = contest.Type;
-            model.StartIndex = model.PageIndex * STANDING_PAGE_SIZE;
-
-            switch (contest.Type)
+            try
             {
-                case Contest.ContestType.ACM:
-                    model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE);
-                    break;
-                default:
-                    throw new NotImplementedException();
+                Contest contest = Contest.ByName(id);
+                model.Problems = contest.Problems().OrderBy(n => n).ToList();
+                model.PageCount = (int)Math.Ceiling(contest.AttendedUsersCount() / (double)STANDING_PAGE_SIZE);
+                model.Contest = id;
+                model.Type = contest.Type;
+                model.StartIndex = model.PageIndex * STANDING_PAGE_SIZE;
+
+                switch (contest.Type)
+                {
+                    case Contest.ContestType.ACM:
+                        model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE);
+                        break;
+                    case Contest.ContestType.OI:
+                        model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛不存在" });
+            }
+            catch (ContestTypeMismatchException)
+            {
+                throw;
+            }
+            catch (ContestNotEndedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，不能查看排名" });
             }
 
             return View(model);
