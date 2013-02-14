@@ -50,18 +50,16 @@
             <h5 style="margin: 0px 5px">进行中的比赛</h5>
             <table class="table table-bordered table-striped table-hover">
                 <colgroup>
-                    <col style="width: 420px">
-                    <col style="width: 100px">
-                    <col style="width: 180px">
+                    <col style="width: 450px">
+                    <col style="width: 150px">
                     <col style="width: 200px">
-                    <col style="width: 80px">
+                    <col style="width: 100px">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>比赛名称</th>
                         <th>赛制</th>
                         <th>开始时刻/时长</th>
-                        <th>操作</th>
                         <th>报名人数</th>
                     </tr>
                 </thead>
@@ -113,11 +111,6 @@
                             </td>
                             <td>@contest.StartTime<br />
                                 持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours, 1))</b>小时
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    @Html.ActionLink("进入比赛", "Show", new { id = contest.Name }, new { @class = "btn btn-danger", style = "display:inline-block;" })
-                                </div>
                             </td>
                             <td>
                                 <div>
@@ -177,18 +170,16 @@
             <h5 style="margin: 0px 5px">计划中的比赛</h5>
             <table class="table table-bordered table-striped table-hover">
                 <colgroup>
-                    <col style="width: 420px">
-                    <col style="width: 100px">
-                    <col style="width: 180px">
+                    <col style="width: 450px">
+                    <col style="width: 150px">
                     <col style="width: 200px">
-                    <col style="width: 80px">
+                    <col style="width: 100px">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>比赛名称</th>
                         <th>赛制</th>
                         <th>开始时刻/时长</th>
-                        <th>操作</th>
                         <th>报名人数</th>
                     </tr>
                 </thead>
@@ -238,11 +229,6 @@
                             </td>
                             <td>@contest.StartTime<br />
                                 持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours, 1))</b>小时
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    @Html.ActionLink("查看预告", "Show", new { id = contest.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
-                                </div>
                             </td>
                             <td>
                                 <div><code>@contest.AttendedUsersCount()</code></div>
@@ -300,18 +286,16 @@
             <h5 style="margin: 0px 5px">已举办的比赛</h5>
             <table class="table table-bordered table-striped table-hover">
                 <colgroup>
-                    <col style="width: 420px">
-                    <col style="width: 100px">
-                    <col style="width: 180px">
+                    <col style="width: 450px">
+                    <col style="width: 150px">
                     <col style="width: 200px">
-                    <col style="width: 80px">
+                    <col style="width: 100px">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>比赛名称</th>
                         <th>赛制</th>
                         <th>开始时刻/时长</th>
-                        <th>操作</th>
                         <th>报名人数</th>
                     </tr>
                 </thead>
@@ -361,12 +345,6 @@
                             </td>
                             <td>@contest.StartTime<br />
                                 持续<b>@(Math.Round((contest.EndTime - contest.StartTime).TotalHours, 1))</b>小时
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-success">模拟比赛</button>
-                                    <button class="btn btn-warning">赛题练习</button>
-                                </div>
                             </td>
                             <td>
                                 <div><code>@contest.AttendedUsersCount()</code></div>
