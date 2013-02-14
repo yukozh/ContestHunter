@@ -148,9 +148,9 @@ namespace ContestHunter.Models.Domain
                                select p).Single();
                 if (!contest.Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
                 {
-                    if (DateTime.Now < contest.StartTime)
+                    if (DateTime.Now < contest.RelativeStartTime)
                         throw new ContestNotStartedException();
-                    if (DateTime.Now <= contest.EndTime && !contest.IsAttended())
+                    if (DateTime.Now <= contest.RelativeEndTime && !contest.IsAttended())
                         throw new NotAttendedContestException();
                 }
                 Guid ret;
@@ -171,7 +171,7 @@ namespace ContestHunter.Models.Domain
                              select u).Single(),
                     Status = (int)Record.StatusType.Pending,
                     SubmitTime = DateTime.Now,
-                    VirtualSubmitTime = contest.IsVirtual() ? currpro.CONTEST1.StartTime + (DateTime.Now - contest.StartTime) : DateTime.Now
+                    VirtualSubmitTime = contest.IsVirtual() ? currpro.CONTEST1.StartTime + (DateTime.Now - contest.RelativeStartTime) : DateTime.Now
                 });
                 db.SaveChanges();
                 return ret;

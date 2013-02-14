@@ -62,8 +62,8 @@ namespace DomainTest
             {
                 Name = "Test 12",
                 Description = "This is Description",
-                StartTime = DateTime.Now + Start,
-                EndTime = DateTime.Now + Duration,
+                RelativeStartTime = DateTime.Now + Start,
+                RelativeEndTime = DateTime.Now + Duration,
                 IsOfficial = false,
                 Owner = new List<string>() { "123" },
                 Type = Contest.ContestType.OI
@@ -142,7 +142,7 @@ namespace DomainTest
                 Code = "virtual test",
                 Language = Record.LanguageType.Pascal
             });
-            Assert.AreEqual(tm, con.StartTime);
+            Assert.AreEqual(tm, con.RelativeStartTime);
         }
 
     }

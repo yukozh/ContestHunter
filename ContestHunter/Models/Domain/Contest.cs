@@ -16,31 +16,31 @@ namespace ContestHunter.Models.Domain
             OI
         }
         public ContestType Type;
-        DateTime _startTime, _endTime;
-        public DateTime StartTime
+        public DateTime AbsoluteStartTime, AbsoluteEndTime;
+        public DateTime RelativeStartTime
         {
             get
             {
                 if (IsVirtual())
                     return VirtualStartTime();
-                return _startTime;
+                return AbsoluteStartTime;
             }
             set
             {
-                _startTime = value;
+                AbsoluteStartTime = value;
             }
         }
-        public DateTime EndTime
+        public DateTime RelativeEndTime
         {
             get
             {
                 if (IsVirtual())
                     return VirtualEndTime();
-                return _endTime;
+                return AbsoluteEndTime;
             }
             set
             {
-                _endTime = value;
+                AbsoluteEndTime = value;
             }
         }
         public string Description;
@@ -74,8 +74,8 @@ namespace ContestHunter.Models.Domain
                              Name = c.Name,
                              Description = c.Description,
                              Type = (ContestType)c.Type,
-                             StartTime = c.StartTime,
-                             EndTime = c.EndTime,
+                             RelativeStartTime = c.StartTime,
+                             RelativeEndTime = c.EndTime,
                              IsOfficial = c.IsOfficial,
                              Owner = (from u in c.OWNERs
                                       select u.Name).ToList()
@@ -117,8 +117,8 @@ namespace ContestHunter.Models.Domain
                             Name = c.Name,
                             Description = c.Description,
                             Type = (ContestType)c.Type,
-                            StartTime = c.StartTime,
-                            EndTime = c.EndTime,
+                            RelativeStartTime = c.StartTime,
+                            RelativeEndTime = c.EndTime,
                             IsOfficial = c.IsOfficial,
                             Owner = (from u in c.OWNERs
                                      select u.Name).ToList()
@@ -161,8 +161,8 @@ namespace ContestHunter.Models.Domain
                             Name = c.Name,
                             Description = c.Description,
                             Type = (ContestType)c.Type,
-                            StartTime = c.StartTime,
-                            EndTime = c.EndTime,
+                            RelativeStartTime = c.StartTime,
+                            RelativeEndTime = c.EndTime,
                             IsOfficial = c.IsOfficial,
                             Owner = (from u in c.OWNERs
                                      select u.Name).ToList()
@@ -199,8 +199,8 @@ namespace ContestHunter.Models.Domain
                 {
                     ID = Guid.NewGuid(),
                     Name = contest.Name,
-                    StartTime = contest.StartTime,
-                    EndTime = contest.EndTime,
+                    StartTime = contest.RelativeStartTime,
+                    EndTime = contest.RelativeEndTime,
                     Description = contest.Description,
                     Type = (int)contest.Type,
                     IsOfficial = contest.IsOfficial,
@@ -237,8 +237,8 @@ namespace ContestHunter.Models.Domain
                           {
                               Name = c.Name,
                               Description = c.Description,
-                              StartTime = c.StartTime,
-                              EndTime = c.EndTime,
+                              RelativeStartTime = c.StartTime,
+                              RelativeEndTime = c.EndTime,
                               IsOfficial = c.IsOfficial,
                               Type = (ContestType)c.Type,
                               Owner = (from u in c.OWNERs
@@ -262,7 +262,7 @@ namespace ContestHunter.Models.Domain
                 throw new UserNotLoginException();
             if (IsAttended())
                 throw new AlreadyAttendedContestException();
-            if (DateTime.Now > EndTime)
+            if (DateTime.Now > RelativeEndTime)
                 throw new ContestEndedException();
             using (var db = new CHDB())
             {
@@ -293,7 +293,7 @@ namespace ContestHunter.Models.Domain
                 throw new UserNotLoginException();
             if (IsAttended())
                 throw new AlreadyAttendedContestException();
-            if (DateTime.Now <= StartTime)
+            if (DateTime.Now <= RelativeStartTime)
                 throw new ContestNotStartedException();
             using (var db = new CHDB())
             {
@@ -325,7 +325,7 @@ namespace ContestHunter.Models.Domain
                 throw new UserNotLoginException();
             if (IsAttended())
                 throw new AlreadyAttendedContestException();
-            if (DateTime.Now <= EndTime)
+            if (DateTime.Now <= RelativeEndTime)
                 throw new ContestNotEndedException();
             using (var db = new CHDB())
             {
@@ -363,7 +363,7 @@ namespace ContestHunter.Models.Domain
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
-                if (DateTime.Now > StartTime)
+                if (DateTime.Now > RelativeStartTime)
                     throw new ContestStartedException();
                 con.CONTEST_ATTEND.Remove(con_att);
                 db.SaveChanges();
@@ -454,7 +454,7 @@ namespace ContestHunter.Models.Domain
             {
                 if (null == User.CurrentUser)
                 {
-                    if (DateTime.Now <= EndTime)
+                    if (DateTime.Now <= RelativeEndTime)
                         throw new UserNotLoginException();
                 }
                 else
@@ -466,12 +466,12 @@ namespace ContestHunter.Models.Domain
                                    select c).Single();
                         if (!IsAttended())
                         {
-                            if (DateTime.Now <= EndTime)
+                            if (DateTime.Now <= RelativeEndTime)
                                 throw new ContestNotEndedException();
                         }
                         else
                         {
-                            if (DateTime.Now < StartTime)
+                            if (DateTime.Now < RelativeStartTime)
                                 throw new ContestNotStartedException();
                         }
                     }
@@ -690,7 +690,7 @@ namespace ContestHunter.Models.Domain
                 var  con_att=(from u in con_atts
                         where u.USER1.Name == User.CurrentUser.name
                         select u).Single();
-                if (con_att.Type != (int)AttendType.Normal)
+                if (con_att.Type == (int)AttendType.Normal)
                     throw new AttendedNotVirtualException();
                 return (DateTime)con_att.Time;
             }
@@ -717,7 +717,7 @@ namespace ContestHunter.Models.Domain
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
-                if (con_att.Type!=(int)AttendType.Normal)
+                if (con_att.Type == (int)AttendType.Normal)
                     throw new AttendedNotVirtualException();
                 return (DateTime)con_att.Time+(con.EndTime-con.StartTime);
             }

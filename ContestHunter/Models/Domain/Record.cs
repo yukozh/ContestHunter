@@ -98,21 +98,22 @@ namespace ContestHunter.Models.Domain
                         break;
                 }
                 var tmp = records.Skip(skip).Take(top).ToList();
-                return (from r in tmp
-                        select new Record
-                        {
-                            ID = r.ID,
-                            CodeLength = r.CodeLength,
-                            ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime),
-                            Contest = r.PROBLEM1.CONTEST1.Name,
-                            Language = (LanguageType)r.Language,
-                            Memory = r.MemoryUsed,
-                            Problem = r.PROBLEM1.Name,
-                            Status = (StatusType)r.Status,
-                            SubmitTime = r.SubmitTime,
-                            User = r.USER1.Name,
-                            Score = r.Score
-                        }).ToList();
+                List<Record> Ret = new List<Record>();
+                return Ret; (from r in tmp
+                             select new Record
+                             {
+                                 ID = r.ID,
+                                 CodeLength = r.CodeLength,
+                                 ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime),
+                                 Contest = r.PROBLEM1.CONTEST1.Name,
+                                 Language = (LanguageType)r.Language,
+                                 Memory = r.MemoryUsed,
+                                 Problem = r.PROBLEM1.Name,
+                                 Status = (StatusType)r.Status,
+                                 SubmitTime = r.SubmitTime,
+                                 User = r.USER1.Name,
+                                 Score = r.Score
+                             }).ToList();
             }
         }
 
