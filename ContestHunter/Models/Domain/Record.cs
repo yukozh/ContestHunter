@@ -99,21 +99,35 @@ namespace ContestHunter.Models.Domain
                 }
                 var tmp = records.Skip(skip).Take(top).ToList();
                 List<Record> Ret = new List<Record>();
-                return Ret; (from r in tmp
-                             select new Record
-                             {
-                                 ID = r.ID,
-                                 CodeLength = r.CodeLength,
-                                 ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime),
-                                 Contest = r.PROBLEM1.CONTEST1.Name,
-                                 Language = (LanguageType)r.Language,
-                                 Memory = r.MemoryUsed,
-                                 Problem = r.PROBLEM1.Name,
-                                 Status = (StatusType)r.Status,
-                                 SubmitTime = r.SubmitTime,
-                                 User = r.USER1.Name,
-                                 Score = r.Score
-                             }).ToList();
+                foreach (RECORD r in tmp)
+                {
+                    var nrec = new Record()
+                    {
+                        ID = r.ID,
+                        CodeLength = r.CodeLength,
+                        Contest = r.PROBLEM1.CONTEST1.Name,
+                        Language = (LanguageType)r.Language,
+                        Problem = r.PROBLEM1.Name,
+                        SubmitTime = r.SubmitTime,
+                        User = r.USER1.Name
+                    };
+                    switch (r.PROBLEM1.CONTEST1.Type)
+                    {
+                        case (int)Domain.Contest.ContestType.CF:
+                            nrec.Score = r.Score;
+                            nrec.Status = (StatusType)r.Status;
+                            nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
+                            nrec.Memory = r.MemoryUsed;
+                            break;
+                        case (int)Domain.Contest.ContestType.ACM:
+                            nrec.Status = (StatusType)r.Status;
+                            nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
+                            nrec.Memory = r.MemoryUsed;
+                            break;
+                    }
+                    Ret.Add(nrec);
+                }
+                return Ret;
             }
         }
 
@@ -133,8 +147,9 @@ namespace ContestHunter.Models.Domain
                               select r).SingleOrDefault();
                 if (null == result)
                     throw new RecordNotFoundException();
-                if (DateTime.Now <= result.PROBLEM1.CONTEST1.EndTime)
-                    throw new ContestNotEndedException();
+                if (result.Status != (int)Record.StatusType.Compile_Error || result.USER1.Name != Domain.User.CurrentUser.name)
+                    if (DateTime.Now <= result.PROBLEM1.CONTEST1.EndTime)
+                        throw new ContestNotEndedException();
                 return new Record()
                 {
                     ID = result.ID,
