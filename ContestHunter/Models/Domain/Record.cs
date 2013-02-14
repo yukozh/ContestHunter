@@ -21,6 +21,7 @@ namespace ContestHunter.Models.Domain
             C,
             CPP,
             Pascal,
+            Java
         };
         public LanguageType Language;
         public DateTime SubmitTime;

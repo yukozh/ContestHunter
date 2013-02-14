@@ -47,6 +47,13 @@ namespace ContestHunter.Models.Domain
         public bool IsOfficial;
         public List<string> Owner;
 
+        internal enum AttendType
+        {
+            Normal,
+            Virtual,
+            Practice
+        }
+
         /// <summary>
         /// 返回等待进行的比赛列表
         /// </summary>
@@ -248,15 +255,15 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="AlreadyAttendedContestException"></exception>
-        /// <exception cref="ContestStartedException"></exception>
+        /// <exception cref="ContestEndedException"></exception>
         public void Attend()
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
             if (IsAttended())
                 throw new AlreadyAttendedContestException();
-            if (DateTime.Now > StartTime)
-                throw new ContestStartedException();
+            if (DateTime.Now > EndTime)
+                throw new ContestEndedException();
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
@@ -267,7 +274,7 @@ namespace ContestHunter.Models.Domain
                      USER1 = (from u in db.USERs
                               where u.ID == User.CurrentUser.ID
                               select u).Single(),
-                     IsVirtual = false,
+                     Type = (int)AttendType.Normal,
                  });
                 db.SaveChanges();
             }
@@ -298,10 +305,41 @@ namespace ContestHunter.Models.Domain
                     USER1 = (from u in db.USERs
                              where u.ID == User.CurrentUser.ID
                              select u).Single(),
-                    IsVirtual = true,
+                    Type = (int)AttendType.Virtual,
                     Time = DateTime.Now
                 });
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 虚拟报名比赛
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="AlreadyAttendedContestException"></exception>
+        /// <exception cref="ContestNotEndedException"></exception>
+        public void PracticeAttend()
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (IsAttended())
+                throw new AlreadyAttendedContestException();
+            if (DateTime.Now <= EndTime)
+                throw new ContestNotEndedException();
+            using (var db = new CHDB())
+            {
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                con.CONTEST_ATTEND.Add(new CONTEST_ATTEND()
+                {
+                    USER1 = (from u in db.USERs
+                             where u.ID == User.CurrentUser.ID
+                             select u).Single(),
+                    Type = (int)AttendType.Practice,
+                    Time = DateTime.Now
+                });
             }
         }
 
@@ -325,8 +363,7 @@ namespace ContestHunter.Models.Domain
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
-                if ((con_att.IsVirtual && DateTime.Now > con_att.Time) ||
-                    (!con_att.IsVirtual && DateTime.Now > StartTime))
+                if (DateTime.Now > StartTime)
                     throw new ContestStartedException();
                 con.CONTEST_ATTEND.Remove(con_att);
                 db.SaveChanges();
@@ -434,11 +471,7 @@ namespace ContestHunter.Models.Domain
                         }
                         else
                         {
-                            var con_att = (from ca in con.CONTEST_ATTEND
-                                           where ca.USER1.Name == User.CurrentUser.name
-                                           select ca).Single();
-                            var _StartTime = con_att.IsVirtual ? con_att.Time : DateTime.Now;
-                            if (DateTime.Now < _StartTime)
+                            if (DateTime.Now < StartTime)
                                 throw new ContestNotStartedException();
                         }
                     }
@@ -608,7 +641,7 @@ namespace ContestHunter.Models.Domain
                         select new OIStanding
                         {
                             Scores = des.Select(x => (null == x ? null : x.Score)).ToList(),
-                            TotalScore = des.Sum(x => x == null || x.Score == null ? 0 : (int)x.Score),
+                            TotalScore = des.Sum(x => (null == x ? 0 : (null==x.Score?0:(int)x.Score))),
                             User = u.Name,
                             TotalTime = des.Sum(x => (null == x ? 0 : (null == x.ExecutedTime ? 0 : (int)x.ExecutedTime)))
                         }).OrderByDescending(x => x.TotalScore).ThenBy(x => x.TotalTime).Skip(skip).Take(top).ToList();
@@ -619,9 +652,7 @@ namespace ContestHunter.Models.Domain
         /// 判断是否为虚拟报名此比赛
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="UserNotLoginException"></exception>
-        /// <exception cref="NotAttendedContestException"></exception>
-        public bool IsVirtual()
+        internal bool IsVirtual()
         {
             if (null == User.CurrentUser)
                 return false;
@@ -634,7 +665,7 @@ namespace ContestHunter.Models.Domain
                                select c.CONTEST_ATTEND).Single();
                 return (from u in con_att
                         where u.USER1.Name == User.CurrentUser.name
-                        select u.IsVirtual).Single();
+                        select u.Type).Single()!=(int)AttendType.Normal;
             }
         }
 
@@ -659,7 +690,7 @@ namespace ContestHunter.Models.Domain
                 var con_att = (from u in con_atts
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
-                if (!con_att.IsVirtual)
+                if (con_att.Type != (int)AttendType.Normal)
                     throw new AttendedNotVirtualException();
                 return (DateTime)con_att.Time;
             }
@@ -686,7 +717,7 @@ namespace ContestHunter.Models.Domain
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
-                if (!con_att.IsVirtual)
+                if (con_att.Type!=(int)AttendType.Normal)
                     throw new AttendedNotVirtualException();
                 return (DateTime)con_att.Time + (con.EndTime - con.StartTime);
             }

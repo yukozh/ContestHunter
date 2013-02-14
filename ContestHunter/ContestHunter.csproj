@@ -168,6 +168,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Domain\Contest.cs" />
+    <Compile Include="Models\Domain\Daemon.cs" />
     <Compile Include="Models\Domain\DESHelper.cs" />
     <Compile Include="Models\Domain\Exceptions.cs" />
     <Compile Include="Models\Domain\Framework.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Models\Domain\Record.cs" />
     <Compile Include="Models\Domain\Standing.cs" />
     <Compile Include="Models\Domain\TestCase.cs" />
+    <Compile Include="Models\Domain\TesterDaemon.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Models\View\ContestListModel.cs" />
     <Compile Include="Models\View\ContestSignupModel.cs" />

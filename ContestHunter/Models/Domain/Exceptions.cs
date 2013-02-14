@@ -81,4 +81,8 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class ContestEndedException : Exception
+    {
+    }
+
 }

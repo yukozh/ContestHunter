@@ -75,7 +75,7 @@
           </Key>
           <Property Name="Contest" Type="uniqueidentifier" Nullable="false" />
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="IsVirtual" Type="bit" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="Time" Type="datetime" />
         </EntityType>
         <EntityType Name="CONTEST_OWNER">
@@ -359,7 +359,7 @@
           </Key>
           <Property Name="Contest" Type="Guid" Nullable="false" />
           <Property Name="User" Type="Guid" Nullable="false" />
-          <Property Name="IsVirtual" Type="Boolean" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="Time" Type="DateTime" Precision="3" />
           <NavigationProperty Name="CONTEST1" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_CONTEST" FromRole="CONTEST_ATTEND" ToRole="CONTEST" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_USER" FromRole="CONTEST_ATTEND" ToRole="USER" />
@@ -548,7 +548,7 @@
               <MappingFragment StoreEntitySet="CONTEST_ATTEND">
                 <ScalarProperty Name="Contest" ColumnName="Contest" />
                 <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="IsVirtual" ColumnName="IsVirtual" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
               </MappingFragment>
             </EntityTypeMapping>
