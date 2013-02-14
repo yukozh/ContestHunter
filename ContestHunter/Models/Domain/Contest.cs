@@ -16,15 +16,19 @@ namespace ContestHunter.Models.Domain
             OI
         }
         public ContestType Type;
+        DateTime _startTime, _endTime;
         public DateTime StartTime
         {
             get
             {
                 if (IsVirtual())
                     return VirtualStartTime();
-                return StartTime;
+                return _startTime;
             }
-            set;
+            set
+            {
+                _startTime = value;
+            }
         }
         public DateTime EndTime
         {
@@ -32,9 +36,12 @@ namespace ContestHunter.Models.Domain
             {
                 if (IsVirtual())
                     return VirtualEndTime();
-                return EndTime;
+                return _endTime;
             }
-            set;
+            set
+            {
+                _endTime = value;
+            }
         }
         public string Description;
         public bool IsOfficial;
@@ -654,7 +661,7 @@ namespace ContestHunter.Models.Domain
                         select u).Single();
                 if (!con_att.IsVirtual)
                     throw new AttendedNotVirtualException();
-                return con_att.Time;
+                return (DateTime)con_att.Time;
             }
         }
 
@@ -681,7 +688,7 @@ namespace ContestHunter.Models.Domain
                                select u).Single();
                 if (!con_att.IsVirtual)
                     throw new AttendedNotVirtualException();
-                return con_att.Time+(con.EndTime-con.StartTime);
+                return (DateTime)con_att.Time+(con.EndTime-con.StartTime);
             }
         }
     }

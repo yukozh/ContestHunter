@@ -4,11 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ba6827cfd65a4a00af5a4572c86ef4c9" Name="Diagram1">
+      <Diagram DiagramId="8085ab37bdda4125ba2974c3318e440e" Name="Diagram1">
         <EntityTypeShape EntityType="ContestHunterModel.CONTEST" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.CONTEST_ATTEND" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.GROUP" Width="1.5" PointX="3.75" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.PROBLEM" Width="1.5" PointX="3" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.PROBLEM" Width="1.5" PointX="3" PointY="9.375" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.RECORD" Width="1.5" PointX="5.25" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.TESTDATA" Width="1.5" PointX="5.25" PointY="14.125" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.USER" Width="1.5" PointX="6" PointY="5.625" IsExpanded="true" />

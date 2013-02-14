@@ -129,6 +129,21 @@ namespace DomainTest
             var stand = con.GetACMStanding(0, 10);
             Assert.AreEqual(0, (int)Record.StatusType.Accept);
         }
+
+        [TestMethod]
+        public void TestVirtual()
+        {
+            User.Authenticate(User.Login("123", "123"));
+            var con = Contest.ByName("Test 12");
+            var tm = DateTime.Now;
+            con.VirtualAttend(tm);
+            con.ProblemByName("Name").Submit(new Record()
+            {
+                Code = "virtual test",
+                Language = Record.LanguageType.Pascal
+            });
+            Assert.AreEqual(tm, con.StartTime);
+        }
     }
 }
 

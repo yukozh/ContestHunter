@@ -76,7 +76,7 @@
           <Property Name="Contest" Type="uniqueidentifier" Nullable="false" />
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IsVirtual" Type="bit" Nullable="false" />
-          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="Time" Type="datetime" />
         </EntityType>
         <EntityType Name="CONTEST_OWNER">
           <Key>
@@ -102,6 +102,8 @@
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Comparer" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DataChecker" Type="nvarchar(max)" />
+          <Property Name="OriginRating" Type="int" />
         </EntityType>
         <EntityType Name="RECORD">
           <Key>
@@ -358,7 +360,7 @@
           <Property Name="Contest" Type="Guid" Nullable="false" />
           <Property Name="User" Type="Guid" Nullable="false" />
           <Property Name="IsVirtual" Type="Boolean" Nullable="false" />
-          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Time" Type="DateTime" Precision="3" />
           <NavigationProperty Name="CONTEST1" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_CONTEST" FromRole="CONTEST_ATTEND" ToRole="CONTEST" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_USER" FromRole="CONTEST_ATTEND" ToRole="USER" />
         </EntityType>
@@ -379,6 +381,8 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Comparer" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="DataChecker" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="OriginRating" Type="Int32" />
           <NavigationProperty Name="CONTEST1" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="PROBLEM" ToRole="CONTEST" />
           <NavigationProperty Name="RECORDs" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="PROBLEM" ToRole="RECORD" />
           <NavigationProperty Name="TESTDATAs" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="PROBLEM" ToRole="TESTDATA" />
@@ -565,6 +569,8 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Content" ColumnName="Content" />
                 <ScalarProperty Name="Comparer" ColumnName="Comparer" />
+                <ScalarProperty Name="DataChecker" ColumnName="DataChecker" />
+                <ScalarProperty Name="OriginRating" ColumnName="OriginRating" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

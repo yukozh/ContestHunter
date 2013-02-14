@@ -17,7 +17,7 @@ namespace ContestHunter.Database
         public System.Guid Contest { get; set; }
         public System.Guid User { get; set; }
         public bool IsVirtual { get; set; }
-        public System.DateTime Time { get; set; }
+        public Nullable<System.DateTime> Time { get; set; }
     
         public virtual CONTEST CONTEST1 { get; set; }
         public virtual USER USER1 { get; set; }
