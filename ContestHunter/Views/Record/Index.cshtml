@@ -7,14 +7,16 @@
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table {
+    .table
+    {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td {
+        .table td
+        {
             text-align: center;
             vertical-align: middle;
             font-family: 微软雅黑;
@@ -52,6 +54,12 @@
                             new SelectListItem{Text="等待评测",Value="Pending"},
                             new SelectListItem{Text="编译失败",Value="Compile_Error"}
                         }, new { @class = "input-small" })
+                        <select class="span2">
+                            <option value="0">按提交时间排序</option>
+                            <option value="1">按程序运行时间排序</option>
+                            <option value="2">按占用内存排序</option>
+                            <option value="3">按代码长度排序</option>
+                        </select>
                     <input type="submit" class="btn btn-primary" value="查询" />
                 </div>
                 <div style="clear: both"></div>
