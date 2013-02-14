@@ -10,7 +10,7 @@
     .table
     {
         background-color: white;
-        font-family:微软雅黑;
+        font-family: 微软雅黑;
     }
 
         .table td h2,
@@ -117,16 +117,40 @@
                             @if (Model.EndTime > DateTime.Now)
                             {
                                 <tr>
-                                    <td style="text-align:center">
+                                    <td style="text-align: center">
                                         <input class="btn btn-danger" value="报名参赛" type="submit" />
-                                        @*<span style="color:green"><b>您已经报名了</b></span>*@
                                     </td>
                                 </tr>
                             }
                             else
                             {
                                 <tr>
-                                    <td>virtual contest部分
+                                    <td style="text-align:center">
+                                        <span style="font-size: 12px; color: gray">*比赛已经结束了，您可以选择参加一场模拟当时情境的比赛，或者查看赛题并进行练习</span>
+                                        <div class="accordion" id="accordion2">
+                                            <div class="accordion-group">
+                                                <div class="accordion-heading">
+                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">注册一场模拟比赛</a>
+                                                </div>
+                                                <div id="collapseOne" class="accordion-body collapse">
+                                                    <div class="accordion-inner" style="text-align:left">
+                                                        开始时间：<input type="text" value="@DateTime.Now"/><br/>@*默认值为当前时间后五分钟，秒钟数取整*@
+                                                        <h5 style="text-align:center"><input type="submit" value="确认" class="btn btn-primary btn-small" /></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-group">
+                                                <div class="accordion-heading">
+                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">赛题练习</a>
+                                                </div>
+                                                <div id="collapseTwo" class="accordion-body collapse">
+                                                    <div class="accordion-inner">
+                                                        您将可以浏览比赛题目并提交代码进行练习，但不能再注册模拟比赛。<br/>
+                                                        <input type="submit" value="确认" class="btn btn-warning btn-small" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }
