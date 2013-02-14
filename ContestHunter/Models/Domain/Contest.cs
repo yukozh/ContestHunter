@@ -652,7 +652,7 @@ namespace ContestHunter.Models.Domain
         /// 判断是否为虚拟报名此比赛
         /// </summary>
         /// <returns></returns>
-        internal bool IsVirtual()
+        public bool IsVirtual()
         {
             if (null == User.CurrentUser)
                 return false;
@@ -665,7 +665,7 @@ namespace ContestHunter.Models.Domain
                                select c.CONTEST_ATTEND).Single();
                 return (from u in con_att
                         where u.USER1.Name == User.CurrentUser.name
-                        select u.Type).Single()!=(int)AttendType.Normal;
+                        select u.Type).Single()==(int)AttendType.Virtual;
             }
         }
 
@@ -690,7 +690,7 @@ namespace ContestHunter.Models.Domain
                 var con_att = (from u in con_atts
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
-                if (con_att.Type == (int)AttendType.Normal)
+                if (con_att.Type != (int)AttendType.Virtual)
                     throw new AttendedNotVirtualException();
                 return (DateTime)con_att.Time;
             }
@@ -717,7 +717,7 @@ namespace ContestHunter.Models.Domain
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
                                select u).Single();
-                if (con_att.Type == (int)AttendType.Normal)
+                if (con_att.Type != (int)AttendType.Virtual)
                     throw new AttendedNotVirtualException();
                 return (DateTime)con_att.Time + (con.EndTime - con.StartTime);
             }
