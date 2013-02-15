@@ -148,11 +148,24 @@ namespace ContestHunter.Controllers
             try
             {
                 Contest contest = Contest.ByName(model.Contest);
+                if (contest.Type == Contest.ContestType.CF && model.OriginalRating == null)
+                {
+                    ModelState.AddModelError("OriginalRating", "不可为空");
+                    return View(model);
+                }
                 contest.AddProblem(new Problem
                 {
                     Content = System.IO.File.ReadAllText(Server.MapPath("~/Content/ProblemTemplate.html")),
-                    Name = model.Name
+                    Name = model.Name,
+                    Comparer = "",
+                    DataChecker = "",
+                    OriginRating = model.OriginalRating
                 });
+            }
+            catch (ProblemNameExistedException)
+            {
+                ModelState.AddModelError("Name", "题目名已存在");
+                return View(model);
             }
             catch (ContestNotFoundException)
             {
@@ -217,8 +230,6 @@ namespace ContestHunter.Controllers
         {
             return View();
         }
-
-
 
         public ActionResult Config()
         {

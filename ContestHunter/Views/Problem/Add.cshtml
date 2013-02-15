@@ -1,4 +1,5 @@
 ﻿@model ContestHunter.Models.View.ProblemBasicInfoModel
+@using ContestHunter.Models.Domain
 @{
     ViewBag.Title = "添加题目";
 }
@@ -30,7 +31,7 @@
         <div style="text-align: center;">
             @using (Html.BeginForm("Add", "Problem", FormMethod.Post, new { @class = "form-horizontal", style = "display:inline-block;" }))
             {
-                @Html.HiddenFor(x=>x.Contest)
+                @Html.HiddenFor(x => x.Contest)
                 <div class="control-group">
                     @Html.LabelFor(x => x.Name, new { @class = "control-label" })
                     <div class="controls">
@@ -47,6 +48,25 @@
                         @Html.DescriptionFor(x => x.Owner, new { @class = "help-block" })
                     </div>
                 </div>
+                if (Model.ContestType == Contest.ContestType.CF)
+                {
+                <div class="control-group">
+                    @Html.LabelFor(x => x.OriginalRating, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.DropDownListFor(x => x.OriginalRating, new SelectListItem[]
+                                {
+                                    new SelectListItem{Value="500"},
+                                    new SelectListItem{Value="1000"},
+                                    new SelectListItem{Value="1500"},
+                                    new SelectListItem{Value="2000"},
+                                    new SelectListItem{Value="2500"},
+                                    new SelectListItem{Value="3000"}
+                                }, new { @class = "input-xlarge" })
+                        @Html.ValidationMessageFor(x => x.Owner)
+                        @Html.DescriptionFor(x => x.Owner, new { @class = "help-block" })
+                    </div>
+                </div>
+                }
                 <input type="submit" value="开始添加" class="btn btn-primary" />
             }
         </div>
