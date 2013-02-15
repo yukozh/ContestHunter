@@ -321,6 +321,9 @@
   <ItemGroup>
     <Content Include="Views\Problem\Test.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Complete.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

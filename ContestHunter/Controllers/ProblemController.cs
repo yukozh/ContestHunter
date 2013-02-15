@@ -155,5 +155,10 @@ namespace ContestHunter.Controllers
         {
             return View();
         }
+
+        public ActionResult Complete()
+        {
+            return View();
+        }
     }
 }
