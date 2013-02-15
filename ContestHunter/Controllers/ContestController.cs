@@ -52,17 +52,16 @@ namespace ContestHunter.Controllers
                 Contest contest = Contest.ByName(id);
                 model.Problems = contest.Problems().OrderBy(n => n).ToList();
                 model.PageCount = (int)Math.Ceiling(contest.AttendedUsersCount() / (double)STANDING_PAGE_SIZE);
-                model.Contest = id;
-                model.Type = contest.Type;
+                model.Contest = contest;
                 model.StartIndex = model.PageIndex * STANDING_PAGE_SIZE;
 
                 switch (contest.Type)
                 {
                     case Contest.ContestType.ACM:
-                        model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE);
+                        model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual);
                         break;
                     case Contest.ContestType.OI:
-                        model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE);
+                        model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual);
                         break;
                     default:
                         throw new NotImplementedException();

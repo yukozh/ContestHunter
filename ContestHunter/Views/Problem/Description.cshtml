@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Description";
+}
+
+<style type="text/css">
+    h5
+    {
+        font-family: 微软雅黑;
+        font-weight: normal;
+    }
+
+    .table td
+    {
+        border: 0px;
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="span12" style="margin-top: 20px; padding: 10px">
+    <div class="alert alert-info" style="text-align: center">
+        <h2>编写试题题面</h2>
+        <div>
+            <div class="progress progress-striped progress-success active">
+                <div class="bar" style="width: 40%;"></div>
+            </div>
+        </div>
+        <h5>请按照模板中给出的格式，在此编写试题的题面</h5>
+        <h5>题面中请尽量使用默认格式，少数需要强调的地方推荐您使用加粗、斜体、下划线等方式，而不是使用不同的颜色</h5>
+        <h5>点击编辑器的“源码”按钮，可以直接编辑Html源码</h5>
+        <textarea name="html" class="ckeditor">@ViewBag.Html</textarea>
+        <h2><input class="btn btn-warning" type="submit" value="效果预览" /></h2>
+        <h3 style="margin-bottom:0px; color:black">OrzSJY</h3>
+        <h5 style="margin-top:0px; color:black">From <a href="#">onetwogoo</a></h5>
+        <div class="well" style="color:black; font-family:微软雅黑">
+            @Html.Sanitized((string)ViewBag.Html)
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary">上一步</button>
+            <button class="btn btn-success">下一步</button>
+        </div>
+    </div>
+</div>

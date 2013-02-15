@@ -129,5 +129,36 @@ namespace ContestHunter.Controllers
 
             return RedirectToAction("Show", "Record", new { id = recordID });
         }
+
+        public ActionResult Add()
+        {
+            return View();
+        }
+
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+        public ActionResult Description(string html = "")
+        {
+            ViewBag.Html = html;
+            return View();
+        }
+
+        public ActionResult Config()
+        {
+            return View();
+        }
+
+        public ActionResult Test()
+        {
+            return View();
+        }
+
+        public ActionResult Complete()
+        {
+            return View();
+        }
     }
 }
