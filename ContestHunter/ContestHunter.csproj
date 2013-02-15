@@ -189,6 +189,8 @@
     <Compile Include="Models\View\ContestListModel.cs" />
     <Compile Include="Models\View\ContestSignupModel.cs" />
     <Compile Include="Models\View\ContestStandingModel.cs" />
+    <Compile Include="Models\View\ProblemBasicInfoModel.cs" />
+    <Compile Include="Models\View\ProblemContentModel.cs" />
     <Compile Include="Models\View\ProblemSubmitModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />
     <Compile Include="Models\View\User\LoginModel.cs" />
@@ -202,6 +204,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\ProblemTemplate.html" />
     <Content Include="Content\ScoreColor.css" />
     <Content Include="Global.asax" />
     <Content Include="Image\Error.gif" />
@@ -330,6 +333,24 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Config.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Description.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Check.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Complete.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

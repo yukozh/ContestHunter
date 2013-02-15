@@ -1,16 +1,15 @@
-﻿@{
-    ViewBag.Title = "Description";
+﻿@model ContestHunter.Models.View.ProblemContentModel
+@{
+    ViewBag.Title = "编写题面";
 }
 
 <style type="text/css">
-    h5
-    {
+    h5 {
         font-family: 微软雅黑;
         font-weight: normal;
     }
 
-    .table td
-    {
+    .table td {
         border: 0px;
         text-align: center;
         vertical-align: middle;
@@ -25,19 +24,26 @@
                 <div class="bar" style="width: 40%;"></div>
             </div>
         </div>
-        <h5>请按照模板中给出的格式，在此编写试题的题面</h5>
-        <h5>题面中请尽量使用默认格式，少数需要强调的地方推荐您使用加粗、斜体、下划线等方式，而不是使用不同的颜色</h5>
-        <h5>点击编辑器的“源码”按钮，可以直接编辑Html源码</h5>
-        <textarea name="html" class="ckeditor">@ViewBag.Html</textarea>
-        <h2><input class="btn btn-warning" type="submit" value="效果预览" /></h2>
-        <h3 style="margin-bottom:0px; color:black">OrzSJY</h3>
-        <h5 style="margin-top:0px; color:black">From <a href="#">onetwogoo</a></h5>
-        <div class="well" style="color:black; font-family:微软雅黑">
-            @Html.Sanitized((string)ViewBag.Html)
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-primary">上一步</button>
-            <button class="btn btn-success">下一步</button>
-        </div>
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(x => x.Problem)
+            @Html.HiddenFor(x => x.Contest)
+            @Html.HiddenFor(x => x.Action)
+            <h5>请按照模板中给出的格式，在此编写试题的题面</h5>
+            <h5>尽量遵循模版中的默认格式。对于少数需要强调的地方，请在“<strong>样式</strong>”或“<strong>格式</strong>”菜单中，选择您需要的效果。</h5>
+            <h5>如您需要更精确地控制显示效果，请点击编辑器的“源码”按钮，直接编辑HTML源码</h5>
+            @Html.TextAreaFor(x => x.Content, new { @class = "ckeditor" })
+            <h2>
+                <input class="btn btn-warning" type="submit" value="效果预览" onclick="$('#Action').val('Preview')" /></h2>
+            <h3 style="margin-bottom: 0px; color: black">@Model.Problem</h3>
+            <h5 style="margin-top: 0px; color: black">From @Html.UserLink("暂不支持")</h5>
+            <div class="well" style="color: black; font-family: 微软雅黑; text-align: left;">
+                @Html.Sanitized(Model.Content)
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary">上一步</button>
+                <button class="btn btn-success">下一步</button>
+            </div>
+        }
     </div>
 </div>

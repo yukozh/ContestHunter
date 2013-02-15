@@ -1,18 +1,19 @@
-﻿@{
-    ViewBag.Title = "Add";
+﻿@model ContestHunter.Models.View.ProblemBasicInfoModel
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = "添加题目";
 }
 
 <style type="text/css">
-    h5
-    {
-        font-family:微软雅黑;
-        font-weight:normal;
+    h5 {
+        font-family: 微软雅黑;
+        font-weight: normal;
     }
-    .table td
-    {
-        border:0px;
-        text-align:center;
-        vertical-align:middle;
+
+    .table td {
+        border: 0px;
+        text-align: center;
+        vertical-align: middle;
     }
 </style>
 
@@ -24,25 +25,50 @@
                 <div class="bar" style="width: 20%;"></div>
             </div>
         </div>
-        <h5>本向导将引导您向 OrzSJY杯模拟赛 中添加一道试题</h5>
+        <h5>本向导将引导您向 @Html.ActionLink(Model.Contest, "Show", "Contest", new { id = Model.Contest }, null) 中添加一道试题</h5>
         <h5>每一步完成后，系统都会保存您所添加的内容</h5>
         <h5>在未完成添加前，请勿关闭此向导或重复添加相同的题目</h5>
-        <div style="margin: 20px auto; width: 350px">
-            <table class="table">
-                <tr>
-                    <td style="text-align:right">题目名称</td>
-                    <td>
-                        <input type="text" class="input-large" />
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align:right">出题人用户名</td>
-                    <td>
-                        <input type="text" class="input-large" />
-                    </td>
-                </tr>
-            </table>
+        <div style="text-align: center;">
+            @using (Html.BeginForm("Add", "Problem", FormMethod.Post, new { @class = "form-horizontal", style = "display:inline-block;" }))
+            {
+                @Html.HiddenFor(x => x.Contest)
+                <div class="control-group">
+                    @Html.LabelFor(x => x.Name, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(x => x.Name, new { @class = "input-xlarge" })
+                        @Html.ValidationMessageFor(x => x.Name)
+                        @Html.DescriptionFor(x => x.Name, new { @class = "help-block" })
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(x => x.Owner, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(x => x.Owner, new { @class = "input-xlarge" })
+                        @Html.ValidationMessageFor(x => x.Owner)
+                        @Html.DescriptionFor(x => x.Owner, new { @class = "help-block" })
+                    </div>
+                </div>
+                if (Model.ContestType == Contest.ContestType.CF)
+                {
+                <div class="control-group">
+                    @Html.LabelFor(x => x.OriginalRating, new { @class = "control-label" })
+                    <div class="controls">
+                        @Html.DropDownListFor(x => x.OriginalRating, new SelectListItem[]
+                                {
+                                    new SelectListItem{Value="500"},
+                                    new SelectListItem{Value="1000"},
+                                    new SelectListItem{Value="1500"},
+                                    new SelectListItem{Value="2000"},
+                                    new SelectListItem{Value="2500"},
+                                    new SelectListItem{Value="3000"}
+                                }, new { @class = "input-xlarge" })
+                        @Html.ValidationMessageFor(x => x.Owner)
+                        @Html.DescriptionFor(x => x.Owner, new { @class = "help-block" })
+                    </div>
+                </div>
+                }
+                <input type="submit" value="开始添加" class="btn btn-primary" />
+            }
         </div>
-        <h2><input class="btn btn-primary" type="submit" value="开始添加" /></h2>
     </div>
 </div>
