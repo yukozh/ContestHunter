@@ -27,6 +27,10 @@
                         <td><b>评测结果</b></td>
                         @switch (Model.Status)
                         {
+                            case null:
+                                ViewBag.Label = "label-info";
+                                ViewBag.Message = "未知";
+                                break;
                             case Record.StatusType.Accept:
                                 ViewBag.Label = "label-success";
                                 ViewBag.Message = "通过";

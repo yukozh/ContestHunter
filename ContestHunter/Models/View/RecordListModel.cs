@@ -13,6 +13,7 @@ namespace ContestHunter.Models.View
         public string ContestName { get; set; }
         public Record.StatusType? Status { get; set; }
         public Record.LanguageType? Language { get; set; }
+        public Record.OrderByType OrderBy { get; set; }
         public int PageIndex { get; set; }
         public int PageCount { get; set; }
         public List<Record> Records { get; set; }

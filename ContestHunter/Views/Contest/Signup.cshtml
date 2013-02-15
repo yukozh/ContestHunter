@@ -106,7 +106,7 @@
                                         <div style="font-size: large; text-align: center;">
                                             @Model.Contest.AbsoluteStartTime<br />
                                             持续<b> @(Math.Round((Model.Contest.AbsoluteEndTime - Model.Contest.AbsoluteStartTime).TotalHours, 1)) </b>小时 
-                                            @if (Model.Contest.IsVirtual())
+                                            @if (User.Identity.IsAuthenticated && Model.Contest.IsAttended() && Model.Contest.GetAttendType() == Contest.AttendType.Virtual)
                                             {
                                                 <div style="font-size: small; color: red;">
                                                     模拟比赛于 @Model.Contest.RelativeStartTime 开始
@@ -123,13 +123,29 @@
                                 @if (Model.Contest.IsAttended())
                                 {
                                     <tr>
-                                        <td style="text-align:center;">您已报名参加此次比赛
-                                            @if (Model.Contest.RelativeStartTime > DateTime.Now)
-                                            {
-                                                <div>
+                                        <td style="text-align: center;">您已报名参加此次比赛<br />
+                                            报名方式为
+                                            <b>
+                                                @switch (Model.Contest.GetAttendType())
+                                                {
+                                                    case Contest.AttendType.Normal:
+                                                    @:正式
+                                                    break;
+                                                    case Contest.AttendType.Practice:
+                                                    @:练习
+                                                    break;
+                                                    case Contest.AttendType.Virtual:
+                                                    @:模拟
+                                                    break;
+                                                }
+                                            </b>
+                                            <div>
+                                                @Html.ActionLink("进入比赛", "Show", new { id = Model.Contest.Name }, new { @class = "btn btn-primary", style = "display:inline-block;" })
+                                                @if (Model.Contest.RelativeStartTime > DateTime.Now)
+                                                {
                                                     <input type="submit" class="btn btn-danger" value="取消报名" onclick="$('#Type').val('Cancel')" />
-                                                </div>
-                                            }
+                                                }
+                                            </div>
                                         </td>
                                     </tr>
                                 }
@@ -137,7 +153,7 @@
                                 {
                                     <tr>
                                         <td style="text-align: center">
-                                            <span style="font-size: 12px; color: gray">您可以从下方选择一种参赛方式</span>
+                                            <span style="font-size: 12px; color: gray">您尚未报名参赛，请从下方选择一种参赛方式</span>
                                             <div class="accordion" id="accordion2">
                                                 @if (Model.Contest.AbsoluteEndTime > DateTime.Now)
                                                 {

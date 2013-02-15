@@ -108,7 +108,7 @@
                             <td>
                                 @contest.AbsoluteStartTime<br />
                                 持续<b>@(Math.Round((contest.AbsoluteEndTime - contest.AbsoluteStartTime).TotalHours, 1))</b>小时
-                                @if (contest.IsVirtual())
+                                @if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
                                 {
                                     <div class="alert alert-success">
                                         模拟比赛于 @contest.RelativeStartTime 开始
@@ -233,7 +233,7 @@
                             <td>
                                 @contest.AbsoluteStartTime<br />
                                 持续<b>@(Math.Round((contest.AbsoluteEndTime - contest.AbsoluteStartTime).TotalHours, 1))</b>小时
-                                @if (contest.IsVirtual())
+                                @if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
                                 {
                                     <div class="alert alert-success">
                                         模拟比赛于 @contest.RelativeStartTime 开始
@@ -356,7 +356,7 @@
                             <td>
                                 @contest.AbsoluteStartTime<br />
                                 持续<b>@(Math.Round((contest.AbsoluteEndTime - contest.AbsoluteStartTime).TotalHours, 1))</b>小时
-                                @if (contest.IsVirtual())
+                                @if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
                                 {
                                     <div class="alert alert-success">
                                         模拟比赛于 @contest.RelativeStartTime 开始

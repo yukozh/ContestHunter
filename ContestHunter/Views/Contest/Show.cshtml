@@ -28,6 +28,7 @@
 </style>
 
 <script type="text/javascript">
+    var ContestWholeTime = 0;
     var DiffDay = -1
     var DiffHour = -1
     var DiffMin = -1
@@ -37,7 +38,8 @@
     var TotSec = 60 * 1000
     var TotMs = 1000
     var DiffMs = 0
-    var LastTime = 0
+    var LastTime = 0;
+    var IntervalTicket;
     function clock() {
         LastTime = DiffMs
         DiffDay = Math.floor(DiffMs / TotHour)
@@ -51,10 +53,12 @@
         document.getElementById('Hour').innerHTML = DiffHour
         document.getElementById('Min').innerHTML = DiffMin
         document.getElementById('Sec').innerHTML = DiffSec
-        document.getElementById('bar').style.width = @((DateTime.Now - Model.RelativeStartTime).TotalSeconds / (Model.RelativeEndTime - Model.RelativeStartTime).TotalSeconds * 100) + '%'
+        document.getElementById('bar').style.width = String((ContestWholeTime-LastTime)/ContestWholeTime*100)+ '%'
         DiffMs = LastTime - 1000
-        if (DiffMs < 0) history.go(0)
-        setTimeout("clock()", 1000)
+        if (DiffMs < 0) {
+            location.reload();
+            clearInterval(IntervalTicket);
+        }
     }
     $(function () {
         @if (Model.RelativeStartTime > DateTime.Now)
@@ -63,28 +67,37 @@
             ViewBag.Pre = "距离比赛开始还有";
             ViewBag.DiffMs = span.TotalMilliseconds;
             ViewBag.StartClock = true;
+            ViewBag.ShowBar = false;
         }
         else if (Model.RelativeEndTime < DateTime.Now)
         {
             ViewBag.Pre = "比赛已结束";
             ViewBag.StartClock = false;
+            ViewBag.ShowBar = false;
         }
         else
         {
-            TimeSpan span = Model.RelativeStartTime - DateTime.Now;
+            TimeSpan span = Model.RelativeEndTime - DateTime.Now;
             ViewBag.Pre = "距离比赛结束还有";
             ViewBag.DiffMs = span.TotalMilliseconds;
             ViewBag.StartClock = true;
+            ViewBag.ShowBar = true;
         }
         $('#Pre').text('@ViewBag.Pre');
+        ContestWholeTime=@((Model.RelativeEndTime - Model.RelativeStartTime).TotalMilliseconds);
         @if (ViewBag.StartClock)
         {
-            @Html.Raw("clock(); DiffMs =");
+            @Html.Raw("IntervalTicket=setInterval(clock,1000); DiffMs =");
             @Html.Raw(ViewBag.DiffMs.ToString());
+            @Html.Raw(";");
         }
         else
         {
             @Html.Raw("$('#Next').html('');");
+        }
+        @if (!ViewBag.ShowBar)
+        {
+            @Html.Raw("$('#progressBar').hide();")
         }
     });
 </script>
@@ -148,31 +161,35 @@
                                 </td>
                             </tr>
                             <tr id="trProgress">
+                                @if (Model.GetAttendType() == Contest.AttendType.Practice)
+                                {
+                                    <script>
+                                        $('#trProgress').hide();
+                                    </script>
+                                }
                                 <td>
-                                    <div class="progress progress-striped active" style="margin: 5px">
-                                        @{
-                                            if (Model.RelativeStartTime > DateTime.Now)
-                                            {
-                                                ViewBag.Progress = 0;
-                                            }
-                                            else if (Model.RelativeEndTime < DateTime.Now)
-                                            {
-                                                ViewBag.Progress = 100;
-                                            }
-                                            else
-                                            {
-                                                ViewBag.Progress = (DateTime.Now - Model.RelativeStartTime).TotalSeconds / (Model.RelativeEndTime - Model.RelativeStartTime).TotalSeconds * 100;
-                                            }
+                                    <div id="progressBar" class="progress progress-striped active" style="margin: 5px">
+                                        @if (Model.RelativeStartTime > DateTime.Now)
+                                        {
+                                            ViewBag.Progress = 0;
+                                        }
+                                        else if (Model.RelativeEndTime < DateTime.Now)
+                                        {
+                                            ViewBag.Progress = 100;
+                                        }
+                                        else
+                                        {
+                                            ViewBag.Progress = (DateTime.Now - Model.RelativeStartTime).TotalSeconds / (Model.RelativeEndTime - Model.RelativeStartTime).TotalSeconds * 100;
                                         }
                                         <div id="bar" class="bar" style="width: @ViewBag.Progress%; text-align: center"></div>
                                     </div>
                                     <h4>
                                         <span id="Pre" style="font-weight: normal">?</span><br />
                                         <span id="Next">
-                                            <span id="Day">?</span>天
-	                                        <span id="Hour">?</span>小时
-	                                        <span id="Min">?</span>分
-	                                        <span id="Sec">?</span>秒
+                                            <span id="Day"></span>天
+	                                        <span id="Hour"></span>小时
+	                                        <span id="Min"></span>分
+	                                        <span id="Sec"></span>秒
                                         </span>
                                     </h4>
                                 </td>
@@ -180,6 +197,7 @@
                             <tr>
                                 <td>
                                     <ul class="nav nav-list">
+                                        <li>@Html.ActionLink("报名与取消", "Signup", new { id = Model.Name })</li>
                                         <li>@Html.ActionLink("实时排名版", "Standing", new { id = Model.Name })</li>
                                         <li>@Html.ActionLink("我的提交记录", "Index", "Record", new { ContestName = Model.Name, UserName = USER.CurrentUserName }, null)</li>
                                         <li>@Html.ActionLink("所有提交记录", "Index", "Record", new { ContestName = Model.Name }, null)</li>

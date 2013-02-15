@@ -7,16 +7,14 @@
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td
-        {
+        .table td {
             text-align: center;
             vertical-align: middle;
             font-family: 微软雅黑;
@@ -54,12 +52,13 @@
                             new SelectListItem{Text="等待评测",Value="Pending"},
                             new SelectListItem{Text="编译失败",Value="Compile_Error"}
                         }, new { @class = "input-small" })
-                        <select class="span2">
-                            <option value="0">按提交时间排序</option>
-                            <option value="1">按程序运行时间排序</option>
-                            <option value="2">按占用内存排序</option>
-                            <option value="3">按代码长度排序</option>
-                        </select>
+                    @Html.DropDownListFor(x => x.OrderBy, new SelectListItem[]
+                       {
+                           new SelectListItem{Text="按提交时间排序",Value="SubmitTime"},
+                           new SelectListItem{Text="按程序运行时间排序",Value="ExecutedTime"},
+                           new SelectListItem{Text="按占用内存排序",Value="MemoryUsed"},
+                           new SelectListItem{Text="按代码长度排序",Value="CodeLength"}
+                       }, new { @class = "span2" })
                     <input type="submit" class="btn btn-primary" value="查询" />
                 </div>
                 <div style="clear: both"></div>
@@ -91,6 +90,10 @@
                             </td>
                             @switch (record.Status)
                             {
+                                case null:
+                                    ViewBag.Label = "label-info";
+                                    ViewBag.Message = "未知";
+                                    break;
                                 case Record.StatusType.Accept:
                                     ViewBag.Label = "label-success";
                                     ViewBag.Message = "通过";
@@ -168,7 +171,7 @@
                             <span style="color: orange"><b>@record.CodeLength</b></span><span style="color: blue"> B</span>
                             </td>
                             <td>
-                                @switch (Model.Language)
+                                @switch (record.Language)
                                 {
                                     case Record.LanguageType.C:
                                     @:C
@@ -178,6 +181,9 @@
                                         break;
                                     case Record.LanguageType.Pascal:
                                     @:Pascal
+                                        break;
+                                    default:
+                                    @:外星语言
                                         break;
                                 }
                             </td>

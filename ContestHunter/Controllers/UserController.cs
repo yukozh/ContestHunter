@@ -98,7 +98,11 @@ namespace ContestHunter.Controllers
         public ActionResult Login(string ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
-            return View();
+            LoginModel model = new LoginModel
+            {
+                KeepOnline = true
+            };
+            return View(model);
         }
 
         [HttpPost]
