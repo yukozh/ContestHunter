@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 using ContestHunter.Models.Domain;
 using ContestHunter.Models.View;
 using USER = ContestHunter.Models.Domain.User;
@@ -100,7 +101,7 @@ namespace ContestHunter.Controllers
             try
             {
                 Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
-                recordID=problem.Submit(new Record
+                recordID = problem.Submit(new Record
                 {
                     Code = model.Code,
                     Language = (Record.LanguageType)model.Language
@@ -130,9 +131,86 @@ namespace ContestHunter.Controllers
             return RedirectToAction("Show", "Record", new { id = recordID });
         }
 
-        public ActionResult Add()
+        [HttpGet]
+        public ActionResult Add(string contest)
         {
-            return View();
+            ProblemBasicInfoModel model = new ProblemBasicInfoModel
+            {
+                Contest = contest
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Add(ProblemBasicInfoModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                Contest contest = Contest.ByName(model.Contest);
+                contest.AddProblem(new Problem
+                {
+                    Content = System.IO.File.ReadAllText(Server.MapPath("~/Content/ProblemTemplate.html")),
+                    Name = model.Name
+                });
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没找到相应比赛" });
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有添加比赛权限" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            return RedirectToAction("Description", new { id = model.Name, contest = model.Contest });
+        }
+
+        [HttpGet]
+        public ActionResult Description(string contest, string id)
+        {
+            ProblemContentModel model = new ProblemContentModel
+            {
+                Contest = contest,
+                Problem = id
+            };
+            try
+            {
+                Problem problem = Contest.ByName(contest).ProblemByName(id);
+                model.Content = problem.Content;
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到所需的比赛" });
+            }
+            catch (ContestNotStartedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未开始" });
+            }
+            catch (NotAttendedContestException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有参加比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Description(ProblemContentModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            switch (model.Action)
+            {
+                case ProblemContentModel.ActionType.Preview:
+                    return View(model);
+            }
+            return View(model);
         }
 
         public ActionResult Edit()
@@ -140,11 +218,7 @@ namespace ContestHunter.Controllers
             return View();
         }
 
-        public ActionResult Description(string html = "")
-        {
-            ViewBag.Html = html;
-            return View();
-        }
+
 
         public ActionResult Config()
         {

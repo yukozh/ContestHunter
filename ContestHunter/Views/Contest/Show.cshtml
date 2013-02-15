@@ -197,6 +197,10 @@
                             <tr>
                                 <td>
                                     <ul class="nav nav-list">
+                                        @if (Model.Owner.Contains(USER.CurrentUserName))
+                                        {
+                                            <li>@Html.ActionLink("添加题目", "Add", "Problem", new { contest = Model.Name }, null)</li>
+                                        }
                                         <li>@Html.ActionLink("报名与取消", "Signup", new { id = Model.Name })</li>
                                         <li>@Html.ActionLink("实时排名版", "Standing", new { id = Model.Name })</li>
                                         <li>@Html.ActionLink("我的提交记录", "Index", "Record", new { ContestName = Model.Name, UserName = USER.CurrentUserName }, null)</li>
