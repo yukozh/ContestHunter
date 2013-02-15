@@ -152,7 +152,13 @@
     <Compile Include="Database\GROUP.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\HUNT.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\PROBLEM.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\RATING.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\RECORD.cs">
@@ -173,6 +179,7 @@
     <Compile Include="Models\Domain\Exceptions.cs" />
     <Compile Include="Models\Domain\Framework.cs" />
     <Compile Include="Models\Domain\Group.cs" />
+    <Compile Include="Models\Domain\Hunt.cs" />
     <Compile Include="Models\Domain\Problem.cs" />
     <Compile Include="Models\Domain\Record.cs" />
     <Compile Include="Models\Domain\Standing.cs" />
@@ -286,6 +293,9 @@
     <Content Include="Views\Contest\Standing.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Contest\Signup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -305,9 +315,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contest\Signup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Add.cshtml" />

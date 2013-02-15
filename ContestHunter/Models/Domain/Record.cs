@@ -163,6 +163,7 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         /// <exception cref="ContestNotEndedException"></exception>
         /// <exception cref="RecordNotFoundException"></exception>
+        /// <exception cref="ProblemNotLockedException"></exception>
         public static Record ByID(Guid id)
         {
             using (var db = new CHDB())
@@ -174,8 +175,22 @@ namespace ContestHunter.Models.Domain
                     throw new RecordNotFoundException();
                 if (result.USER1.Name != Domain.User.CurrentUser.name)
                 {
-                    if (DateTime.Now <= Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name).RelativeEndTime)
-                        throw new ContestNotEndedException();
+                    var con = Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name);
+                    if (con.Type != Domain.Contest.ContestType.CF)
+                    {
+                        if (DateTime.Now <= Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name).RelativeEndTime)
+                            throw new ContestNotEndedException();
+                    }
+                    else
+                    {
+                        if (!(from l in
+                                  (from u in db.USERs
+                                   where u.Name == Domain.User.CurrentUser.name
+                                   select u).Single().LOCKs
+                              where l == result.PROBLEM1
+                              select l).Any())
+                            throw new ProblemNotLockedException();
+                    }
                 }
                 return new Record()
                 {
@@ -206,6 +221,42 @@ namespace ContestHunter.Models.Domain
             {
                 return (from r in db.RECORDs
                         select r).Count();
+            }
+        }
+
+        /// <summary>
+        /// Hunt本记录
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <exception cref="RecordStatusMismatchException"></exception>
+        /// <exception cref="ContestTypeMismatchException"></exception>
+        /// <exception cref="ContestEndedException"></exception>
+        /// <exception cref="ProblemNotLockedException"></exception>
+        public void Hunt(string Data)
+        {
+            using (var db = new CHDB())
+            {
+                var curRecord = (from r in db.RECORDs
+                           where r.ID == ID
+                           select r).Single();
+                if (curRecord.Status != (int)Record.StatusType.Accept)
+                    throw new RecordStatusMismatchException();
+                var curContest = Domain.Contest.ByName(curRecord.PROBLEM1.CONTEST1.Name);
+                if (curContest.Type != Domain.Contest.ContestType.CF)
+                    throw new ContestTypeMismatchException();
+                if (DateTime.Now > curContest.AbsoluteEndTime)
+                    throw new ContestEndedException();
+                var curProbelm = curContest.ProblemByName(curRecord.PROBLEM1.Name);
+                if (!curProbelm.IsLock())
+                    throw new ProblemNotLockedException();
+                db.HUNTs.Add(new HUNT()
+                {
+                    HuntData = Data,
+                    RECORD1 = curRecord,
+                    User = Domain.User.CurrentUser.ID,
+                    Status = (int)Domain.Hunt.Status.Pending,
+                });
+                db.SaveChanges();
             }
         }
     }

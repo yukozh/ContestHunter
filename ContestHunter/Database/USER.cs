@@ -17,8 +17,11 @@ namespace ContestHunter.Database
         public USER()
         {
             this.CONTEST_ATTEND = new HashSet<CONTEST_ATTEND>();
+            this.HUNTs = new HashSet<HUNT>();
+            this.RATINGs = new HashSet<RATING>();
             this.RECORDs = new HashSet<RECORD>();
             this.CONTESTs = new HashSet<CONTEST>();
+            this.LOCKs = new HashSet<PROBLEM>();
             this.GROUPs = new HashSet<GROUP>();
         }
     
@@ -28,8 +31,11 @@ namespace ContestHunter.Database
         public string Email { get; set; }
     
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
+        public virtual ICollection<HUNT> HUNTs { get; set; }
+        public virtual ICollection<RATING> RATINGs { get; set; }
         public virtual ICollection<RECORD> RECORDs { get; set; }
         public virtual ICollection<CONTEST> CONTESTs { get; set; }
+        public virtual ICollection<PROBLEM> LOCKs { get; set; }
         public virtual ICollection<GROUP> GROUPs { get; set; }
     }
 }
