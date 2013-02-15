@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Check";
+}
+
+<style type="text/css">
+    textarea
+    {
+        width: 800px;
+        height: 400px;
+        margin: auto;
+        display: block;
+    }
+    .accordion-group
+    {
+        background-color:white;
+    }
+    h5
+    {
+        font-family:微软雅黑;
+        font-weight:normal;
+    }
+</style>
+
+<div class="span12" style="margin-top: 20px; padding: 10px">
+    <div class="alert alert-info" style="text-align: center">
+        <h2>提交校验器和标程</h2>
+        <div>
+            <div class="progress progress-striped progress-success active">
+                <div class="bar" style="width: 80%;"></div>
+            </div>
+        </div>
+        <h5>请为您的题目提交一份标程(std)和一个运行结果比较器(Special Judge)</h5>
+        <h5>我们这里同时为您准备了预置的比较器，可以支持忽略文末换行符和行末空格后全文比较</h5>
+        <h5>如果该题目属于一场Codeforces赛制的比赛，您还需要编写一份检测参赛者提交的Hunt数据合法性的程序</h5>
+        <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">提交标程(Standard Program)</a>
+                </div>
+                <div id="collapse1" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <select class="input-small">
+                            <option value="">语言</option>
+                            <option value="CPP">C++</option>
+                            <option value="C">C</option>
+                            <option value="Pascal">Pascal</option>
+                        </select>
+                        <span style="font-size:12px; color:gray">*标准输入输出，C/C++代码中的long long(%lld)和__int64(%I64d)均可使用</span>
+                        <textarea id="std"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">提交运行结果比较器(Special Judge)</a>
+                </div>
+                <div id="collapse2" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <select class="input-small">
+                            <option value="">语言</option>
+                            <option value="CPP">C++</option>
+                            <option value="C">C</option>
+                            <option value="Pascal">Pascal</option>
+                        </select>
+                        <span style="font-size:12px; color:gray">*如果您的题目为直接比较方式，可以选择我们的预置校验器</span>
+                        <textarea id="spj"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse3">提交数据合法性校验器(Data Checker)</a>
+                </div>
+                <div id="collapse3" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <select class="input-small">
+                            <option value="">语言</option>
+                            <option value="CPP">C++</option>
+                            <option value="C">C</option>
+                            <option value="Pascal">Pascal</option>
+                        </select>
+                        <span style="font-size:12px; color:gray">*用于在Codeforces赛制下检测Hunt数据的合法性</span>
+                        <textarea id="checker"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary">上一步</button>
+            <button class="btn btn-success">下一步</button>
+        </div>
+    </div>
+</div>
