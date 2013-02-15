@@ -45,7 +45,7 @@ namespace ContestHunter.Models.Domain
             Compile_Error = -3
         }
 
-        public StatusType Status;
+        public StatusType? Status;
 
         public enum OrderByType
         {

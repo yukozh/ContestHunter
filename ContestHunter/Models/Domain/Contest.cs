@@ -21,8 +21,14 @@ namespace ContestHunter.Models.Domain
         {
             get
             {
-                if (IsVirtual())
-                    return VirtualStartTime();
+                try
+                {
+                    if (GetAttendType() == AttendType.Virtual)
+                        return VirtualStartTime();
+                }
+                catch
+                {
+                }
                 return AbsoluteStartTime;
             }
             set
@@ -34,8 +40,14 @@ namespace ContestHunter.Models.Domain
         {
             get
             {
-                if (IsVirtual())
-                    return VirtualEndTime();
+                try
+                {
+                    if (GetAttendType()==AttendType.Virtual)
+                        return VirtualEndTime();
+                }
+                catch
+                {
+                }
                 return AbsoluteEndTime;
             }
             set
@@ -47,7 +59,7 @@ namespace ContestHunter.Models.Domain
         public bool IsOfficial;
         public List<string> Owner;
 
-        internal enum AttendType
+        public enum AttendType
         {
             Normal,
             Virtual,
@@ -654,20 +666,22 @@ namespace ContestHunter.Models.Domain
         /// 判断是否为虚拟报名此比赛
         /// </summary>
         /// <returns></returns>
-        public bool IsVirtual()
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
+        public AttendType GetAttendType()
         {
             if (null == User.CurrentUser)
-                return false;
+                throw new UserNotLoginException();
             if (!IsAttended())
-                return false;
+                throw new NotAttendedContestException();
             using (var db = new CHDB())
             {
                 var con_att = (from c in db.CONTESTs
                                where c.Name == Name
                                select c.CONTEST_ATTEND).Single();
-                return (from u in con_att
+                return (AttendType)(from u in con_att
                         where u.USER1.Name == User.CurrentUser.name
-                        select u.Type).Single()==(int)AttendType.Virtual;
+                        select u.Type).Single();
             }
         }
 

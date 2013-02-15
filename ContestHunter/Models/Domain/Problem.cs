@@ -130,6 +130,19 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        DateTime GetVirtualSubmitTime(PROBLEM currpro)
+        {
+            try
+            {
+                if (contest.GetAttendType() == Domain.Contest.AttendType.Virtual)
+                    return currpro.CONTEST1.StartTime + (DateTime.Now - contest.RelativeStartTime);
+            }
+            catch
+            {
+            }
+            return DateTime.Now;
+        }
+
         /// <summary>
         /// 提交题目 record只需要填充 Code 和 Language
         /// </summary>
@@ -171,7 +184,7 @@ namespace ContestHunter.Models.Domain
                              select u).Single(),
                     Status = (int)Record.StatusType.Pending,
                     SubmitTime = DateTime.Now,
-                    VirtualSubmitTime = contest.IsVirtual() ? currpro.CONTEST1.StartTime + (DateTime.Now - contest.RelativeStartTime) : DateTime.Now
+                    VirtualSubmitTime = GetVirtualSubmitTime(currpro)
                 });
                 db.SaveChanges();
                 return ret;
