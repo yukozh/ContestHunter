@@ -238,6 +238,40 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        public void Change(Contest contest)
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!Owner.Contains(User.CurrentUser.name) &&
+                !User.CurrentUser.groups.Contains("Administrators"))
+                throw new PermissionDeniedException();
+            using (var db = new CHDB())
+            {
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                con.Name = contest.Name;
+                con.Description = contest.Description;
+                con.OWNERs.Clear();
+                foreach (var name in contest.Owner)
+                {
+                    con.OWNERs.Add((from u in db.USERs
+                                    where u.Name == name
+                                    select u).Single());
+                }
+                con.IsOfficial = contest.IsOfficial;
+                con.StartTime = contest.AbsoluteStartTime;
+                con.EndTime = contest.AbsoluteStartTime;
+                db.SaveChanges();
+            }
+            Name = contest.Name;
+            Description = contest.Description;
+            Owner = contest.Owner;
+            IsOfficial = contest.IsOfficial;
+            AbsoluteStartTime = contest.AbsoluteStartTime;
+            AbsoluteEndTime = contest.AbsoluteEndTime;
+        }
+
         /// <summary>
         /// 获取指定名称比赛实例
         /// </summary>
@@ -582,13 +616,14 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /*
         public override bool Equals(object obj)
         {
             if (obj is Contest)
                 return Name == ((Contest)obj).Name;
             return base.Equals(obj);
         }
-
+        */
         /// <summary>
         /// 返回ACM比赛Standing
         /// </summary>
@@ -749,10 +784,10 @@ namespace ContestHunter.Models.Domain
                                                            && r.Status > 0
                                                            select r).Count()
                                         let SuccessfulHack = (from h in db.HUNTs
-                                                              where h.USER1 == u && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.Status.Success
+                                                              where h.USER1 == u && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.StatusType.Success
                                                               select h).Count()
                                         let FailedHack = (from h in db.HUNTs
-                                                          where h.USER1 == u && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.Status.Fail
+                                                          where h.USER1 == u && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.StatusType.Fail
                                                           select h).Count()
                                         select new CFStanding.DescriptionClass()
                                         {
@@ -770,7 +805,8 @@ namespace ContestHunter.Models.Domain
                                   TotalRating = des.Sum(x => x.Rating),
                                   FailedHack = des.Sum(x => x._huntFailed),
                                   SeccessfullyHack = des.Sum(x => x._huntSuccessfully),
-                                  IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual
+                                  IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual,
+                                  Description = des.ToList()
                               });
                 return result.OrderByDescending(s=>s.TotalRating).Skip(skip).Take(top).ToList();
 

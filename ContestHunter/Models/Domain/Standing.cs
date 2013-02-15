@@ -32,7 +32,7 @@ namespace ContestHunter.Models.Domain
             internal int _huntFailed;
             internal int _huntSuccessfully;
         }
-        List<DescriptionClass> Description;
+        public List<DescriptionClass> Description;
         public int TotalRating;
         public int SeccessfullyHack;
         public int FailedHack;

@@ -55,6 +55,104 @@ namespace ContestHunter.Models.Domain
 
         public string IP = "moo.imeng.de";
         public long Password = 34659308463532339;
+
+        void DealRecord(CHDB db,Socket sock)
+        {
+
+            var rec = (from r in db.RECORDs
+                       where r.Status == (int)Record.StatusType.Pending
+                       select r).FirstOrDefault();
+            if (null == rec)
+                return;
+            sock.Send(new Message()
+            {
+                Type = Message.MessageType.Compile,
+                Content = new CompileIn()
+                {
+                    Code = rec.Code,
+                    Command = commands[rec.Language]["src2exe"],
+                    Memory = 1024 * 1024 * 60,
+                    Time = 5 * 1000
+                }
+            }.ToBytes());
+            Out ret = new Out(sock);
+            switch (ret.Type)
+            {
+                case Out.ResultType.Success:
+                    sock.Send(new Message()
+                    {
+                        Type = Message.MessageType.Compile,
+                        Content = new CompileIn()
+                        {
+                            Code = rec.Code,
+                            Command = commands[rec.Language]["src2exe"],
+                            Memory = 1024 * 1024 * 60,
+                            Time = 5 * 1000
+                        }
+                    }.ToBytes());
+                    Out CompileCMP = new Out(sock);
+                    switch (CompileCMP.Type)
+                    {
+                        case Out.ResultType.Success:
+                            int totalTests = 0;
+                            int passedTests = 0;
+                            foreach (TESTDATA test in (from t in db.TESTDATAs
+                                                       where t.PROBLEM1 == rec.PROBLEM1
+                                                       select t))
+                            {
+                                totalTests++;
+                                sock.Send(new Message()
+                                {
+                                    Type = Message.MessageType.Test,
+                                    Content = new TestIn()
+                                    {
+                                        CmpPath = CompileCMP.Message,
+                                        ExecPath = ret.Message,
+                                        Memory = test.MemoryLimit,
+                                        Time = test.TimeLimit,
+                                        Input = test.Input,
+                                        Output = test.Data
+                                    }
+                                }.ToBytes());
+                                Out testResult = new Out(sock);
+                                switch (testResult.Type)
+                                {
+                                    case Out.ResultType.Success:
+                                        passedTests++;
+                                        rec.MemoryUsed += testResult.Memory;
+                                        rec.ExecutedTime += (int)testResult.Time;
+                                        break;
+                                    default:
+                                        rec.Status = (int)testResult.Type;
+                                        break;
+                                }
+                            }
+                            if (totalTests == passedTests)
+                            {
+                                rec.Status = (int)Out.ResultType.Success;
+                            }
+                            rec.Score = (0 != totalTests ? passedTests / totalTests * 100 : 0);
+                            break;
+                        default:
+                            rec.Status = (int)Record.StatusType.CMP_Error;
+                            break;
+                    }
+                    break;
+                default:
+                    rec.Status = (int)Record.StatusType.Compile_Error;
+                    break;
+            }
+            db.SaveChanges();
+        }
+
+        void DealHunt(CHDB db, Socket sock)
+        {
+            var rec = (from h in db.HUNTs
+                       where h.Status == (int)Hunt.StatusType.Pending
+                       select h);
+
+        }
+
         protected override int Run()
         {
             using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
@@ -71,90 +169,8 @@ namespace ContestHunter.Models.Domain
                 }
                 using (var db = new CHDB())
                 {
-                    var rec = (from r in db.RECORDs
-                               where r.Status == (int)Record.StatusType.Pending
-                               select r).FirstOrDefault();
-                    if (null == rec)
-                        return 3000;
-                    sock.Send(new Message()
-                    {
-                        Type = Message.MessageType.Compile,
-                        Content = new CompileIn()
-                        {
-                            Code = rec.Code,
-                            Command = commands[rec.Language]["src2exe"],
-                            Memory = 1024 * 1024 * 60,
-                            Time = 5 * 1000
-                        }
-                    }.ToBytes());
-                    Out ret = new Out(sock);
-                    switch (ret.Type)
-                    {
-                        case Out.ResultType.Success:
-                            sock.Send(new Message()
-                            {
-                                Type = Message.MessageType.Compile,
-                                Content = new CompileIn()
-                                {
-                                    Code = rec.Code,
-                                    Command = commands[rec.Language]["src2exe"],
-                                    Memory = 1024 * 1024 * 60,
-                                    Time = 5 * 1000
-                                }
-                            }.ToBytes());
-                            Out CompileCMP = new Out(sock);
-                            switch (CompileCMP.Type)
-                            {
-                                case Out.ResultType.Success:
-                                    int totalTests = 0;
-                                    int passedTests = 0;
-                                    foreach (TESTDATA test in (from t in db.TESTDATAs
-                                                               where t.PROBLEM1 == rec.PROBLEM1
-                                                               select t))
-                                    {
-                                        totalTests++;
-                                        sock.Send(new Message()
-                                        {
-                                            Type = Message.MessageType.Test,
-                                            Content = new TestIn()
-                                            {
-                                                CmpPath = CompileCMP.Message,
-                                                ExecPath = ret.Message,
-                                                Memory = test.MemoryLimit,
-                                                Time = test.TimeLimit,
-                                                Input = test.Input,
-                                                Output = test.Data
-                                            }
-                                        }.ToBytes());
-                                        Out testResult = new Out(sock);
-                                        switch (testResult.Type)
-                                        {
-                                            case Out.ResultType.Success:
-                                                passedTests++;
-                                                rec.MemoryUsed += testResult.Memory;
-                                                rec.ExecutedTime += (int)testResult.Time;
-                                                break;
-                                            default:
-                                                rec.Status = (int)testResult.Type;
-                                                break;
-                                        }
-                                    }
-                                    if (totalTests == passedTests)
-                                    {
-                                        rec.Status = (int)Out.ResultType.Success;
-                                    }
-                                    rec.Score = (0 != totalTests ? passedTests / totalTests * 100 : 0);
-                                    break;
-                                default:
-                                    rec.Status = (int)Record.StatusType.CMP_Error;
-                                    break;
-                            }
-                            break;
-                        default:
-                            rec.Status = (int)Record.StatusType.Compile_Error;
-                            break;
-                    }
-                    db.SaveChanges();
+                    DealRecord(db, sock);
+                    DealHunt(db, sock);
                 }
             }
             return 3000;

@@ -293,6 +293,24 @@
     <Content Include="Views\Contest\Signup.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Problem\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Config.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Description.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Test.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\Complete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -312,24 +330,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\Add.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\Config.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\Description.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\Test.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\Complete.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

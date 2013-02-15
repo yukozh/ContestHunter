@@ -105,4 +105,12 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class NoRecordWaitingException : Exception
+    {
+    }
+
+    public class NoHuntWaitingException : Exception
+    {
+    }
+
 }

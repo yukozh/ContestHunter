@@ -129,7 +129,9 @@
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Record" Type="uniqueidentifier" Nullable="false" />
           <Property Name="HuntData" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Detail" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="LOCK">
           <Key>
@@ -531,7 +533,9 @@
           <Property Name="User" Type="Guid" Nullable="false" />
           <Property Name="Record" Type="Guid" Nullable="false" />
           <Property Name="HuntData" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Detail" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="RECORD1" Relationship="ContestHunterModel.FK_HACK_RECORD" FromRole="HUNT" ToRole="RECORD" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterModel.FK_HACK_USER" FromRole="HUNT" ToRole="USER" />
         </EntityType>
@@ -799,7 +803,9 @@
                 <ScalarProperty Name="User" ColumnName="User" />
                 <ScalarProperty Name="Record" ColumnName="Record" />
                 <ScalarProperty Name="HuntData" ColumnName="HuntData" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

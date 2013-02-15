@@ -17,7 +17,9 @@ namespace ContestHunter.Database
         public System.Guid User { get; set; }
         public System.Guid Record { get; set; }
         public string HuntData { get; set; }
+        public System.DateTime Time { get; set; }
         public int Status { get; set; }
+        public string Detail { get; set; }
     
         public virtual RECORD RECORD1 { get; set; }
         public virtual USER USER1 { get; set; }

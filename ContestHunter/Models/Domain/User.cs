@@ -253,11 +253,13 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /*
         public override bool Equals(object obj)
         {
             if (obj is User)
                 return Name == ((User)obj).Name;
             return base.Equals(obj);
         }
+         * */
     }
 }

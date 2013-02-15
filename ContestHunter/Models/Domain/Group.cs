@@ -180,11 +180,14 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+
+        /*
         public override bool Equals(object obj)
         {
             if (obj is Group)
                 return Name == ((Group)obj).Name;
             return base.Equals(obj);
         }
+         * */
     } 
 }

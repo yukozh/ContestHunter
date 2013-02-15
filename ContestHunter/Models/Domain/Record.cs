@@ -254,7 +254,7 @@ namespace ContestHunter.Models.Domain
                     HuntData = Data,
                     RECORD1 = curRecord,
                     User = Domain.User.CurrentUser.ID,
-                    Status = (int)Domain.Hunt.Status.Pending,
+                    Status = (int)Domain.Hunt.StatusType.Pending,
                 });
                 db.SaveChanges();
             }

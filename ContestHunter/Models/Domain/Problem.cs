@@ -18,12 +18,13 @@ namespace ContestHunter.Models.Domain
         internal Guid ID;
         internal Contest contest;
 
+        /*
         public override bool Equals(object obj)
         {
             if (obj is Problem)
                 return ID == ((Problem)obj).ID;
             return base.Equals(obj);
-        }
+        }*/
 
         /// <summary>
         /// 返回题目所有测试数据编号
@@ -234,6 +235,32 @@ namespace ContestHunter.Models.Domain
                         where l.Name == Name && l.CONTEST1.Name==contest.Name
                         select l).Any();
             }
+        }
+
+        public void Change(Problem problem)
+        {
+            if(null==User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!contest.Owner.Contains(User.CurrentUser.name) &&
+                !User.CurrentUser.groups.Contains("Administrators"))
+                throw new PermissionDeniedException();
+            using (var db = new CHDB())
+            {
+                var pro = (from p in db.PROBLEMs
+                           where p.Name == Name && p.CONTEST1.Name == contest.Name
+                           select p).Single();
+                pro.Name = problem.Name;
+                pro.OriginRating = problem.OriginRating;
+                pro.Content = problem.Content;
+                pro.Comparer = problem.Comparer;
+                pro.DataChecker = problem.DataChecker;
+                db.SaveChanges();
+            }
+            Name = problem.Name;
+            OriginRating = problem.OriginRating;
+            Content = problem.Content;
+            Comparer = problem.Comparer;
+            DataChecker = problem.DataChecker;
         }
     }
 }
