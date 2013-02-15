@@ -55,6 +55,13 @@ namespace ContestHunter.Models.Domain
                 AbsoluteEndTime = value;
             }
         }
+        internal DateTime RelativeNow
+        {
+            get
+            {
+                return AbsoluteStartTime + (DateTime.Now - RelativeStartTime);
+            }
+        }
         public string Description;
         public bool IsOfficial;
         public List<string> Owner;
@@ -596,14 +603,14 @@ namespace ContestHunter.Models.Domain
                                         let ACTimeList = (from r in p.RECORDs
                                                           where r.USER1 == u
                                                           && r.VirtualSubmitTime >= con.StartTime
-                                                          && r.VirtualSubmitTime <= con.EndTime
+                                                          && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
                                                           && r.Status == (int)Record.StatusType.Accept
                                                           select r.VirtualSubmitTime)
                                         let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Min() : null
                                         let FailedTimes = (from r in p.RECORDs
                                                            where r.USER1 == u
                                                            && r.VirtualSubmitTime >= con.StartTime
-                                                           && r.VirtualSubmitTime <= (ACTime == null ? con.EndTime : ACTime)
+                                                           && r.VirtualSubmitTime <= (ACTime == null ? (con.EndTime < RelativeNow ? con.EndTime : RelativeNow) : ACTime)
                                                            && r.Status > 0
                                                            select r).Count()
                                         select new ACMStanding.DescriptionClass()
@@ -651,7 +658,7 @@ namespace ContestHunter.Models.Domain
                                                 where r.USER1 == u
                                                 && r.PROBLEM1 == p
                                                 && r.VirtualSubmitTime >= con.StartTime
-                                                && r.VirtualSubmitTime <= con.EndTime
+                                                && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime:RelativeNow)
                                                 orderby r.VirtualSubmitTime descending
                                                 select r).FirstOrDefault()
                                    select score)
@@ -722,14 +729,14 @@ namespace ContestHunter.Models.Domain
                                         let ACTimeList = (from r in p.RECORDs
                                                           where r.USER1 == u
                                                           && r.VirtualSubmitTime >= con.StartTime
-                                                          && r.VirtualSubmitTime <= con.EndTime
+                                                          && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
                                                           && r.Status == (int)Record.StatusType.Accept
                                                           select r.VirtualSubmitTime)
                                         let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Min() : null
                                         let FailedTimes = (from r in p.RECORDs
                                                            where r.USER1 == u
                                                            && r.VirtualSubmitTime >= con.StartTime
-                                                           && r.VirtualSubmitTime <= (ACTime == null ? con.EndTime : ACTime)
+                                                           && r.VirtualSubmitTime <= (ACTime == null ? (con.EndTime < RelativeNow ? con.EndTime : RelativeNow) : ACTime)
                                                            && r.Status > 0
                                                            select r).Count()
                                         select new CFStanding.DescriptionClass()
