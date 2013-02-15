@@ -14,6 +14,11 @@ namespace ContestHunter.Database
     
     public partial class RECORD
     {
+        public RECORD()
+        {
+            this.HUNTs = new HashSet<HUNT>();
+        }
+    
         public System.Guid ID { get; set; }
         public System.Guid User { get; set; }
         public System.Guid Problem { get; set; }
@@ -28,6 +33,7 @@ namespace ContestHunter.Database
         public Nullable<int> Score { get; set; }
         public string Detail { get; set; }
     
+        public virtual ICollection<HUNT> HUNTs { get; set; }
         public virtual PROBLEM PROBLEM1 { get; set; }
         public virtual USER USER1 { get; set; }
     }

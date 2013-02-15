@@ -18,6 +18,7 @@ namespace ContestHunter.Database
         {
             this.CONTEST_ATTEND = new HashSet<CONTEST_ATTEND>();
             this.PROBLEMs = new HashSet<PROBLEM>();
+            this.RATINGs = new HashSet<RATING>();
             this.OWNERs = new HashSet<USER>();
         }
     
@@ -28,9 +29,11 @@ namespace ContestHunter.Database
         public string Description { get; set; }
         public int Type { get; set; }
         public bool IsOfficial { get; set; }
+        public bool IsDone { get; set; }
     
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<PROBLEM> PROBLEMs { get; set; }
+        public virtual ICollection<RATING> RATINGs { get; set; }
         public virtual ICollection<USER> OWNERs { get; set; }
     }
 }

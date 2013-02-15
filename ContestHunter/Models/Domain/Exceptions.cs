@@ -85,4 +85,24 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class ProblemNotLockedException : Exception
+    {
+    }
+
+    public class AttendedNotNormalException : Exception
+    {
+    }
+
+    public class ProblemLockedException : Exception
+    {
+    }
+
+    public class ProblemNameExistedException : Exception
+    {
+    }
+
+    public class RecordStatusMismatchException : Exception
+    {
+    }
+
 }

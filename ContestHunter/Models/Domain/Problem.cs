@@ -12,6 +12,8 @@ namespace ContestHunter.Models.Domain
         public string Content;
         public string Comparer;
         public string Contest;
+        public string DataChecker;
+        public int? OriginRating;
 
         internal Guid ID;
         internal Contest contest;
@@ -150,6 +152,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="ContestNotStartedException"></exception>
         /// <exception cref="NotAttendedContestException"></exception>
+        /// <exception cref="ProblemLockedException"></exception>
         public Guid Submit(Record record)
         {
             if (null == User.CurrentUser)
@@ -166,6 +169,8 @@ namespace ContestHunter.Models.Domain
                     if (DateTime.Now <= contest.RelativeEndTime && !contest.IsAttended())
                         throw new NotAttendedContestException();
                 }
+                if (contest.Type == Domain.Contest.ContestType.CF && IsLock())
+                    throw new ProblemLockedException();
                 Guid ret;
                 db.RECORDs.Add(new RECORD()
                 {
@@ -190,6 +195,45 @@ namespace ContestHunter.Models.Domain
                 return ret;
             }
 
+        }
+
+        /// <summary>
+        /// 锁定题目
+        /// </summary>
+        /// <exception cref="AttendedNotNormalException"></exception>
+        /// <exception cref="ContestTypeMismatchException"></exception>
+        public void Lock()
+        {
+            if (contest.GetAttendType() != Domain.Contest.AttendType.Normal)
+                throw new AttendedNotNormalException();
+            if (contest.Type != Domain.Contest.ContestType.CF)
+                throw new ContestTypeMismatchException();
+            using (var db = new CHDB())
+            {
+                (from u in db.USERs
+                 where u.Name == User.CurrentUser.name
+                 select u.LOCKs).Single().Add((from p in db.PROBLEMs
+                                               where p.Name == Name && p.CONTEST1.Name == contest.Name
+                                               select p).Single());
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 判断本题目是否被锁定
+        /// </summary>
+        /// <returns></returns>
+        public bool IsLock()
+        {
+            using (var db = new CHDB())
+            {
+                return (from l in
+                            (from u in db.USERs
+                             where u.Name == User.CurrentUser.name
+                             select u.LOCKs).Single()
+                        where l.Name == Name && l.CONTEST1.Name==contest.Name
+                        select l).Any();
+            }
         }
     }
 }

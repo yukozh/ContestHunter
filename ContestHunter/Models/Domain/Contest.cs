@@ -510,6 +510,8 @@ namespace ContestHunter.Models.Domain
                                   Comparer = result.Comparer,
                                   ID = result.ID,
                                   Contest = result.CONTEST1.Name,
+                                  OriginRating = result.OriginRating,
+                                  DataChecker = result.DataChecker,
                                   contest = this
                               };
             }
@@ -517,11 +519,12 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
-        /// 添加题目
+        /// 添加题目 所有赛制必须填充 Name,Content,Comparer, CF赛制还须填充OriginRating,DataChecker
         /// </summary>
         /// <param name="problem"></param>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="PermissionDeniedException"></exception>
+        /// <exception cref="ProblemNameExistedException"></exception>
         public void AddProblem(Problem problem)
         {
             if (null == User.CurrentUser)
@@ -531,12 +534,18 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                if ((from p in db.PROBLEMs
+                     where p.Name == problem.Name && p.CONTEST1.Name == Name
+                     select p).Any())
+                    throw new ProblemNameExistedException();
                 db.PROBLEMs.Add(new PROBLEM()
                 {
                     ID = Guid.NewGuid(),
                     Name = problem.Name,
                     Content = problem.Content,
                     Comparer = problem.Comparer,
+                    OriginRating=problem.OriginRating,
+                    DataChecker=problem.DataChecker,
                     CONTEST1 = (from c in db.CONTESTs
                                 where c.Name == Name
                                 select c).Single()
@@ -739,21 +748,29 @@ namespace ContestHunter.Models.Domain
                                                            && r.VirtualSubmitTime <= (ACTime == null ? (con.EndTime < RelativeNow ? con.EndTime : RelativeNow) : ACTime)
                                                            && r.Status > 0
                                                            select r).Count()
+                                        let SuccessfulHack = (from h in db.HUNTs
+                                                              where h.USER1 == u && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.Status.Success
+                                                              select h).Count()
+                                        let FailedHack = (from h in db.HUNTs
+                                                          where h.USER1 == u && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.Status.Fail
+                                                          select h).Count()
                                         select new CFStanding.DescriptionClass()
                                         {
                                             ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
                                             isAC = null != ACTime,
                                             FailedTimes = FailedTimes,
                                             Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
-                                                    (int)p.OriginRating, FailedTimes, 0, 0)
+                                                    (int)p.OriginRating, FailedTimes, SuccessfulHack, FailedHack),
+                                            _huntFailed = FailedHack,
+                                            _huntSuccessfully = SuccessfulHack
                                         }
                               select new CFStanding
                               {
                                   User = u.Name,
                                   TotalRating = des.Sum(x => x.Rating),
-                                  FailedHack = 0,
-                                  SeccessfullyHack = 0,
-                                  IsVirtual=u.CONTEST_ATTEND.Where(x=>x.CONTEST1==con).Single().Type==(int)AttendType.Virtual
+                                  FailedHack = des.Sum(x => x._huntFailed),
+                                  SeccessfullyHack = des.Sum(x => x._huntSuccessfully),
+                                  IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual
                               });
                 return result.OrderByDescending(s=>s.TotalRating).Skip(skip).Take(top).ToList();
 

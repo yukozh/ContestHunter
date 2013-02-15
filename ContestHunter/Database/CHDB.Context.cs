@@ -28,7 +28,9 @@ namespace ContestHunter.Database
         public DbSet<CONTEST> CONTESTs { get; set; }
         public DbSet<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public DbSet<GROUP> GROUPs { get; set; }
+        public DbSet<HUNT> HUNTs { get; set; }
         public DbSet<PROBLEM> PROBLEMs { get; set; }
+        public DbSet<RATING> RATINGs { get; set; }
         public DbSet<RECORD> RECORDs { get; set; }
         public DbSet<TESTDATA> TESTDATAs { get; set; }
         public DbSet<USER> USERs { get; set; }
