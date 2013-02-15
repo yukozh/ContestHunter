@@ -1,143 +1,164 @@
 ﻿@model ContestHunter.Models.View.ContestStandingModel
 @using ContestHunter.Models.Domain
 @{
-    ViewBag.Title = Model.Contest + "的排名";
+    ViewBag.Title = Model.Contest.Name + "的排名";
 }
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         font-family: 微软雅黑;
-        color:black;
+        color: black;
     }
 
-    .table th, .table td
-    {
-        text-align: center;
-        vertical-align: middle;
-    }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
 </style>
 
 <div class="span12" style="margin-top: 30px">
-    <h2 style="text-align: center">@Model.Contest</h2>
+    <h2 style="text-align: center">@Model.Contest.Name</h2>
     <div class="alert alert-info" style="padding: 0px">
-        <table class="table" style="margin:0px; border:0px; background-color:rgb(217,237,247)">
-            <tr>
-                <td style="text-align:left; color:green">
-                    @Model.Contest 的最终排名@*在比赛进行 2:15:08 时的排名（为了支持virtual以后需要加入时间）*@
-                </td>
-                <td style="text-align:right">
-                    <input type="checkbox"/>显示模拟比赛用户 
-                    <b>@Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest },null)</b>
-                </td>
-            </tr>
-        </table>
-        <table class="table table-bordered table-striped table-hover">
-            <colgroup>
-                <col style="width: 50px">
-                <col style="width: 150px">
-                <col style="width: 80px">
-                @for (int i = 0; i < Model.Problems.Count; i++)
-                {
-                    <col />
-                }
-                <col style="width: 100px">
-            </colgroup>
-            <thead>
+        @using (Html.BeginForm("Standing", "Contest", FormMethod.Get, new { id = "frmList" }))
+        {
+            <table class="table" style="margin: 0px; border: 0px; background-color: rgb(217,237,247)">
                 <tr>
-                    <th>排名</th>
-                    <th>用户名</th>
-                    @if (Model.Type == Contest.ContestType.ACM)
-                    {
-                        <th>通过题数</th>
-                    }
-                    else
-                    {   
-                        <th>总分</th>
-                    }
-                    @foreach (var p in Model.Problems)
-                    {
-                        <th>@p</th>
-                    }
-                    @switch (Model.Type)
-                    {
-                        case Contest.ContestType.OI:
-                        <th>总用时</th>
-                            break;
-                        case Contest.ContestType.ACM:
-                        <th>总罚时</th>
-                            break;
-                        case Contest.ContestType.CF:
-                        <th>猎杀数</th>
-                            break;
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Type == Contest.ContestType.ACM)
-                {
-                    for (int i = 0; i < Model.ACM.Count; i++)
-                    {
-                        ACMStanding standing = Model.ACM[i];
-                    <tr>
-                        <td><b>@(i + Model.StartIndex + 1)</b></td>
-                        <td>@Html.UserLink(standing.User)</td>
-                        <td><b>@standing.CountAC</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
-                        @foreach (var desc in standing.Description)
+                    <td style="text-align: left; color: green">
+                        @if (Model.Contest.IsAttended() && Model.Contest.GetAttendType() == Contest.AttendType.Virtual)
                         {
+                            TimeSpan span = DateTime.Now - Model.Contest.RelativeStartTime;
+                            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
+                            <span>比赛开始后 @span.ToString("g") 时的排名</span>
+                        }
+                        else
+                        {
+                            <span>@Model.Contest.Name 的最终排名</span>
+                        }
+                    </td>
+                    <td style="text-align: right">
+                        @Html.CheckBoxFor(x => x.ShowVirtual, new { onchange = "$('#frmList').submit();" })
+                        @Html.LabelFor(x => x.ShowVirtual)
+                        <b>@Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest }, null)</b>
+                    </td>
+                </tr>
+            </table>
+            <table class="table table-bordered table-striped table-hover">
+                <colgroup>
+                    <col style="width: 50px">
+                    <col style="width: 150px">
+                    <col style="width: 80px">
+                    @for (int i = 0; i < Model.Problems.Count; i++)
+                    {
+                        <col />
+                    }
+                    <col style="width: 100px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户名</th>
+                        @if (Model.Contest.Type == Contest.ContestType.ACM)
+                        {
+                            <th>通过题数</th>
+                        }
+                        else
+                        {   
+                            <th>总分</th>
+                        }
+                        @foreach (var p in Model.Problems)
+                        {
+                            <th>@p</th>
+                        }
+                        @switch (Model.Contest.Type)
+                        {
+                            case Contest.ContestType.OI:
+                            <th>总用时</th>
+                                break;
+                            case Contest.ContestType.ACM:
+                            <th>总罚时</th>
+                                break;
+                            case Contest.ContestType.CF:
+                            <th>猎杀数</th>
+                                break;
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Contest.Type == Contest.ContestType.ACM)
+                    {
+                        for (int i = 0; i < Model.ACM.Count; i++)
+                        {
+                            ACMStanding standing = Model.ACM[i];
+                        <tr>
+                            <td><b>@(i + Model.StartIndex + 1)</b></td>
                             <td>
-                                @if (desc.isAC)
+                                @Html.UserLink(standing.User)
+                                @if (standing.IsVirtual)
                                 {
-                                    <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)).(@desc.FailedTimes)</span>
-                                }
-                                else if (desc.FailedTimes > 0)
-                                {
-                                    <span style="color: red">-@desc.FailedTimes</span>
+                                    <label class="label">模拟</label>
                                 }
                             </td>
-                            <!--
+                            <td><b>@standing.CountAC</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
+                            @foreach (var desc in standing.Description)
+                            {
+                                <td>
+                                    @if (desc.isAC)
+                                    {
+                                        <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)).(@desc.FailedTimes)</span>
+                                    }
+                                    else if (desc.FailedTimes > 0)
+                                    {
+                                        <span style="color: red">-@desc.FailedTimes</span>
+                                    }
+                                </td>
+                                <!--
                         <td>@*CF赛制的情况，如果通过则显示该题得分，如果提交未通过显示-X（X为提交次数），如果未提交则空着"*@
                             <span style="color: #50C350"><b>1680</b></span>
                             @*未通过时：<span style="color:red"><b>-3</b></span>*@
                         </td>
                             -->
-                        }
-                        <td>
-                            <span style="color: blue">@(new TimeSpan(0, standing.TotalTime, 0))</span>
-                            @*CF：（+X:-Y，X为成功hunt次数，Y为失败次数，有一项为0则只显示一项，都为0则不显示）<span style="color: green">+2</span> : <span style="color:gray">-1</span>*@
-                        </td>
-                    </tr>
-                    }
-                }
-                else if (Model.Type == Contest.ContestType.OI)
-                {
-                    for (int i = 0; i < Model.OI.Count; i++)
-                    {
-                        OIStanding standing = Model.OI[i];
-                    <tr>
-                        <td><b>@(i + Model.StartIndex + 1)</b></td>
-                        <td>@Html.UserLink(standing.User)</td>
-                        <td><b>@standing.TotalScore</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
-                        @foreach (var score in standing.Scores)
-                        {
+                            }
                             <td>
-                                <span class="score_@score"><b>@score</b></span>
+                                <span style="color: blue">@(new TimeSpan(0, standing.TotalTime, 0))</span>
+                                @*CF：（+X:-Y，X为成功hunt次数，Y为失败次数，有一项为0则只显示一项，都为0则不显示）<span style="color: green">+2</span> : <span style="color:gray">-1</span>*@
                             </td>
+                        </tr>
                         }
-                        <td>
-                            <span style="color: orange"><b>@standing.TotalTime</b></span><span style="color: blue"> ms</span>
-                        </td>
-                    </tr>
                     }
-                }
-            </tbody>
-        </table>
-        @using (Html.BeginForm("Standing", "Contest", FormMethod.Get, new { id = "frmList" }))
-        {
-            if (Model.PageCount > 1)
-            {
+                    else if (Model.Contest.Type == Contest.ContestType.OI)
+                    {
+                        for (int i = 0; i < Model.OI.Count; i++)
+                        {
+                            OIStanding standing = Model.OI[i];
+                        <tr>
+                            <td><b>@(i + Model.StartIndex + 1)</b></td>
+                            <td>
+                                @Html.UserLink(standing.User)
+                                @if (standing.IsVirtual)
+                                {
+                                    <label class="label">模拟</label>
+                                }
+                            </td>
+                            <td><b>@standing.TotalScore</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
+                            @foreach (var score in standing.Scores)
+                            {
+                                <td>
+                                    <span class="score_@score"><b>@score</b></span>
+                                </td>
+                            }
+                            <td>
+                                <span style="color: orange"><b>@standing.TotalTime</b></span><span style="color: blue"> ms</span>
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        
+                    if (Model.PageCount > 1)
+                    {
             <div class="pagination" style="text-align: center; margin: 3px">
                 @Html.HiddenFor(x => x.PageIndex)
                 <script>
@@ -168,7 +189,7 @@
                     }
                 </ul>
             </div>
-            }
+                    }
         }
     </div>
 </div>
