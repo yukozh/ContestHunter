@@ -127,7 +127,7 @@ namespace DomainTest
         public void TestStanding()
         {
             var con = Contest.ByName("Test 12");
-            var stand = con.GetACMStanding(0, 10);
+            var stand = con.GetACMStanding(0, 10,true);
             Assert.AreEqual(0, (int)Record.StatusType.Accept);
         }
 

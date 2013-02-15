@@ -27,6 +27,7 @@ namespace ContestHunter.Models.Domain
             public bool isAC;
             public int FailedTimes;
             public int? ACTime;
+            public int Rating;
         }
         List<DescriptionClass> Description;
         public int TotalRating;

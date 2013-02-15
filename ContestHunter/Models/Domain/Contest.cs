@@ -580,7 +580,7 @@ namespace ContestHunter.Models.Domain
         /// <param name="top"></param>
         /// <returns></returns>
         /// <exception cref="ContestTypeMismatchException"></exception>
-        public List<ACMStanding> GetACMStanding(int skip, int top)
+        public List<ACMStanding> GetACMStanding(int skip, int top,bool HasVirtual)
         {
             if (Type != ContestType.ACM)
                 throw new ContestTypeMismatchException();
@@ -589,7 +589,7 @@ namespace ContestHunter.Models.Domain
                 var con = (from c in db.CONTESTs
                            where c.Name == Name
                            select c).Single();
-                var result = (from u in con.CONTEST_ATTEND.Select(x => x.USER1)
+                var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                               let des = from p in con.PROBLEMs
                                         orderby p.Name ascending
                                         let ACTimeList = (from r in p.RECORDs
@@ -630,7 +630,7 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         /// <exception cref="ContestTypeMismatchException"></exception>
         /// <exception cref="ContestNotEndedException"></exception>
-        public List<OIStanding> GetOIStanding(int skip, int top)
+        public List<OIStanding> GetOIStanding(int skip, int top,bool HasVirtual)
         {
             if (Type != ContestType.OI)
                 throw new ContestTypeMismatchException();
@@ -641,7 +641,7 @@ namespace ContestHunter.Models.Domain
                            select c).Single();
                 if (DateTime.Now <= con.EndTime)
                     throw new ContestNotEndedException();
-                return (from u in con.CONTEST_ATTEND.Select(x => x.USER1)
+                return (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                         let des = (from p in con.PROBLEMs
                                    orderby p.Name ascending
                                    let score = (from r in p.RECORDs
@@ -659,6 +659,84 @@ namespace ContestHunter.Models.Domain
                             User = u.Name,
                             TotalTime = des.Sum(x => (null == x ? 0 : (null == x.ExecutedTime ? 0 : (int)x.ExecutedTime)))
                         }).OrderByDescending(x => x.TotalScore).ThenBy(x => x.TotalTime).Skip(skip).Take(top).ToList();
+            }
+        }
+
+        int CalcRating(int? ACTime, int totoalRating, int failedTimes, int succssfullyHunt, int unsuccessfullyHunt)
+        {
+            if (null == ACTime)
+                return 0;
+            int ratingbase = totoalRating * 3 / 5;
+            int minRating = totoalRating * 2 / 5;
+            int time = (int)ACTime;
+            if (time > 30)
+            {
+                totoalRating -= ratingbase * 2 / 10;
+                if (time > 60)
+                {
+                    totoalRating -= ratingbase * 4 / 10;
+                    if (time > 90)
+                    {
+                        totoalRating -= ratingbase * 3 / 10;
+                        totoalRating -= ratingbase * 1 / 10 * (time - 90) / 30;
+                    }
+                    else
+                        totoalRating -= ratingbase * 3 / 10 * (time - 60) / 30;
+                }
+                else
+                    totoalRating -= ratingbase * 4 / 10 * (time - 30) / 30;
+            }
+            else
+                totoalRating -= ratingbase * 2 / 10 * time / 30;
+            totoalRating -= failedTimes * 50;
+            totoalRating += succssfullyHunt * 100;
+            totoalRating -= unsuccessfullyHunt * 25;
+            totoalRating = Math.Max(totoalRating, minRating);
+            return totoalRating;
+        }
+
+        public List<CFStanding> GetCFStanding(int skip, int top, bool HasVirtual)
+        {
+            if (Type != ContestType.CF)
+                throw new ContestTypeMismatchException();
+            using (var db = new CHDB())
+            {
+                var con = (from c in db.CONTESTs
+                           where c.Name == Name
+                           select c).Single();
+                var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
+                              let des = from p in con.PROBLEMs
+                                        orderby p.Name ascending
+                                        let ACTimeList = (from r in p.RECORDs
+                                                          where r.USER1 == u
+                                                          && r.VirtualSubmitTime >= con.StartTime
+                                                          && r.VirtualSubmitTime <= con.EndTime
+                                                          && r.Status == (int)Record.StatusType.Accept
+                                                          select r.VirtualSubmitTime)
+                                        let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Min() : null
+                                        let FailedTimes = (from r in p.RECORDs
+                                                           where r.USER1 == u
+                                                           && r.VirtualSubmitTime >= con.StartTime
+                                                           && r.VirtualSubmitTime <= (ACTime == null ? con.EndTime : ACTime)
+                                                           && r.Status > 0
+                                                           select r).Count()
+                                        select new CFStanding.DescriptionClass()
+                                        {
+                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
+                                            isAC = null != ACTime,
+                                            FailedTimes = FailedTimes,
+                                            Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
+                                                    (int)p.OriginRating, FailedTimes, 0, 0)
+                                        }
+                              select new CFStanding
+                              {
+                                  User = u.Name,
+                                  TotalRating = des.Sum(x => x.Rating),
+                                  FailedHack = 0,
+                                  SeccessfullyHack = 0
+                              });
+                return result.OrderByDescending(s=>s.TotalRating).Skip(skip).Take(top).ToList();
+
             }
         }
 
