@@ -12,7 +12,7 @@ namespace ContestHunter.Models.View
 
         public enum SignupType
         {
-            Attend, Virtual, Practice
+            Attend, Virtual, Practice,Cancel
         }
 
         [Required]

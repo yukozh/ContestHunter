@@ -91,10 +91,6 @@ namespace ContestHunter.Controllers
             try
             {
                 contest = Contest.ByName(id);
-                if (contest.IsAttended())
-                {
-                    return RedirectToAction("Show", new { id = id });
-                }
             }
             catch (ContestNotFoundException)
             {
@@ -131,6 +127,9 @@ namespace ContestHunter.Controllers
                     case ContestSignupModel.SignupType.Practice:
                         Contest.ByName(id).PracticeAttend();
                         break;
+                    case ContestSignupModel.SignupType.Cancel:
+                        Contest.ByName(id).Disattended();
+                        break;
                 }
             }
             catch (ContestNotFoundException)
@@ -152,6 +151,10 @@ namespace ContestHunter.Controllers
             catch (ContestNotStartedException)
             {
                 return RedirectToAction("Error", "Shared", new { msg = "比赛尚未开始" });
+            }
+            catch (ContestStartedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛已经开始，不可取消参赛" });
             }
 
             return RedirectToAction("Show", new { id = id });
