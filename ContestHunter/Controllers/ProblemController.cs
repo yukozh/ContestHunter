@@ -236,7 +236,7 @@ namespace ContestHunter.Controllers
             return View();
         }
 
-        public ActionResult Test()
+        public ActionResult Check()
         {
             return View();
         }

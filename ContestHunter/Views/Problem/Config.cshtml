@@ -2,6 +2,37 @@
     ViewBag.Title = "Config";
 }
 
+<style type="text/css">
+    .table
+    {
+        background-color: white;
+        font-family: 微软雅黑;
+        color: black;
+        margin: 10px auto;
+    }
+
+    .table td, .table th
+    {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    h4,h5
+    {
+        font-family: 微软雅黑;
+        font-weight: normal;
+    }
+
+    .inputmini
+    {
+        width: 50px;
+        padding-top: 0px!important;
+        padding-bottom: 0px!important;
+        margin:0px!important;
+        margin-right:5px!important;
+    }
+</style>
+
 <div class="span12" style="margin-top: 20px; padding: 10px">
     <div class="alert alert-info" style="text-align: center">
         <h2>配置测试数据</h2>
@@ -10,6 +41,45 @@
                 <div class="bar" style="width: 60%;"></div>
             </div>
         </div>
+        <h4>已经上传的测试数据</h4>
+        <table class="table table-bordered table-striped table-hover">
+            <colgroup>
+                <col>
+                <col>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>输入文件名</th>
+                    <th>输出文件名</th>
+                    <th>时间限制</th>
+                    <th>内存限制</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>input.txt</td>
+                    <td>output.txt</td>
+                    <td><input type="text" class="inputmini" value="1"/>s</td>@*可填小数，例如0.5s,0.1s*@
+                    <td><input type="text" class="inputmini" value="256"/>MB</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-small btn-warning">修改</button>
+                            <button class="btn btn-small btn-danger">删除</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>上传新的测试数据</h4>
+        <form id="FileUpload" method="post" enctype="multipart/form-data">
+            <h5>请将您要添加的所有输入、输出数据压缩成一个.rar或者.zip文件后上传</h5>
+            <h5>新上传的文件如果与原有测试数据重名，将会覆盖原有文件</h5>
+            <input type="file" id="file" name="file"/>
+        </form>
         <div class="btn-group">
             <button class="btn btn-primary">上一步</button>
             <button class="btn btn-success">下一步</button>

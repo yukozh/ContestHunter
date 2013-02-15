@@ -329,7 +329,7 @@
     <Content Include="Views\Problem\Description.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Problem\Test.cshtml" />
+    <Content Include="Views\Problem\Check.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Complete.cshtml" />
