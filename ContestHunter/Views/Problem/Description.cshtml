@@ -35,6 +35,9 @@
         <div class="well" style="color:black; font-family:微软雅黑">
             @Html.Sanitized((string)ViewBag.Html)
         </div>
-        <h2><input class="btn btn-primary" type="submit" value="下一步" /></h2>
+        <div class="btn-group">
+            <button class="btn btn-primary">上一步</button>
+            <button class="btn btn-success">下一步</button>
+        </div>
     </div>
 </div>
