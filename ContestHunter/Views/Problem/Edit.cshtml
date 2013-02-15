@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+
+<style type="text/css">
+    h5
+    {
+        font-family:微软雅黑;
+        font-weight:normal;
+    }
+    .table td
+    {
+        border:0px;
+        text-align:center;
+        vertical-align:middle;
+    }
+</style>
+
+<div class="span12" style="margin-top: 20px; padding: 10px">
+    <div class="alert alert-info" style="text-align: center">
+        <h2>试题编辑向导</h2>
+        <div>
+            <div class="progress progress-striped progress-success active">
+                <div class="bar" style="width: 20%;"></div>
+            </div>
+        </div>
+        <h5>本向导将引导您编辑 OrzSJY杯模拟赛 中的题目 OrzSJY</h5>
+        <h5>每一步完成后，系统都会保存您所修改的内容</h5>
+        <div style="margin: 20px auto; width: 350px">
+            <table class="table">
+                <tr>
+                    <td style="text-align:right">题目名称</td>
+                    <td>
+                        <input type="text" class="input-large" value="OrzSJY"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right">出题人用户名</td>
+                    <td>
+                        <input type="text" class="input-large" value="onetwogoo"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <h2><input class="btn btn-primary" type="submit" value="开始编辑" /></h2>
+    </div>
+</div>
