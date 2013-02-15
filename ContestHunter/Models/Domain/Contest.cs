@@ -578,6 +578,7 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="skip"></param>
         /// <param name="top"></param>
+        /// <param name="HasVirtual"></param>
         /// <returns></returns>
         /// <exception cref="ContestTypeMismatchException"></exception>
         public List<ACMStanding> GetACMStanding(int skip, int top,bool HasVirtual)
@@ -616,7 +617,8 @@ namespace ContestHunter.Models.Domain
                                   User = u.Name,
                                   TotalTime = des.Sum(d => d.isAC ? d.FailedTimes * 20 + (int)d.ACTime : 0),
                                   Description = des.ToList(),
-                                  CountAC = des.Sum(d => d.isAC ? 1 : 0)
+                                  CountAC = des.Sum(d => d.isAC ? 1 : 0),
+                                  IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual
                               });
                 return result.OrderByDescending(s => s.CountAC).ThenBy(s => s.TotalTime).Skip(skip).Take(top).ToList();
             }
@@ -627,6 +629,7 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="skip"></param>
         /// <param name="top"></param>
+        /// <param name="HasVirtual"></param>
         /// <returns></returns>
         /// <exception cref="ContestTypeMismatchException"></exception>
         /// <exception cref="ContestNotEndedException"></exception>
@@ -655,9 +658,10 @@ namespace ContestHunter.Models.Domain
                         select new OIStanding
                         {
                             Scores = des.Select(x => (null == x ? null : x.Score)).ToList(),
-                            TotalScore = des.Sum(x => (null == x ? 0 : (null==x.Score?0:(int)x.Score))),
+                            TotalScore = des.Sum(x => (null == x ? 0 : (null == x.Score ? 0 : (int)x.Score))),
                             User = u.Name,
-                            TotalTime = des.Sum(x => (null == x ? 0 : (null == x.ExecutedTime ? 0 : (int)x.ExecutedTime)))
+                            TotalTime = des.Sum(x => (null == x ? 0 : (null == x.ExecutedTime ? 0 : (int)x.ExecutedTime))),
+                            IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual
                         }).OrderByDescending(x => x.TotalScore).ThenBy(x => x.TotalTime).Skip(skip).Take(top).ToList();
             }
         }
@@ -695,6 +699,14 @@ namespace ContestHunter.Models.Domain
             return totoalRating;
         }
 
+        /// <summary>
+        /// 返回CF比赛Standing
+        /// </summary>
+        /// <param name="skip"></param>
+        /// <param name="top"></param>
+        /// <param name="HasVirtual"></param>
+        /// <returns></returns>
+        /// <exception cref="ContestTypeMismatchException"></exception>
         public List<CFStanding> GetCFStanding(int skip, int top, bool HasVirtual)
         {
             if (Type != ContestType.CF)
@@ -733,7 +745,8 @@ namespace ContestHunter.Models.Domain
                                   User = u.Name,
                                   TotalRating = des.Sum(x => x.Rating),
                                   FailedHack = 0,
-                                  SeccessfullyHack = 0
+                                  SeccessfullyHack = 0,
+                                  IsVirtual=u.CONTEST_ATTEND.Where(x=>x.CONTEST1==con).Single().Type==(int)AttendType.Virtual
                               });
                 return result.OrderByDescending(s=>s.TotalRating).Skip(skip).Take(top).ToList();
 

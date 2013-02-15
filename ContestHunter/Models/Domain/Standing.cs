@@ -10,6 +10,7 @@ namespace ContestHunter.Models.Domain
         public string User;
         public int TotalTime;
         public int CountAC;
+        public bool IsVirtual;
         public class DescriptionClass
         {
             public bool isAC;
@@ -33,6 +34,7 @@ namespace ContestHunter.Models.Domain
         public int TotalRating;
         public int SeccessfullyHack;
         public int FailedHack;
+        public bool IsVirtual;
     }
 
     public class OIStanding
@@ -41,6 +43,7 @@ namespace ContestHunter.Models.Domain
         public List<int?> Scores;
         public int TotalScore;
         public int TotalTime;
+        public bool IsVirtual;
     }
 
 }
