@@ -4,6 +4,7 @@ using ContestHunter.Models.Domain;
 using System.Web;
 using System.Collections.Generic;
 using System.Threading;
+using ContestHunter.Database;
 
 namespace DomainTest
 {
@@ -144,7 +145,11 @@ namespace DomainTest
             });
             Assert.AreEqual(tm, con.RelativeStartTime);
         }
+        [TestMethod]
+        public void TestDB()
+        {
 
+        }
     }
 }
 
