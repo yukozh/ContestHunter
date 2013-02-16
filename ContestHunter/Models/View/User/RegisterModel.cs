@@ -20,7 +20,7 @@ namespace ContestHunter.Models.View.User
 
         [Required]
         [Display(Name = "电子邮件", Description = "合法的Email地址，它将用于接收验证邮件与密码恢复")]
-        [RegularExpression(@".+@.+\..{2,4}",ErrorMessage="无效的邮件地址")]
+        [EmailAddress]
         [MaxLength(100)]
         public string Email { get; set; }
     }

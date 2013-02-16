@@ -31,7 +31,7 @@ $(function () {
     $('span.field-validation-valid, span.field-validation-error').each(function () {
         $(this).wrap('<div style="margin: 5px; text-align: right;"/>');
         var controlGroup = $(this).parent().parent().parent();
-        var input = $('input',controlGroup);
+        var input = $('input,select',controlGroup);
         if ($(this).hasClass('field-validation-error')) {
             ShowValidationMessage(input);
         } else {

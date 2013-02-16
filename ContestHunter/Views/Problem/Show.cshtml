@@ -40,7 +40,7 @@
                 </tr>
                 <tr>
                     <td><b>出题人</b></td>
-                    <td>暂不支持</td>
+                    <td>@Html.UserLink(Model.Owner)</td>
                     <td><b>提交情况</b></td>
                     <td>暂不支持</td>
                 </tr>
@@ -49,6 +49,10 @@
     </div>
     <div style="width: 980px">@Html.Sanitized(Model.Content)</div>
     <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
+        @if (ViewBag.CanEdit)
+        {
+            @Html.ActionLink("编辑", "Edit", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-inverse", style = "display:inline-block;" })
+        }
         @Html.ActionLink("提交", "Submit", "Problem", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-success", style = "display:inline-block;" })
         @Html.ActionLink("状态", "Index", "Record", new { ProblemName = Model.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
         <button class="btn btn-warning">数据</button>

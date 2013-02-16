@@ -94,7 +94,6 @@
                                             break;
                                     }
                                 </div>
-                                @*OI、ACM/ICPC、Codeforces三种赛制*@
                                 @if (contest.IsOfficial)
                                 {
                                     <div style="color: red">Official</div>
@@ -103,7 +102,6 @@
                                 {
                                     <div style="color: blue">Unofficial</div>
                                 }
-                                @*Official和Unofficial两种，前者计入rating，后者不计rating*@
                             </td>
                             <td>
                                 @contest.AbsoluteStartTime<br />

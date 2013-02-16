@@ -238,6 +238,12 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// TODO ! SJY is too lazy to write here!
+        /// </summary>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="PermissionDeniedException"></exception>
+        /// <exception cref="UserNotFoundException"></exception>
         public void Change()
         {
             if(null==User.CurrentUser)

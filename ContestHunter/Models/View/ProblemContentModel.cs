@@ -18,6 +18,7 @@ namespace ContestHunter.Models.View
 
         public string Contest { get; set; }
         public string Problem { get; set; }
+        public string ProblemOwner { get; set; }
 
         [Display(Name="题目内容")]
         public string Content { get; set; }

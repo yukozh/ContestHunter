@@ -10,6 +10,7 @@ namespace ContestHunter.Models.View
     {
         public string Contest { get; set; }
         public Contest.ContestType ContestType { get; set; }
+        public string OldName { get; set; }
 
         [Required]
         [Display(Name = "题目名称")]
@@ -22,6 +23,7 @@ namespace ContestHunter.Models.View
         public string Owner { get; set; }
 
         [Display(Name = "初始分数", Description = "此题的初始最高分值，随着比赛的进行，实际分值会不断减少")]
+        [Range(0, 3000)]
         public int? OriginalRating { get; set; }
     }
 }

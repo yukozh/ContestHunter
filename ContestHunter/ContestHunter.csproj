@@ -313,9 +313,6 @@
     <Content Include="Views\Problem\Test.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Problem\Add.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Problem\Check.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -29,6 +29,7 @@
             @Html.HiddenFor(x => x.Problem)
             @Html.HiddenFor(x => x.Contest)
             @Html.HiddenFor(x => x.Action)
+            @Html.HiddenFor(x => x.ProblemOwner)
             <h5>请按照模板中给出的格式，在此编写试题的题面</h5>
             <h5>尽量遵循模版中的默认格式。对于少数需要强调的地方，请在“<strong>样式</strong>”或“<strong>格式</strong>”菜单中，选择您需要的效果。</h5>
             <h5>如您需要更精确地控制显示效果，请点击编辑器的“源码”按钮，直接编辑HTML源码</h5>
@@ -36,13 +37,13 @@
             <h2>
                 <input class="btn btn-warning" type="submit" value="效果预览" onclick="$('#Action').val('Preview')" /></h2>
             <h3 style="margin-bottom: 0px; color: black">@Model.Problem</h3>
-            <h5 style="margin-top: 0px; color: black">From @Html.UserLink("暂不支持")</h5>
+            <h5 style="margin-top: 0px; color: black">From @Html.UserLink(Model.ProblemOwner)</h5>
             <div class="well" style="color: black; font-family: 微软雅黑; text-align: left;">
                 @Html.Sanitized(Model.Content)
             </div>
             <div class="btn-group">
-                <button class="btn btn-primary">上一步</button>
-                <button class="btn btn-success">下一步</button>
+                @Html.ActionLink("上一步", "Edit", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-primary" ,style="display:inline-block;"})
+                <input type="submit" value="下一步" class="btn btn-success" onclick="$('#Action').val('Modify');" />
             </div>
         }
     </div>

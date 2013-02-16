@@ -32,6 +32,7 @@
             @using (Html.BeginForm("Add", "Problem", FormMethod.Post, new { @class = "form-horizontal", style = "display:inline-block;" }))
             {
                 @Html.HiddenFor(x => x.Contest)
+                @Html.HiddenFor(x=>x.ContestType)
                 <div class="control-group">
                     @Html.LabelFor(x => x.Name, new { @class = "control-label" })
                     <div class="controls">
@@ -55,15 +56,15 @@
                     <div class="controls">
                         @Html.DropDownListFor(x => x.OriginalRating, new SelectListItem[]
                                 {
-                                    new SelectListItem{Value="500"},
-                                    new SelectListItem{Value="1000"},
-                                    new SelectListItem{Value="1500"},
-                                    new SelectListItem{Value="2000"},
-                                    new SelectListItem{Value="2500"},
-                                    new SelectListItem{Value="3000"}
+                                    new SelectListItem{Text="500"},
+                                    new SelectListItem{Text="1000"},
+                                    new SelectListItem{Text="1500"},
+                                    new SelectListItem{Text="2000"},
+                                    new SelectListItem{Text="2500"},
+                                    new SelectListItem{Text="3000"}
                                 }, new { @class = "input-xlarge" })
-                        @Html.ValidationMessageFor(x => x.Owner)
-                        @Html.DescriptionFor(x => x.Owner, new { @class = "help-block" })
+                        @Html.ValidationMessageFor(x => x.OriginalRating)
+                        @Html.DescriptionFor(x => x.OriginalRating, new { @class = "help-block" })
                     </div>
                 </div>
                 }
