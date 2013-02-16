@@ -86,16 +86,16 @@
                                                 <span style="color: blue">Unofficial</span>
                                             }
                                         </h4>
-                                        @if (Model.Contest.Owner.Count > 0)
+                                        @if (Model.Contest.Owners.Count > 0)
                                         {
                                             <h5>From 
-                                                @for (int i = 0; i < Model.Contest.Owner.Count; i++)
+                                                @for (int i = 0; i < Model.Contest.Owners.Count; i++)
                                                 {
                                                     if (i != 0)
                                                     {
                                                     @:,
                                                     }
-                                                    @Html.UserLink(Model.Contest.Owner[i])
+                                                    @Html.UserLink(Model.Contest.Owners[i])
                                                 }
                                             </h5>
                                         }

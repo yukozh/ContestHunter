@@ -126,6 +126,7 @@
   <ItemGroup>
     <Compile Include="Controllers\CKEditorController.cs" />
     <Compile Include="Controllers\ContestController.cs" />
+    <Compile Include="Controllers\CRC32.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProblemController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
@@ -339,6 +340,9 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Problem\DataShow.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
