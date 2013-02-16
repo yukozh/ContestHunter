@@ -8,7 +8,7 @@ namespace ContestHunter.Models.Domain
     public class Group
     {
         public string Name;
-
+        internal Guid ID;
         internal static void CheckPriviledge()
         {
             if (!User.CurrentUser.groups.Contains("Administrators"))
@@ -28,7 +28,8 @@ namespace ContestHunter.Models.Domain
                 return (from g in db.GROUPs
                         select new Group
                         {
-                            Name = g.Name
+                            Name = g.Name,
+                            ID = g.ID
                         }).ToList();
             }
         }
@@ -51,7 +52,8 @@ namespace ContestHunter.Models.Domain
                         select new User
                         {
                             Name = u.Name,
-                            Email = u.Email
+                            Email = u.Email,
+                            ID = u.ID
                         }).OrderBy(u => u.Name).Skip(skip).Take(top).ToList();
             }
         }
@@ -66,13 +68,13 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 return (from g in db.GROUPs
-                        where g.Name == Name
+                        where g.ID == ID
                         select g.USERs).Single().Count();
             }
         }
 
         /// <summary>
-        /// 增加用户组
+        /// 增加用户组 需要填充 Name
         /// </summary>
         /// <param name="name"></param>
         /// <exception cref="PermissionDeniedException"></exception>
@@ -102,7 +104,7 @@ namespace ContestHunter.Models.Domain
             {
                 db.GROUPs.Remove(
                     (from g in db.GROUPs
-                     where g.Name == Name
+                     where g.ID==ID
                      select g).Single()
                     );
                 db.SaveChanges();
@@ -121,11 +123,11 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 (from u in db.USERs
-                 where u.Name==user.Name
+                 where u.ID==user.ID
                  select u).Single().GROUPs.Add
                  (
                     (from g in db.GROUPs
-                    where g.Name==Name
+                    where g.ID==ID
                     select g).Single()
                     );
                 db.SaveChanges();
@@ -144,11 +146,11 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 (from u in db.USERs
-                 where u.Name == user.Name
+                 where u.ID==user.ID
                  select u).Single().GROUPs.Remove
                  (
                     (from g in db.GROUPs
-                     where g.Name == Name
+                     where g.ID==ID
                      select g).Single()
                      );
                 db.SaveChanges();
@@ -171,7 +173,8 @@ namespace ContestHunter.Models.Domain
                               where g.Name == name
                               select new Group
                               {
-                                  Name = g.Name
+                                  Name = g.Name,
+                                  ID = g.ID
                               }).SingleOrDefault();
                 if (null == result)
                     throw new GroupNotFoundException();

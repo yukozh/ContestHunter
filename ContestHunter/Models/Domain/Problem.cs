@@ -112,15 +112,16 @@ namespace ContestHunter.Models.Domain
                 flag = true;
             using (var db = new CHDB())
             {
-                var currcon = (from p in db.PROBLEMs
-                               where p.ID == ID
-                               select p.CONTEST1).Single();
+                var currprob = (from p in db.PROBLEMs
+                                where p.ID == ID
+                                select p).Single();
+                var currcon = currprob.CONTEST1;
                 if (!flag)
                 {
                     if (DateTime.Now < currcon.EndTime)
                         throw new ContestNotEndedException();
                 }
-                var result = (from t in db.TESTDATAs
+                var result = (from t in currprob.TESTDATAs
                               where t.ID == testCase
                               select new TestCase
                               {

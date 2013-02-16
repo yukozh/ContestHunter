@@ -17,15 +17,15 @@ namespace ContestHunter.Models.Domain
             OtherError
         }
 
-        string User;
-        string Contest;
-        string Problem;
-        byte[] Data;
+        public string User;
+        public string Contest;
+        public string Problem;
+        public byte[] Data;
 
-        Guid Record;
-        StatusType Status;
-        string Detail;
-        DateTime Time;
+        public Guid Record;
+        public StatusType Status;
+        public string Detail;
+        public DateTime Time;
 
         public static List<Hunt> Get(string user, string contest,string problem)
         {

@@ -15,7 +15,7 @@ namespace ContestHunter.Models.Domain
 
         public string Name;
         public string Email;
-
+        internal Guid ID;
         internal class OnlineUser
         {
             public Guid ID;
@@ -233,7 +233,7 @@ namespace ContestHunter.Models.Domain
                               select u).SingleOrDefault();
                 if (null == result)
                     throw new UserNotFoundException();
-                return new User() { Name = result.Name, Email = result.Email };
+                return new User() { Name = result.Name, Email = result.Email, ID = result.ID };
             }
         }
 
@@ -253,7 +253,8 @@ namespace ContestHunter.Models.Domain
                              select u.GROUPs).Single()
                         select new Group
                         {
-                            Name = g.Name
+                            Name = g.Name,
+                            ID = g.ID
                         }).ToList();
             }
         }
