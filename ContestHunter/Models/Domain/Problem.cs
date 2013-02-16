@@ -125,6 +125,7 @@ namespace ContestHunter.Models.Domain
                               where t.ID == testCase
                               select new TestCase
                               {
+                                  ID = t.ID,
                                   Input = t.Input,
                                   Data = t.Data,
                                   TimeLimit = t.TimeLimit,
