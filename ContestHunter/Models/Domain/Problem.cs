@@ -127,7 +127,8 @@ namespace ContestHunter.Models.Domain
                               {
                                   Input = t.Input,
                                   Data = t.Data,
-                                  TimeLimit = t.TimeLimit
+                                  TimeLimit = t.TimeLimit,
+                                  MemoryLimit = t.MemoryLimit
                               }).SingleOrDefault();
                 if (null == result)
                     throw new TestCaseNotFoundException();

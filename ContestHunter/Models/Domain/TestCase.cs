@@ -10,6 +10,6 @@ namespace ContestHunter.Models.Domain
         public byte[] Input;
         public byte[] Data;
         public int TimeLimit;
-        public int MemoryLimit;
+        public long MemoryLimit;
     }
 }
