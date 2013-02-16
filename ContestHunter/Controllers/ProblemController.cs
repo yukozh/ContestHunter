@@ -353,5 +353,10 @@ namespace ContestHunter.Controllers
         {
             return View();
         }
+
+        public ActionResult DataShow()
+        {
+            return View();
+        }
     }
 }

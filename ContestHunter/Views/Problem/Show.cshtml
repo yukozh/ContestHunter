@@ -13,7 +13,7 @@
 </style>
 
 <div class="span12">
-    <div style="width: 980px; text-align: center">
+    <div style="width: 940px; text-align: center">
         <h3>@Model.Name</h3>
         <table class="table table-striped table-bordered" style="background-color: white; width: 400px; margin: 10px auto">
             <colgroup>
@@ -48,7 +48,7 @@
         </table>
     </div>
     <div style="width: 980px">@Html.Sanitized(Model.Content)</div>
-    <div class="btn-group" style="margin: 10px auto; text-align: center; padding-left: 40px">
+    <div class="btn-group" style="margin: 10px auto; text-align: center">
         @if (ViewBag.CanEdit)
         {
             @Html.ActionLink("编辑", "Edit", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-inverse", style = "display:inline-block;" })
