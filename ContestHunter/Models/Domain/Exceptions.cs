@@ -113,4 +113,8 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class ContestNameExistedException : Exception
+    {
+    }
+
 }

@@ -245,6 +245,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="PermissionDeniedException"></exception>
         /// <exception cref="UserNotFoundException"></exception>
+        /// <exception cref="ProblemNameExistedException"></exception>
         public void Change()
         {
             if(null==User.CurrentUser)
@@ -262,6 +263,10 @@ namespace ContestHunter.Models.Domain
                              select u).SingleOrDefault();
                 if (null == owner)
                     throw new UserNotFoundException();
+                if (pro.Name != Name && (from p in db.PROBLEMs
+                                         where p.Name == Name && p.CONTEST1.ID == contest.ID
+                                         select p).Any())
+                    throw new ProblemNameExistedException();
                 pro.Name = Name;
                 pro.OriginRating = OriginRating;
                 pro.Content = Content;

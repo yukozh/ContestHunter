@@ -64,7 +64,8 @@ namespace ContestHunter.Models.Domain
         }
         public string Description;
         public bool IsOfficial;
-        public List<string> Owner;
+        internal List<string> Owner;
+        public List<string> Owners;
 
         public enum AttendType
         {
@@ -85,23 +86,29 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                return (from c in
-                            (from contest in db.CONTESTs
-                             where contest.StartTime > DateTime.Now
-                             select contest
-                                ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList()
-                        select new Contest
-                         {
-                             ID = c.ID,
-                             Name = c.Name,
-                             Description = c.Description,
-                             Type = (ContestType)c.Type,
-                             RelativeStartTime = c.StartTime,
-                             RelativeEndTime = c.EndTime,
-                             IsOfficial = c.IsOfficial,
-                             Owner = (from u in c.OWNERs
-                                      select u.Name).ToList()
-                         }).ToList();
+                var cons = (from contest in db.CONTESTs
+                            where contest.StartTime > DateTime.Now
+                            select contest
+                                ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList();
+                List<Contest> Ret = new List<Contest>();
+                foreach (var c in cons)
+                {
+                    var Own = (from u in c.OWNERs
+                               select u.Name).ToList();
+                    Ret.Add(new Contest
+                            {
+                                ID = c.ID,
+                                Name = c.Name,
+                                Description = c.Description,
+                                Type = (ContestType)c.Type,
+                                RelativeStartTime = c.StartTime,
+                                RelativeEndTime = c.EndTime,
+                                IsOfficial = c.IsOfficial,
+                                Owner = Own,
+                                Owners = Own
+                            });
+                }
+                return Ret;
             }
         }
 
@@ -129,23 +136,29 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                return (from c in
-                            (from contest in db.CONTESTs
-                             where contest.StartTime <= DateTime.Now && contest.EndTime >= DateTime.Now
-                             select contest
-                                ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList()
-                        select new Contest
-                        {
-                            ID = c.ID,
-                            Name = c.Name,
-                            Description = c.Description,
-                            Type = (ContestType)c.Type,
-                            RelativeStartTime = c.StartTime,
-                            RelativeEndTime = c.EndTime,
-                            IsOfficial = c.IsOfficial,
-                            Owner = (from u in c.OWNERs
-                                     select u.Name).ToList()
-                        }).ToList();
+                var cons = (from contest in db.CONTESTs
+                            where contest.StartTime <= DateTime.Now && contest.EndTime >= DateTime.Now
+                            select contest
+                                ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList();
+                List<Contest> Ret=new List<Contest>();
+                foreach (var c in cons)
+                {
+                    var Own = (from u in c.OWNERs
+                               select u.Name).ToList();
+                    Ret.Add(new Contest
+                            {
+                                ID = c.ID,
+                                Name = c.Name,
+                                Description = c.Description,
+                                Type = (ContestType)c.Type,
+                                RelativeStartTime = c.StartTime,
+                                RelativeEndTime = c.EndTime,
+                                IsOfficial = c.IsOfficial,
+                                Owner = Own,
+                                Owners = Own
+                            });
+                }
+                return Ret;
             }
         }
 
@@ -173,24 +186,30 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                return (from c in
-                            (from contest in db.CONTESTs
-                             where contest.EndTime < DateTime.Now
-                             orderby contest.StartTime descending
-                             select contest
-                                ).Skip(skip).Take(top).ToList()
-                        select new Contest
-                        {
-                            ID = c.ID,
-                            Name = c.Name,
-                            Description = c.Description,
-                            Type = (ContestType)c.Type,
-                            RelativeStartTime = c.StartTime,
-                            RelativeEndTime = c.EndTime,
-                            IsOfficial = c.IsOfficial,
-                            Owner = (from u in c.OWNERs
-                                     select u.Name).ToList()
-                        }).ToList();
+                var cons = (from contest in db.CONTESTs
+                            where contest.EndTime < DateTime.Now
+                            orderby contest.StartTime descending
+                            select contest
+                                ).Skip(skip).Take(top).ToList();
+                List<Contest> Ret=new List<Contest>();
+                foreach (var c in cons)
+                {
+                    var Own = (from u in c.OWNERs
+                               select u.Name).ToList();
+                    Ret.Add(new Contest
+                            {
+                                ID = c.ID,
+                                Name = c.Name,
+                                Description = c.Description,
+                                Type = (ContestType)c.Type,
+                                RelativeStartTime = c.StartTime,
+                                RelativeEndTime = c.EndTime,
+                                IsOfficial = c.IsOfficial,
+                                Owner = Own,
+                                Owners = Own
+                            });
+                }
+                return Ret;
             }
         }
 
@@ -213,6 +232,8 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="contest"></param>
         /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="PermissionDeniedException"></exception>
+        /// <exception cref="ContestNameExistedException"></exception>
         public static void Add(Contest contest)
         {
             if (null == User.CurrentUser)
@@ -221,6 +242,10 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                if ((from c in db.CONTESTs
+                     where c.Name == contest.Name
+                     select c).Any())
+                    throw new ContestNameExistedException();
                 var curContest = db.CONTESTs.Add(new CONTEST()
                 {
                     ID = Guid.NewGuid(),
@@ -245,6 +270,12 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 修改Contest信息
+        /// </summary>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="PermissionDeniedException"></exception>
+        /// <exception cref="ContestNameExistedException"></exception>
         public void Change()
         {
             if (null == User.CurrentUser)
@@ -257,14 +288,24 @@ namespace ContestHunter.Models.Domain
                 var con = (from c in db.CONTESTs
                            where c.ID==ID
                            select c).Single();
-                con.Name = Name;
-                con.Description = Description;
-                con.OWNERs.Clear();
-                foreach (var name in Owner)
+                if (con.Name != Name)
                 {
-                    con.OWNERs.Add((from u in db.USERs
-                                    where u.Name == name
-                                    select u).Single());
+                    if ((from c in db.CONTESTs
+                         where c.Name == Name
+                         select c).Any())
+                        throw new ContestNameExistedException();
+                    con.Name = Name;
+                }
+                con.Description = Description;
+                if (Owner != Owners)
+                {
+                    con.OWNERs.Clear();
+                    foreach (var name in Owner)
+                    {
+                        con.OWNERs.Add((from u in db.USERs
+                                        where u.Name == name
+                                        select u).Single());
+                    }
                 }
                 con.IsOfficial = IsOfficial;
                 con.StartTime = AbsoluteStartTime;
@@ -288,6 +329,7 @@ namespace ContestHunter.Models.Domain
                                    select c).SingleOrDefault();
                 if(null==con)
                     throw new ContestNotFoundException();
+                var Own=con.OWNERs.Select(x => x.Name).ToList();
                 return new Contest
                 {
                     Name = con.Name,
@@ -296,7 +338,8 @@ namespace ContestHunter.Models.Domain
                     RelativeEndTime = con.EndTime,
                     IsOfficial = con.IsOfficial,
                     Type = (ContestType)con.Type,
-                    Owner = con.OWNERs.Select(x => x.Name).ToList(),
+                    Owner = Own,
+                    Owners = Own,
                     ID = con.ID
                 };
             }
