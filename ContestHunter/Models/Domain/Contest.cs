@@ -92,6 +92,7 @@ namespace ContestHunter.Models.Domain
                                 ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList()
                         select new Contest
                          {
+                             ID = c.ID,
                              Name = c.Name,
                              Description = c.Description,
                              Type = (ContestType)c.Type,
@@ -135,6 +136,7 @@ namespace ContestHunter.Models.Domain
                                 ).OrderBy(x => x.StartTime).Skip(skip).Take(top).ToList()
                         select new Contest
                         {
+                            ID = c.ID,
                             Name = c.Name,
                             Description = c.Description,
                             Type = (ContestType)c.Type,
@@ -179,6 +181,7 @@ namespace ContestHunter.Models.Domain
                                 ).Skip(skip).Take(top).ToList()
                         select new Contest
                         {
+                            ID = c.ID,
                             Name = c.Name,
                             Description = c.Description,
                             Type = (ContestType)c.Type,

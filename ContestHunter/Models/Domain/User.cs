@@ -32,7 +32,12 @@ namespace ContestHunter.Models.Domain
 
         static public string CurrentUserName
         {
-            get { return CurrentUser.name; }
+            get 
+            {
+                if (null == CurrentUser)
+                    throw new UserNotLoginException();
+                return CurrentUser.name; 
+            }
         }
 
         /// <summary>
