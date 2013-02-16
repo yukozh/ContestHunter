@@ -13,10 +13,10 @@ namespace ContestHunter.Models.Domain
 {
     public class TesterDaemon : Daemon
     {
-        static IDictionary<int, IDictionary<string, string>> commands = new Dictionary<int, IDictionary<string, string>>()
+        static IDictionary<Record.LanguageType, IDictionary<string, string>> commands = new Dictionary<Record.LanguageType, IDictionary<string, string>>()
         {
             {
-                (int)Record.LanguageType.CPP,
+                Record.LanguageType.CPP,
                 new Dictionary<string,string>()
                 {
                     {"src2exe","g++ -Wall -O2 -o {Execute} {E.exeE} {Source} {S.cppS}"},
@@ -26,7 +26,7 @@ namespace ContestHunter.Models.Domain
                 }
             },
             {
-                (int)Record.LanguageType.C,
+                Record.LanguageType.C,
                 new Dictionary<string,string>()
                 {
                     {"src2exe","gcc -Wall -O2 -o {Execute} {E.exeE} {Source} {S.cS}"},
@@ -36,7 +36,7 @@ namespace ContestHunter.Models.Domain
                 }
             },
             {
-                (int)Record.LanguageType.Pascal,
+                Record.LanguageType.Pascal,
                 new Dictionary<string,string>()
                 {
                     {"src2exe","ppcrossx64 -o{Execute} {E.exeE} {Source} {S.pasS}"},
@@ -44,7 +44,7 @@ namespace ContestHunter.Models.Domain
                 }
             },
             {
-                (int)Record.LanguageType.Java,
+                Record.LanguageType.Java,
                 new Dictionary<string,string>()
                 {
                     {"src2exe","javac {Source=Main} {S.javaS}"},
@@ -56,6 +56,40 @@ namespace ContestHunter.Models.Domain
         public string IP = "moo.imeng.de";
         public long Password = 34659308463532339;
 
+        Out Compile(string Source, Record.LanguageType Language,Socket sock)
+        {
+            sock.Send(new Message()
+            {
+                Type = Message.MessageType.Compile,
+                Content = new CompileIn()
+                {
+                    Code = Source,
+                    Command = commands[Language]["src2exe"],
+                    Memory = 256 * 1024 * 1024,
+                    Time = 5000
+                }
+            }.ToBytes());
+            return new Out(sock);
+        }
+
+        Out Test(byte[] input,byte[] output,long Time,long Memory, Socket sock, string CmpPath, string ExecPath)
+        {
+            sock.Send(new Message()
+            {
+                Type = Message.MessageType.Test,
+                Content = new TestIn()
+                {
+                    CmpPath = CmpPath,
+                    ExecPath = ExecPath,
+                    Memory = Memory,
+                    Time = Time,
+                    Input = input,
+                    Output = output
+                }
+            }.ToBytes());
+            return new Out(sock);
+        }
+
         void DealRecord(CHDB db,Socket sock)
         {
 
@@ -64,33 +98,12 @@ namespace ContestHunter.Models.Domain
                        select r).FirstOrDefault();
             if (null == rec)
                 return;
-            sock.Send(new Message()
-            {
-                Type = Message.MessageType.Compile,
-                Content = new CompileIn()
-                {
-                    Code = rec.Code,
-                    Command = commands[rec.Language]["src2exe"],
-                    Memory = 1024 * 1024 * 60,
-                    Time = 5 * 1000
-                }
-            }.ToBytes());
-            Out ret = new Out(sock);
+
+            Out ret = Compile(rec.Code, (Record.LanguageType)rec.Language, sock);
             switch (ret.Type)
             {
                 case Out.ResultType.Success:
-                    sock.Send(new Message()
-                    {
-                        Type = Message.MessageType.Compile,
-                        Content = new CompileIn()
-                        {
-                            Code = rec.Code,
-                            Command = commands[rec.Language]["src2exe"],
-                            Memory = 1024 * 1024 * 60,
-                            Time = 5 * 1000
-                        }
-                    }.ToBytes());
-                    Out CompileCMP = new Out(sock);
+                    Out CompileCMP = Compile(rec.PROBLEM1.Comparer, Record.LanguageType.CPP, sock);
                     switch (CompileCMP.Type)
                     {
                         case Out.ResultType.Success:
@@ -101,20 +114,7 @@ namespace ContestHunter.Models.Domain
                                                        select t))
                             {
                                 totalTests++;
-                                sock.Send(new Message()
-                                {
-                                    Type = Message.MessageType.Test,
-                                    Content = new TestIn()
-                                    {
-                                        CmpPath = CompileCMP.Message,
-                                        ExecPath = ret.Message,
-                                        Memory = test.MemoryLimit,
-                                        Time = test.TimeLimit,
-                                        Input = test.Input,
-                                        Output = test.Data
-                                    }
-                                }.ToBytes());
-                                Out testResult = new Out(sock);
+                                Out testResult = Test(test.Input,test.Data,test.TimeLimit,test.MemoryLimit, sock, CompileCMP.Message, ret.Message);
                                 switch (testResult.Type)
                                 {
                                     case Out.ResultType.Success:
@@ -142,15 +142,45 @@ namespace ContestHunter.Models.Domain
                     rec.Status = (int)Record.StatusType.Compile_Error;
                     break;
             }
-            db.SaveChanges();
         }
 
         void DealHunt(CHDB db, Socket sock)
         {
             var rec = (from h in db.HUNTs
                        where h.Status == (int)Hunt.StatusType.Pending
-                       select h);
+                       select h).FirstOrDefault();
+            if (null == rec)
+                return;
 
+            Out DataChecker = Compile(rec.RECORD1.PROBLEM1.DataChecker, Record.LanguageType.CPP, sock);
+            if (DataChecker.Type != Out.ResultType.Success)
+            {
+                rec.Status = (int)Hunt.StatusType.OtherError;
+                return;
+            }
+            Out OriRec = Compile(rec.RECORD1.Code, (Record.LanguageType)rec.RECORD1.Language, sock);
+            if(OriRec.Type!=Out.ResultType.Success)
+            {
+                rec.Status=(int)Hunt.StatusType.OtherError;
+                return;
+            }
+            long TimeLimit = (from t in db.TESTDATAs
+                              where t.PROBLEM1 == rec.RECORD1.PROBLEM1
+                              select t).Max(x => x.TimeLimit);
+            long MemoryLimit = (from t in db.TESTDATAs
+                                where t.PROBLEM1 == rec.RECORD1.PROBLEM1
+                                select t).Max(x => x.MemoryLimit);
+            Out result = Test(rec.HuntData, new byte[] { }, TimeLimit, MemoryLimit, sock, DataChecker.Message, OriRec.Message);
+            if (result.Type == Out.ResultType.Success)
+            {
+                rec.Status = (int)Hunt.StatusType.Success;
+                rec.RECORD1.Status = (int)Record.StatusType.Hacked;
+            }
+            else
+                if (result.Type == Out.ResultType.WrongAnswer)
+                    rec.Status = (int)Hunt.StatusType.Fail;
+                else
+                    rec.Status = (int)Hunt.StatusType.BadData;
         }
 
         protected override int Run()
@@ -171,6 +201,7 @@ namespace ContestHunter.Models.Domain
                 {
                     DealRecord(db, sock);
                     DealHunt(db, sock);
+                    db.SaveChanges();
                 }
             }
             return 3000;

@@ -18,6 +18,7 @@ namespace ContestHunter.Database
         {
             this.CONTEST_ATTEND = new HashSet<CONTEST_ATTEND>();
             this.HUNTs = new HashSet<HUNT>();
+            this.PROBLEMs = new HashSet<PROBLEM>();
             this.RATINGs = new HashSet<RATING>();
             this.RECORDs = new HashSet<RECORD>();
             this.CONTESTs = new HashSet<CONTEST>();
@@ -32,6 +33,7 @@ namespace ContestHunter.Database
     
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<HUNT> HUNTs { get; set; }
+        public virtual ICollection<PROBLEM> PROBLEMs { get; set; }
         public virtual ICollection<RATING> RATINGs { get; set; }
         public virtual ICollection<RECORD> RECORDs { get; set; }
         public virtual ICollection<CONTEST> CONTESTs { get; set; }

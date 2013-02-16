@@ -73,6 +73,8 @@ namespace ContestHunter.Models.Domain
             Practice
         }
 
+        internal Guid ID;
+
         /// <summary>
         /// 返回等待进行的比赛列表
         /// </summary>
@@ -212,6 +214,8 @@ namespace ContestHunter.Models.Domain
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
+            if (!contest.Owner.Contains(User.CurrentUser.name))
+                throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
                 var curContest = db.CONTESTs.Add(new CONTEST()
@@ -222,7 +226,7 @@ namespace ContestHunter.Models.Domain
                     EndTime = contest.RelativeEndTime,
                     Description = contest.Description,
                     Type = (int)contest.Type,
-                    IsOfficial = contest.IsOfficial,
+                    IsOfficial = contest.IsOfficial
                 });
 
                 foreach (string name in contest.Owner)
@@ -238,7 +242,7 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        public void Change(Contest contest)
+        public void Change()
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
@@ -248,28 +252,22 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
-                con.Name = contest.Name;
-                con.Description = contest.Description;
+                con.Name = Name;
+                con.Description = Description;
                 con.OWNERs.Clear();
-                foreach (var name in contest.Owner)
+                foreach (var name in Owner)
                 {
                     con.OWNERs.Add((from u in db.USERs
                                     where u.Name == name
                                     select u).Single());
                 }
-                con.IsOfficial = contest.IsOfficial;
-                con.StartTime = contest.AbsoluteStartTime;
-                con.EndTime = contest.AbsoluteStartTime;
+                con.IsOfficial = IsOfficial;
+                con.StartTime = AbsoluteStartTime;
+                con.EndTime = AbsoluteStartTime;
                 db.SaveChanges();
             }
-            Name = contest.Name;
-            Description = contest.Description;
-            Owner = contest.Owner;
-            IsOfficial = contest.IsOfficial;
-            AbsoluteStartTime = contest.AbsoluteStartTime;
-            AbsoluteEndTime = contest.AbsoluteEndTime;
         }
 
         /// <summary>
@@ -282,24 +280,22 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                var result = (from c in
-                                  (from c in db.CONTESTs
+                var con=(from c in db.CONTESTs
                                    where c.Name == name
-                                   select c).ToList()
-                              select new Contest
-                          {
-                              Name = c.Name,
-                              Description = c.Description,
-                              RelativeStartTime = c.StartTime,
-                              RelativeEndTime = c.EndTime,
-                              IsOfficial = c.IsOfficial,
-                              Type = (ContestType)c.Type,
-                              Owner = (from u in c.OWNERs
-                                       select u.Name).ToList()
-                          }).SingleOrDefault();
-                if (null == result)
+                                   select c).SingleOrDefault();
+                if(null==con)
                     throw new ContestNotFoundException();
-                return result;
+                return new Contest
+                {
+                    Name = con.Name,
+                    Description = con.Description,
+                    RelativeStartTime = con.StartTime,
+                    RelativeEndTime = con.EndTime,
+                    IsOfficial = con.IsOfficial,
+                    Type = (ContestType)con.Type,
+                    Owner = con.OWNERs.Select(x => x.Name).ToList(),
+                    ID = con.ID
+                };
             }
         }
 
@@ -559,6 +555,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="PermissionDeniedException"></exception>
         /// <exception cref="ProblemNameExistedException"></exception>
+        /// <exception cref="UserNotFoundException"></exception>
         public void AddProblem(Problem problem)
         {
             if (null == User.CurrentUser)
@@ -572,17 +569,23 @@ namespace ContestHunter.Models.Domain
                      where p.Name == problem.Name && p.CONTEST1.Name == Name
                      select p).Any())
                     throw new ProblemNameExistedException();
+                var owner = (from u in db.USERs
+                             where u.Name == problem.Owner
+                             select u).SingleOrDefault();
+                if (null == owner)
+                    throw new UserNotFoundException();
                 db.PROBLEMs.Add(new PROBLEM()
                 {
                     ID = Guid.NewGuid(),
                     Name = problem.Name,
                     Content = problem.Content,
                     Comparer = problem.Comparer,
-                    OriginRating=problem.OriginRating,
-                    DataChecker=problem.DataChecker,
+                    OriginRating = problem.OriginRating,
+                    DataChecker = problem.DataChecker,
                     CONTEST1 = (from c in db.CONTESTs
                                 where c.Name == Name
-                                select c).Single()
+                                select c).Single(),
+                    OWNER = owner
                 });
                 db.SaveChanges();
             }

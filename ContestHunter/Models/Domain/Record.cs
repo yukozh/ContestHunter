@@ -40,6 +40,7 @@ namespace ContestHunter.Models.Domain
             Memory_Limit_Execeeded,
             CMP_Error,
             Output_Limit_Execeeded,
+            Hacked,
             System_Error = -1,
             Pending = -2,
             Compile_Error = -3
@@ -232,7 +233,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestTypeMismatchException"></exception>
         /// <exception cref="ContestEndedException"></exception>
         /// <exception cref="ProblemNotLockedException"></exception>
-        public void Hunt(string Data)
+        public void Hunt(byte[] Data)
         {
             using (var db = new CHDB())
             {

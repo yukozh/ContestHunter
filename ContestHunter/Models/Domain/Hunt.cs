@@ -13,13 +13,14 @@ namespace ContestHunter.Models.Domain
             Pending,
             Success,
             Fail,
-            BadData
+            BadData,
+            OtherError
         }
 
         string User;
         string Contest;
         string Problem;
-        string Data;
+        byte[] Data;
 
         Guid Record;
         StatusType Status;
@@ -50,7 +51,7 @@ namespace ContestHunter.Models.Domain
                         User = h.USER1.Name,
                         Detail = (h.USER1.Name == Domain.User.CurrentUser.name ? h.Detail : null),
                         Time = h.Time,
-                        Data = h.HuntData.Length > 1024 ? h.HuntData.Substring(0, 1024) : h.HuntData
+                        Data = h.HuntData.Length > 1024 ? h.HuntData.Take(1024).ToArray() : h.HuntData
                     });
                 }
                 return Ret;

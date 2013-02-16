@@ -23,6 +23,7 @@ namespace ContestHunter.Database
     
         public System.Guid ID { get; set; }
         public System.Guid Contest { get; set; }
+        public System.Guid User { get; set; }
         public string Name { get; set; }
         public string Content { get; set; }
         public string Comparer { get; set; }
@@ -30,6 +31,7 @@ namespace ContestHunter.Database
         public Nullable<int> OriginRating { get; set; }
     
         public virtual CONTEST CONTEST1 { get; set; }
+        public virtual USER OWNER { get; set; }
         public virtual ICollection<RECORD> RECORDs { get; set; }
         public virtual ICollection<TESTDATA> TESTDATAs { get; set; }
         public virtual ICollection<USER> USERs { get; set; }

@@ -14,6 +14,7 @@ namespace ContestHunter.Models.Domain
         public string Contest;
         public string DataChecker;
         public int? OriginRating;
+        public string Owner;
 
         internal Guid ID;
         internal Contest contest;
@@ -214,7 +215,7 @@ namespace ContestHunter.Models.Domain
                 (from u in db.USERs
                  where u.Name == User.CurrentUser.name
                  select u.LOCKs).Single().Add((from p in db.PROBLEMs
-                                               where p.Name == Name && p.CONTEST1.Name == contest.Name
+                                               where p.ID==ID
                                                select p).Single());
                 db.SaveChanges();
             }
@@ -232,12 +233,12 @@ namespace ContestHunter.Models.Domain
                             (from u in db.USERs
                              where u.Name == User.CurrentUser.name
                              select u.LOCKs).Single()
-                        where l.Name == Name && l.CONTEST1.Name==contest.Name
+                        where l.ID==ID
                         select l).Any();
             }
         }
 
-        public void Change(Problem problem)
+        public void Change()
         {
             if(null==User.CurrentUser)
                 throw new UserNotLoginException();
@@ -247,20 +248,21 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var pro = (from p in db.PROBLEMs
-                           where p.Name == Name && p.CONTEST1.Name == contest.Name
+                           where p.ID==ID
                            select p).Single();
-                pro.Name = problem.Name;
-                pro.OriginRating = problem.OriginRating;
-                pro.Content = problem.Content;
-                pro.Comparer = problem.Comparer;
-                pro.DataChecker = problem.DataChecker;
+                var owner = (from u in db.USERs
+                             where u.Name == Owner
+                             select u).SingleOrDefault();
+                if (null == owner)
+                    throw new UserNotFoundException();
+                pro.Name = Name;
+                pro.OriginRating = OriginRating;
+                pro.Content = Content;
+                pro.Comparer = Comparer;
+                pro.DataChecker = DataChecker;
+                pro.OWNER = owner;
                 db.SaveChanges();
             }
-            Name = problem.Name;
-            OriginRating = problem.OriginRating;
-            Content = problem.Content;
-            Comparer = problem.Comparer;
-            DataChecker = problem.DataChecker;
         }
     }
 }
