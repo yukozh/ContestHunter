@@ -341,6 +341,7 @@ namespace ContestHunter.Controllers
         {
             return new TestCaseUploadModel.TestCaseInfo
             {
+                ID = t.ID,
                 Memory = t.MemoryLimit / (double)(1024 * 1024),
                 Time = t.TimeLimit / 1000.0,
                 InputHash = new CRC32().AsString(t.Input),
@@ -414,7 +415,7 @@ namespace ContestHunter.Controllers
             return true;
         }
 
-        IEnumerable<TestCase> AddTestCase(Problem problem, HttpPostedFileBase file)
+        List<TestCase> AddTestCase(Problem problem, HttpPostedFileBase file)
         {
             if (file == null)
             {
@@ -462,10 +463,10 @@ namespace ContestHunter.Controllers
                     Data = outputFiles[id],
                     MemoryLimit = DEFAULT_TEST_CASE_MEMORY_LIMIT,
                     TimeLimit = DEFAULT_TEST_CASE_TIME_LIMIT
-                });
+                }).ToList();
             foreach (var t in testCases)
             {
-                problem.AddTestCase(t);
+                t.ID = problem.AddTestCase(t);
             }
             return testCases;
         }
@@ -473,12 +474,17 @@ namespace ContestHunter.Controllers
         [HttpPost]
         public ActionResult TestCase(TestCaseUploadModel model)
         {
+            if (model.TestCases == null)
+            {
+                model.TestCases = new List<TestCaseUploadModel.TestCaseInfo>();
+            }
             if (!ModelState.IsValid) return View(model);
+            ModelState.Clear();
 
             Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
             foreach (var testCase in model.TestCases)
             {
-                problem.TestCaseByID(testCase.ID);
+                ContestHunter.Models.Domain.TestCase.Change(testCase.ID, (int)(testCase.Time * 1000), (int)(testCase.Memory * 1024 * 1024));
             }
             switch (model.Action)
             {
@@ -491,10 +497,17 @@ namespace ContestHunter.Controllers
                             model.TestCases.Add(t);
                         }
                     }
-                    return View(model);
+                    break;
+                case TestCaseUploadModel.ActionType.Next:
+                    return RedirectToAction("Check", new { id = model.Problem, contest = model.Contest });
+                case TestCaseUploadModel.ActionType.Delete:
+                    problem.RemoveTestCase(model.TestCases[model.TestCaseIndex].ID);
+                    model.TestCases.RemoveAt(model.TestCaseIndex);
+                    break;
             }
             return View(model);
         }
+        #endregion
 
         public ActionResult Check()
         {
@@ -505,7 +518,7 @@ namespace ContestHunter.Controllers
         {
             return View();
         }
-        #endregion
+
         public ActionResult DataShow()
         {
             return View();

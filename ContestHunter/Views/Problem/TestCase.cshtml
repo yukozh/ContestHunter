@@ -37,7 +37,7 @@
         @Html.HiddenFor(x => x.Action)
         @Html.HiddenFor(x => x.Contest)
         @Html.HiddenFor(x => x.Problem)
-        @Html.HiddenFor(x => x.TestCaseID)
+        @Html.HiddenFor(x => x.TestCaseIndex)
         <div class="alert alert-info" style="text-align: center">
             <h2>配置测试数据</h2>
             <div>
@@ -70,6 +70,7 @@
                     <tbody>
                         @for (int i = 0; i < Model.TestCases.Count; i++)
                         {
+                            @Html.HiddenFor(x => x.TestCases[i].ID)
                             <tr>
                                 <td data-content="&lt;pre&gt;@Model.TestCases[i].Input&lt;/pre&gt;" title="输入文件内容预览" class="Preview">
                                     @Html.HiddenFor(x => x.TestCases[i].InputHash)
@@ -96,7 +97,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="submit" value="删除" class="btn btn-small btn-danger" onclick="$('#TestCaseID').val(@i); $('#Action').val('Delete');"/>
+                                    <input type="submit" value="删除" class="btn btn-small btn-danger" onclick="$('#TestCaseIndex').val(@i); $('#Action').val('Delete');"/>
                                 </td>
                             </tr>
                         }

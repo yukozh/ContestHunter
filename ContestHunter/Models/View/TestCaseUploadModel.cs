@@ -37,7 +37,7 @@ namespace ContestHunter.Models.View
         [Required]
         public ActionType? Action { get; set; }
 
-        public Guid? TestCaseID { get; set; }
+        public int TestCaseIndex { get; set; }
         public string Problem { get; set; }
         public string Contest { get; set; }
         public List<TestCaseInfo> TestCases { get; set; }
