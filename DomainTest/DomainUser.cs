@@ -66,7 +66,7 @@ namespace DomainTest
                 RelativeStartTime = DateTime.Now + Start,
                 RelativeEndTime = DateTime.Now + Duration,
                 IsOfficial = false,
-                Owner = new List<string>() { "123" },
+                Owners = new List<string>() { "123" },
                 Type = Contest.ContestType.OI
             });
             var nowtest = Contest.ByName("Test 12");

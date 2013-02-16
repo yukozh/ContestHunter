@@ -38,7 +38,7 @@ namespace ContestHunter.ViewHelpers
             var metadata = ModelMetadata.FromLambdaExpression(expression, self.ViewData);
             var description = metadata.Description;
 
-            return MvcHtmlString.Create(string.Format(@"<p{0}>{1}</p>", sb.ToString(), description));
+            return MvcHtmlString.Create(string.Format(@"<span{0}>{1}</span>", sb.ToString(), description));
         }
     }
 }
