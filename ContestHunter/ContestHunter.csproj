@@ -53,6 +53,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AntiXSS.4.2.1\lib\net40\HtmlSanitizationLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -193,6 +196,7 @@
     <Compile Include="Models\View\ProblemContentModel.cs" />
     <Compile Include="Models\View\ProblemSubmitModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />
+    <Compile Include="Models\View\TestCaseUploadModel.cs" />
     <Compile Include="Models\View\User\LoginModel.cs" />
     <Compile Include="Models\View\User\RegisterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -304,13 +308,10 @@
     <Content Include="Views\Problem\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Problem\Config.cshtml" />
+    <Content Include="Views\Problem\TestCase.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Description.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\Test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Check.cshtml" />
