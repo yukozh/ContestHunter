@@ -506,5 +506,9 @@ namespace ContestHunter.Controllers
             return View();
         }
         #endregion
+        public ActionResult DataShow()
+        {
+            return View();
+        }
     }
 }
