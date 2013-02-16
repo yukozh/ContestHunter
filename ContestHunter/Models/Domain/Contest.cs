@@ -316,7 +316,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 con.CONTEST_ATTEND.Add(new CONTEST_ATTEND()
                  {
@@ -348,7 +348,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 con.CONTEST_ATTEND.Add(new CONTEST_ATTEND()
                 {
@@ -363,7 +363,7 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
-        /// 虚拟报名比赛
+        /// 报名练习比赛
         /// </summary>
         /// <param name="startTime"></param>
         /// <exception cref="UserNotLoginException"></exception>
@@ -380,7 +380,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 con.CONTEST_ATTEND.Add(new CONTEST_ATTEND()
                 {
@@ -409,7 +409,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
@@ -434,7 +434,7 @@ namespace ContestHunter.Models.Domain
             {
                 return (from u in
                             (from c in db.CONTESTs
-                             where c.Name == Name
+                             where c.ID==ID
                              select c).Single().CONTEST_ATTEND
                         where u.USER1.Name == User.CurrentUser.name
                         select u).Any();
@@ -450,7 +450,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 return (from c in db.CONTESTs
-                        where c.Name == Name
+                        where c.ID==ID
                         select c.CONTEST_ATTEND).Single().Count();
             }
         }
@@ -467,7 +467,7 @@ namespace ContestHunter.Models.Domain
             {
                 return (from u in
                             (from c in db.CONTESTs
-                             where c.Name == Name
+                             where c.ID==ID
                              select c.CONTEST_ATTEND).Single()
                         orderby u.USER1.Name ascending
                         select u.USER1.Name).Skip(skip).Take(top).ToList();
@@ -484,7 +484,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 return (from p in db.PROBLEMs
-                        where p.CONTEST1.Name == Name
+                        where p.CONTEST1.ID==ID
                         select p.Name).ToList();
             }
         }
@@ -494,41 +494,38 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        /// <exception cref="ContestNotStartedException"></exception>
-        /// <exception cref="NotAttendedContestException"></exception>
-        /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="ProblemNotFoundException"></exception>
-        /// <exception cref="UserNotLoginException"></exception>
         public Problem ProblemByName(string name)
         {
+            bool privillege = true;
             using (var db = new CHDB())
             {
                 if (null == User.CurrentUser)
                 {
                     if (DateTime.Now <= RelativeEndTime)
-                        throw new UserNotLoginException();
+                        privillege = false;
                 }
                 else
                 {
                     if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
                     {
                         var con = (from c in db.CONTESTs
-                                   where c.Name == Name
+                                   where c.ID==ID
                                    select c).Single();
                         if (!IsAttended())
                         {
                             if (DateTime.Now <= RelativeEndTime)
-                                throw new ContestNotEndedException();
+                                privillege = false;
                         }
                         else
                         {
                             if (DateTime.Now < RelativeStartTime)
-                                throw new ContestNotStartedException();
+                                privillege = false;
                         }
                     }
                 }
                 var result = (from p in db.PROBLEMs
-                              where p.Name == name && p.CONTEST1.Name == Name
+                              where p.Name == name && p.CONTEST1.ID==ID
                               select p).SingleOrDefault();
                 if (null == result)
                     throw new ProblemNotFoundException();
@@ -536,12 +533,13 @@ namespace ContestHunter.Models.Domain
                 return new Problem()
                               {
                                   Name = result.Name,
-                                  Content = result.Content,
-                                  Comparer = result.Comparer,
+                                  Content = privillege ? result.Content : null,
+                                  Comparer = privillege ? result.Comparer : null,
                                   ID = result.ID,
                                   Contest = result.CONTEST1.Name,
                                   OriginRating = result.OriginRating,
-                                  DataChecker = result.DataChecker,
+                                  DataChecker = privillege ? result.DataChecker : null,
+                                  Owner = result.OWNER.Name,
                                   contest = this
                               };
             }
@@ -549,7 +547,7 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
-        /// 添加题目 所有赛制必须填充 Name,Content,Comparer, CF赛制还须填充OriginRating,DataChecker
+        /// 添加题目 所有赛制必须填充 Name,Content,Comparer,Owner, CF赛制还须填充OriginRating,DataChecker
         /// </summary>
         /// <param name="problem"></param>
         /// <exception cref="UserNotLoginException"></exception>
@@ -566,7 +564,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 if ((from p in db.PROBLEMs
-                     where p.Name == problem.Name && p.CONTEST1.Name == Name
+                     where p.Name == problem.Name && p.CONTEST1.ID==ID
                      select p).Any())
                     throw new ProblemNameExistedException();
                 var owner = (from u in db.USERs
@@ -610,7 +608,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var prob = (from p in db.PROBLEMs
-                            where p.Name == name && p.CONTEST1.Name == Name
+                            where p.Name == name && p.CONTEST1.ID==ID
                             select p).SingleOrDefault();
                 if (null == prob)
                     throw new ProblemNotFoundException();
@@ -642,7 +640,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                               let des = from p in con.PROBLEMs
@@ -694,7 +692,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 if (DateTime.Now <= con.EndTime)
                     throw new ContestNotEndedException();
@@ -768,7 +766,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                               let des = from p in con.PROBLEMs
@@ -831,7 +829,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con_att = (from c in db.CONTESTs
-                               where c.Name == Name
+                               where c.ID==ID
                                select c.CONTEST_ATTEND).Single();
                 return (AttendType)(from u in con_att
                         where u.USER1.Name == User.CurrentUser.name
@@ -855,7 +853,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con_atts = (from c in db.CONTESTs
-                                where c.Name == Name
+                                where c.ID==ID
                                 select c.CONTEST_ATTEND).Single();
                 var con_att = (from u in con_atts
                                where u.USER1.Name == User.CurrentUser.name
@@ -882,7 +880,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.Name == Name
+                           where c.ID==ID
                            select c).Single();
                 var con_att = (from u in con.CONTEST_ATTEND
                                where u.USER1.Name == User.CurrentUser.name
