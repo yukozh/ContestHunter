@@ -126,6 +126,7 @@
   <ItemGroup>
     <Compile Include="Controllers\CKEditorController.cs" />
     <Compile Include="Controllers\ContestController.cs" />
+    <Compile Include="Controllers\CRC32.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProblemController.cs" />
     <Compile Include="Controllers\RecordController.cs" />

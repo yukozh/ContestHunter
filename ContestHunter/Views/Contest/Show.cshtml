@@ -145,16 +145,16 @@
                                             <span style="color: blue">Unofficial</span>
                                         }
                                     </h4>
-                                    @if (Model.Owner.Count > 0)
+                                    @if (Model.Owners.Count > 0)
                                     {
                                         <h5>From 
-                                        @for (int i = 0; i < Model.Owner.Count; i++)
+                                        @for (int i = 0; i < Model.Owners.Count; i++)
                                         {
                                             if (i != 0)
                                             {
                                             @:,
                                             }
-                                            @Html.UserLink(Model.Owner[i])
+                                            @Html.UserLink(Model.Owners[i])
                                         }
                                         </h5>
                                     }
@@ -197,7 +197,7 @@
                             <tr>
                                 <td>
                                     <ul class="nav nav-list">
-                                        @if (Model.Owner.Contains(USER.CurrentUserName))
+                                        @if (Model.Owners.Contains(USER.CurrentUserName))
                                         {
                                             <li>@Html.ActionLink("添加题目", "Add", "Problem", new { contest = Model.Name }, null)</li>
                                         }
