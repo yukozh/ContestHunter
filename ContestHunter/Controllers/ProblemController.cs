@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using ICSharpCode.SharpZipLib.Zip;
 using ContestHunter.Models.Domain;
 using ContestHunter.Models.View;
 using USER = ContestHunter.Models.Domain.User;
@@ -45,7 +46,7 @@ namespace ContestHunter.Controllers
                     ViewBag.MinimumMemoryLimit = -1;
                     ViewBag.MaximumMemoryLimit = -1;
                 }
-                ViewBag.CanEdit = con.Owner.Contains(USER.CurrentUserName);
+                ViewBag.CanEdit = con.Owners.Contains(USER.CurrentUserName);
             }
             catch (ContestNotFoundException)
             {
@@ -232,15 +233,15 @@ namespace ContestHunter.Controllers
                     ModelState.AddModelError("OriginalRating", "不可为空");
                     return View(model);
                 }
-                contest.AddProblem(new Problem
-                {
-                    Content = System.IO.File.ReadAllText(Server.MapPath("~/Content/ProblemTemplate.html")),
-                    Name = model.Name,
-                    Comparer = "",
-                    DataChecker = "",
-                    OriginRating = model.OriginalRating,
-                    Owner = model.Owner
-                });
+                Problem problem = contest.ProblemByName(model.OldName);
+                problem.Name = model.Name;
+                problem.OriginRating = model.OriginalRating;
+                problem.Owner = model.Owner;
+                problem.Change();
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有这个题目" });
             }
             catch (ProblemNameExistedException)
             {
@@ -319,13 +320,27 @@ namespace ContestHunter.Controllers
                     {
                         return RedirectToAction("Error", "Shared", new { msg = "没有找到相应题目" });
                     }
+                    catch (PermissionDeniedException)
+                    {
+                        return RedirectToAction("Error", "Shared", new { msg = "没有权限修改题目内容" });
+                    }
+                    catch (UserNotLoginException)
+                    {
+                        throw;
+                    }
+                    catch (UserNotFoundException)
+                    {
+                        throw;
+                    }
                     return new EmptyResult();
             }
             throw new NotImplementedException();
         }
 
-        public ActionResult Config()
+        [HttpPost]
+        public ActionResult TestCase(TestCaseUploadModel model)
         {
+            
             return View();
         }
 

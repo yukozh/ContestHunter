@@ -65,16 +65,16 @@
                         <tr>
                             <td>
                                 <h5 style="margin: 0px">@Html.ActionLink(contest.Name, "Show", new { id = contest.Name })</h5>
-                                @if (contest.Owner.Count > 0)
+                                @if (contest.Owners.Count > 0)
                                 {
                                     <h6 style="margin: 0px">From
-                                        @for (int i = 0; i < contest.Owner.Count; i++)
+                                        @for (int i = 0; i < contest.Owners.Count; i++)
                                         {
                                             if (i != 0)
                                             {
                                             @:,
                                             }
-                                            @Html.UserLink(contest.Owner[i])
+                                            @Html.UserLink(contest.Owners[i])
                                         }
                                     </h6>
                                 }
@@ -190,16 +190,16 @@
                         <tr>
                             <td>
                                 <h5 style="margin: 0px">@Html.ActionLink(contest.Name, "Show", new { id = contest.Name })</h5>
-                                @if (contest.Owner.Count > 0)
+                                @if (contest.Owners.Count > 0)
                                 {
                                     <h6 style="margin: 0px">From
-                                        @for (int i = 0; i < contest.Owner.Count; i++)
+                                        @for (int i = 0; i < contest.Owners.Count; i++)
                                         {
                                             if (i != 0)
                                             {
                                             @:,
                                             }
-                                            @Html.UserLink(contest.Owner[i])
+                                            @Html.UserLink(contest.Owners[i])
                                         }
                                     </h6>
                                 }
@@ -313,16 +313,16 @@
                         <tr>
                             <td>
                                 <h5 style="margin: 0px">@Html.ActionLink(contest.Name, "Show", new { id = contest.Name })</h5>
-                                @if (contest.Owner.Count > 0)
+                                @if (contest.Owners.Count > 0)
                                 {
                                     <h6 style="margin: 0px">From
-                                        @for (int i = 0; i < contest.Owner.Count; i++)
+                                        @for (int i = 0; i < contest.Owners.Count; i++)
                                         {
                                             if (i != 0)
                                             {
                                             @:,
                                             }
-                                            @Html.UserLink(contest.Owner[i])
+                                            @Html.UserLink(contest.Owners[i])
                                         }
                                     </h6>
                                 }
