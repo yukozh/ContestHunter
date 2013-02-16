@@ -10,11 +10,12 @@ namespace ContestHunter.Models.View
     {
         public enum ActionType
         {
-            Delete, Change, Upload
+            Delete, Upload, Next
         }
 
         public class TestCaseInfo
         {
+            public Guid ID { get; set; }
             public string InputHash { get; set; }
             public string OutputHash { get; set; }
             public int InputSize { get; set; }
@@ -26,7 +27,7 @@ namespace ContestHunter.Models.View
             [Display(Description = "MB")]
             [Range(0.0, double.MaxValue)]
             public double? Memory { get; set; }
-            
+
             [Required]
             [Display(Description = "s")]
             [Range(0.0, double.MaxValue)]

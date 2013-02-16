@@ -331,9 +331,25 @@ namespace ContestHunter.Controllers
                     {
                         throw;
                     }
-                    return new EmptyResult();
+                    return RedirectToAction("TestCase", new { id = model.Problem, contest = model.Contest });
             }
             throw new NotImplementedException();
+        }
+
+        #region TestCase
+        TestCaseUploadModel.TestCaseInfo TestCase2Info(TestCase t)
+        {
+            return new TestCaseUploadModel.TestCaseInfo
+            {
+                Memory = t.MemoryLimit / (double)(1024 * 1024),
+                Time = t.TimeLimit / 1000.0,
+                InputHash = new CRC32().AsString(t.Input),
+                OutputHash = new CRC32().AsString(t.Data),
+                InputSize = t.Input.Length,
+                OutputSize = t.Data.Length,
+                Input = Encoding.Default.GetString(t.Input.Take(100).ToArray()),
+                Output = Encoding.Default.GetString(t.Data.Take(100).ToArray())
+            };
         }
 
         [HttpGet]
@@ -348,18 +364,8 @@ namespace ContestHunter.Controllers
             {
                 Contest con = Contest.ByName(contest);
                 Problem problem = con.ProblemByName(id);
-                model.TestCases = (from t in problem.TestCases().Select(x => problem.TestCaseByID(x))
-                                   select new TestCaseUploadModel.TestCaseInfo
-                                   {
-                                       Memory = t.MemoryLimit / (double)(1024 * 1024),
-                                       Time = t.TimeLimit / 1000.0,
-                                       InputHash = new CRC32().AsString(t.Input),
-                                       OutputHash = new CRC32().AsString(t.Data),
-                                       InputSize = t.Input.Length,
-                                       OutputSize = t.Data.Length,
-                                       Input = Encoding.Default.GetString(t.Input.Take(100).ToArray()),
-                                       Output = Encoding.Default.GetString(t.Data.Take(100).ToArray())
-                                   }).ToList();
+                model.TestCases = (from t in problem.TestCases()
+                                   select TestCase2Info(problem.TestCaseByID(t))).ToList();
             }
             catch (ContestNotFoundException)
             {
@@ -381,7 +387,7 @@ namespace ContestHunter.Controllers
                 int fileID = int.Parse(match.Groups[1].Value);
                 if (inputFiles.ContainsKey(fileID))
                 {
-                    ModelState.AddModelError("File", "存在编号均为" + fileID + "的多个输入文件");
+                    ModelState.AddModelError("File", "存在编号为" + fileID + "的多个输入文件");
                     return false;
                 }
                 inputFiles.Add(fileID, bytes);
@@ -394,18 +400,74 @@ namespace ContestHunter.Controllers
                     int fileID = int.Parse(match.Groups[1].Value);
                     if (outputFiles.ContainsKey(fileID))
                     {
-                        ModelState.AddModelError("File", "存在编号均为" + fileID + "的多个输出文件");
+                        ModelState.AddModelError("File", "存在编号为" + fileID + "的多个输出文件");
                         return false;
                     }
                     outputFiles.Add(fileID, bytes);
                 }
                 else
                 {
-                    ModelState.AddModelError("File", "无法识别的文件名:" + filename + "。请参照上方的命名规范命名。");
+                    ModelState.AddModelError("File", "无法识别的文件名:" + filename + "。请参照下方的命名规范命名。");
                     return false;
                 }
             }
             return true;
+        }
+
+        IEnumerable<TestCase> AddTestCase(Problem problem, HttpPostedFileBase file)
+        {
+            if (file == null)
+            {
+                ModelState.AddModelError("File", "请选择文件");
+                return null;
+            }
+            Dictionary<int, byte[]> inputFiles = new Dictionary<int, byte[]>();
+            Dictionary<int, byte[]> outputFiles = new Dictionary<int, byte[]>();
+
+            if (new[] { "application/zip", "application/x-zip-compressed" }.Contains(file.ContentType))
+            {
+                using (ZipInputStream stream = new ZipInputStream(file.InputStream))
+                {
+                    ZipEntry entry;
+                    while ((entry = stream.GetNextEntry()) != null)
+                    {
+                        byte[] bytes;
+                        using (MemoryStream mem = new MemoryStream())
+                        {
+                            stream.CopyTo(mem);
+                            bytes = mem.ToArray();
+                        }
+                        if (!FoundEntry(entry.Name, bytes, inputFiles, outputFiles))
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("File", "不支持的压缩文件类型");
+                return null;
+            }
+
+            if (!inputFiles.Keys.OrderBy(x => x).SequenceEqual(outputFiles.Keys.OrderBy(x => x)))
+            {
+                ModelState.AddModelError("File", "输入与输出文件没有一一对应");
+                return null;
+            }
+
+            var testCases = inputFiles.Keys.Select(id => new TestCase
+                {
+                    Input = inputFiles[id],
+                    Data = outputFiles[id],
+                    MemoryLimit = DEFAULT_TEST_CASE_MEMORY_LIMIT,
+                    TimeLimit = DEFAULT_TEST_CASE_TIME_LIMIT
+                });
+            foreach (var t in testCases)
+            {
+                problem.AddTestCase(t);
+            }
+            return testCases;
         }
 
         [HttpPost]
@@ -414,55 +476,22 @@ namespace ContestHunter.Controllers
             if (!ModelState.IsValid) return View(model);
 
             Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
+            foreach (var testCase in model.TestCases)
+            {
+                problem.TestCaseByID(testCase.ID);
+            }
             switch (model.Action)
             {
                 case TestCaseUploadModel.ActionType.Upload:
-                    Dictionary<int, byte[]> inputFiles = new Dictionary<int, byte[]>();
-                    Dictionary<int, byte[]> outputFiles = new Dictionary<int, byte[]>();
-
-                    if (new[] { "application/zip", "application/x-zip-compressed" }.Contains(model.File.ContentType))
+                    var newCases = AddTestCase(problem, model.File);
+                    if (newCases != null)
                     {
-                        using (ZipInputStream stream = new ZipInputStream(model.File.InputStream))
+                        foreach (var t in newCases.Select(TestCase2Info))
                         {
-                            ZipEntry entry;
-                            while ((entry = stream.GetNextEntry()) != null)
-                            {
-                                byte[] bytes;
-                                using (MemoryStream mem = new MemoryStream())
-                                {
-                                    stream.CopyTo(mem);
-                                    bytes = mem.ToArray();
-                                }
-                                if (!FoundEntry(entry.Name, bytes, inputFiles, outputFiles))
-                                {
-                                    return View(model);
-                                }
-                            }
+                            model.TestCases.Add(t);
                         }
                     }
-                    else
-                    {
-                        ModelState.AddModelError("File", "不支持的压缩文件类型");
-                        return View(model);
-                    }
-
-                    if (!inputFiles.Keys.OrderBy(x => x).SequenceEqual(outputFiles.Keys.OrderBy(x => x)))
-                    {
-                        ModelState.AddModelError("File", "输入与输出文件没有一一对应");
-                        return View(model);
-                    }
-
-                    foreach (int id in inputFiles.Keys)
-                    {
-                        problem.AddTestCase(new TestCase
-                        {
-                            Input = inputFiles[id],
-                            Data = outputFiles[id],
-                            MemoryLimit = DEFAULT_TEST_CASE_MEMORY_LIMIT,
-                            TimeLimit = DEFAULT_TEST_CASE_TIME_LIMIT
-                        });
-                    }
-                    return TestCase(model.Problem, model.Contest);
+                    return View(model);
             }
             return View(model);
         }
@@ -476,5 +505,6 @@ namespace ContestHunter.Controllers
         {
             return View();
         }
+        #endregion
     }
 }
