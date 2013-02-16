@@ -239,7 +239,7 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
-        /// TODO ! SJY is too lazy to write here!
+        /// 修改Problem内容 把 Name OriginRating Content Comparer DataChecker Owner 更新
         /// </summary>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="PermissionDeniedException"></exception>
