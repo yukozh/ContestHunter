@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Text;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -343,16 +344,31 @@ namespace ContestHunter.Controllers
                 Contest = contest,
                 Problem = id
             };
-            Contest con = Contest.ByName(contest);
-            Problem problem = con.ProblemByName(id);
-            model.TestCases = (from t in problem.TestCases().Select(x => problem.TestCaseByID(x))
-                               select new TestCaseUploadModel.TestCaseInfo
-                               {
-                                   Memory = t.MemoryLimit / (double)(1024 * 1024),
-                                   Time = t.TimeLimit / 1000.0,
-                                   InputHash = new CRC32().AsString(t.Input),
-                                   OutputHash = new CRC32().AsString(t.Data)
-                               }).ToList();
+            try
+            {
+                Contest con = Contest.ByName(contest);
+                Problem problem = con.ProblemByName(id);
+                model.TestCases = (from t in problem.TestCases().Select(x => problem.TestCaseByID(x))
+                                   select new TestCaseUploadModel.TestCaseInfo
+                                   {
+                                       Memory = t.MemoryLimit / (double)(1024 * 1024),
+                                       Time = t.TimeLimit / 1000.0,
+                                       InputHash = new CRC32().AsString(t.Input),
+                                       OutputHash = new CRC32().AsString(t.Data),
+                                       InputSize = t.Input.Length,
+                                       OutputSize = t.Data.Length,
+                                       Input = Encoding.Default.GetString(t.Input.Take(100).ToArray()),
+                                       Output = Encoding.Default.GetString(t.Data.Take(100).ToArray())
+                                   }).ToList();
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关比赛" });
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关题目" });
+            }
             return View(model);
         }
 

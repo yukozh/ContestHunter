@@ -32,72 +32,86 @@
 </style>
 
 <div class="span12" style="margin-top: 20px; padding: 10px">
-    @using (Html.BeginForm("TestCase","Problem",FormMethod.Post,new{id="frmUpload",enctype="multipart/form-data"}))
+    @using (Html.BeginForm("TestCase", "Problem", FormMethod.Post, new { id = "frmUpload", enctype = "multipart/form-data" }))
     {
         @Html.HiddenFor(x => x.Action)
-    @Html.HiddenFor(x => x.Contest)
-    @Html.HiddenFor(x => x.Problem)
-    @Html.HiddenFor(x => x.TestCaseID)
-    <div class="alert alert-info" style="text-align: center">
-        <h2>配置测试数据</h2>
-        <div>
-            <div class="progress progress-striped progress-success active">
-                <div class="bar" style="width: 60%;"></div>
+        @Html.HiddenFor(x => x.Contest)
+        @Html.HiddenFor(x => x.Problem)
+        @Html.HiddenFor(x => x.TestCaseID)
+        <div class="alert alert-info" style="text-align: center">
+            <h2>配置测试数据</h2>
+            <div>
+                <div class="progress progress-striped progress-success active">
+                    <div class="bar" style="width: 60%;"></div>
+                </div>
+            </div>
+            <h4>已经上传的测试数据</h4>
+            <div class="alert" style="margin: 10px;">
+                鼠标悬停于输入/输出文件列，可查看文件内容预览
+            </div>
+            <table class="table table-bordered table-striped table-hover">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>输入文件 CRC-32/大小</th>
+                        <th>输出文件 CRC-32/大小</th>
+                        <th>时间限制</th>
+                        <th>内存限制</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.TestCases.Count; i++)
+                    {
+                        <tr>
+                            <td data-content="&lt;pre&gt;@Model.TestCases[i].Input&lt;/pre&gt;" title="输入文件内容预览" class="Preview"><b>@Model.TestCases[i].InputHash</b> / <b>@Model.TestCases[i].InputSize</b>bytes</td>
+                            <td data-content="&lt;pre&gt;@Model.TestCases[i].Output&lt;/pre&gt;" title="输出文件内容预览" class="Preview"><b>@Model.TestCases[i].OutputHash</b> / <b>@Model.TestCases[i].OutputSize</b>bytes</td>
+                            <td class="control-group">
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.TestCases[i].Time, new { @class = "inputmini" })
+                                    @Html.DescriptionFor(x => x.TestCases[i].Time)
+                                    @Html.ValidationMessageFor(x => x.TestCases[i].Time)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.TestCases[i].Memory, new { @class = "inputmini" })
+                                    @Html.DescriptionFor(x => x.TestCases[i].Memory)
+                                    @Html.ValidationMessageFor(x => x.TestCases[i].Memory)
+                                </div>
+                            </td>
+                            <td>
+                                <input type="submit" value="删除" class="btn btn-small btn-danger" onclick="$('#TestCaseID').val(@i); $('#Action').val('Delete');"/>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <script>
+                $('td.Preview').popover();
+            </script>
+            <h4>上传新的测试数据</h4>
+            <div class="form-horizontal" style="width:60%; margin:10px auto;">
+                <div class="control-group">
+                    @Html.LabelFor(x => x.File, new { @class = "control-label" })
+                    <div class="controls">
+                        <input type="file" name="File" />
+                        @Html.ValidationMessageFor(x => x.File)
+                        @Html.DescriptionFor(x => x.File)
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-warning" value="上传文件" onclick="$('#Action').val('Upload');" />
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary">上一步</button>
+                <input type="submit" class="btn btn-success" onclick="$('#Action').val('Change')" value="下一步" />
             </div>
         </div>
-        <h4>已经上传的测试数据</h4>
-        <table class="table table-bordered table-striped table-hover">
-            <colgroup>
-                <col>
-                <col>
-                <col>
-                <col>
-                <col>
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>输入文件CRC32</th>
-                    <th>输出文件CRC32</th>
-                    <th>时间限制</th>
-                    <th>内存限制</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.TestCases.Count; i++)
-                    {
-                    <tr>
-                        <td>@Model.TestCases[i].InputHash</td>
-                        <td>@Model.TestCases[i].OutputHash</td>
-                        <td class="control-group">
-                            <div class="controls">
-                                @Html.TextBoxFor(x => x.TestCases[i].Time, new { @class = "inputmini" })
-                                @Html.DescriptionFor(x => x.TestCases[i].Time)
-                                @Html.ValidationMessageFor(x => x.TestCases[i].Time)
-                            </div>
-                        </td>
-                        <td>
-                            <div class="controls">
-                                @Html.TextBoxFor(x => x.TestCases[i].Memory, new { @class = "inputmini" })
-                                @Html.DescriptionFor(x => x.TestCases[i].Memory)
-                                @Html.ValidationMessageFor(x => x.TestCases[i].Memory)
-                            </div>
-                        </td>
-                        <td>
-                            <input type="submit" value="删除" class="btn btn-small btn-danger" onclick="$('#TestCaseID').val(@i); $('#Action').val('Delete');"/>
-                        </td>
-                    </tr>
-                    }
-            </tbody>
-        </table>
-        <h4>上传新的测试数据</h4>
-        <h5>请将您要添加的所有输入、输出数据压缩成一个.rar或者.zip文件后上传</h5>
-        <h5>新上传的文件如果与原有测试数据重名，将会覆盖原有文件</h5>
-        <input type="file" name="File" onchange="$('#Action').val('Upload'); $('#frmUpload').submit();" />
-        <div class="btn-group">
-            <button class="btn btn-primary">上一步</button>
-            <input type="submit" class="btn btn-success" onclick="$('#Action').val('Change')" value="下一步" />
-        </div>
-    </div>
     }
 </div>
