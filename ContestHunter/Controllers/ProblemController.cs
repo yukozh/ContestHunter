@@ -224,7 +224,9 @@ namespace ContestHunter.Controllers
                     return View(model);
                 case ProblemContentModel.ActionType.Modify:
                     Problem problem=Contest.ByName(model.Contest).ProblemByName(model.Problem);
-                    problem.Content = problem;
+                    problem.Content = model.Content;
+                    problem.Change();
+                    return 
             }
             return View(model);
         }
