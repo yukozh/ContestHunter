@@ -34,7 +34,7 @@ namespace ContestHunter.Models.Domain
         }
         public List<DescriptionClass> Description;
         public int TotalRating;
-        public int SeccessfullyHack;
+        public int SuccessHack;
         public int FailedHack;
         public bool IsVirtual;
     }

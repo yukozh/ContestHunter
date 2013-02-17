@@ -63,8 +63,9 @@ namespace ContestHunter.Controllers
                     case Contest.ContestType.OI:
                         model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual);
                         break;
-                    default:
-                        throw new NotImplementedException();
+                    case Contest.ContestType.CF:
+                        model.CF = contest.GetCFStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual);
+                        break;
                 }
             }
             catch (ContestNotFoundException)

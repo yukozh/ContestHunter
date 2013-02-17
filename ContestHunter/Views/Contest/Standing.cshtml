@@ -16,9 +16,9 @@
             text-align: center;
             vertical-align: middle;
         }
-    .label
-    {
-        font-weight:normal;
+
+    .label {
+        font-weight: normal;
     }
 </style>
 
@@ -104,7 +104,7 @@
                                     <label class="label">模拟</label>
                                 }
                             </td>
-                            <td><b>@standing.CountAC</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
+                            <td><b>@standing.CountAC</b></td>
                             @foreach (var desc in standing.Description)
                             {
                                 <td>
@@ -117,16 +117,9 @@
                                         <span style="color: red">-@desc.FailedTimes</span>
                                     }
                                 </td>
-                                <!--
-                        <td>@*CF赛制的情况，如果通过则显示该题得分，如果提交未通过显示-X（X为提交次数），如果未提交则空着"*@
-                            <span style="color: #50C350"><b>1680</b></span>
-                            @*未通过时：<span style="color:red"><b>-3</b></span>*@
-                        </td>
-                            -->
                             }
                             <td>
                                 <span style="color: blue">@(new TimeSpan(0, standing.TotalTime, 0))</span>
-                                @*CF：（+X:-Y，X为成功hunt次数，Y为失败次数，有一项为0则只显示一项，都为0则不显示）<span style="color: green">+2</span> : <span style="color:gray">-1</span>*@
                             </td>
                         </tr>
                         }
@@ -145,7 +138,7 @@
                                     <label class="label">模拟</label>
                                 }
                             </td>
-                            <td><b>@standing.TotalScore</b></td>@*一个数值，OI、CF赛制显示总分，ACM赛制显示通过题数*@
+                            <td><b>@standing.TotalScore</b></td>
                             @foreach (var score in standing.Scores)
                             {
                                 <td>
@@ -154,6 +147,51 @@
                             }
                             <td>
                                 <span style="color: orange"><b>@standing.TotalTime</b></span><span style="color: blue"> ms</span>
+                            </td>
+                        </tr>
+                        }
+                    }
+                    else if (Model.Contest.Type == Contest.ContestType.CF)
+                    {
+                        for (int i = 0; i < Model.CF.Count; i++)
+                        {
+                            CFStanding standing = Model.CF[i];
+                        <tr>
+                            <td><b>@(i + Model.StartIndex + 1)</b></td>
+                            <td>
+                                @Html.UserLink(standing.User)
+                                @if (standing.IsVirtual)
+                                {
+                                    <label class="label">模拟</label>
+                                }
+                            </td>
+                            <td><b>@standing.TotalRating</b></td>
+                            @foreach (var desc in standing.Description)
+                            {
+                                <td>
+                                    @if (desc.isAC)
+                                    {
+                                        <span style="color: #50C350">@desc.Rating</span>
+                                    }
+                                    else if (desc.FailedTimes > 0)
+                                    {
+                                        <span style="color: red">-@desc.FailedTimes</span>
+                                    }
+                                </td>
+                            }
+                            <td>
+                                @if (standing.SuccessHack > 0 || standing.FailedHack > 0)
+                                {
+                                    if (standing.SuccessHack > 0)
+                                    {
+                                    <span style="color: green">+@standing.SuccessHack</span>
+                                    }
+                                    @: :
+                                    if (standing.FailedHack > 0)
+                                    {
+                                    <span style="color: gray">-@standing.FailedHack</span>
+                                    }
+                                }
                             </td>
                         </tr>
                         }

@@ -94,7 +94,8 @@
                                         @Html.ValidationMessageFor(x => x.TestCases[i].Memory)
                                     </div>
                                 </td>
-                                <td>
+                                <td class="btn-group">
+                                    @Html.ActionLink("下载", "TestCaseDownload", new { id = Model.Problem, contest = Model.Contest, testCaseID = Model.TestCases[i].ID }, new { @class = "btn btn-small btn-primary", style = "display:inline-block;" })
                                     <input type="submit" value="删除" class="btn btn-small btn-danger" onclick="$('#TestCaseIndex').val(@i); $('#Action').val('Delete');"/>
                                 </td>
                             </tr>

@@ -38,9 +38,7 @@
         <table>
             <tr>
                 <td style="width: 200px; padding-right: 20px; vertical-align: top;">
-                    <img src="/Image/Error.gif" style="width: 200px; height: 200px" />
-                    <br />
-                    （这里是头像 200*200）
+                    @Html.Gravatar(Model.Email, 200)
                 </td>
                 <td style="padding-top: 10px; padding-right: 20px; width: 350px; vertical-align: top;">
                     <h4 style="color: #ff0000">国际首席猎手，@Model.Name</h4>
