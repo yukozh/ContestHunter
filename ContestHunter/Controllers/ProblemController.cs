@@ -83,6 +83,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Submit(string id, string contest, ProblemSubmitModel model)
         {
             if (!ModelState.IsValid)
@@ -146,6 +147,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Add(string contest, ProblemBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -223,6 +225,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, string contest, ProblemBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -299,6 +302,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Description(string id, string contest, ProblemContentModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -477,6 +481,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult TestCase(string id, string contest, TestCaseUploadModel model)
         {
             if (model.TestCases == null)
@@ -568,6 +573,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Program(string id, string contest, ProblemProgramModel model)
         {
             if (!ModelState.IsValid) return View(model);

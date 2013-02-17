@@ -31,6 +31,7 @@
         <div style="margin: 20px auto; width: 350px">
             @using (Html.BeginForm("Edit", "Problem", FormMethod.Post, new { @class = "form-horizontal", style = "display:inline-block;" }))
             {
+                @Html.AntiForgeryToken()
                 @Html.HiddenFor(x => x.Contest)
                 @Html.HiddenFor(x => x.Problem)
                 @Html.HiddenFor(x => x.ContestType)

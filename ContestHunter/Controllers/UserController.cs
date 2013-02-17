@@ -22,6 +22,7 @@ namespace ContestHunter.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterModel model)
         {
             if (!ModelState.IsValid)
@@ -66,6 +67,7 @@ namespace ContestHunter.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult CheckPassword(RegisterModel model, string passwordHash, string emailHash)
         {
             ViewBag.EmailHash = emailHash;

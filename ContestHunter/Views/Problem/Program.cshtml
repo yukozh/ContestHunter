@@ -24,6 +24,7 @@
 <div class="span12" style="margin-top: 20px; padding: 10px">
     @using (Html.BeginForm())
     {
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(x=>x.Problem)
         @Html.HiddenFor(x=>x.Contest)
         <div class="alert alert-info" style="text-align: center">

@@ -34,6 +34,7 @@
 <div class="span12" style="margin-top: 20px; padding: 10px">
     @using (Html.BeginForm("TestCase", "Problem", FormMethod.Post, new { id = "frmUpload", enctype = "multipart/form-data" }))
     {
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.Action)
         @Html.HiddenFor(x => x.TestCaseIndex)
         @Html.HiddenFor(x => x.ShowEnabled)

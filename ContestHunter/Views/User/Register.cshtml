@@ -25,6 +25,7 @@
         onsubmit = "return CheckPassword();"
     }))
     {
+        @Html.AntiForgeryToken()
         <h2>用户注册</h2>
         <div style="padding-bottom: 20px">
             <div class="progress progress-striped progress-success active">

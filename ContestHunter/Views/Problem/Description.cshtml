@@ -26,6 +26,7 @@
         </div>
         @using (Html.BeginForm())
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.Problem)
             @Html.HiddenFor(x => x.Contest)
             @Html.HiddenFor(x => x.Action)

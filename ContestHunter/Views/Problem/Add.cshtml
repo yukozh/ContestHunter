@@ -31,6 +31,7 @@
         <div style="text-align: center;">
             @using (Html.BeginForm("Add", "Problem", FormMethod.Post, new { @class = "form-horizontal", style = "display:inline-block;" }))
             {
+                @Html.AntiForgeryToken()
                 @Html.HiddenFor(x => x.Contest)
                 @Html.HiddenFor(x=>x.ContestType)
                 <div class="control-group">
