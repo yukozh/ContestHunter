@@ -64,10 +64,11 @@ namespace ContestHunter.Models.Domain
                     Input = testCase.Input,
                     Data = testCase.Data,
                     TimeLimit = testCase.TimeLimit,
-                    MemoryLimit=testCase.MemoryLimit,
-                    PROBLEM1=(from p in db.PROBLEMs
-                              where p.ID == ID
-                              select p).Single()
+                    MemoryLimit = testCase.MemoryLimit,
+                    PROBLEM1 = (from p in db.PROBLEMs
+                                where p.ID == ID
+                                select p).Single(),
+                    Available = testCase.Available
                 });
                 db.SaveChanges();
                 return result.ID;
@@ -131,7 +132,8 @@ namespace ContestHunter.Models.Domain
                                   Input = t.Input,
                                   Data = t.Data,
                                   TimeLimit = t.TimeLimit,
-                                  MemoryLimit = t.MemoryLimit
+                                  MemoryLimit = t.MemoryLimit,
+                                  Available = t.Available
                               }).SingleOrDefault();
                 if (null == result)
                     throw new TestCaseNotFoundException();

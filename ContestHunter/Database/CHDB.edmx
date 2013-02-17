@@ -197,6 +197,7 @@
           <Property Name="Data" Type="varbinary(max)" Nullable="false" />
           <Property Name="TimeLimit" Type="int" Nullable="false" />
           <Property Name="MemoryLimit" Type="bigint" Nullable="false" />
+          <Property Name="Available" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="USER">
           <Key>
@@ -213,7 +214,7 @@
           <Property Name="School" Type="nvarchar" MaxLength="50" />
           <Property Name="LastLoginTime" Type="datetime" />
           <Property Name="LastLoginIP" Type="nvarchar" MaxLength="50" />
-          <Property Name="Matto" Type="nvarchar" MaxLength="100" />
+          <Property Name="Motto" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="USER_GROUP">
           <Key>
@@ -634,6 +635,7 @@
           <Property Name="Data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="TimeLimit" Type="Int32" Nullable="false" />
           <Property Name="MemoryLimit" Type="Int64" Nullable="false" />
+          <Property Name="Available" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="TESTDATA" ToRole="PROBLEM" />
         </EntityType>
         <EntityType Name="USER">
@@ -651,7 +653,7 @@
           <Property Name="School" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="LastLoginTime" Type="DateTime" Precision="3" />
           <Property Name="LastLoginIP" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Matto" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Motto" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_USER" FromRole="USER" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="HUNTs" Relationship="ContestHunterModel.FK_HACK_USER" FromRole="USER" ToRole="HUNT" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterModel.FK_PROBLEM_USER" FromRole="USER" ToRole="PROBLEM" />
@@ -920,6 +922,7 @@
                 <ScalarProperty Name="Data" ColumnName="Data" />
                 <ScalarProperty Name="TimeLimit" ColumnName="TimeLimit" />
                 <ScalarProperty Name="MemoryLimit" ColumnName="MemoryLimit" />
+                <ScalarProperty Name="Available" ColumnName="Available" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -937,7 +940,7 @@
                 <ScalarProperty Name="School" ColumnName="School" />
                 <ScalarProperty Name="LastLoginTime" ColumnName="LastLoginTime" />
                 <ScalarProperty Name="LastLoginIP" ColumnName="LastLoginIP" />
-                <ScalarProperty Name="Matto" ColumnName="Matto" />
+                <ScalarProperty Name="Motto" ColumnName="Motto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

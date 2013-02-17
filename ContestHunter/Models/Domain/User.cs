@@ -23,7 +23,7 @@ namespace ContestHunter.Models.Domain
         public string LastLoginIP;
         public DateTime? LastLoginTime;
         public string Password;
-        public string Matto;
+        public string Motto;
 
         internal Guid ID;
         internal class OnlineUser
@@ -120,7 +120,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="PasswordMismatchException"></exception>
         /// <exception cref="EmailMismatchException"></exception>
         public static void Register(string name, string originalPassword, string encryptedPassword, string email, string emailHash,
-            string country,string province,string city,string school,string matto,string realName)
+            string country,string province,string city,string school,string motto,string realName)
         {
             if (originalPassword != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(encryptedPassword))))
                 throw new PasswordMismatchException();
@@ -141,7 +141,7 @@ namespace ContestHunter.Models.Domain
                         Province = province,
                         City = city,
                         School = school,
-                        Matto = matto,
+                        Motto = motto,
                         RealName = realName
                     });
                 }
@@ -265,7 +265,7 @@ namespace ContestHunter.Models.Domain
                     Country = result.Country,
                     Province = result.Province,
                     City = result.City,
-                    Matto = result.Matto,
+                    Motto = result.Motto,
                     RealName = result.RealName,
                     School = result.School,
                     LastLoginTime = privillege ? result.LastLoginTime : null,
@@ -335,7 +335,7 @@ namespace ContestHunter.Models.Domain
                     usr.School = School;
                     usr.Email = Email;
                     usr.RealName = RealName;
-                    usr.Matto = Matto;
+                    usr.Motto = Motto;
                     db.SaveChanges();
                 }
             }

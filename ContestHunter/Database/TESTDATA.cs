@@ -20,6 +20,7 @@ namespace ContestHunter.Database
         public byte[] Data { get; set; }
         public int TimeLimit { get; set; }
         public long MemoryLimit { get; set; }
+        public bool Available { get; set; }
     
         public virtual PROBLEM PROBLEM1 { get; set; }
     }

@@ -14,6 +14,7 @@ namespace ContestHunter.Models.Domain
         public byte[] Data;
         public int TimeLimit;
         public long MemoryLimit;
+        public bool Available;
 
         /// <summary>
         /// 修改测试数据时间/内存限制
@@ -23,7 +24,7 @@ namespace ContestHunter.Models.Domain
         /// <param name="newMemoryLimit"></param>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="PermissionDeniedException"></exception>
-        static public void Change(Guid ID, int newTimeLimit,long newMemoryLimit)
+        static public void Change(Guid ID, int newTimeLimit,long newMemoryLimit,bool newAvailable)
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
@@ -37,6 +38,7 @@ namespace ContestHunter.Models.Domain
                     throw new PermissionDeniedException();
                 test.MemoryLimit = newMemoryLimit;
                 test.TimeLimit = newTimeLimit;
+                test.Available = newAvailable;
                 db.SaveChanges();
             }
         }
