@@ -19,7 +19,7 @@ namespace ContestHunter.ViewHelpers
                 if (tmp.Length == 1) sb.Append('0').Append(tmp);
                 else sb.Append(tmp);
             }
-            return sb.ToString().ToUpper();
+            return sb.ToString();
         }
         public static MvcHtmlString Sanitized<TModel>(this HtmlHelper<TModel> self, string html)
         {

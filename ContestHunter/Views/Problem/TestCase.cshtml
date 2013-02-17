@@ -36,6 +36,7 @@
     {
         @Html.HiddenFor(x => x.Action)
         @Html.HiddenFor(x => x.TestCaseIndex)
+        @Html.HiddenFor(x => x.ShowEnabled)
         <div class="alert alert-info" style="text-align: center">
             <h2>配置测试数据</h2>
             <div>
@@ -49,19 +50,16 @@
                     鼠标悬停于输入/输出文件列，可查看文件内容预览
                 </div>
                 <table class="table table-bordered table-striped table-hover">
-                    <colgroup>
-                        <col>
-                        <col>
-                        <col>
-                        <col>
-                        <col>
-                    </colgroup>
                     <thead>
                         <tr>
                             <th>输入文件 CRC-32/大小</th>
                             <th>输出文件 CRC-32/大小</th>
                             <th>时间限制</th>
                             <th>内存限制</th>
+                            @if (Model.ShowEnabled)
+                            {
+                                <th>Pretest</th>
+                            }
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -94,6 +92,15 @@
                                         @Html.ValidationMessageFor(x => x.TestCases[i].Memory)
                                     </div>
                                 </td>
+                                @if (Model.ShowEnabled)
+                                {
+                                    <td>
+                                        <div class="controls">
+                                            @Html.CheckBoxFor(x => x.TestCases[i].Enabled)
+                                            @Html.ValidationMessageFor(x => x.TestCases[i].Enabled)
+                                        </div>
+                                    </td>
+                                }
                                 <td class="btn-group">
                                     @Html.ActionLink("下载", "TestCaseDownload", new { id = Model.Problem, contest = Model.Contest, testCaseID = Model.TestCases[i].ID }, new { @class = "btn btn-small btn-primary", style = "display:inline-block;" })
                                     <input type="submit" value="删除" class="btn btn-small btn-danger" onclick="$('#TestCaseIndex').val(@i); $('#Action').val('Delete');"/>

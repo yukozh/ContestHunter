@@ -10,5 +10,6 @@ namespace ContestHunter.Models.View
         public string Problem { get; set; }
         public string Contest { get; set; }
         public List<TestCaseInfo> TestCases { get; set; }
+        public bool ShowEnabled { get; set; }
     }
 }
