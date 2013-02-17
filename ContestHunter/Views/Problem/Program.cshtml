@@ -40,12 +40,13 @@
                     </div>
                     <div id="collapse1" class="accordion-body collapse">
                         <div class="accordion-inner">
-                            <select class="input-small">
-                                <option value="">语言</option>
-                                <option value="CPP">C++</option>
-                                <option value="C">C</option>
-                                <option value="Pascal">Pascal</option>
-                            </select>
+                            @Html.DropDownListFor(x=>x.StdLanguage,new SelectListItem[]
+                               {
+                                   new SelectListItem{Text="C++",Value="CPP"},
+                                   new SelectListItem{Text="C",Value="C"},
+                                   new SelectListItem{Text="Java",Value="Java"},
+                                   new SelectListItem{Text="Pascal",Value="Pascal"}
+                               },new{@class="input-small"})
                             <span style="font-size: 12px; color: gray">*标准输入输出，C/C++代码中的long long(%lld)和__int64(%I64d)均可使用</span>
                             @Html.TextAreaFor(x => x.Std)
                         </div>
@@ -57,12 +58,13 @@
                     </div>
                     <div id="collapse2" class="accordion-body collapse">
                         <div class="accordion-inner">
-                            <select class="input-small">
-                                <option value="">语言</option>
-                                <option value="CPP">C++</option>
-                                <option value="C">C</option>
-                                <option value="Pascal">Pascal</option>
-                            </select>
+                            @Html.DropDownListFor(x=>x.SpjLanguage,new SelectListItem[]
+                               {
+                                   new SelectListItem{Text="C++",Value="CPP"},
+                                   new SelectListItem{Text="C",Value="C"},
+                                   new SelectListItem{Text="Java",Value="Java"},
+                                   new SelectListItem{Text="Pascal",Value="Pascal"}
+                               },new{@class="input-small"})
                             <span style="font-size: 12px; color: gray">*如果您的题目为直接比较方式，可以选择我们的预置校验器</span>
                             @Html.TextAreaFor(x => x.Spj)
                         </div>

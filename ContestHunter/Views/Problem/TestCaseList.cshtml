@@ -59,8 +59,8 @@
                     <td data-content="&lt;pre&gt;@info.Output&lt;/pre&gt;" title="输出文件内容预览" class="Preview">
                         <b>@info.OutputHash</b> / <b>@info.OutputSize</b>B
                     </td>
-                    <td><span style="color: orange"><b>@Math.Round(info.Time, 1)</b></span><span style="color: blue"> s</span></td>
-                    <td><span style="color: orange"><b>@Math.Round(info.Memory, 1)</b></span><span style="color: blue"> MB</span></td>
+                    <td><span style="color: orange"><b>@Math.Round((double)info.Time, 1)</b></span><span style="color: blue"> s</span></td>
+                    <td><span style="color: orange"><b>@Math.Round((double)info.Memory, 1)</b></span><span style="color: blue"> MB</span></td>
                     <td>
                         @Html.ActionLink("下载", "TestCaseDownload", new { id = Model.Problem, contest = Model.Contest, testCaseID = info.ID }, new { @class = "btn btn-small btn-info" })
                     </td>

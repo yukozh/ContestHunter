@@ -29,7 +29,7 @@ namespace ContestHunter
             {
                 try
                 {
-                    USER.Authenticate(User.Identity.Name);
+                    USER.Authenticate(User.Identity.Name,Request.UserHostAddress);
                 }
                 catch (BadTokenException)
                 {

@@ -163,6 +163,8 @@ namespace ContestHunter.Controllers
                     Name = model.Name,
                     Comparer = "",
                     DataChecker = "",
+                    ComparerLanguage = Record.LanguageType.CPP,
+                    DataCheckerLanguage = Record.LanguageType.CPP,
                     OriginRating = model.OriginalRating,
                     Owner = model.Owner
                 });
@@ -522,6 +524,8 @@ namespace ContestHunter.Controllers
                 Problem problem = Contest.ByName(contest).ProblemByName(id);
                 model.Spj = problem.Comparer;
                 model.Std = problem.DataChecker;
+                model.SpjLanguage = problem.ComparerLanguage.Value;
+                model.StdLanguage = problem.DataCheckerLanguage.Value;
             }
             catch (ContestNotFoundException)
             {
@@ -543,6 +547,8 @@ namespace ContestHunter.Controllers
                 Problem problem = Contest.ByName(contest).ProblemByName(id);
                 problem.Comparer = model.Spj;
                 problem.DataChecker = model.Std;
+                problem.DataCheckerLanguage = model.StdLanguage;
+                problem.ComparerLanguage = model.SpjLanguage;
                 problem.Change();
             }
             catch (ContestNotFoundException)
@@ -557,22 +563,22 @@ namespace ContestHunter.Controllers
             return RedirectToAction("Complete", new { id = id, contest = contest });
         }
 
-        public ActionResult Complete(string id,string contest)
+        public ActionResult Complete(string id, string contest)
         {
             ViewBag.Contest = contest;
             ViewBag.Problem = id;
             return View();
         }
 
-        public ActionResult TestCaseList(string id,string contest)
+        public ActionResult TestCaseList(string id, string contest)
         {
             TestCaseListModel model = new TestCaseListModel
             {
-                Problem=id,
-                Contest=contest
+                Problem = id,
+                Contest = contest
             };
-            Problem problem=Contest.ByName(contest).ProblemByName(id);
-            model.TestCases=problem.TestCases().Select(problem.TestCaseByID).Select(TestCase2Info).ToList();
+            Problem problem = Contest.ByName(contest).ProblemByName(id);
+            model.TestCases = problem.TestCases().Select(problem.TestCaseByID).Select(TestCase2Info).ToList();
             return View(model);
         }
     }
