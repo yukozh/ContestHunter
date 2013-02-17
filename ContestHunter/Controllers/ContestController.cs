@@ -165,5 +165,20 @@ namespace ContestHunter.Controllers
 
             return RedirectToAction("Show", new { id = id });
         }
+
+        public ActionResult Mine()
+        {
+            return View();
+        }
+
+        public ActionResult Manage()
+        {
+            return View();
+        }
+
+        public ActionResult Add()
+        {
+            return View();
+        }
     }
 }
