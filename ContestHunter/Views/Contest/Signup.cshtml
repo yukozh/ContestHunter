@@ -140,7 +140,7 @@
                                                 }
                                             </b>
                                             <div>
-                                                @Html.ActionLink("进入比赛", "Show", new { id = Model.Contest.Name }, new { @class = "btn btn-primary", style = "display:inline-block;" })
+                                                @Html.ActionLink("进入比赛", "Show", new { id = Model.Contest.Name }, new { @class = "btn btn-danger", style = "display:inline-block;" })
                                                 @if (Model.Contest.RelativeStartTime > DateTime.Now)
                                                 {
                                                     <input type="submit" class="btn btn-danger" value="取消报名" onclick="$('#Type').val('Cancel')" />
@@ -153,7 +153,7 @@
                                 {
                                     <tr>
                                         <td style="text-align: center">
-                                            <span style="font-size: 12px; color: gray">您尚未报名参赛，请从下方选择一种参赛方式</span>
+                                            <span style="font-size: 12px; color: gray">您尚未报名，请从下面选择一种参赛方式</span>
                                             <div class="accordion" id="accordion2">
                                                 @if (Model.Contest.AbsoluteEndTime > DateTime.Now)
                                                 {
@@ -163,7 +163,7 @@
                                                         </div>
                                                         <div id="collapseZero" class="accordion-body collapse">
                                                             <div class="accordion-inner">
-                                                                <input type="submit" value="报名参赛" onclick="$('#Type').val('Attend')" class="btn btn-primary" />
+                                                                <input type="submit" value="报名参赛" onclick="$('#Type').val('Attend')" class="btn btn-danger" />
                                                             </div>
                                                         </div>
                                                     </div>
