@@ -111,7 +111,7 @@ namespace ContestHunter.Models.Domain
                 return;
             }
             Detail.Append("<h5>各测试点详细信息：</h5>\r\n<div style=\"padding-left: 10px\">");
-            Out CompileCMP = Compile(rec.PROBLEM1.Comparer, Record.LanguageType.CPP, sock);
+            Out CompileCMP = Compile(rec.PROBLEM1.Comparer, (Record.LanguageType)rec.PROBLEM1.ComparerLanguage, sock);
             if (CompileCMP.Type != Out.ResultType.Success)
             {
                 rec.Status = (int)Record.StatusType.CMP_Error;
@@ -179,7 +179,7 @@ namespace ContestHunter.Models.Domain
             if (null == rec)
                 return;
 
-            Out DataChecker = Compile(rec.RECORD1.PROBLEM1.DataChecker, Record.LanguageType.CPP, sock);
+            Out DataChecker = Compile(rec.RECORD1.PROBLEM1.DataChecker, (Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage, sock);
             if (DataChecker.Type != Out.ResultType.Success)
             {
                 rec.Status = (int)Hunt.StatusType.OtherError;

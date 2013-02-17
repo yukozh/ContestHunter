@@ -244,7 +244,7 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
-        /// 修改Problem内容 把 Name OriginRating Content Comparer DataChecker Owner 更新
+        /// 修改Problem内容 把 Name OriginRating Content Comparer DataChecker Owner DataCheckerLanguage ComparerLanguage 更新
         /// </summary>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="PermissionDeniedException"></exception>
@@ -277,6 +277,8 @@ namespace ContestHunter.Models.Domain
                 pro.Comparer = Comparer;
                 pro.DataChecker = DataChecker;
                 pro.OWNER = owner;
+                pro.DataCheckerLanguage = (int)DataCheckerLanguage;
+                pro.ComparerLanguage = (int)ComparerLanguage;
                 db.SaveChanges();
             }
         }
