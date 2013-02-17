@@ -163,6 +163,8 @@ namespace ContestHunter.Controllers
                     Name = model.Name,
                     Comparer = "",
                     DataChecker = "",
+                    ComparerLanguage = Record.LanguageType.CPP,
+                    DataCheckerLanguage = Record.LanguageType.CPP,
                     OriginRating = model.OriginalRating,
                     Owner = model.Owner
                 });
@@ -522,6 +524,8 @@ namespace ContestHunter.Controllers
                 Problem problem = Contest.ByName(contest).ProblemByName(id);
                 model.Spj = problem.Comparer;
                 model.Std = problem.DataChecker;
+                model.SpjLanguage = problem.ComparerLanguage.Value;
+                model.StdLanguage = problem.DataCheckerLanguage.Value;
             }
             catch (ContestNotFoundException)
             {
@@ -543,6 +547,8 @@ namespace ContestHunter.Controllers
                 Problem problem = Contest.ByName(contest).ProblemByName(id);
                 problem.Comparer = model.Spj;
                 problem.DataChecker = model.Std;
+                problem.DataCheckerLanguage = model.StdLanguage;
+                problem.ComparerLanguage = model.SpjLanguage;
                 problem.Change();
             }
             catch (ContestNotFoundException)
@@ -557,23 +563,62 @@ namespace ContestHunter.Controllers
             return RedirectToAction("Complete", new { id = id, contest = contest });
         }
 
-        public ActionResult Complete(string id,string contest)
+        public ActionResult Complete(string id, string contest)
         {
             ViewBag.Contest = contest;
             ViewBag.Problem = id;
             return View();
         }
 
-        public ActionResult TestCaseList(string id,string contest)
+        public ActionResult TestCaseList(string id, string contest)
         {
             TestCaseListModel model = new TestCaseListModel
             {
-                Problem=id,
-                Contest=contest
+                Problem = id,
+                Contest = contest
             };
-            Problem problem=Contest.ByName(contest).ProblemByName(id);
-            model.TestCases=problem.TestCases().Select(problem.TestCaseByID).Select(TestCase2Info).ToList();
+            Problem problem = Contest.ByName(contest).ProblemByName(id);
+            model.TestCases = problem.TestCases().Select(problem.TestCaseByID).Select(TestCase2Info).ToList();
             return View(model);
+        }
+
+        public ActionResult TestCaseDownload(string id, string contest, Guid testCaseID)
+        {
+            try
+            {
+                TestCase testCase = Contest.ByName(contest).ProblemByName(id).TestCaseByID(testCaseID);
+                using (MemoryStream mem = new MemoryStream())
+                {
+                    using (ZipOutputStream zip = new ZipOutputStream(mem))
+                    {
+                        zip.PutNextEntry(new ZipEntry("Input"));
+                        zip.Write(testCase.Input, 0, testCase.Input.Length);
+                        zip.PutNextEntry(new ZipEntry("Output"));
+                        zip.Write(testCase.Data, 0, testCase.Data.Length);
+                    }
+                    return File(mem.ToArray(), "application/zip", "TestCase" + testCase.ID);
+                }
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相应比赛" });
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相应题目" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (ContestNotEndedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，不可下载数据" });
+            }
+            catch (TestCaseNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相应的测试数据" });
+            }
         }
     }
 }

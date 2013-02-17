@@ -855,7 +855,7 @@ namespace ContestHunter.Models.Domain
                                   User = u.Name,
                                   TotalRating = des.Sum(x => x.Rating),
                                   FailedHack = des.Sum(x => x._huntFailed),
-                                  SeccessfullyHack = des.Sum(x => x._huntSuccessfully),
+                                  SuccessHack = des.Sum(x => x._huntSuccessfully),
                                   IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual,
                                   Description = des.ToList()
                               });

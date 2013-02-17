@@ -76,7 +76,7 @@ namespace ContestHunter.Controllers
 
             try
             {
-                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash);
+                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash, "中国", "湖南省", "长沙市", "雅礼中学", "I'm too shy to say something...", "艾雨青");
             }
             catch (PasswordMismatchException)
             {
@@ -117,7 +117,7 @@ namespace ContestHunter.Controllers
             string token;
             try
             {
-                token = USER.Login(model.UserName, model.Password);
+                token = USER.Login(model.UserName, model.Password,Request.UserHostAddress);
             }
             catch (UserNotFoundException)
             {
