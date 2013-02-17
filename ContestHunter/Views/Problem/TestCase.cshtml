@@ -73,12 +73,12 @@
                                 <td data-content="&lt;pre&gt;@Model.TestCases[i].Input&lt;/pre&gt;" title="输入文件内容预览" class="Preview">
                                     @Html.HiddenFor(x => x.TestCases[i].InputHash)
                                     @Html.HiddenFor(x => x.TestCases[i].InputSize)
-                                    <b>@Model.TestCases[i].InputHash</b> / <b>@Model.TestCases[i].InputSize</b>bytes
+                                    <b>@Model.TestCases[i].InputHash</b> / <b>@Model.TestCases[i].InputSize</b>B
                                 </td>
                                 <td data-content="&lt;pre&gt;@Model.TestCases[i].Output&lt;/pre&gt;" title="输出文件内容预览" class="Preview">
                                     @Html.HiddenFor(x => x.TestCases[i].OutputHash)
                                     @Html.HiddenFor(x => x.TestCases[i].OutputSize)
-                                    <b>@Model.TestCases[i].OutputHash</b> / <b>@Model.TestCases[i].OutputSize</b>bytes
+                                    <b>@Model.TestCases[i].OutputHash</b> / <b>@Model.TestCases[i].OutputSize</b>B
                                 </td>
                                 <td class="control-group">
                                     <div class="controls">

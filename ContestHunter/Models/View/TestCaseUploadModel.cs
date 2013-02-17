@@ -13,27 +13,6 @@ namespace ContestHunter.Models.View
             Delete, Upload, Next
         }
 
-        public class TestCaseInfo
-        {
-            public Guid ID { get; set; }
-            public string InputHash { get; set; }
-            public string OutputHash { get; set; }
-            public int InputSize { get; set; }
-            public int OutputSize { get; set; }
-            public string Input { get; set; }
-            public string Output { get; set; }
-
-            [Required]
-            [Display(Description = "MB")]
-            [Range(0.0, double.MaxValue)]
-            public double? Memory { get; set; }
-
-            [Required]
-            [Display(Description = "s")]
-            [Range(0.0, double.MaxValue)]
-            public double? Time { get; set; }
-        };
-
         [Required]
         public ActionType? Action { get; set; }
 

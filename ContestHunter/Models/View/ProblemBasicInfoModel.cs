@@ -9,6 +9,7 @@ namespace ContestHunter.Models.View
     public class ProblemBasicInfoModel
     {
         public string Contest { get; set; }
+        public string Problem { get; set; }
         public Contest.ContestType ContestType { get; set; }
 
         [Required]

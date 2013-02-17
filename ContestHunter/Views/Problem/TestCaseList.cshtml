@@ -1,0 +1,77 @@
+﻿@model ContestHunter.Models.View.TestCaseListModel
+@{
+    ViewBag.Title = "测试数据列表";
+    ViewBag.ActivedNav = "Contest";
+}
+
+<style type="text/css">
+    .table {
+        background-color: white;
+        font-family: 微软雅黑;
+        margin: 20px auto;
+    }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    h3, h4 {
+        text-align: center;
+    }
+
+    h4 {
+        font-family: 微软雅黑;
+        font-weight: normal;
+    }
+</style>
+
+<div class="span12">
+    <h3>@Model.Problem</h3>
+    <h4>测试数据列表</h4>
+    <div class="alert">
+        鼠标悬停于输入/输出文件列，可查看文件内容预览
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <colgroup>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>输入文件 CRC-32/大小</th>
+                <th>输出文件 CRC-32/大小</th>
+                <th>时间限制</th>
+                <th>内存限制</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var info in Model.TestCases)
+            {
+                <tr>
+                    <td data-content="&lt;pre&gt;@info.Input&lt;/pre&gt;" title="输入文件内容预览" class="Preview">
+                        <b>@info.InputHash</b> / <b>@info.InputSize</b>B
+                    </td>
+                    <td data-content="&lt;pre&gt;@info.Output&lt;/pre&gt;" title="输出文件内容预览" class="Preview">
+                        <b>@info.OutputHash</b> / <b>@info.OutputSize</b>B
+                    </td>
+                    <td><span style="color: orange"><b>@Math.Round(info.Time, 1)</b></span><span style="color: blue"> s</span></td>
+                    <td><span style="color: orange"><b>@Math.Round(info.Memory, 1)</b></span><span style="color: blue"> MB</span></td>
+                    <td>
+                        @Html.ActionLink("下载", "TestCaseDownload", new { id = Model.Problem, contest = Model.Contest, testCaseID = info.ID }, new { @class = "btn btn-small btn-info" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+        $('td.Preview').popover();
+    </script>
+    <div class="btn-group" style="margin: 10px auto; text-align: center">
+        @Html.ActionLink("返回题目", "Show", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@model ContestHunter.Models.View.ProblemProgramModel
+@{
+    ViewBag.Title = "配置相关程序";
+}
+
+<style type="text/css">
+    textarea {
+        width: 800px;
+        height: 400px;
+        margin: auto;
+        display: block;
+    }
+
+    .accordion-group {
+        background-color: white;
+    }
+
+    h5 {
+        font-family: 微软雅黑;
+        font-weight: normal;
+    }
+</style>
+
+<div class="span12" style="margin-top: 20px; padding: 10px">
+    @using (Html.BeginForm())
+    {
+        <div class="alert alert-info" style="text-align: center">
+            <h2>提交校验器和标程</h2>
+            <div>
+                <div class="progress progress-striped progress-success active">
+                    <div class="bar" style="width: 80%;"></div>
+                </div>
+            </div>
+            <h5>请为您的题目提交一份<b>标程(Standard Program)</b>和一个<b>运行结果比较器(Special Judge)</b></h5>
+            <h5>您可以将<b>运行结果比较器</b>一栏留空，这样会使用预置的默认比较器，它可以支持忽略文末换行符和行末空格后的全文比较</h5>
+            <div class="accordion" id="accordion2">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">标程(Standard Program)</a>
+                    </div>
+                    <div id="collapse1" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <select class="input-small">
+                                <option value="">语言</option>
+                                <option value="CPP">C++</option>
+                                <option value="C">C</option>
+                                <option value="Pascal">Pascal</option>
+                            </select>
+                            <span style="font-size: 12px; color: gray">*标准输入输出，C/C++代码中的long long(%lld)和__int64(%I64d)均可使用</span>
+                            @Html.TextAreaFor(x => x.Std)
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">运行结果比较器(Special Judge)</a>
+                    </div>
+                    <div id="collapse2" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <select class="input-small">
+                                <option value="">语言</option>
+                                <option value="CPP">C++</option>
+                                <option value="C">C</option>
+                                <option value="Pascal">Pascal</option>
+                            </select>
+                            <span style="font-size: 12px; color: gray">*如果您的题目为直接比较方式，可以选择我们的预置校验器</span>
+                            @Html.TextAreaFor(x => x.Spj)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                @Html.ActionLink("上一步", "TestCase", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
+                <input type="submit" value="下一步" class="btn btn-success" />
+            </div>
+        </div>
+    }
+</div>
