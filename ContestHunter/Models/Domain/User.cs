@@ -15,6 +15,16 @@ namespace ContestHunter.Models.Domain
 
         public string Name;
         public string Email;
+        public string Country;
+        public string Province;
+        public string City;
+        public string School;
+        public string RealName;
+        public string LastLoginIP;
+        public DateTime? LastLoginTime;
+        public string Password;
+        public string Matto;
+
         internal Guid ID;
         internal class OnlineUser
         {
@@ -22,6 +32,7 @@ namespace ContestHunter.Models.Domain
             public Guid Token;
             public string name;
             public string email;
+            public string ip;
             public List<string> groups;
         }
 
@@ -45,7 +56,7 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="Token"></param>
         /// <exception cref="BadTokenException"></exception>
-        public static void Authenticate(string Token)
+        public static void Authenticate(string Token,string ip)
         {
             lock (OnlineUsers)
             {
@@ -56,6 +67,8 @@ namespace ContestHunter.Models.Domain
                 if (!OnlineUsers.ContainsKey(uid))
                     throw new BadTokenException();
                 if (OnlineUsers[uid].Token != tk)
+                    throw new BadTokenException();
+                if (OnlineUsers[uid].ip != ip)
                     throw new BadTokenException();
                 CurrentUser = OnlineUsers[uid];
             }
@@ -106,7 +119,8 @@ namespace ContestHunter.Models.Domain
         /// <param name="email"></param>
         /// <exception cref="PasswordMismatchException"></exception>
         /// <exception cref="EmailMismatchException"></exception>
-        public static void Register(string name, string originalPassword, string encryptedPassword, string email, string emailHash)
+        public static void Register(string name, string originalPassword, string encryptedPassword, string email, string emailHash,
+            string country,string province,string city,string school,string matto,string realName)
         {
             if (originalPassword != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(encryptedPassword))))
                 throw new PasswordMismatchException();
@@ -122,7 +136,13 @@ namespace ContestHunter.Models.Domain
                         ID = Guid.NewGuid(),
                         Name = name,
                         Password = hash.ComputeHash(Encoding.Unicode.GetBytes(originalPassword)),
-                        Email = email
+                        Email = email,
+                        Country = country,
+                        Province = province,
+                        City = city,
+                        School = school,
+                        Matto = matto,
+                        RealName = realName
                     });
                 }
                 db.SaveChanges();
@@ -167,7 +187,7 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         /// <exception cref="UserNotFoundException"></exception>
         /// <exception cref="PasswordMismatchException"></exception>
-        public static string Login(string name, string password)
+        public static string Login(string name, string password,string ip)
         {
 
             using (var sha = SHA256.Create())
@@ -189,7 +209,8 @@ namespace ContestHunter.Models.Domain
                             name = currentUser.Name,
                             email = currentUser.Email,
                             groups = (from g in currentUser.GROUPs
-                                      select g.Name).ToList()
+                                      select g.Name).ToList(),
+                            ip = ip
                         };
                     lock (OnlineUsers)
                     {
@@ -233,7 +254,23 @@ namespace ContestHunter.Models.Domain
                               select u).SingleOrDefault();
                 if (null == result)
                     throw new UserNotFoundException();
-                return new User() { Name = result.Name, Email = result.Email, ID = result.ID };
+                bool privillege = false;
+                if (null != CurrentUser && result.Name == CurrentUser.name)
+                    privillege = true;
+                return new User()
+                {
+                    Name = result.Name,
+                    Email = result.Email,
+                    ID = result.ID,
+                    Country = result.Country,
+                    Province = result.Province,
+                    City = result.City,
+                    Matto = result.Matto,
+                    RealName = result.RealName,
+                    School = result.School,
+                    LastLoginTime = privillege ? result.LastLoginTime : null,
+                    LastLoginIP = privillege ? result.LastLoginIP : null
+                };
             }
         }
 
@@ -267,5 +304,41 @@ namespace ContestHunter.Models.Domain
             return base.Equals(obj);
         }
          * */
+
+        /// <summary>
+        /// 修改用户信息，必须验证当前密码
+        /// </summary>
+        /// <param name="oriPassword"></param>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="PermissionDeniedException"></exception>
+        /// <exception cref="PasswordMismatchException"></exception>
+        public void Change(string oriPassword)
+        {
+            if (null == CurrentUser)
+                throw new UserNotLoginException();
+            if (CurrentUser.ID != ID)
+                throw new PermissionDeniedException();
+            using (SHA256 hash = SHA256.Create())
+            {
+                using (var db = new CHDB())
+                {
+                    var usr = (from u in db.USERs
+                               where u.ID == ID
+                               select u).Single();
+                    if (!hash.ComputeHash(Encoding.Unicode.GetBytes(oriPassword)).Equals(usr.Password))
+                        throw new PasswordMismatchException();
+                    if (null != Password)
+                        usr.Password = hash.ComputeHash(Encoding.Unicode.GetBytes(Password));
+                    usr.Country = Country;
+                    usr.Province = Province;
+                    usr.City = City;
+                    usr.School = School;
+                    usr.Email = Email;
+                    usr.RealName = RealName;
+                    usr.Matto = Matto;
+                    db.SaveChanges();
+                }
+            }
+        }
     }
 }
