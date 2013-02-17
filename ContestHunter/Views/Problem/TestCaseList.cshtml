@@ -33,19 +33,16 @@
         鼠标悬停于输入/输出文件列，可查看文件内容预览
     </div>
     <table class="table table-bordered table-striped table-hover">
-        <colgroup>
-            <col>
-            <col>
-            <col>
-            <col>
-            <col>
-        </colgroup>
         <thead>
             <tr>
                 <th>输入文件 CRC-32/大小</th>
                 <th>输出文件 CRC-32/大小</th>
                 <th>时间限制</th>
                 <th>内存限制</th>
+                @if (Model.ShowEnabled)
+                {
+                    <th>Pretest</th>
+                }
                 <th>操作</th>
             </tr>
         </thead>
@@ -61,6 +58,12 @@
                     </td>
                     <td><span style="color: orange"><b>@Math.Round((double)info.Time, 1)</b></span><span style="color: blue"> s</span></td>
                     <td><span style="color: orange"><b>@Math.Round((double)info.Memory, 1)</b></span><span style="color: blue"> MB</span></td>
+                    @if (Model.ShowEnabled)
+                    {
+                        <td>
+                            <input type="checkbox" checked="@info.Enabled" disabled="disabled"/>
+                        </td>
+                    }
                     <td>
                         @Html.ActionLink("下载", "TestCaseDownload", new { id = Model.Problem, contest = Model.Contest, testCaseID = info.ID }, new { @class = "btn btn-small btn-info" })
                     </td>

@@ -24,5 +24,8 @@ namespace ContestHunter.Models.View
         [Display(Description = "s")]
         [Range(0.0, double.MaxValue)]
         public double? Time { get; set; }
+
+        [Required]
+        public bool Enabled { get; set; }
     }
 }

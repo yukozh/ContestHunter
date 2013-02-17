@@ -10,8 +10,15 @@ namespace ContestHunter.Models.View
     {
         public Record.LanguageType StdLanguage { get; set; }
         public Record.LanguageType SpjLanguage { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        [DisplayFormat(ConvertEmptyStringToNull=false)]
         public string Std { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        [DisplayFormat(ConvertEmptyStringToNull=false)]
         public string Spj { get; set; }
+
         public string Contest { get; set; }
         public string Problem { get; set; }
     }

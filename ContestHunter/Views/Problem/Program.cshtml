@@ -24,6 +24,8 @@
 <div class="span12" style="margin-top: 20px; padding: 10px">
     @using (Html.BeginForm())
     {
+        @Html.HiddenFor(x=>x.Problem)
+        @Html.HiddenFor(x=>x.Contest)
         <div class="alert alert-info" style="text-align: center">
             <h2>提交校验器和标程</h2>
             <div>
@@ -65,7 +67,7 @@
                                    new SelectListItem{Text="Java",Value="Java"},
                                    new SelectListItem{Text="Pascal",Value="Pascal"}
                                },new{@class="input-small"})
-                            <span style="font-size: 12px; color: gray">*如果您的题目为直接比较方式，可以选择我们的预置校验器</span>
+                            <span style="font-size: 12px; color: gray">*如果您的题目为直接比较方式，可以留空此处，以选择我们预置的校验器</span>
                             @Html.TextAreaFor(x => x.Spj)
                         </div>
                     </div>

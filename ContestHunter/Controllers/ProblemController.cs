@@ -351,7 +351,8 @@ namespace ContestHunter.Controllers
                 InputSize = t.Input.Length,
                 OutputSize = t.Data.Length,
                 Input = Encoding.Default.GetString(t.Input.Take(100).ToArray()),
-                Output = Encoding.Default.GetString(t.Data.Take(100).ToArray())
+                Output = Encoding.Default.GetString(t.Data.Take(100).ToArray()),
+                Enabled = t.Available
             };
         }
 
@@ -369,6 +370,7 @@ namespace ContestHunter.Controllers
                 Problem problem = con.ProblemByName(id);
                 model.TestCases = (from t in problem.TestCases()
                                    select TestCase2Info(problem.TestCaseByID(t))).ToList();
+                model.ShowEnabled = con.Type == Contest.ContestType.CF;
             }
             catch (ContestNotFoundException)
             {
@@ -417,7 +419,7 @@ namespace ContestHunter.Controllers
             return true;
         }
 
-        List<TestCase> AddTestCase(Problem problem, HttpPostedFileBase file)
+        List<TestCase> AddTestCase(Contest contest, Problem problem, HttpPostedFileBase file)
         {
             if (file == null)
             {
@@ -464,7 +466,8 @@ namespace ContestHunter.Controllers
                     Input = inputFiles[id],
                     Data = outputFiles[id],
                     MemoryLimit = DEFAULT_TEST_CASE_MEMORY_LIMIT,
-                    TimeLimit = DEFAULT_TEST_CASE_TIME_LIMIT
+                    TimeLimit = DEFAULT_TEST_CASE_TIME_LIMIT,
+                    Available = contest.Type == Contest.ContestType.CF ? false : true
                 }).ToList();
             foreach (var t in testCases)
             {
@@ -482,30 +485,56 @@ namespace ContestHunter.Controllers
             }
             if (!ModelState.IsValid) return View(model);
             ModelState.Clear();
-
-            Problem problem = Contest.ByName(contest).ProblemByName(id);
-            foreach (var testCase in model.TestCases)
+            try
             {
-                ContestHunter.Models.Domain.TestCase.Change(testCase.ID, (int)(testCase.Time * 1000), (int)(testCase.Memory * 1024 * 1024));
-            }
-            switch (model.Action)
-            {
-                case TestCaseUploadModel.ActionType.Upload:
-                    var newCases = AddTestCase(problem, model.File);
-                    if (newCases != null)
+                Contest con = Contest.ByName(contest);
+                Problem problem = con.ProblemByName(id);
+                foreach (var testCase in model.TestCases)
+                {
+                    if (con.Type == Contest.ContestType.CF)
                     {
-                        foreach (var t in newCases.Select(TestCase2Info))
-                        {
-                            model.TestCases.Add(t);
-                        }
+                        ContestHunter.Models.Domain.TestCase.Change(testCase.ID, (int)(testCase.Time * 1000), (int)(testCase.Memory * 1024 * 1024), testCase.Enabled);
                     }
-                    break;
-                case TestCaseUploadModel.ActionType.Next:
-                    return RedirectToAction("Program", new { id = id, contest = contest });
-                case TestCaseUploadModel.ActionType.Delete:
-                    problem.RemoveTestCase(model.TestCases[model.TestCaseIndex].ID);
-                    model.TestCases.RemoveAt(model.TestCaseIndex);
-                    break;
+                    else
+                    {
+                        ContestHunter.Models.Domain.TestCase.Change(testCase.ID, (int)(testCase.Time * 1000), (int)(testCase.Memory * 1024 * 1024), true);
+                    }
+                }
+                switch (model.Action)
+                {
+                    case TestCaseUploadModel.ActionType.Upload:
+                        var newCases = AddTestCase(con, problem, model.File);
+                        if (newCases != null)
+                        {
+                            foreach (var t in newCases.Select(TestCase2Info))
+                            {
+                                model.TestCases.Add(t);
+                            }
+                        }
+                        break;
+                    case TestCaseUploadModel.ActionType.Next:
+                        return RedirectToAction("Program", new { id = id, contest = contest });
+                    case TestCaseUploadModel.ActionType.Delete:
+                        problem.RemoveTestCase(model.TestCases[model.TestCaseIndex].ID);
+                        model.TestCases.RemoveAt(model.TestCaseIndex);
+                        break;
+                }
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关比赛" });
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关题目" });
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您不具备维护此题测试数据的相关权限" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
             }
             return View(model);
         }
@@ -577,8 +606,33 @@ namespace ContestHunter.Controllers
                 Problem = id,
                 Contest = contest
             };
-            Problem problem = Contest.ByName(contest).ProblemByName(id);
-            model.TestCases = problem.TestCases().Select(problem.TestCaseByID).Select(TestCase2Info).ToList();
+            try
+            {
+                Contest con = Contest.ByName(contest);
+                Problem problem = con.ProblemByName(id);
+                model.TestCases = problem.TestCases().Select(problem.TestCaseByID).Select(TestCase2Info).ToList();
+                model.ShowEnabled = con.Type == Contest.ContestType.CF;
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相关比赛" });
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相关题目" });
+            }
+            catch (TestCaseNotFoundException)
+            {
+                throw;
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (ContestNotEndedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，不可查看数据" });
+            }
             return View(model);
         }
 
@@ -593,8 +647,17 @@ namespace ContestHunter.Controllers
                     {
                         zip.PutNextEntry(new ZipEntry("Input"));
                         zip.Write(testCase.Input, 0, testCase.Input.Length);
+
                         zip.PutNextEntry(new ZipEntry("Output"));
                         zip.Write(testCase.Data, 0, testCase.Data.Length);
+
+                        zip.PutNextEntry(new ZipEntry("MemoryLimit"));
+                        byte[] bytes = Encoding.UTF8.GetBytes(testCase.MemoryLimit.ToString());
+                        zip.Write(bytes, 0, bytes.Length);
+
+                        zip.PutNextEntry(new ZipEntry("TimeLimit"));
+                        bytes = Encoding.UTF8.GetBytes(testCase.TimeLimit.ToString());
+                        zip.Write(bytes, 0, bytes.Length);
                     }
                     return File(mem.ToArray(), "application/zip", "TestCase" + testCase.ID);
                 }
