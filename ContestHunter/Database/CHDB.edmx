@@ -155,7 +155,9 @@
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Comparer" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="DataChecker" Type="nvarchar(max)" />
+          <Property Name="ComparerLanguage" Type="int" Nullable="false" />
+          <Property Name="DataChecker" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DataCheckerLanguage" Type="int" Nullable="false" />
           <Property Name="OriginRating" Type="int" />
         </EntityType>
         <EntityType Name="RATING">
@@ -204,6 +206,14 @@
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="Password" Type="binary" Nullable="false" MaxLength="32" />
           <Property Name="Email" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="RealName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="Province" Type="nvarchar" MaxLength="50" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" />
+          <Property Name="School" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastLoginTime" Type="datetime" />
+          <Property Name="LastLoginIP" Type="nvarchar" MaxLength="50" />
+          <Property Name="Matto" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="USER_GROUP">
           <Key>
@@ -572,7 +582,9 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Comparer" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="DataChecker" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ComparerLanguage" Type="Int32" Nullable="false" />
+          <Property Name="DataChecker" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="DataCheckerLanguage" Type="Int32" Nullable="false" />
           <Property Name="OriginRating" Type="Int32" />
           <NavigationProperty Name="CONTEST1" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="PROBLEM" ToRole="CONTEST" />
           <NavigationProperty Name="OWNER" Relationship="ContestHunterModel.FK_PROBLEM_USER" FromRole="PROBLEM" ToRole="USER" />
@@ -632,6 +644,14 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Password" Type="Binary" Nullable="false" MaxLength="32" FixedLength="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="RealName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Country" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Province" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="City" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="School" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="LastLoginTime" Type="DateTime" Precision="3" />
+          <Property Name="LastLoginIP" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Matto" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_USER" FromRole="USER" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="HUNTs" Relationship="ContestHunterModel.FK_HACK_USER" FromRole="USER" ToRole="HUNT" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterModel.FK_PROBLEM_USER" FromRole="USER" ToRole="PROBLEM" />
@@ -856,7 +876,9 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Content" ColumnName="Content" />
                 <ScalarProperty Name="Comparer" ColumnName="Comparer" />
+                <ScalarProperty Name="ComparerLanguage" ColumnName="ComparerLanguage" />
                 <ScalarProperty Name="DataChecker" ColumnName="DataChecker" />
+                <ScalarProperty Name="DataCheckerLanguage" ColumnName="DataCheckerLanguage" />
                 <ScalarProperty Name="OriginRating" ColumnName="OriginRating" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -908,6 +930,14 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="RealName" ColumnName="RealName" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="School" ColumnName="School" />
+                <ScalarProperty Name="LastLoginTime" ColumnName="LastLoginTime" />
+                <ScalarProperty Name="LastLoginIP" ColumnName="LastLoginIP" />
+                <ScalarProperty Name="Matto" ColumnName="Matto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

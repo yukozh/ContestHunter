@@ -324,6 +324,9 @@
     <Content Include="Views\Problem\Complete.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Problem\DataShow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
