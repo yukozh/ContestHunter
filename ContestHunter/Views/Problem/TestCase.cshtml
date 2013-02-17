@@ -35,8 +35,6 @@
     @using (Html.BeginForm("TestCase", "Problem", FormMethod.Post, new { id = "frmUpload", enctype = "multipart/form-data" }))
     {
         @Html.HiddenFor(x => x.Action)
-        @Html.HiddenFor(x => x.Contest)
-        @Html.HiddenFor(x => x.Problem)
         @Html.HiddenFor(x => x.TestCaseIndex)
         <div class="alert alert-info" style="text-align: center">
             <h2>配置测试数据</h2>

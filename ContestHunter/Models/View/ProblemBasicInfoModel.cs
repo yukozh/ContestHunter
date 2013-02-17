@@ -10,7 +10,6 @@ namespace ContestHunter.Models.View
     {
         public string Contest { get; set; }
         public Contest.ContestType ContestType { get; set; }
-        public string OldName { get; set; }
 
         [Required]
         [Display(Name = "题目名称")]

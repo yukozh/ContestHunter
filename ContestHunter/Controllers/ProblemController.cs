@@ -68,7 +68,7 @@ namespace ContestHunter.Controllers
             Problem problem;
             try
             {
-                problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
+                problem = Contest.ByName(contest).ProblemByName(id);
             }
             catch (ContestNotFoundException)
             {
@@ -83,7 +83,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Submit(ProblemSubmitModel model)
+        public ActionResult Submit(string id,string contest,ProblemSubmitModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -91,7 +91,7 @@ namespace ContestHunter.Controllers
             Guid recordID;
             try
             {
-                Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
+                Problem problem = Contest.ByName(contest).ProblemByName(id);
                 recordID = problem.Submit(new Record
                 {
                     Code = model.Code,
@@ -146,18 +146,18 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(ProblemBasicInfoModel model)
+        public ActionResult Add(string contest,ProblemBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
             try
             {
-                Contest contest = Contest.ByName(model.Contest);
-                if (contest.Type == Contest.ContestType.CF && model.OriginalRating == null)
+                Contest con = Contest.ByName(contest);
+                if (con.Type == Contest.ContestType.CF && model.OriginalRating == null)
                 {
                     ModelState.AddModelError("OriginalRating", "不可为空");
                     return View(model);
                 }
-                contest.AddProblem(new Problem
+                con.AddProblem(new Problem
                 {
                     Content = System.IO.File.ReadAllText(Server.MapPath("~/Content/ProblemTemplate.html")),
                     Name = model.Name,
@@ -189,7 +189,7 @@ namespace ContestHunter.Controllers
             {
                 throw;
             }
-            return RedirectToAction("Description", new { id = model.Name, contest = model.Contest });
+            return RedirectToAction("Description", new { id = model.Name, contest = contest });
         }
 
         [HttpGet]
@@ -198,7 +198,6 @@ namespace ContestHunter.Controllers
             ProblemBasicInfoModel model = new ProblemBasicInfoModel
             {
                 Contest = contest,
-                OldName = id
             };
             try
             {
@@ -221,18 +220,18 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ProblemBasicInfoModel model)
+        public ActionResult Edit(string id,string contest,ProblemBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
             try
             {
-                Contest contest = Contest.ByName(model.Contest);
-                if (contest.Type == Contest.ContestType.CF && model.OriginalRating == null)
+                Contest con = Contest.ByName(contest);
+                if (con.Type == Contest.ContestType.CF && model.OriginalRating == null)
                 {
                     ModelState.AddModelError("OriginalRating", "不可为空");
                     return View(model);
                 }
-                Problem problem = contest.ProblemByName(model.OldName);
+                Problem problem = con.ProblemByName(id);
                 problem.Name = model.Name;
                 problem.OriginRating = model.OriginalRating;
                 problem.Owner = model.Owner;
@@ -264,7 +263,7 @@ namespace ContestHunter.Controllers
             {
                 throw;
             }
-            return RedirectToAction("Description", new { id = model.Name, contest = model.Contest });
+            return RedirectToAction("Description", new { id = model.Name, contest = contest });
         }
 
         [HttpGet]
@@ -297,7 +296,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Description(ProblemContentModel model)
+        public ActionResult Description(string id,string contest,ProblemContentModel model)
         {
             if (!ModelState.IsValid) return View(model);
             switch (model.Action)
@@ -307,7 +306,7 @@ namespace ContestHunter.Controllers
                 case ProblemContentModel.ActionType.Modify:
                     try
                     {
-                        Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
+                        Problem problem = Contest.ByName(contest).ProblemByName(id);
                         problem.Content = model.Content;
                         problem.Change();
                     }
@@ -331,7 +330,7 @@ namespace ContestHunter.Controllers
                     {
                         throw;
                     }
-                    return RedirectToAction("TestCase", new { id = model.Problem, contest = model.Contest });
+                    return RedirectToAction("TestCase", new { id = id, contest = contest });
             }
             throw new NotImplementedException();
         }
@@ -472,7 +471,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult TestCase(TestCaseUploadModel model)
+        public ActionResult TestCase(string id,string contest,TestCaseUploadModel model)
         {
             if (model.TestCases == null)
             {
@@ -481,7 +480,7 @@ namespace ContestHunter.Controllers
             if (!ModelState.IsValid) return View(model);
             ModelState.Clear();
 
-            Problem problem = Contest.ByName(model.Contest).ProblemByName(model.Problem);
+            Problem problem = Contest.ByName(contest).ProblemByName(id);
             foreach (var testCase in model.TestCases)
             {
                 ContestHunter.Models.Domain.TestCase.Change(testCase.ID, (int)(testCase.Time * 1000), (int)(testCase.Memory * 1024 * 1024));
@@ -499,7 +498,7 @@ namespace ContestHunter.Controllers
                     }
                     break;
                 case TestCaseUploadModel.ActionType.Next:
-                    return RedirectToAction("Check", new { id = model.Problem, contest = model.Contest });
+                    return RedirectToAction("Check", new { id = id, contest = contest });
                 case TestCaseUploadModel.ActionType.Delete:
                     problem.RemoveTestCase(model.TestCases[model.TestCaseIndex].ID);
                     model.TestCases.RemoveAt(model.TestCaseIndex);

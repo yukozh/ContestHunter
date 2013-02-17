@@ -32,8 +32,7 @@
             @using (Html.BeginForm("Edit", "Problem", FormMethod.Post, new { @class = "form-horizontal", style = "display:inline-block;" }))
             {
                 @Html.HiddenFor(x => x.Contest)
-                @Html.HiddenFor(x => x.OldName)
-                @Html.HiddenFor(x=>x.ContestType)
+                @Html.HiddenFor(x => x.ContestType)
                 <div class="control-group">
                     @Html.LabelFor(x => x.Name, new { @class = "control-label" })
                     <div class="controls">

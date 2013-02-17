@@ -14,6 +14,12 @@ namespace ContestHunter
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Problem",
+                url: "Contest/{contest}/Problem/{action}/{id}",
+                defaults: new { controller = "Problem", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
