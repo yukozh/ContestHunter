@@ -324,7 +324,7 @@
     <Content Include="Views\Problem\Complete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Problem\DataShow.cshtml" />
+    <Content Include="Views\Problem\TestCaseList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
@@ -346,9 +346,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Problem\TestCaseList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
