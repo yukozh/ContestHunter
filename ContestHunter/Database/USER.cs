@@ -30,6 +30,14 @@ namespace ContestHunter.Database
         public string Name { get; set; }
         public byte[] Password { get; set; }
         public string Email { get; set; }
+        public string RealName { get; set; }
+        public string Country { get; set; }
+        public string Province { get; set; }
+        public string City { get; set; }
+        public string School { get; set; }
+        public Nullable<System.DateTime> LastLoginTime { get; set; }
+        public string LastLoginIP { get; set; }
+        public string Matto { get; set; }
     
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<HUNT> HUNTs { get; set; }

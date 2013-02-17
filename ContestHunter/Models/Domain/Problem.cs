@@ -15,6 +15,8 @@ namespace ContestHunter.Models.Domain
         public string DataChecker;
         public int? OriginRating;
         public string Owner;
+        public Record.LanguageType? ComparerLanguage;
+        public Record.LanguageType? DataCheckerLanguage;
 
         internal Guid ID;
         internal Contest contest;

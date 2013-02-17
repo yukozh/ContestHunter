@@ -585,6 +585,8 @@ namespace ContestHunter.Models.Domain
                                   Contest = result.CONTEST1.Name,
                                   OriginRating = result.OriginRating,
                                   DataChecker = privillege ? result.DataChecker : null,
+                                  DataCheckerLanguage = privillege ? ((Record.LanguageType?)result.DataCheckerLanguage) : null,
+                                  ComparerLanguage = privillege ? ((Record.LanguageType?)result.ComparerLanguage) : null,
                                   Owner = result.OWNER.Name,
                                   contest = this
                               };
@@ -593,7 +595,7 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
-        /// 添加题目 所有赛制必须填充 Name,Content,Comparer,Owner, CF赛制还须填充OriginRating,DataChecker
+        /// 添加题目 所有赛制必须填充 Name,Content,Comparer,Owner,DataChecker CF赛制还须填充OriginRating
         /// </summary>
         /// <param name="problem"></param>
         /// <exception cref="UserNotLoginException"></exception>
@@ -624,8 +626,10 @@ namespace ContestHunter.Models.Domain
                     Name = problem.Name,
                     Content = problem.Content,
                     Comparer = problem.Comparer,
+                    ComparerLanguage = (int)problem.ComparerLanguage,
                     OriginRating = problem.OriginRating,
                     DataChecker = problem.DataChecker,
+                    DataCheckerLanguage = (int)problem.DataCheckerLanguage,
                     CONTEST1 = (from c in db.CONTESTs
                                 where c.Name == Name
                                 select c).Single(),

@@ -27,7 +27,9 @@ namespace ContestHunter.Database
         public string Name { get; set; }
         public string Content { get; set; }
         public string Comparer { get; set; }
+        public int ComparerLanguage { get; set; }
         public string DataChecker { get; set; }
+        public int DataCheckerLanguage { get; set; }
         public Nullable<int> OriginRating { get; set; }
     
         public virtual CONTEST CONTEST1 { get; set; }

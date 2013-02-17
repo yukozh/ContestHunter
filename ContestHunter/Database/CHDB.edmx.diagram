@@ -4,15 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f888d4c6935a40218563d2593597b314" Name="Diagram1" ZoomLevel="73">
-        <EntityTypeShape EntityType="ContestHunterModel.CONTEST" Width="1.5" PointX="0.75" PointY="6.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.CONTEST_ATTEND" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.GROUP" Width="1.5" PointX="9" PointY="3.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.HUNT" Width="1.5" PointX="13.5" PointY="7.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.PROBLEM" Width="1.5" PointX="6" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.RATING" Width="1.5" PointX="13.5" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.RECORD" Width="1.5" PointX="8.25" PointY="6.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ContestHunterModel.TESTDATA" Width="1.5" PointX="8.25" PointY="12" IsExpanded="true" />
+      <Diagram DiagramId="7da0b933396e4ea5a8bf9ad40141ccee" Name="Diagram1">
+        <EntityTypeShape EntityType="ContestHunterModel.CONTEST" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.CONTEST_ATTEND" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.GROUP" Width="1.5" PointX="9" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.HUNT" Width="1.5" PointX="13.5" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.PROBLEM" Width="1.5" PointX="6" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.RATING" Width="1.5" PointX="13.5" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.RECORD" Width="1.5" PointX="8.25" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterModel.TESTDATA" Width="1.5" PointX="8.25" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.USER" Width="1.5" PointX="11.25" PointY="6.875" IsExpanded="true" />
         <AssociationConnector Association="ContestHunterModel.FK_CONTEST_ATTEND_CONTEST" ManuallyRouted="false" />
         <AssociationConnector Association="ContestHunterModel.FK_PROBLEM_CONTEST1" ManuallyRouted="false" />
