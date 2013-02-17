@@ -74,6 +74,13 @@ namespace ContestHunter.Models.Domain
             Practice
         }
 
+        internal enum StatusType
+        {
+            BeforeFinalTest,
+            FinalTesting,
+            Done
+        }
+
         internal Guid ID;
 
         /// <summary>
@@ -525,6 +532,8 @@ namespace ContestHunter.Models.Domain
         /// 获取比赛题目名称列表
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="NotAttendedContestException"></exception>
         public List<string> Problems()
         {
             if (null == User.CurrentUser)
