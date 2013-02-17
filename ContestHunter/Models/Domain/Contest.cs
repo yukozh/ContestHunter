@@ -527,8 +527,17 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         public List<string> Problems()
         {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
+            {
+                if (!IsAttended())
+                    throw new NotAttendedContestException();
+            }
+   
             using (var db = new CHDB())
             {
+
                 return (from p in db.PROBLEMs
                         where p.CONTEST1.ID==ID
                         select p.Name).ToList();

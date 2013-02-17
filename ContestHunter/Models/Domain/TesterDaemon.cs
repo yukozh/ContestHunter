@@ -121,7 +121,7 @@ namespace ContestHunter.Models.Domain
             int totalTests = 0;
             int passedTests = 0;
             foreach (TESTDATA test in (from t in db.TESTDATAs
-                                        where t.PROBLEM1 == rec.PROBLEM1
+                                        where t.PROBLEM1 == rec.PROBLEM1 && t.Available
                                         select t))
             {
                 totalTests++;
@@ -191,7 +191,7 @@ namespace ContestHunter.Models.Domain
                 rec.Status=(int)Hunt.StatusType.OtherError;
                 return;
             }
-            long TimeLimit = (from t in db.TESTDATAs
+            int TimeLimit = (from t in db.TESTDATAs
                               where t.PROBLEM1 == rec.RECORD1.PROBLEM1
                               select t).Max(x => x.TimeLimit);
             long MemoryLimit = (from t in db.TESTDATAs
@@ -202,6 +202,16 @@ namespace ContestHunter.Models.Domain
             {
                 rec.Status = (int)Hunt.StatusType.Success;
                 rec.RECORD1.Status = (int)Record.StatusType.Hacked;
+                rec.RECORD1.PROBLEM1.TESTDATAs.Add(new TESTDATA()
+                {
+                    Available = false,
+                    Data = Encoding.UTF8.GetBytes(result.Message),
+                    Input = rec.HuntData,
+                    ID = Guid.NewGuid(),
+                    MemoryLimit = MemoryLimit,
+                    TimeLimit = TimeLimit,
+                    PROBLEM1 = rec.RECORD1.PROBLEM1
+                });
             }
             else
                 if (result.Type == Out.ResultType.WrongAnswer)

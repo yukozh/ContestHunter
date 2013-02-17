@@ -202,6 +202,8 @@ namespace ContestHunter.Models.Domain
                         throw new UserNotFoundException();
                     if (!Enumerable.SequenceEqual<byte>(pwdInBytes, currentUser.Password))
                         throw new PasswordMismatchException();
+                    currentUser.LastLoginIP = ip;
+                    currentUser.LastLoginTime = DateTime.Now;
                     var newToken = new OnlineUser()
                         {
                             ID = currentUser.ID,
@@ -219,7 +221,7 @@ namespace ContestHunter.Models.Domain
                         else
                             OnlineUsers.Add(currentUser.ID, newToken);
                     }
-
+                    db.SaveChanges();
                     return currentUser.ID.ToString() + "|" + newToken.Token.ToString();
                 }
             }
