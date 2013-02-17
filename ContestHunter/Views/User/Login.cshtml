@@ -5,8 +5,7 @@
 }
 
 <style type="text/css">
-    .control-group
-    {
+    .control-group {
         margin-left: -50px;
     }
 </style>
@@ -35,14 +34,18 @@
                 </div>
             </div>
             <div class="control-group">
-                <div class="controls" style="margin-left:50px">
+                <div class="controls" style="margin-left: 50px">
                     @Html.CheckBoxFor(x => x.KeepOnline)
                     @Html.LabelFor(x => x.KeepOnline)
                     @Html.ValidationMessageFor(x => x.KeepOnline)
                     @Html.DescriptionFor(x => x.KeepOnline, new { @class = "help-block" })
                 </div>
             </div>
+            
             <input type="submit" value="登录" class="btn btn-primary" />
+            <div style="margin-top: 30px;">
+                @Html.ActionLink("没有账户？立即注册！", "Register")
+            </div>
         }
     </div>
 </div>

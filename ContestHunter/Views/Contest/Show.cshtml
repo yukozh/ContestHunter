@@ -161,7 +161,7 @@
                                 </td>
                             </tr>
                             <tr id="trProgress">
-                                @if (Model.GetAttendType() == Contest.AttendType.Practice)
+                                @if (Model.IsAttended() && Model.GetAttendType() == Contest.AttendType.Practice)
                                 {
                                     <script>
                                         $('#trProgress').hide();
@@ -196,6 +196,31 @@
                             </tr>
                             <tr>
                                 <td>
+                                    <h4>
+                                        @if (Model.IsAttended())
+                                        {
+                                            switch (Model.GetAttendType())
+                                            {
+                                                case Contest.AttendType.Normal:
+                                            @:已报名正式比赛
+                                                    break;
+                                                case Contest.AttendType.Practice:
+                                            @:已报名练习
+                                                    break;
+                                                case Contest.AttendType.Virtual:
+                                            @:已报名模拟比赛
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span style="color: red;">尚未报名</span>
+                                        }
+                                    </h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <ul class="nav nav-list">
                                         @if (Model.Owners.Contains(USER.CurrentUserName))
                                         {
@@ -218,7 +243,7 @@
                             <col>
                         </colgroup>
                         <tbody>
-                            @foreach (var problem in Model.Problems())
+                            @foreach (string problem in ViewBag.Problems)
                             {
                                 <tr>
                                     <td>@Html.ActionLink(problem, "Show", "Problem", new { id = problem, contest = Model.Name }, null)<code>此处通过率</code></td>

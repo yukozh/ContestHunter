@@ -33,14 +33,19 @@ namespace ContestHunter.Controllers
             try
             {
                 contest = Contest.ByName(id);
-                if (!contest.IsAttended())
-                {
-                    return RedirectToAction("Signup", new { id = id });
-                }
+                ViewBag.Problems = contest.Problems();
             }
             catch (ContestNotFoundException)
             {
                 return RedirectToAction("Error", "Shared", new { msg = "没有相应的比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (NotAttendedContestException)
+            {
+                return RedirectToAction("Signup", new { id = id });
             }
             return View(contest);
         }
@@ -106,6 +111,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Signup(string id, ContestSignupModel model)
         {
             if (!ModelState.IsValid) return View(model);
