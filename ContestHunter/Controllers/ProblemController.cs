@@ -83,7 +83,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Submit(string id,string contest,ProblemSubmitModel model)
+        public ActionResult Submit(string id, string contest, ProblemSubmitModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -146,7 +146,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(string contest,ProblemBasicInfoModel model)
+        public ActionResult Add(string contest, ProblemBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
             try
@@ -198,6 +198,7 @@ namespace ContestHunter.Controllers
             ProblemBasicInfoModel model = new ProblemBasicInfoModel
             {
                 Contest = contest,
+                Problem = id
             };
             try
             {
@@ -220,7 +221,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(string id,string contest,ProblemBasicInfoModel model)
+        public ActionResult Edit(string id, string contest, ProblemBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
             try
@@ -296,7 +297,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult Description(string id,string contest,ProblemContentModel model)
+        public ActionResult Description(string id, string contest, ProblemContentModel model)
         {
             if (!ModelState.IsValid) return View(model);
             switch (model.Action)
@@ -336,9 +337,9 @@ namespace ContestHunter.Controllers
         }
 
         #region TestCase
-        TestCaseUploadModel.TestCaseInfo TestCase2Info(TestCase t)
+        TestCaseInfo TestCase2Info(TestCase t)
         {
-            return new TestCaseUploadModel.TestCaseInfo
+            return new TestCaseInfo
             {
                 ID = t.ID,
                 Memory = t.MemoryLimit / (double)(1024 * 1024),
@@ -471,11 +472,11 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
-        public ActionResult TestCase(string id,string contest,TestCaseUploadModel model)
+        public ActionResult TestCase(string id, string contest, TestCaseUploadModel model)
         {
             if (model.TestCases == null)
             {
-                model.TestCases = new List<TestCaseUploadModel.TestCaseInfo>();
+                model.TestCases = new List<TestCaseInfo>();
             }
             if (!ModelState.IsValid) return View(model);
             ModelState.Clear();
@@ -498,7 +499,7 @@ namespace ContestHunter.Controllers
                     }
                     break;
                 case TestCaseUploadModel.ActionType.Next:
-                    return RedirectToAction("Check", new { id = id, contest = contest });
+                    return RedirectToAction("Program", new { id = id, contest = contest });
                 case TestCaseUploadModel.ActionType.Delete:
                     problem.RemoveTestCase(model.TestCases[model.TestCaseIndex].ID);
                     model.TestCases.RemoveAt(model.TestCaseIndex);
@@ -508,19 +509,71 @@ namespace ContestHunter.Controllers
         }
         #endregion
 
-        public ActionResult Check()
+        [HttpGet]
+        public ActionResult Program(string id, string contest)
         {
+            ProblemProgramModel model = new ProblemProgramModel
+            {
+                Contest = contest,
+                Problem = id
+            };
+            try
+            {
+                Problem problem = Contest.ByName(contest).ProblemByName(id);
+                model.Spj = problem.Comparer;
+                model.Std = problem.DataChecker;
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相关比赛" });
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相关题目" });
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Program(string id, string contest, ProblemProgramModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                Problem problem = Contest.ByName(contest).ProblemByName(id);
+                problem.Comparer = model.Spj;
+                problem.DataChecker = model.Std;
+                problem.Change();
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相关比赛" });
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相关题目" });
+            }
+
+            return RedirectToAction("Complete", new { id = id, contest = contest });
+        }
+
+        public ActionResult Complete(string id,string contest)
+        {
+            ViewBag.Contest = contest;
+            ViewBag.Problem = id;
             return View();
         }
 
-        public ActionResult Complete()
+        public ActionResult TestCaseList(string id,string contest)
         {
-            return View();
-        }
-
-        public ActionResult DataShow()
-        {
-            return View();
+            TestCaseListModel model = new TestCaseListModel
+            {
+                Problem=id,
+                Contest=contest
+            };
+            Problem problem=Contest.ByName(contest).ProblemByName(id);
+            model.TestCases=problem.TestCases().Select(problem.TestCaseByID).Select(TestCase2Info).ToList();
+            return View(model);
         }
     }
 }
