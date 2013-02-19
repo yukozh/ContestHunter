@@ -357,6 +357,12 @@
   <ItemGroup>
     <Content Include="Views\Contest\Add.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contest\Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contest\Complete.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

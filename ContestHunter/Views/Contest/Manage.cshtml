@@ -43,124 +43,45 @@
 
 <div class="span12" style="margin-top: 20px; padding: 10px">
     <div class="alert alert-info" style="text-align: center">
-        <h2>配置比赛信息</h2>
+        <h2>添加和管理试题</h2>
         <div>
             <div class="progress progress-striped progress-success active">
-                <div class="bar" style="width: 100%;"></div>
+                <div class="bar" style="width: 75%;"></div>
             </div>
         </div>
-        <h5>这里是管理比赛 OrzCYF杯模拟赛 详细信息的页面</h5>
-        <h5>在本页面中您可以设置比赛赛制和比赛时间、编写比赛预告、进入添加或编辑题目的向导</h5>
-        <h5>请您慎重做出每一步的修改决定，尤其注意不要频繁调整比赛的进行时间</h5>
-        <div class="accordion" id="accordion2">
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">设置基本信息</a>
-                </div>
-                <div id="collapse1" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <form class="form-horizontal">
-                            <div class="control-group">
-                                <label class="control-label">比赛名称</label>
-                                <div class="controls">
-                                    <input type="text" class="input-xlarge" value="OrzCYF杯模拟赛">
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">比赛管理者</label>
-                                <div class="controls">
-                                    <input type="text" class="input-small" value="onetwogoo">
-                                    <input type="text" class="input-small" value="VariantF">
-                                    <input type="text" class="input-small">
-                                    <p class="help-block">最多三位比赛管理者，少于三位请留空其中1~2个文本框</p>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">赛制</label>
-                                <div class="controls">
-                                    <input type="radio" name="rule">OI
-                                    <input type="radio" name="rule">ACM/ICPC
-                                    <input type="radio" name="rule">Codeforces 
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">开始时刻</label>
-                                <div class="controls">
-                                    <input type="text" class="input-xlarge" value="20YY/MM/DD hh:mm:ss">
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">时长</label>
-                                <div class="controls">
-                                    <input type="text" class="input-small">
-                                    小时
-                                    <input type="text" class="input-small">
-                                    分钟
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">比赛等级</label>
-                                <div class="controls">
-                                    <input type="radio" name="grade">Official@*普通用户此选项不可选*@
-                                    <input type="radio" name="grade">Unofficial
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">编写比赛预告</a>
-                </div>
-                <div id="collapse2" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <textarea name="html" class="ckeditor"></textarea>
-                        <h2>
-                            <input class="btn btn-warning" type="submit" value="效果预览" onclick="$('#Action').val('Preview')" />
-                        </h2>
-                        <div class="well" style="color: black; font-family: 微软雅黑; text-align: left;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse3">添加和管理试题</a>
-                </div>
-                <div id="collapse3" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <fieldset>
-                            <legend>当前试题列表
+        <h5>在本页面中您可以进入 OrzCYF杯模拟赛 中添加或编辑题目的向导</h5>
+        <h5>请确保您添加的题目是原创题目，并确保标程能够通过。不要在赛前把试题公布给他人</h5>
+        <fieldset>
+            <legend>当前试题列表
                                 <input class="btn btn-warning" type="submit" value="添加新的试题" style="float: right">
-                            </legend>
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>题目名称</th>
-                                        <th>出题人</th>
-                                        <th>测试点数目</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>OrzCYF</td>
-                                        <td>onetwogoo</td>
-                                        <td>20</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button class="btn btn-danger btn-small">编辑</button>
-                                                <button class="btn btn-inverse btn-small">删除</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
+            </legend>
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>题目名称</th>
+                        <th>出题人</th>
+                        <th>测试点数目</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>OrzCYF</td>
+                        <td>onetwogoo</td>
+                        <td>20</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-danger btn-small">编辑</button>
+                                <button class="btn btn-inverse btn-small">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <div class="control-group">
+            <button class="btn btn-primary">上一步</button>
+            <button class="btn btn-success">下一步</button>
         </div>
-        <input type="submit" class="btn btn-primary" value="完成配置并查看比赛">
     </div>
 </div>
