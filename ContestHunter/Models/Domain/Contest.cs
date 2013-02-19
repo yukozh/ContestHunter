@@ -257,8 +257,8 @@ namespace ContestHunter.Models.Domain
                 {
                     ID = Guid.NewGuid(),
                     Name = contest.Name,
-                    StartTime = contest.RelativeStartTime,
-                    EndTime = contest.RelativeEndTime,
+                    StartTime = contest.AbsoluteStartTime,
+                    EndTime = contest.AbsoluteEndTime,
                     Description = contest.Description,
                     Type = (int)contest.Type,
                     IsOfficial = contest.IsOfficial
