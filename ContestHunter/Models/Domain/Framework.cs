@@ -42,5 +42,18 @@ namespace ContestHunter.Models.Domain
                 db.SaveChanges();
             }
         }
+        static ContestDaemon contest = new ContestDaemon();
+        static TesterDaemon tester = new TesterDaemon();
+        public static void DomainStart()
+        {
+            contest.Start();
+            tester.Start();
+        }
+
+        public static void DomainStop()
+        {
+            contest.Stop();
+            tester.Stop();
+        }
     }
 }

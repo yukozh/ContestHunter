@@ -94,21 +94,21 @@ namespace ContestHunter.Models.Domain
             return new Out(sock);
         }
 
-        void DealRecord(CHDB db,Socket sock)
+        bool DealRecord(CHDB db,Socket sock)
         {
 
             var rec = (from r in db.RECORDs
                        where r.Status == (int)Record.StatusType.Pending
                        select r).FirstOrDefault();
             if (null == rec)
-                return;
+                return false;
             StringBuilder Detail = new StringBuilder();
             Out ret = Compile(rec.Code, (Record.LanguageType)rec.Language, sock);
             if (ret.Type != Out.ResultType.Success)
             {
                 rec.Status = (int)Record.StatusType.Compile_Error;
                 Detail.AppendFormat("<h5>编译失败：</h5>\r\n<div style=\"padding-left: 10px\">\r\n{0}{1}</div>", ret.Type.ToString(), ret.Message);
-                return;
+                return true;
             }
             Detail.Append("<h5>各测试点详细信息：</h5>\r\n<div style=\"padding-left: 10px\">");
             Out CompileCMP = Compile(rec.PROBLEM1.Comparer, (Record.LanguageType)rec.PROBLEM1.ComparerLanguage, sock);
@@ -116,7 +116,7 @@ namespace ContestHunter.Models.Domain
             {
                 rec.Status = (int)Record.StatusType.CMP_Error;
                 Detail.Append("比较器编译失败");
-                return;
+                return true;
             }
             int totalTests = 0;
             int passedTests = 0;
@@ -169,27 +169,28 @@ namespace ContestHunter.Models.Domain
             rec.Score = (0 != totalTests ? passedTests / totalTests * 100 : 0);
             Detail.Append("</div>");
             rec.Detail = Detail.ToString();
+            return true;
         }
 
-        void DealHunt(CHDB db, Socket sock)
+        bool DealHunt(CHDB db, Socket sock)
         {
             var rec = (from h in db.HUNTs
                        where h.Status == (int)Hunt.StatusType.Pending
                        select h).FirstOrDefault();
             if (null == rec)
-                return;
+                return false;
 
             Out DataChecker = Compile(rec.RECORD1.PROBLEM1.DataChecker, (Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage, sock);
             if (DataChecker.Type != Out.ResultType.Success)
             {
                 rec.Status = (int)Hunt.StatusType.OtherError;
-                return;
+                return false;
             }
             Out OriRec = Compile(rec.RECORD1.Code, (Record.LanguageType)rec.RECORD1.Language, sock);
             if(OriRec.Type!=Out.ResultType.Success)
             {
                 rec.Status=(int)Hunt.StatusType.OtherError;
-                return;
+                return false;
             }
             int TimeLimit = (from t in db.TESTDATAs
                               where t.PROBLEM1 == rec.RECORD1.PROBLEM1
@@ -218,6 +219,7 @@ namespace ContestHunter.Models.Domain
                     rec.Status = (int)Hunt.StatusType.Fail;
                 else
                     rec.Status = (int)Hunt.StatusType.BadData;
+            return true;
         }
 
         protected override int Run()

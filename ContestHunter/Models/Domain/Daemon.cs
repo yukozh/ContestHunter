@@ -8,14 +8,6 @@ namespace ContestHunter.Models.Domain
 {
     public abstract class Daemon
     {
-        public static void StartAll()
-        {
-        }
-
-        public static void StopAll()
-        {
-        }
-
         Thread thread;
         volatile bool running;
 
