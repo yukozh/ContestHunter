@@ -399,5 +399,6 @@ namespace ContestHunter.Models.Domain
                 }
             }
         }
+
     }
 }
