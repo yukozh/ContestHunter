@@ -8,6 +8,8 @@ namespace ContestHunter.Models.View
 {
     public class ContestBasicInfoModel
     {
+        public string Contest { get; set; }
+
         [Required]
         [Display(Name = "比赛名称")]
         [MaxLength(50)]

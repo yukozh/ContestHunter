@@ -185,11 +185,11 @@ namespace ContestHunter.Controllers
         public ActionResult Add(ContestBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            List<string> owners=new List<string>();
+            List<string> owners = new List<string>();
             owners.Add(USER.CurrentUserName);
-            if(model.Owner2!=null)
+            if (model.Owner2 != null)
                 owners.Add(model.Owner2);
-            if(model.Owner3!=null)
+            if (model.Owner3 != null)
                 owners.Add(model.Owner3);
             try
             {
@@ -219,6 +219,76 @@ namespace ContestHunter.Controllers
             }
 
             return RedirectToAction("Show", new { id = model.Name });
+        }
+
+        [HttpGet]
+        public ActionResult Edit(string id)
+        {
+            ContestBasicInfoModel model = new ContestBasicInfoModel
+            {
+                Contest = id,
+            };
+            try
+            {
+                Contest con = Contest.ByName(id);
+                model.Hour = (int)(con.AbsoluteEndTime - con.AbsoluteStartTime).TotalHours;
+                model.Minute = (con.AbsoluteEndTime - con.AbsoluteStartTime).Minutes;
+                model.IsOfficial = con.IsOfficial;
+                model.Name = con.Name;
+                model.Owner1 = USER.CurrentUserName;
+                var otherOwners = con.Owners.Where(u => u != USER.CurrentUserName);
+                model.Owner2 = otherOwners.FirstOrDefault();
+                model.Owner3 = otherOwners.Skip(1).FirstOrDefault();
+                model.StartTime = con.AbsoluteStartTime;
+                model.Type = con.Type;
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相应比赛" });
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(string id, ContestBasicInfoModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            List<string> owners = new List<string>();
+            owners.Add(USER.CurrentUserName);
+            if (model.Owner2 != null)
+                owners.Add(model.Owner2);
+            if (model.Owner3 != null)
+                owners.Add(model.Owner3);
+            try
+            {
+                Contest con = Contest.ByName(id);
+                con.AbsoluteStartTime = model.StartTime.Value;
+                con.AbsoluteEndTime = model.StartTime.Value + new TimeSpan(model.Hour.Value, model.Minute.Value, 0);
+                con.IsOfficial = model.IsOfficial;
+                con.Name = model.Name;
+                con.Type = model.Type.Value;
+                con.Owners = owners;
+                con.Change();
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "找不到相应比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有修改比赛信息的相关权限" });
+            }
+            catch (ContestNameExistedException)
+            {
+                ModelState.AddModelError("Name", "比赛名称已存在");
+                return View(model);
+            }
+
+            return new EmptyResult();
         }
 
         public ActionResult Mine()
