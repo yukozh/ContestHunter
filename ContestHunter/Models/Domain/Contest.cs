@@ -249,7 +249,7 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
-                if (contest.IsOfficial && !User.CurrentUser.groups.Contains("Administrators")
+                if (contest.IsOfficial && !User.CurrentUser.IsAdmin
                     && User.ByName(User.CurrentUser.name).Rating() < 2100)
                     throw new PermissionDeniedException();
                 if ((from c in db.CONTESTs
@@ -291,11 +291,11 @@ namespace ContestHunter.Models.Domain
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
             if (!Owner.Contains(User.CurrentUser.name) &&
-                !User.CurrentUser.groups.Contains("Administrators"))
+                !User.CurrentUser.IsAdmin)
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
-                if (IsOfficial && !User.CurrentUser.groups.Contains("Administrators") &&
+                if (IsOfficial && !User.CurrentUser.IsAdmin &&
                     User.ByName(User.CurrentUser.name).Rating() < 2100)
                     throw new PermissionDeniedException();
                 var con = (from c in db.CONTESTs
@@ -544,7 +544,7 @@ namespace ContestHunter.Models.Domain
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
-            if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
+            if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.IsAdmin)
             {
                 if (!IsAttended())
                     throw new NotAttendedContestException();
@@ -577,7 +577,7 @@ namespace ContestHunter.Models.Domain
                 }
                 else
                 {
-                    if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.groups.Contains("Administrators"))
+                    if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.IsAdmin)
                     {
                         var con = (from c in db.CONTESTs
                                    where c.ID==ID
@@ -631,7 +631,7 @@ namespace ContestHunter.Models.Domain
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
             if (!Owner.Contains(User.CurrentUser.name)
-                && !User.CurrentUser.groups.Contains("Administrators"))
+                && !User.CurrentUser.IsAdmin)
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
@@ -675,7 +675,7 @@ namespace ContestHunter.Models.Domain
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
             if (!Owner.Contains(User.CurrentUser.name)
-                && !User.CurrentUser.groups.Contains("Administrators"))
+                && !User.CurrentUser.IsAdmin)
                 throw new PermissionDeniedException();
 
             using (var db = new CHDB())

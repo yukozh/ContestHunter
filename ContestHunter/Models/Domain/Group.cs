@@ -11,7 +11,7 @@ namespace ContestHunter.Models.Domain
         internal Guid ID;
         internal static void CheckPriviledge()
         {
-            if (!User.CurrentUser.groups.Contains("Administrators"))
+            if (!User.CurrentUser.IsAdmin)
                 throw new PermissionDeniedException();
         }
 

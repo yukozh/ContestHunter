@@ -33,7 +33,7 @@ namespace ContestHunter.Models.Domain
                 var test = (from t in db.TESTDATAs
                             where t.ID == ID
                             select t).Single();
-                if (!User.CurrentUser.groups.Contains("Administrators") && !(from u in test.PROBLEM1.CONTEST1.OWNERs
+                if (!User.CurrentUser.IsAdmin && !(from u in test.PROBLEM1.CONTEST1.OWNERs
                                                                              select u.Name).Contains(User.CurrentUser.name))
                     throw new PermissionDeniedException();
                 test.MemoryLimit = newMemoryLimit;

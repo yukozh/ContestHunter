@@ -34,6 +34,7 @@ namespace ContestHunter.Models.Domain
             public string email;
             public string ip;
             public List<string> groups;
+            public bool IsAdmin;
         }
 
         static Dictionary<Guid, OnlineUser> OnlineUsers = new Dictionary<Guid, OnlineUser>();
@@ -212,7 +213,8 @@ namespace ContestHunter.Models.Domain
                             email = currentUser.Email,
                             groups = (from g in currentUser.GROUPs
                                       select g.Name).ToList(),
-                            ip = ip
+                            ip = ip,
+                            IsAdmin = currentUser.GROUPs.Where(x => x.Name == "Administrators").Any()
                         };
                     lock (OnlineUsers)
                     {
@@ -358,14 +360,19 @@ namespace ContestHunter.Models.Domain
                 return rating;
             }
         }
-        /*
+
+        /// <summary>
+        /// 返回当前用户是否为Administrators组
+        /// </summary>
+        /// <returns></returns>
         public bool IsAdmin()
         {
             using (var db = new CHDB())
             {
-
+                return (from u in db.USERs
+                        where u.ID == ID
+                        select u.GROUPs).Single().Where(x => x.Name == "Administrators").Any();
             }
         }
-         * */
     }
 }
