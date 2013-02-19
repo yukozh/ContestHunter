@@ -49,10 +49,6 @@
     </div>
     <div style="width: 980px">@Html.Sanitized(Model.Content)</div>
     <div class="btn-group" style="margin: 10px auto; text-align: center">
-        @if (ViewBag.CanEdit)
-        {
-            @Html.ActionLink("编辑", "Edit", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-inverse", style = "display:inline-block;" })
-        }
         @Html.ActionLink("提交", "Submit", "Problem", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-success", style = "display:inline-block;" })
         @Html.ActionLink("状态", "Index", "Record", new { ProblemName = Model.Name }, new { @class = "btn btn-info", style = "display:inline-block;" })
         @Html.ActionLink("数据", "TestCaseList", "Problem", new { id = Model.Name, contest = Model.Contest }, new { @class = "btn btn-warning", style = "display:inline-block;" })

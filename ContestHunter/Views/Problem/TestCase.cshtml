@@ -123,10 +123,10 @@
                         @Html.ValidationMessageFor(x => x.File)
                         @Html.DescriptionFor(x => x.File)
                     </div>
+                    <input type="submit" class="btn btn-warning" value="开始上传" onclick="$('#Action').val('Upload');" />
                 </div>
-                <input type="submit" class="btn btn-warning" value="上传文件" onclick="$('#Action').val('Upload');" />
             </fieldset>
-            <div class="btn-group">
+            <div class="btn-group" style="margin-top:20px">
                 @Html.ActionLink("上一步", "Description", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
                 <input type="submit" class="btn btn-success" onclick="$('#Action').val('Next')" value="下一步" />
             </div>
