@@ -368,18 +368,51 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "没有找到相关比赛" });
             }
+            catch (ProblemNotFoundException)
+            {
+                throw;
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Problems(string id, ContestProblemsModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            ModelState.Clear();
+            try
+            {
+                Contest contest = Contest.ByName(id);
+                contest.RemoveProblem(model.Problems[model.ProblemIndex].Name);
+                model.Problems.RemoveAt(model.ProblemIndex);
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关题目" });
+            }
+
+            return View(model);
+        }
+
+        public ActionResult Complete(string id)
+        {
+            ViewBag.Contest = id;
             return View();
         }
-            
 
         public ActionResult Mine()
         {
             return View();
         }
 
-        public ActionResult Complete()
-        {
-            return View();
-        }
+        
     }
 }

@@ -11,7 +11,6 @@ namespace ContestHunter.Models.View
     {
         public string Contest { get; set; }
         public List<ProblemInfo> Problems { get; set; }
-        [Required]
-        public string ProblemName { get; set; }
+        public int ProblemIndex { get; set; }
     }
 }

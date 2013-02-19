@@ -1,5 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Complete";
+    ViewBag.Title = "比赛配置成功";
+    ViewBag.ActivedNav = "Contest";
 }
 
 <style type="text/css">
@@ -17,10 +18,10 @@
                 <div class="bar" style="width: 100%;"></div>
             </div>
         </div>
-        <h5>您已经成功配置了比赛 OrzCYF杯模拟赛</h5>
+        <h5>您已经成功配置了比赛 @Html.ActionLink((string)ViewBag.Contest,"Show",new{id=ViewBag.Contest})</h5>
         <h5>请在比赛前确认比赛相关信息、题目已经设置无误，比赛期间在线以应对特殊情况。</h5>
-        <h5>如有必要，您可以打开比赛编辑向导，添加和修改题目与比赛预告。</h5>
+        <h5>如有必要，您可以再次打开比赛编辑向导，添加、修改题目和比赛预告。</h5>
         <h5>感谢您在Contest Hunter举办比赛！</h5>
-        <input class="btn btn-primary" type="submit" value="查看比赛">
+        @Html.ActionLink("查看比赛", "Show", new { id = ViewBag.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
     </div>
 </div>
