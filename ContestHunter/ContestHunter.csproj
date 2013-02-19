@@ -191,6 +191,7 @@
     <Compile Include="Models\Domain\TestCase.cs" />
     <Compile Include="Models\Domain\TesterDaemon.cs" />
     <Compile Include="Models\Domain\User.cs" />
+    <Compile Include="Models\View\ContestBasicInfoModel.cs" />
     <Compile Include="Models\View\ProblemProgramModel.cs" />
     <Compile Include="Models\View\ContestListModel.cs" />
     <Compile Include="Models\View\ContestSignupModel.cs" />
@@ -367,6 +368,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contest\Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contest\Complete.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -115,6 +115,9 @@
                                 case Record.LanguageType.Pascal:
                                 @:Pascal
                                     break;
+                                case Record.LanguageType.Java:
+                                @:Java
+                                    break;
                             }
                         </td>
                     </tr>
@@ -160,6 +163,9 @@
                     break;
                 case Record.LanguageType.Pascal:
                     ViewBag.Brush = "pascal";
+                    break;
+                case Record.LanguageType.Java:
+                    ViewBag.Brush = "java";
                     break;
             }
             <pre class="brush:@ViewBag.Brush;">@Model.Code</pre>
