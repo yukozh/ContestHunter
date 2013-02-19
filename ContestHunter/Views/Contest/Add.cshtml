@@ -66,8 +66,8 @@
                     @Html.DropDownListFor(x => x.Type, new SelectListItem[]
                         {
                             new SelectListItem{Text="OI - 赛时不显示结果，试题有部分分",Value="OI"},
-                            new SelectListItem{Text="Codeforces - 有Pretest，支持Hunt",Value="CF"},
-                            new SelectListItem{Text="ACM/ICPC - 计算罚时，即时显示结果",Value="ACM"},
+                            new SelectListItem{Text="ACM/ICPC - 即时显示结果，计算罚时，试题无部分分",Value="ACM"},
+                            new SelectListItem{Text="Codeforces - 提供Pretest并显示结果，动态分，支持Hunt",Value="CF"},
                         }, new { @class = "input-xlarge" })
                     @Html.ValidationMessageFor(x => x.Type)
                     @Html.DescriptionFor(x => x.Type, new { @class = "help-block" })

@@ -3530,9 +3530,9 @@ input[type="submit"].btn.btn-mini {
           border-radius: 4px;
 }
 
-.alert h4 {
+/*.alert h4 {
   margin: 0;
-}
+}*/
 
 .alert .close {
   position: relative;
