@@ -36,7 +36,8 @@
                             new SelectListItem{Text="语言",Value=""},
                             new SelectListItem{Text="C++",Value="CPP"},
                             new SelectListItem{Text="Pascal",Value="Pascal"},
-                            new SelectListItem{Text="C",Value="C"}
+                            new SelectListItem{Text="C",Value="C"},
+                            new SelectListItem{Text="Java",Value="Java"}
                         }, new { @class = "input-small" })
                     @Html.DropDownListFor(x => x.Status, new SelectListItem[]
                         {
@@ -181,6 +182,9 @@
                                         break;
                                     case Record.LanguageType.Pascal:
                                     @:Pascal
+                                        break;
+                                    case Record.LanguageType.Java:
+                                    @:Java
                                         break;
                                     default:
                                     @:外星语言

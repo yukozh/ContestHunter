@@ -355,12 +355,10 @@ namespace ContestHunter.Models.Domain
                               where r.USER1.ID == ID
                               orderby r.CONTEST1.EndTime descending
                               select r.Rating1).FirstOrDefault();
-                if (null == rating)
-                    return 0;
-                return (int)rating;
+                return rating;
             }
         }
-
+        /*
         public bool IsAdmin()
         {
             using (var db = new CHDB())
@@ -368,5 +366,6 @@ namespace ContestHunter.Models.Domain
 
             }
         }
+         * */
     }
 }

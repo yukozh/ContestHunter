@@ -21,6 +21,13 @@ namespace ContestHunter
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            Framework.DomainStart();
+        }
+
+        protected void Application_Stop()
+        {
+            Framework.DomainStop();
         }
 
         protected void Application_AuthorizeRequest()
