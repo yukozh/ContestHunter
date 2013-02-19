@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using ContestHunter.Models.Domain;
 using ContestHunter.Models.View;
+using USER = ContestHunter.Models.Domain.User;
 namespace ContestHunter.Controllers
 {
     public class ContestController : Controller
@@ -166,17 +167,66 @@ namespace ContestHunter.Controllers
             return RedirectToAction("Show", new { id = id });
         }
 
+        [HttpGet]
+        public ActionResult Add()
+        {
+            ContestBasicInfoModel model = new ContestBasicInfoModel
+            {
+                Owner1 = USER.CurrentUserName,
+                StartTime = DateTime.Now,
+                Hour = 0,
+                Minute = 0
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Add(ContestBasicInfoModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            List<string> owners=new List<string>();
+            owners.Add(USER.CurrentUserName);
+            if(model.Owner2!=null)
+                owners.Add(model.Owner2);
+            if(model.Owner3!=null)
+                owners.Add(model.Owner3);
+            try
+            {
+                Contest.Add(new Contest
+                {
+                    AbsoluteStartTime = model.StartTime.Value,
+                    AbsoluteEndTime = model.StartTime.Value + new TimeSpan(model.Hour.Value, model.Minute.Value, 0),
+                    Description = "",
+                    IsOfficial = model.IsOfficial,
+                    Name = model.Name,
+                    Type = model.Type.Value,
+                    Owners = owners,
+                });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有创建比赛的相关权限" });
+            }
+            catch (ContestNameExistedException)
+            {
+                ModelState.AddModelError("Name", "比赛名称已存在");
+                return View(model);
+            }
+
+            return RedirectToAction("Show", new { id = model.Name });
+        }
+
         public ActionResult Mine()
         {
             return View();
         }
 
         public ActionResult Manage()
-        {
-            return View();
-        }
-
-        public ActionResult Add()
         {
             return View();
         }

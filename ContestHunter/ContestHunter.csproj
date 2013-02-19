@@ -191,6 +191,7 @@
     <Compile Include="Models\Domain\TestCase.cs" />
     <Compile Include="Models\Domain\TesterDaemon.cs" />
     <Compile Include="Models\Domain\User.cs" />
+    <Compile Include="Models\View\ContestBasicInfoModel.cs" />
     <Compile Include="Models\View\ProblemProgramModel.cs" />
     <Compile Include="Models\View\ContestListModel.cs" />
     <Compile Include="Models\View\ContestSignupModel.cs" />
@@ -205,6 +206,11 @@
     <Compile Include="Models\View\User\LoginModel.cs" />
     <Compile Include="Models\View\User\RegisterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewHelpers\HtmlFilter.cs" />
     <Compile Include="ViewHelpers\MvcHtmlHelperExt.cs" />
   </ItemGroup>
@@ -356,6 +362,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Contest\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Contest\Preview.cshtml" />

@@ -342,5 +342,30 @@ namespace ContestHunter.Models.Domain
                 }
             }
         }
+
+        /// <summary>
+        /// 获得用户 Rating
+        /// </summary>
+        /// <returns></returns>
+        public int Rating()
+        {
+            using (var db = new CHDB())
+            {
+                var rating = (from r in db.RATINGs
+                              where r.USER1.ID == ID
+                              orderby r.CONTEST1.EndTime descending
+                              select r.Rating1).FirstOrDefault();
+                return rating;
+            }
+        }
+        /*
+        public bool IsAdmin()
+        {
+            using (var db = new CHDB())
+            {
+
+            }
+        }
+         * */
     }
 }
