@@ -958,5 +958,33 @@ namespace ContestHunter.Models.Domain
                 return (DateTime)con_att.Time + (con.EndTime - con.StartTime);
             }
         }
+
+        static List<Contest> ByOwner(string name)
+        {
+            using (var db = new CHDB())
+            {
+                var cons = (from c in db.CONTESTs
+                            where c.OWNERs.Select(x => x.Name).Contains(name)
+                            select c);
+                List<Contest> Ret = new List<Contest>();
+                foreach (var con in cons)
+                {
+                    var Own = con.OWNERs.Select(x => x.Name).ToList();
+                    Ret.Add(new Contest
+                    {
+                        Name = con.Name,
+                        Description = con.Description,
+                        RelativeStartTime = con.StartTime,
+                        RelativeEndTime = con.EndTime,
+                        IsOfficial = con.IsOfficial,
+                        Type = (ContestType)con.Type,
+                        Owner = Own,
+                        Owners = Own,
+                        ID = con.ID
+                    });
+                }
+                return Ret;
+            }
+        }
     }
 }
