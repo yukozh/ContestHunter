@@ -218,7 +218,7 @@ namespace ContestHunter.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Show", new { id = model.Name });
+            return RedirectToAction("Preview", new { id = model.Name });
         }
 
         [HttpGet]
@@ -288,20 +288,91 @@ namespace ContestHunter.Controllers
                 return View(model);
             }
 
-            return new EmptyResult();
+            return RedirectToAction("Preview", new { id = id });
         }
+
+        [HttpGet]
+        public ActionResult Preview(string id)
+        {
+            ContestDescriptionModel model = new ContestDescriptionModel
+            {
+                Contest = id
+            };
+            try
+            {
+                Contest contest = Contest.ByName(id);
+                model.Description = contest.Description;
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关比赛" });
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Preview(string id, ContestDescriptionModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            switch (model.Action)
+            {
+                case ContestDescriptionModel.ActionType.Preview:
+                    return View(model);
+                case ContestDescriptionModel.ActionType.Next:
+                    try
+                    {
+                        Contest contest = Contest.ByName(id);
+                        contest.Description = model.Description;
+                        contest.Change();
+                    }
+                    catch (ContestNotFoundException)
+                    {
+                        return RedirectToAction("Error", "Shared", new { msg = "没有找到相关比赛" });
+                    }
+                    catch (UserNotLoginException)
+                    {
+                        throw;
+                    }
+                    catch (PermissionDeniedException)
+                    {
+                        return RedirectToAction("Error", "Shared", new { msg = "没有修改比赛预告的相关权限" });
+                    }
+                    catch (ContestNameExistedException)
+                    {
+                        throw;
+                    }
+                    return RedirectToAction("Problems", new { id = id });
+            }
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public ActionResult Problems(string id)
+        {
+            ContestProblemsModel model = new ContestProblemsModel
+            {
+                Contest=id
+            };
+            try
+            {
+                Contest contest = Contest.ByName(id);
+                model.Problems = (from p in contest.Problems().Select(contest.ProblemByName)
+                                  select new ProblemInfo
+                                  {
+                                      Name = p.Name,
+                                      Owner = p.Owner,
+                                      TestCaseCount = p.TestCases().Count
+                                  }).ToList();
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有找到相关比赛" });
+            }
+            return View();
+        }
+            
 
         public ActionResult Mine()
-        {
-            return View();
-        }
-
-        public ActionResult Manage()
-        {
-            return View();
-        }
-
-        public ActionResult Preview()
         {
             return View();
         }

@@ -307,7 +307,7 @@ namespace ContestHunter.Models.Domain
                 if (Owner != Owners)
                 {
                     con.OWNERs.Clear();
-                    foreach (var name in Owner)
+                    foreach (var name in Owners)
                     {
                         con.OWNERs.Add((from u in db.USERs
                                         where u.Name == name
@@ -316,7 +316,7 @@ namespace ContestHunter.Models.Domain
                 }
                 con.IsOfficial = IsOfficial;
                 con.StartTime = AbsoluteStartTime;
-                con.EndTime = AbsoluteStartTime;
+                con.EndTime = AbsoluteEndTime;
                 db.SaveChanges();
             }
         }
