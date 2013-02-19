@@ -1,4 +1,6 @@
 ﻿@model ContestHunter.Models.View.ContestBasicInfoModel
+@using ContestHunter.Models.Domain
+@using USER = ContestHunter.Models.Domain.User
 @{
     ViewBag.Title = "添加比赛";
     ViewBag.ActivedNav = "Contest";
@@ -55,7 +57,7 @@
             <div class="control-group">
                 @Html.LabelFor(x => x.IsOfficial, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.CheckBoxFor(x => x.IsOfficial)
+                    @Html.CheckBoxFor(x => x.IsOfficial, new { disabled = USER.ByName(USER.CurrentUserName).Rating() < 2100 })
                     @Html.ValidationMessageFor(x => x.IsOfficial)
                     @Html.DescriptionFor(x => x.IsOfficial)
                 </div>
