@@ -2,4 +2,78 @@
     ViewBag.Title = "Mine";
 }
 
-<h2>我举办的比赛列表,此处会有比赛申办和管理链接</h2>
+<style type="text/css">
+    .table
+    {
+        background-color: white;
+        color: black;
+        margin: 0px;
+    }
+
+    .table th,
+    .table td
+    {
+        text-align: center;
+        vertical-align: middle;
+        font-family: 微软雅黑;
+    }
+
+    .table td h5
+    {
+        margin: 0px;
+    }
+
+    code
+    {
+        padding: 0 3px 2px;
+        font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+        font-size: 12px;
+        color: #333333;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        padding: 2px 4px;
+        color: #d14;
+        background-color: #f7f7f9;
+        border: 1px solid #e1e1e8;
+    }
+</style>
+
+<div class="span12">
+    <fieldset style="margin-top:30px">
+        <legend>我举办的比赛
+            <input type="submit" class="btn btn-danger" style="float: right" value="我要申办比赛">
+        </legend>
+        <table class="table table-bordered table-striped table-hover">
+            <colgroup>
+                <col style="width: 200px">
+                <col style="width: 500px">
+                <col style="width: 100px">
+                <col style="width: 100px">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>举办时间</th>
+                    <th>比赛名称</th>
+                    <th>参赛人数</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2013/2/19 13:50:00</td>
+                    <td>
+                        <h5>
+                            <a href="#">OrzCYF杯模拟赛</a>
+                            <span style="font-size:12px; font-weight:normal"> - 合作举办者：<a href="#">VariantF</a></span>@*没有则省略此行*@
+                        </h5>
+                    </td>
+                    <td><code>1234</code></td>
+                    <td>
+                        <input class="btn btn-primary btn-small" type="submit" value="管理">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+</div>
