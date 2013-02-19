@@ -245,7 +245,7 @@ namespace ContestHunter.Models.Domain
         {
             if (null == User.CurrentUser)
                 throw new UserNotLoginException();
-            if (!contest.Owner.Contains(User.CurrentUser.name))
+            if (!contest.Owners.Contains(User.CurrentUser.name))
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
@@ -264,7 +264,7 @@ namespace ContestHunter.Models.Domain
                     IsOfficial = contest.IsOfficial
                 });
 
-                foreach (string name in contest.Owner)
+                foreach (string name in contest.Owners)
                 {
                     curContest.OWNERs.Add(
                         (from u in db.USERs
