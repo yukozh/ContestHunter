@@ -249,6 +249,9 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                if (contest.IsOfficial && !User.CurrentUser.groups.Contains("Administrators")
+                    && User.ByName(User.CurrentUser.name).Rating() < 2100)
+                    throw new PermissionDeniedException();
                 if ((from c in db.CONTESTs
                      where c.Name == contest.Name
                      select c).Any())
@@ -665,7 +668,6 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="name"></param>
         /// <exception cref="ContestNotStartedException"></exception>
-        /// <exception cref="NotAttendedContestException"></exception>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="ProblemNotFoundException"></exception>
         public void RemoveProblem(string name)
