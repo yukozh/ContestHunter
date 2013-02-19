@@ -111,7 +111,8 @@ namespace ContestHunter.Models.Domain
                 return true;
             }
             Detail.Append("<h5>各测试点详细信息：</h5>\r\n<div style=\"padding-left: 10px\">");
-            Out CompileCMP = Compile(rec.PROBLEM1.Comparer, (Record.LanguageType)rec.PROBLEM1.ComparerLanguage, sock);
+            string comparer = rec.PROBLEM1.Comparer == "" ? Resources.DefaultComparer : rec.PROBLEM1.Comparer;
+            Out CompileCMP = Compile(comparer, (Record.LanguageType)rec.PROBLEM1.ComparerLanguage, sock);
             if (CompileCMP.Type != Out.ResultType.Success)
             {
                 rec.Status = (int)Record.StatusType.CMP_Error;
