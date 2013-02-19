@@ -1,7 +1,7 @@
 ﻿function ShowValidationMessage(input,msg) {
     var controlGroup = input.parent().parent();
     controlGroup.addClass('error');
-    var span = $('span.field-validation-valid, span.field-validation-error', controlGroup);
+    var span = $('span.field-validation-error', controlGroup);
     span
         .show()
         .addClass('label')

@@ -1,0 +1,102 @@
+﻿@model ContestHunter.Models.View.ContestProblemsModel
+@{
+    ViewBag.Title = "管理试题";
+    ViewBag.ActivedNav = "Contest";
+}
+
+<style type="text/css">
+    h5 {
+        font-family: 微软雅黑;
+        font-weight: normal;
+    }
+
+    .form-horizontal {
+        width: 550px;
+        margin: 10px auto;
+        font-family: 微软雅黑;
+    }
+
+    .controls {
+        text-align: left;
+    }
+
+    .accordion-group {
+        background-color: white;
+    }
+
+    .table {
+        background-color: white;
+        font-family: 微软雅黑;
+        color: black;
+        margin: 10px auto;
+    }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+</style>
+
+<div class="span12" style="margin-top: 20px; padding: 10px">
+    @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(x => x.Contest)
+        @Html.HiddenFor(x => x.ProblemIndex)
+        <div class="alert alert-info" style="text-align: center">
+            <h2>添加和管理试题</h2>
+            <div>
+                <div class="progress progress-striped progress-success active">
+                    <div class="bar" style="width: 75%;"></div>
+                </div>
+            </div>
+            <h5>在本页面中您可以进入 @Html.ActionLink(Model.Contest, "Show", new { id = Model.Contest }) 中添加或编辑题目的向导</h5>
+            <h5>请确保您添加的题目是原创题目，并确保标程能够通过。不要在赛前把试题公布给他人</h5>
+            <fieldset>
+                <legend>试题列表</legend>
+
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>题目名称</th>
+                            <th>出题人</th>
+                            <th>测试点数目</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Problems.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(Model.Problems[i].Name, "Show", "Problem", new { id = Model.Problems[i].Name, contest = Model.Contest }, null)
+                                    @Html.HiddenFor(x => x.Problems[i].Name)
+                                </td>
+                                <td>
+                                    @Html.UserLink(Model.Problems[i].Owner)
+                                    @Html.HiddenFor(x => x.Problems[i].Owner)
+                                </td>
+                                <td>
+                                    @Html.ActionLink(Model.Problems[i].TestCaseCount.ToString(), "TestCase", "Problem", new { id = Model.Problems[i].Name, contest = Model.Contest }, null)
+                                    @Html.HiddenFor(x => x.Problems[i].TestCaseCount)
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        @Html.ActionLink("编辑", "Edit", "Problem", new { id = Model.Problems[i].Name, contest = Model.Contest }, new { @class = "btn btn-danger", style = "display:inline-block;" })
+                                        <input type="submit" value="删除" class="btn btn-inverse" onclick="$('#ProblemIndex').val('@i    ')"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </fieldset>
+            <div style="margin: 10px auto;">
+                @Html.ActionLink("添加新试题", "Add", "Problem", new { contest = Model.Contest }, new { @class = "btn btn-warning", style = "display:inline-block;" })
+            </div>
+            <div class="btn-group">
+                @Html.ActionLink("上一步", "Preview", new { id = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
+                @Html.ActionLink("下一步", "Complete", new { id = Model.Contest }, new { @class = "btn btn-success", style = "display:inline-block;" })
+            </div>
+        </div>
+    }
+</div>

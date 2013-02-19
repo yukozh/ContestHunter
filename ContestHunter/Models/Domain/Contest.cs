@@ -257,8 +257,8 @@ namespace ContestHunter.Models.Domain
                 {
                     ID = Guid.NewGuid(),
                     Name = contest.Name,
-                    StartTime = contest.RelativeStartTime,
-                    EndTime = contest.RelativeEndTime,
+                    StartTime = contest.AbsoluteStartTime,
+                    EndTime = contest.AbsoluteEndTime,
                     Description = contest.Description,
                     Type = (int)contest.Type,
                     IsOfficial = contest.IsOfficial
@@ -292,6 +292,9 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                if (IsOfficial && !User.CurrentUser.groups.Contains("Administrators") &&
+                    User.ByName(User.CurrentUser.name).Rating() < 2100)
+                    throw new PermissionDeniedException();
                 var con = (from c in db.CONTESTs
                            where c.ID==ID
                            select c).Single();
@@ -307,7 +310,7 @@ namespace ContestHunter.Models.Domain
                 if (Owner != Owners)
                 {
                     con.OWNERs.Clear();
-                    foreach (var name in Owner)
+                    foreach (var name in Owners)
                     {
                         con.OWNERs.Add((from u in db.USERs
                                         where u.Name == name
@@ -316,7 +319,7 @@ namespace ContestHunter.Models.Domain
                 }
                 con.IsOfficial = IsOfficial;
                 con.StartTime = AbsoluteStartTime;
-                con.EndTime = AbsoluteStartTime;
+                con.EndTime = AbsoluteEndTime;
                 db.SaveChanges();
             }
         }

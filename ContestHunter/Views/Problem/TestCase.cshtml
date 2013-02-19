@@ -72,11 +72,13 @@
                                 <td data-content="&lt;pre&gt;@Model.TestCases[i].Input&lt;/pre&gt;" title="输入文件内容预览" class="Preview">
                                     @Html.HiddenFor(x => x.TestCases[i].InputHash)
                                     @Html.HiddenFor(x => x.TestCases[i].InputSize)
+                                    @Html.HiddenFor(x => x.TestCases[i].Input)
                                     <b>@Model.TestCases[i].InputHash</b> / <b>@Model.TestCases[i].InputSize</b>B
                                 </td>
                                 <td data-content="&lt;pre&gt;@Model.TestCases[i].Output&lt;/pre&gt;" title="输出文件内容预览" class="Preview">
                                     @Html.HiddenFor(x => x.TestCases[i].OutputHash)
                                     @Html.HiddenFor(x => x.TestCases[i].OutputSize)
+                                    @Html.HiddenFor(x => x.TestCases[i].Output)
                                     <b>@Model.TestCases[i].OutputHash</b> / <b>@Model.TestCases[i].OutputSize</b>B
                                 </td>
                                 <td class="control-group">
@@ -126,7 +128,7 @@
                     <input type="submit" class="btn btn-warning" value="开始上传" onclick="$('#Action').val('Upload');" />
                 </div>
             </fieldset>
-            <div class="btn-group" style="margin-top:20px">
+            <div class="btn-group" style="margin-top: 20px">
                 @Html.ActionLink("上一步", "Description", new { id = Model.Problem, contest = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
                 <input type="submit" class="btn btn-success" onclick="$('#Action').val('Next')" value="下一步" />
             </div>
