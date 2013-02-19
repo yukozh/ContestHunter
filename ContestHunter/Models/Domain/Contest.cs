@@ -964,7 +964,7 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        static List<Contest> ByOwner(string name)
+        public static List<Contest> ByOwner(string name)
         {
             using (var db = new CHDB())
             {
