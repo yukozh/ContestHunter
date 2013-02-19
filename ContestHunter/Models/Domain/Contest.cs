@@ -292,6 +292,9 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                if (IsOfficial && !User.CurrentUser.groups.Contains("Administrators") &&
+                    User.ByName(User.CurrentUser.name).Rating() < 2100)
+                    throw new PermissionDeniedException();
                 var con = (from c in db.CONTESTs
                            where c.ID==ID
                            select c).Single();
