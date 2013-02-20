@@ -351,7 +351,7 @@ namespace ContestHunter.Controllers
         {
             ContestProblemsModel model = new ContestProblemsModel
             {
-                Contest=id
+                Contest = id
             };
             try
             {
@@ -410,9 +410,17 @@ namespace ContestHunter.Controllers
 
         public ActionResult Mine()
         {
-            return View();
+            MyContestModel model = new MyContestModel();
+            model.Contests = Contest.ByOwner(USER.CurrentUserName).Select(c => new MyContestModel.ContestInfo
+            {
+                AttendUserCount = c.AttendedUsersCount(),
+                Name = c.Name,
+                OtherOwners = c.Owners.Where(o => o != USER.CurrentUserName).ToList(),
+                StartTime = c.AbsoluteStartTime
+            }).ToList();
+            return View(model);
         }
 
-        
+
     }
 }

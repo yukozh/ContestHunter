@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 
-namespace ContestHunter.Models.View.User
+namespace ContestHunter.Models.View
 {
     public class RegisterModel
     {

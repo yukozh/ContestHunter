@@ -1,30 +1,28 @@
-﻿@{
-    ViewBag.Title = "Mine";
+﻿@model ContestHunter.Models.View.MyContestModel
+@{
+    ViewBag.Title = "我举办的比赛";
+    ViewBag.ActivedNav = "Contest";
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
-    .table th,
-    .table td
-    {
-        text-align: center;
-        vertical-align: middle;
-        font-family: 微软雅黑;
-    }
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+            font-family: 微软雅黑;
+        }
 
-    .table td h5
-    {
-        margin: 0px;
-    }
+            .table td h5 {
+                margin: 0px;
+            }
 
-    code
-    {
+    code {
         padding: 0 3px 2px;
         font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
         font-size: 12px;
@@ -40,9 +38,9 @@
 </style>
 
 <div class="span12">
-    <fieldset style="margin-top:30px">
+    <fieldset style="margin-top: 30px">
         <legend>我举办的比赛
-            <input type="submit" class="btn btn-danger" style="float: right" value="我要申办比赛">
+            @Html.ActionLink("我要申办比赛","Add",null,new{@class="btn btn-danger",style="float: right; display:inline-block;"})
         </legend>
         <table class="table table-bordered table-striped table-hover">
             <colgroup>
@@ -60,19 +58,30 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>2013/2/19 13:50:00</td>
-                    <td>
-                        <h5>
-                            <a href="#">OrzCYF杯模拟赛</a>
-                            <span style="font-size:12px; font-weight:normal"> - 合作举办者：<a href="#">VariantF</a></span>@*没有则省略此行*@
-                        </h5>
-                    </td>
-                    <td><code>1234</code></td>
-                    <td>
-                        <input class="btn btn-primary btn-small" type="submit" value="管理">
-                    </td>
-                </tr>
+                @foreach (var contest in Model.Contests)
+                {
+                    <tr>
+                        <td>@contest.StartTime</td>
+                        <td>
+                            <h5>
+                                @Html.ActionLink(contest.Name, "Show", new { id = contest.Name })
+                                @if (contest.OtherOwners.Count > 0)
+                                {
+                                    <span style="font-size: 12px; font-weight: normal">- 合作举办者：
+                                @foreach (string user in contest.OtherOwners)
+                                {
+                                    @Html.UserLink(user)
+                                }
+                                    </span>
+                                }
+                            </h5>
+                        </td>
+                        <td><code>@contest.AttendUserCount</code></td>
+                        <td>
+                            @Html.ActionLink("管理", "Edit", new { id = contest.Name }, new { @class = "btn btn-primary btn-small", style = "display:inline-block;" })
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </fieldset>

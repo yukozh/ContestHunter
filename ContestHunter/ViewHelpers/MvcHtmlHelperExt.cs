@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using ContestHunter.Models.Domain;
 namespace ContestHunter.ViewHelpers
 {
     public static class MvcHtmlHelperExt
@@ -14,8 +15,9 @@ namespace ContestHunter.ViewHelpers
         public static string ToHexString(byte[] bytes)
         {
             StringBuilder sb = new StringBuilder();
-            foreach(byte  b in bytes){
-                string tmp=Convert.ToString(b, 16);
+            foreach (byte b in bytes)
+            {
+                string tmp = Convert.ToString(b, 16);
                 if (tmp.Length == 1) sb.Append('0').Append(tmp);
                 else sb.Append(tmp);
             }
@@ -37,7 +39,9 @@ namespace ContestHunter.ViewHelpers
 
         public static MvcHtmlString UserLink<TModel>(this HtmlHelper<TModel> self, string userName)
         {
-            return self.ActionLink(userName, "Show", "User", new { id = userName }, null);
+            RatingInfo info = new RatingInfo(userName);
+
+            return self.ActionLink(userName, "Show", "User", new { id = userName }, new { title = info.Caption, style = "color: " + info.Color });
         }
 
         public static MvcHtmlString DescriptionFor<TModel, TValue>(this HtmlHelper<TModel> self, Expression<Func<TModel, TValue>> expression)

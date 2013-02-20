@@ -39,22 +39,11 @@
                     @Html.Gravatar(Model.Email, 200)
                 </td>
                 <td style="padding-top: 10px; padding-right: 20px; width: 350px; vertical-align: top;">
-                    <h4 style="color: #ff0000">国际首席猎手，@Model.Name</h4>
-                    @*
-                    管理员(Administrator)  color:#000000
-                    国际首席猎手(International Chief Hunter)  rating=2600~3000  color:#FF0000
-                    首席猎手(Chief Hunter)  rating=2350~2599  color:#F66F00
-                    猎手(Hunter)  rating=2100~2349  color:#FF8C00
-                    神犇(God Triple Bull)  rating=1900~2099  color:#CC0066
-                    神牛(God Bull)  rating=1700~1899  color:#3366CC
-
-                    大牛(Bull)  rating=1500~1699  color:#0099CC
-                    领先学习者(Advanced Learner)  rating=1250~1499  color:#008000
-                    学习者(Learner)  rating=1000~1249  color:#77CC77
-                    蒟蒻(Weak Dish)  rating=1~999  color:#C0C0C0
-                    尚未排名的(Unrated)  rating=0  color:#CC9966
-                    *@
-                    <h5 style="color: green">能力评估值：2651</h5>
+                    @{
+                        ViewBag.Rating = new RatingInfo(Model);
+                    }
+                    <h4 style="color: @ViewBag.Rating.Color">@ViewBag.Rating.Caption，@Model.Name</h4>
+                    <h5 style="color: green">能力评估值：@Model.Rating()</h5>
                     <h5 style="color: green">当前排名：-1</h5>
                     <h5>基本信息：@Model.RealName - @Model.Country,@Model.Province,@Model.City,@Model.School</h5>
                     <h5>电子邮件：<a href="mailto:@Model.Email">@Model.Email</a></h5>

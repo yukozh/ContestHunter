@@ -65,7 +65,14 @@
                     <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li>@Html.ActionLink(USER.CurrentUserName, "Show", "User", new { id = USER.CurrentUserName }, null)</li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@USER.CurrentUserName<span class="caret" /></a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("我的用户信息", "Show", "User", new { id = USER.CurrentUserName }, null)</li>
+                                    <li>@Html.ActionLink("修改个人资料", "??", "User", new { id = USER.CurrentUserName }, null)</li>
+                                    <li>@Html.ActionLink("我举办的比赛","Mine","Contest",null,null)</li>
+                                </ul>
+                            </li>
                             <li>
                                 <a href="#" onclick="$('#frmLogout').submit();">登出</a>
                                 @using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "frmLogout", style = "display:none;" }))
@@ -129,7 +136,7 @@
         Developed by lydrainbowcat, VariantF and onetwogoo<br />
         Server time: @DateTimeOffset.Now<br />
     </div>
-    
+
     <script>
         (function () {
             @*
@@ -170,7 +177,7 @@
               'xml xhtml xslt html    !shBrushXml.js'
             ));*@
             SyntaxHighlighter.defaults['toolbar'] = false;
-        
+
             SyntaxHighlighter.all();
         })();
     </script>

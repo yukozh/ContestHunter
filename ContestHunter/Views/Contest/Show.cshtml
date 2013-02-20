@@ -7,26 +7,22 @@
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
     }
 
         .table td h2,
         .table td h4,
-        .table td h5
-        {
+        .table td h5 {
             margin: 0px;
             text-align: center;
         }
 
-        .table td h5
-        {
+        .table td h5 {
             font-weight: normal;
         }
 
-        .table td code
-        {
+        .table td code {
             margin-left: 5px;
         }
 </style>
@@ -203,21 +199,21 @@
                                     <h4>
                                         @if (Model.IsAttended())
                                         {
-                                            @:<span style="color: green;">
-                                            switch (Model.GetAttendType())
-                                            {
-                                                case Contest.AttendType.Normal:
-                                            @:已报名正式比赛
+                                            <span style="color: green;">
+                                                @switch (Model.GetAttendType())
+                                                {
+                                                    case Contest.AttendType.Normal:
+                                                    @:已报名正式比赛
                                                     break;
-                                                case Contest.AttendType.Practice:
-                                            @:已报名练习
+                                                    case Contest.AttendType.Practice:
+                                                    @:已报名练习
                                                     break;
-                                                case Contest.AttendType.Virtual:
-                                            @:已报名模拟比赛
+                                                    case Contest.AttendType.Virtual:
+                                                    @:已报名模拟比赛
                                                     break;
-                                            }
-                                            @:</span>
-                                                                                                                                }
+                                                }
+                                            </span>
+                                        }
                                         else
                                         {
                                             <span style="color: red;">尚未报名</span>
@@ -228,7 +224,7 @@
                             <tr>
                                 <td>
                                     <ul class="nav nav-list">
-                                        @if (Model.Owners.Contains(USER.CurrentUserName))
+                                        @if (Model.Owners.Contains(USER.CurrentUserName) || USER.ByName(USER.CurrentUserName).IsAdmin())
                                         {
                                             <li>@Html.ActionLink("管理这场比赛", "Edit", new { id = Model.Name })</li>
                                         }

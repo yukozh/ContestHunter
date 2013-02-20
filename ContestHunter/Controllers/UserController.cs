@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.Mvc;
-using ContestHunter.Models.View.User;
+using ContestHunter.Models.View;
 using ContestHunter.Models.Domain;
 using USER = ContestHunter.Models.Domain.User;
 

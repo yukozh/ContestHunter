@@ -1,4 +1,6 @@
 ﻿@model ContestHunter.Models.View.ContestBasicInfoModel
+@using ContestHunter.Models.Domain
+@using USER = ContestHunter.Models.Domain.User
 @{
     ViewBag.Title = "修改比赛";
     ViewBag.ActivedNav = "Contest";
@@ -33,7 +35,7 @@
         <h5>本向导将引导您修改 @Html.ActionLink(Model.Contest, "Show", new { id = Model.Contest })</h5>
         @using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { @class = "form-horizontal" }))
         {
-            @Html.HiddenFor(x=>x.Contest)
+            @Html.HiddenFor(x => x.Contest)
             <div class="control-group">
                 @Html.LabelFor(x => x.Name, new { @class = "control-label" })
                 <div class="controls">
@@ -56,7 +58,7 @@
             <div class="control-group">
                 @Html.LabelFor(x => x.IsOfficial, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.CheckBoxFor(x => x.IsOfficial)
+                    @Html.CheckBoxFor(x => x.IsOfficial,new{disabled = USER.ByName(USER.CurrentUserName).Rating() < 2100 })
                     @Html.ValidationMessageFor(x => x.IsOfficial)
                     @Html.DescriptionFor(x => x.IsOfficial)
                 </div>

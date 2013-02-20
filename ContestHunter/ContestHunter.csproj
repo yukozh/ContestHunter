@@ -194,6 +194,7 @@
     <Compile Include="Models\View\ContestBasicInfoModel.cs" />
     <Compile Include="Models\View\ContestDescriptionModel.cs" />
     <Compile Include="Models\View\ContestProblemsModel.cs" />
+    <Compile Include="Models\View\MyContestModel.cs" />
     <Compile Include="Models\View\ProblemInfo.cs" />
     <Compile Include="Models\View\ProblemProgramModel.cs" />
     <Compile Include="Models\View\ContestListModel.cs" />
@@ -206,8 +207,8 @@
     <Compile Include="Models\View\TestCaseInfo.cs" />
     <Compile Include="Models\View\TestCaseListModel.cs" />
     <Compile Include="Models\View\TestCaseUploadModel.cs" />
-    <Compile Include="Models\View\User\LoginModel.cs" />
-    <Compile Include="Models\View\User\RegisterModel.cs" />
+    <Compile Include="Models\View\LoginModel.cs" />
+    <Compile Include="Models\View\RegisterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -216,6 +217,7 @@
     </Compile>
     <Compile Include="ViewHelpers\HtmlFilter.cs" />
     <Compile Include="ViewHelpers\MvcHtmlHelperExt.cs" />
+    <Compile Include="ViewHelpers\RatingInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
