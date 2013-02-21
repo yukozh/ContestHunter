@@ -96,81 +96,92 @@ namespace ContestHunter.Models.Domain
 
         bool DealRecord(CHDB db,Socket sock)
         {
-
             var rec = (from r in db.RECORDs
                        where r.Status == (int)Record.StatusType.Pending
                        select r).FirstOrDefault();
             if (null == rec)
                 return false;
             StringBuilder Detail = new StringBuilder();
-            Out ret = Compile(rec.Code, (Record.LanguageType)rec.Language, sock);
-            if (ret.Type != Out.ResultType.Success)
+            try
             {
-                rec.Status = (int)Record.StatusType.Compile_Error;
-                Detail.AppendFormat("<h5>编译失败：</h5>\r\n<div style=\"padding-left: 10px\">\r\n{0}{1}</div>", ret.Type.ToString(), ret.Message);
-                return true;
-            }
-            Detail.Append("<h5>各测试点详细信息：</h5>\r\n<div style=\"padding-left: 10px\">");
-            string comparer = rec.PROBLEM1.Comparer == "" ? Resources.DefaultComparer : rec.PROBLEM1.Comparer;
-            Out CompileCMP = Compile(comparer, (Record.LanguageType)rec.PROBLEM1.ComparerLanguage, sock);
-            if (CompileCMP.Type != Out.ResultType.Success)
-            {
-                rec.Status = (int)Record.StatusType.CMP_Error;
-                Detail.Append("比较器编译失败");
-                return true;
-            }
-            int totalTests = 0;
-            int passedTests = 0;
-            foreach (TESTDATA test in (from t in db.TESTDATAs
-                                        where t.PROBLEM1 == rec.PROBLEM1 && t.Available
-                                        select t))
-            {
-                totalTests++;
-                Out testResult = Test(test.Input,test.Data,test.TimeLimit,test.MemoryLimit, sock, CompileCMP.Message, ret.Message);
-                switch (testResult.Type)
+                Out ret = Compile(rec.Code, (Record.LanguageType)rec.Language, sock);
+                if (ret.Type != Out.ResultType.Success)
                 {
-                    case Out.ResultType.Success:
-                        passedTests++;
-                        rec.MemoryUsed += testResult.Memory;
-                        rec.ExecutedTime += (int)testResult.Time;
-                        Detail.AppendFormat("#{0}：<span class=\"score_100\"><b>通过</b></span> ({1} ms / {2} KB)<br />", totalTests, testResult.Time, testResult.Memory);
-                        break;
-                    case Out.ResultType.CompareError:
-                        rec.Status = (int)testResult.Type;
-                        Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误</b></span> (???? ms / ???? KB)<br />", totalTests);
-                        break;
-                    case Out.ResultType.MemoryLimitExceeded:
-                        rec.Status = (int)testResult.Type;
-                        Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>内存超过限定</b></span> (???? ms / ???? KB)<br />", totalTests);
-                        break;
-                    case Out.ResultType.OutputLimitExceeded:
-                        rec.Status = (int)testResult.Type;
-                        Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>程序吐槽过多</b></span> (???? ms / ???? KB)<br />", totalTests);
-                        break;
-                    case Out.ResultType.RuntimeError:
-                        rec.Status = (int)testResult.Type;
-                        Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误</b></span> (???? ms / ???? KB)<br />", totalTests);
-                        break;
-                    case Out.ResultType.TimeLimitExceeded:
-                        rec.Status = (int)testResult.Type;
-                        Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>超时</b></span> (???? ms / ???? KB)<br />", totalTests);
-                        break;
-                    case Out.ResultType.WrongAnswer:
-                        rec.Status = (int)testResult.Type;
-                        Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>答案错误</b></span> (???? ms / ???? KB)<br />", totalTests);
+                    rec.Status = (int)Record.StatusType.Compile_Error;
+                    Detail.AppendFormat("<h5>编译失败：</h5>\r\n<div style=\"padding-left: 10px\">\r\n{0}{1}</div>", ret.Type.ToString(), ret.Message);
+                    return true;
+                }
+                Detail.Append("<h5>各测试点详细信息：</h5>\r\n<div style=\"padding-left: 10px\">");
+                string comparer = rec.PROBLEM1.Comparer == "" ? Resources.DefaultComparer : rec.PROBLEM1.Comparer;
+                var comparerLanguage = rec.PROBLEM1.Comparer == "" ? Record.LanguageType.CPP : (Record.LanguageType)rec.PROBLEM1.ComparerLanguage;
+                Out CompileCMP = Compile(comparer, comparerLanguage, sock);
+                if (CompileCMP.Type != Out.ResultType.Success)
+                {
+                    rec.Status = (int)Record.StatusType.CMP_Error;
+                    Detail.Append("比较器编译失败");
+                    return true;
+                }
+                int totalTests = 0;
+                int passedTests = 0;
+                foreach (TESTDATA test in (from t in db.TESTDATAs
+                                           where t.PROBLEM1.ID == rec.PROBLEM1.ID && t.Available
+                                           select t).ToArray())
+                {
+                    totalTests++;
+                    Out testResult = Test(test.Input, test.Data, test.TimeLimit, test.MemoryLimit, sock, CompileCMP.Message, ret.Message);
+                    switch (testResult.Type)
+                    {
+                        case Out.ResultType.Success:
+                            passedTests++;
+                            rec.MemoryUsed += testResult.Memory;
+                            rec.ExecutedTime += (int)testResult.Time;
+                            Detail.AppendFormat("#{0}：<span class=\"score_100\"><b>通过</b></span> ({1} ms / {2} KB)<br />", totalTests, testResult.Time, testResult.Memory);
+                            break;
+                        case Out.ResultType.CompareError:
+                            rec.Status = (int)testResult.Type;
+                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误</b></span> (???? ms / ???? KB)<br />", totalTests);
+                            break;
+                        case Out.ResultType.MemoryLimitExceeded:
+                            rec.Status = (int)testResult.Type;
+                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>内存超过限定</b></span> (???? ms / ???? KB)<br />", totalTests);
+                            break;
+                        case Out.ResultType.OutputLimitExceeded:
+                            rec.Status = (int)testResult.Type;
+                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>程序吐槽过多</b></span> (???? ms / ???? KB)<br />", totalTests);
+                            break;
+                        case Out.ResultType.RuntimeError:
+                            rec.Status = (int)testResult.Type;
+                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误</b></span> (???? ms / ???? KB)<br />", totalTests);
+                            break;
+                        case Out.ResultType.TimeLimitExceeded:
+                            rec.Status = (int)testResult.Type;
+                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>超时</b></span> (???? ms / ???? KB)<br />", totalTests);
+                            break;
+                        case Out.ResultType.WrongAnswer:
+                            rec.Status = (int)testResult.Type;
+                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>答案错误</b></span> (???? ms / ???? KB)<br />", totalTests);
+                            break;
+                    }
+                    if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI && testResult.Type != Out.ResultType.Success)
                         break;
                 }
-                if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI && testResult.Type != Out.ResultType.Success)
-                    break;
+                if (totalTests == passedTests)
+                {
+                    rec.Status = (int)Out.ResultType.Success;
+                }
+                rec.Score = (0 != totalTests ? passedTests / totalTests * 100 : 0);
+                Detail.Append("</div>");
+                rec.Detail = Detail.ToString();
+                return true;
             }
-            if (totalTests == passedTests)
+            catch(Exception e)
             {
-                rec.Status = (int)Out.ResultType.Success;
+                throw e;
             }
-            rec.Score = (0 != totalTests ? passedTests / totalTests * 100 : 0);
-            Detail.Append("</div>");
-            rec.Detail = Detail.ToString();
-            return true;
+            finally
+            {
+                rec.Detail = Detail.ToString();
+            }
         }
 
         bool DealHunt(CHDB db, Socket sock)

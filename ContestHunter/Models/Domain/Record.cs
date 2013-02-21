@@ -260,5 +260,21 @@ namespace ContestHunter.Models.Domain
                 db.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// 重测指定记录
+        /// </summary>
+        /// <exception cref="PermissionDeniedException"></exception>
+        public void ReJudge()
+        {
+            if (!Domain.User.CurrentUser.IsAdmin)
+                throw new PermissionDeniedException();
+            using (var db = new CHDB())
+            {
+                (from r in db.RECORDs
+                 where r.ID == ID
+                 select r).Single().Status = (int)StatusType.Pending;
+            }
+        }
     }
 }

@@ -964,6 +964,11 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 获得指定用户所创建的所有比赛
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static List<Contest> ByOwner(string name)
         {
             using (var db = new CHDB())
