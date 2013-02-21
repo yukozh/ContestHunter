@@ -6,40 +6,47 @@
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table {
+    .table
+    {
         background-color: white;
         font-family: 微软雅黑;
         color: black;
     }
 
-        .table th, .table td {
+        .table th, .table td
+        {
             text-align: center;
             vertical-align: middle;
         }
 
-    .label {
+    .label
+    {
         font-weight: normal;
     }
 </style>
 
 <div class="span12" style="margin-top: 30px">
     <h2 style="text-align: center">@Model.Contest.Name</h2>
+    <h5 style="text-align: center; font-family:微软雅黑">
+        @if (Model.Contest.IsAttended() && Model.Contest.GetAttendType() == Contest.AttendType.Virtual)
+        {
+            TimeSpan span = DateTime.Now - Model.Contest.RelativeStartTime;
+            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
+            <span>开始后 @span.ToString("g") 时的排名</span>
+        }
+        else
+        {
+            <span>最终排名</span>
+        }
+    </h5>
     <div class="alert alert-info" style="padding: 0px">
         @using (Html.BeginForm("Standing", "Contest", FormMethod.Get, new { id = "frmList" }))
         {
             <table class="table" style="margin: 0px; border: 0px; background-color: rgb(217,237,247)">
                 <tr>
-                    <td style="text-align: left; color: green">
-                        @if (Model.Contest.IsAttended() && Model.Contest.GetAttendType() == Contest.AttendType.Virtual)
-                        {
-                            TimeSpan span = DateTime.Now - Model.Contest.RelativeStartTime;
-                            span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);
-                            <span>比赛开始后 @span.ToString("g") 时的排名</span>
-                        }
-                        else
-                        {
-                            <span>@Model.Contest.Name 的最终排名</span>
-                        }
+                    <td style="text-align: left">
+                        <input class="input-small search-query" type="text" placeholder="搜索用户">
+                        <input type="submit" class="btn btn-primary btn-small" value="查询" />
                     </td>
                     <td style="text-align: right">
                         @Html.CheckBoxFor(x => x.ShowVirtual, new { onchange = "$('#frmList').submit();" })

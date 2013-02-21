@@ -74,7 +74,10 @@
                             default:
                                 throw new Exception("错误的类型");
                         }
-                        <td><span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span></td>
+                        <td>
+                            <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span>
+                            <input class="btn btn-danger btn-small" value="Hunt!" type="submit" style="float:right; font-weight:bold">
+                        </td>
                     </tr>
                     @if (Model.Score.HasValue)
                     {

@@ -31,11 +31,20 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，信息不予显示" });
             }
+            catch (ProblemNotLockedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您尚未锁定题目，信息不予显示" });
+            }
             catch (RecordNotFoundException)
             {
                 return RedirectToAction("Error", "Shared", new { msg = "没有这个记录" });
             }
             return View(record);
+        }
+
+        public ActionResult Hunt()
+        {
+            return View();
         }
     }
 }

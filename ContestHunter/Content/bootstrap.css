@@ -1565,9 +1565,9 @@ select:focus:required:invalid:focus {
 
 input.search-query {
   padding-right: 14px;
-  padding-right: 4px \9;
+  /*padding-right: 4px \9;*/
   padding-left: 14px;
-  padding-left: 4px \9;
+  /*padding-left: 4px \9;*/
   /* IE7-8 doesn't have border-radius, so don't indent the padding */
 
   margin-bottom: 0;

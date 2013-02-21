@@ -248,7 +248,10 @@
                             {
                                 <tr>
                                     <td>@Html.ActionLink(problem, "Show", "Problem", new { id = problem, contest = Model.Name }, null)<code>此处通过率</code></td>
-                                    <td style="text-align: right; border-left: 0px">From @Html.UserLink(Model.ProblemByName(problem).Owner)</td>
+                                    <td style="text-align: right; border-left: 0px">
+                                        From @Html.UserLink(Model.ProblemByName(problem).Owner)
+                                        <input class="btn btn-danger btn-mini" type="submit" value="锁定该题">
+                                    </td>
                                 </tr>
                             }
                             @if (!string.IsNullOrEmpty(Model.Description))
