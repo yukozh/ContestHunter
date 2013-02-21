@@ -858,10 +858,10 @@ namespace ContestHunter.Models.Domain
                                                            && r.Status > 0
                                                            select r).Count()
                                         let SuccessfulHack = (from h in db.HUNTs
-                                                              where h.USER1.ID == u.ID && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.StatusType.Success
+                                                              where h.USER1.ID == u.ID && h.RECORD1.PROBLEM1.ID == p.ID && h.Status == (int)Hunt.StatusType.Success
                                                               select h).Count()
                                         let FailedHack = (from h in db.HUNTs
-                                                          where h.USER1.ID == u.ID && h.RECORD1.PROBLEM1 == p && h.Status == (int)Hunt.StatusType.Fail
+                                                          where h.USER1.ID == u.ID && h.RECORD1.PROBLEM1.ID == p.ID && h.Status == (int)Hunt.StatusType.Fail
                                                           select h).Count()
                                         select new CFStanding.DescriptionClass()
                                         {
