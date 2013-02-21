@@ -78,7 +78,7 @@ namespace ContestHunter.Controllers
 
             try
             {
-                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash, "中国", "湖南省", "长沙市", "雅礼中学", "I'm too shy to say something...", "艾雨青");
+                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash, "中国", "山东省", "青岛市", "第二中学", "I'm too shy to say something...", "王强松");
             }
             catch (PasswordMismatchException)
             {
@@ -161,6 +161,11 @@ namespace ContestHunter.Controllers
             }
 
             return View(user);
+        }
+
+        public ActionResult Edit()
+        {
+            return View();
         }
     }
 }

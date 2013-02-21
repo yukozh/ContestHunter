@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="span12">
+    <div class="alert alert-info" style="margin-top:20px">
+        <h2 style="text-align: center">修改用户资料</h2>
+        <form class="form-horizontal" style="width:600px; margin:auto">
+            <div class="control-group">
+                <label class="control-label">当前密码</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge">
+                    <p class="help-block">请输入您现在的密码</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">新密码</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge">
+                    <p class="help-block">若不修改密码，请留空</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">重复新密码</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge">
+                    <p class="help-block">请再次输入新密码</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">我的头像</label>
+                <div class="controls">
+                    <input type="file">
+                    <input class="btn btn-warning btn-small" type="submit" value="开始上传">
+                    <p class="help-block">上传一张200px*200px的图片作为头像</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">基本信息</label>
+                <div class="controls">
+                    <input type="text" class="input-mini" placeholder="尊姓大名">
+                    <input type="text" class="input-mini" placeholder="国家">
+                    <input type="text" class="input-mini" placeholder="省份">
+                    <input type="text" class="input-mini" placeholder="城市">
+                    <input type="text" class="input-mini" placeholder="学校">
+                    <p class="help-block">鼓励您填写真实信息，以便于大家相互交流</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">我的格言</label>
+                <div class="controls">
+                    <textarea style="width:300px; height:100px"></textarea>
+                    <p class="help-block">对自己的简要介绍，或者您想说的话</p>
+                </div>
+            </div>
+        </form>
+        <div style="text-align: center">
+            <input class="btn btn-primary" value="确认修改" type="submit">
+        </div>
+    </div>
+</div>

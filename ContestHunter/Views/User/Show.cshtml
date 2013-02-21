@@ -38,28 +38,31 @@
                 <td style="width: 200px; padding-right: 20px; vertical-align: top;">
                     @Html.Gravatar(Model.Email, 200)
                 </td>
-                <td style="padding-top: 10px; padding-right: 20px; width: 350px; vertical-align: top;">
+                <td style="vertical-align: top;">
                     @{
                         ViewBag.Rating = new RatingInfo(Model);
                     }
                     <h4 style="color: @ViewBag.Rating.Color">@ViewBag.Rating.Caption，@Model.Name</h4>
-                    <h5 style="color: green">能力评估值：@Model.Rating()</h5>
-                    <h5 style="color: green">当前排名：-1</h5>
-                    <h5>基本信息：@Model.RealName - @Model.Country,@Model.Province,@Model.City,@Model.School</h5>
-                    <h5>电子邮件：<a href="mailto:@Model.Email">@Model.Email</a></h5>
-                    <h5>上次登录：@Model.LastLoginTime</h5>
-                </td>
-                <td style="width: 300px; vertical-align: top">
-                    <h5>Ta的格言：</h5>
-                    @Model.Motto
-                    <h5 style="text-align: right">
-                        @Html.ActionLink("Ta的提交记录", "Index", "Record", new { UserName = Model.Name },null)<br />
-                        <a href="#">Ta的比赛记录</a><br />
-                        @if (USER.CurrentUserName == Model.Name)
-                        {
-                            <a href="#">修改我的用户资料</a>
-                        }
-                    </h5>
+                    <div style="float:left; width:350px">
+                        <h5 style="color: green">能力评估值：@Model.Rating()</h5>
+                        <h5 style="color: green">当前排名：-1</h5>
+                        <h5>基本信息：@Model.RealName - @Model.Country,@Model.Province,@Model.City,@Model.School</h5>
+                        <h5>电子邮件：<a href="mailto:@Model.Email">@Model.Email</a></h5>
+                        <h5>上次登录：@Model.LastLoginTime</h5>
+                    </div>
+                    <div style="float:right; width:300px">
+                        <h5>Ta的格言：</h5>
+                        @Model.Motto
+                        <h5 style="text-align: right">
+                            @Html.ActionLink("Ta的提交记录", "Index", "Record", new { UserName = Model.Name },null)<br />
+                            <a href="#">Ta的比赛记录</a><br />
+                            @if (USER.CurrentUserName == Model.Name)
+                            {
+                                <a href="#">修改我的用户资料</a>
+                            }
+                        </h5>
+                    </div>
+                    <div style="clear:both"></div>
                 </td>
             </tr>
         </table>
