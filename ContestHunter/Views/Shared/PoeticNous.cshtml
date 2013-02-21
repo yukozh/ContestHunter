@@ -23,10 +23,11 @@
 
     <!--SyntaxHighlighter-->
     <link href="~/Content/syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css" />
     <script src="~/Content/syntaxhighlighter/scripts/shCore.js" type="text/javascript"></script>
-    @*<script src="http://agorbatchev.typepad.com/pub/sh/3_0_83/scripts/shAutoloader.js" type="text/javascript"></script>*@
     <script src="~/Content/syntaxhighlighter/scripts/shBrushCpp.js"></script>
     <script src="~/Content/syntaxhighlighter/scripts/shBrushDelphi.js"></script>
+    @*<script src="http://agorbatchev.typepad.com/pub/sh/3_0_83/scripts/shAutoloader.js" type="text/javascript"></script>*@
     <!--End SyntaxHighlighter-->
 
     <script src="~/Script/site.js"></script>
@@ -176,8 +177,18 @@
               'vb vbnet               !shBrushVb.js',
               'xml xhtml xslt html    !shBrushXml.js'
             ));*@
-            SyntaxHighlighter.defaults['toolbar'] = false;
-
+            SyntaxHighlighter.defaults['toolbar'] = true;
+            SyntaxHighlighter.config.strings = {
+                expandSource: '展开代码',
+                viewSource: '查看代码',
+                copyToClipboard: '复制代码',
+                print: '打印代码',
+                help: '关于',
+                alert: '代码复制成功！\n\n',
+                copyToClipboardConfirmation: '如果您的浏览器复制下来的代码丢失回车符，请点击"查看代码"再全选复制。',
+                aboutDialog: 'SyntaxHighlighter'
+            };
+            SyntaxHighlighter.config.clipboardSwf = '/Content/SyntaxHighlighter/scripts/clipboard.swf';
             SyntaxHighlighter.all();
         })();
     </script>

@@ -227,7 +227,7 @@ namespace ContestHunter.Models.Domain
         {
             using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
-                sock.Connect(new IPEndPoint(IPAddress.Parse(IP), 6000));
+                sock.Connect(IP,6000);
                 using (MemoryStream stream = new MemoryStream())
                 {
                     using (BinaryWriter Writer = new BinaryWriter(stream))
