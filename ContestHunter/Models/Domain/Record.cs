@@ -177,20 +177,22 @@ namespace ContestHunter.Models.Domain
                 if (result.USER1.Name != Domain.User.CurrentUser.name)
                 {
                     var con = Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name);
-                    if (con.Type != Domain.Contest.ContestType.CF)
+                    if (DateTime.Now <= Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name).RelativeEndTime)
                     {
-                        if (DateTime.Now <= Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name).RelativeEndTime)
+                        if (con.Type != Domain.Contest.ContestType.CF)
+                        {
                             throw new ContestNotEndedException();
-                    }
-                    else
-                    {
-                        if (!(from l in
-                                  (from u in db.USERs
-                                   where u.Name == Domain.User.CurrentUser.name
-                                   select u).Single().LOCKs
-                              where l == result.PROBLEM1
-                              select l).Any())
-                            throw new ProblemNotLockedException();
+                        }
+                        else
+                        {
+                            if (!(from l in
+                                      (from u in db.USERs
+                                       where u.Name == Domain.User.CurrentUser.name
+                                       select u).Single().LOCKs
+                                  where l == result.PROBLEM1
+                                  select l).Any())
+                                throw new ProblemNotLockedException();
+                        }
                     }
                 }
                 return new Record()
