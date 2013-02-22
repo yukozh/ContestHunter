@@ -6,29 +6,26 @@
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         font-family: 微软雅黑;
         color: black;
     }
 
-        .table th, .table td
-        {
+        .table th, .table td {
             text-align: center;
             vertical-align: middle;
         }
 
-    .label
-    {
+    .label {
         font-weight: normal;
     }
 </style>
 
 <div class="span12" style="margin-top: 30px">
     <h2 style="text-align: center">@Model.Contest.Name</h2>
-    <h5 style="text-align: center; font-family:微软雅黑">
-        @if (Model.Contest.IsAttended() && Model.Contest.GetAttendType() == Contest.AttendType.Virtual)
+    <h5 style="text-align: center; font-family: 微软雅黑">
+        @if (DateTime.Now < Model.Contest.RelativeEndTime)
         {
             TimeSpan span = DateTime.Now - Model.Contest.RelativeStartTime;
             span = new TimeSpan(span.Days, span.Hours, span.Minutes, span.Seconds);

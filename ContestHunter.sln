@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContestHunter", "ContestHun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainTest", "DomainTest\DomainTest.csproj", "{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllKorrect", "AllKorrect\AllKorrect.csproj", "{D9A3C7FE-689E-4C7F-83DB-CAC4FE27DB0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{483984A1-0D01-4339-8EB8-1C3A95E1D2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9A3C7FE-689E-4C7F-83DB-CAC4FE27DB0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A3C7FE-689E-4C7F-83DB-CAC4FE27DB0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A3C7FE-689E-4C7F-83DB-CAC4FE27DB0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A3C7FE-689E-4C7F-83DB-CAC4FE27DB0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
