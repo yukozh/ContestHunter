@@ -2,4 +2,31 @@
     ViewBag.Title = "Hunt";
 }
 
-<h2>Hunt</h2>
+<div class="span12">
+    <div class="alert alert-info" style="margin-top: 20px">
+        <fieldset>
+            <legend style="color:red; text-align:center">Make a Hunt！</legend>
+            <div style="text-align: center; font-family: 微软雅黑">
+                Hunt成功可以得到100分，失败将被扣除25分<br />
+                如果您提交的数据不合法，那么本次Hunt不计入总成绩<br />
+                可以直接提交输入数据，也可以上传数据生成器<br />
+                如果提交数据生成器，请采用标准输出，C++代码中%lld和%I64d均可<br />
+                <br />
+            </div>
+            <div style="width: 800px; margin: auto; text-align: center">
+                <div>
+                    选项：
+                <select>
+                    <option value="Data">直接提交输入数据</option>
+                    <option value="CPP">数据生成器(C++)</option>
+                    <option value="C">数据生成器(C)</option>
+                    <option value="Pascal">数据生成器(Pascal)</option>
+                    <option value="Java">数据生成器(Java)</option>
+                </select>
+                </div>
+                <textarea style="width: 800px; height: 400px"></textarea>
+                <input type="submit" value="Hunt!" class="btn btn-danger" />
+            </div>
+        </fieldset>
+    </div>
+</div>
