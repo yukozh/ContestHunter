@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
 namespace AllKorrect
 {
     /// <summary>
-    /// 封装好的NativeRunner类，此类为IDisposable，注意适当处理
+    /// 封装好的NativeRunner类。此类为IDisposable，注意适当处理
     /// </summary>
     public class NativeRunner : IDisposable
     {
+        const int RANDOM_STRING_LENGTH = 10;
+        static readonly Random RAND = new Random();
+
         TcpClient tcp;
         BinaryReader reader;
         BinaryWriter writer;
@@ -183,7 +187,7 @@ namespace AllKorrect
                 msg.Size = msg.Body.Length;
                 msg.Send(writer);
 
-                Message reply=new Message(reader);
+                Message reply = new Message(reader);
                 if (reply.Type != MessageType.HasBlobReply)
                 {
                     throw new Exception("错误的的消息回应类型");
@@ -255,6 +259,28 @@ namespace AllKorrect
         }
 
         /// <summary>
+        /// 上传一个File
+        /// </summary>
+        public void PutFile(string name, byte[] bytes)
+        {
+            string filename = RandomString();
+            PutBlob(filename, bytes);
+            MoveBlob2File(filename, name);
+        }
+
+        /// <summary>
+        /// 下载一个File
+        /// </summary>
+        public byte[] GetFile(string name)
+        {
+            string blobname = RandomString();
+            MoveFile2Blob(name, blobname);
+            byte[] result = GetBlob(blobname);
+            MoveBlob2File(blobname, name);
+            return result;
+        }
+
+        /// <summary>
         /// 远程执行一个程序
         /// </summary>
         /// <param name="command">若为系统程序，直接填入程序名，如g++，若为某File，则在程序名前加"./"，如./code</param>
@@ -272,7 +298,7 @@ namespace AllKorrect
                 ArgumentCount = argv.Count(),
                 Arguments = argv,
                 Command = command,
-                InputBlob = inputBlob,
+                InputBlob = inputBlob ?? "",
                 MemoryLimit = memoryLimit,
                 OutputLimit = outputLimit,
                 Restriction = restriction,
@@ -288,7 +314,41 @@ namespace AllKorrect
 
         public void Dispose()
         {
+            if (tcp.Connected && writer.BaseStream.CanWrite)
+            {
+                new Message()
+                {
+                    Type = MessageType.Exit,
+                    Body = new byte[0],
+                    Size = 0
+                }.Send(writer);
+                //Increase the probability of server  to recv the msg
+                Thread.Sleep(500);
+            }
             tcp.Close();
+        }
+
+        string RandomString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("__");
+            for (int i = 0; i < RANDOM_STRING_LENGTH; i++)
+            {
+                int num = RAND.Next(10 + 26 + 26);
+                if (num < 10)
+                {
+                    sb.Append((char)(num + '0'));
+                }
+                else if (num < 10 + 26)
+                {
+                    sb.Append((char)(num - 10 + 'a'));
+                }
+                else
+                {
+                    sb.Append((char)(num - 10 - 26 + 'A'));
+                }
+            }
+            return sb.ToString();
         }
     }
 }
