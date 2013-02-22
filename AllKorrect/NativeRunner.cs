@@ -7,12 +7,20 @@ using System.Net.Sockets;
 using System.IO;
 namespace AllKorrect
 {
+    /// <summary>
+    /// 封装好的NativeRunner类，此类为IDisposable，注意适当处理
+    /// </summary>
     public class NativeRunner : IDisposable
     {
         TcpClient tcp;
         BinaryReader reader;
         BinaryWriter writer;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="host">AllKorrect的主机地址</param>
+        /// <param name="port">AllKorrect的端口号</param>
         public NativeRunner(string host, int port)
         {
             tcp = new TcpClient(host, port);
@@ -20,6 +28,9 @@ namespace AllKorrect
             writer = new BinaryWriter(tcp.GetStream(), Encoding.ASCII, true);
         }
 
+        /// <summary>
+        /// 将特定Blob移动为特定的File
+        /// </summary>
         public void MoveBlob2File(string blob, string file)
         {
             new CopyMove
@@ -34,6 +45,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 为特定Blob更名
+        /// </summary>
         public void MoveBlob2Blob(string blob1, string blob2)
         {
             new CopyMove
@@ -48,6 +62,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 为特定File更名
+        /// </summary>
         public void MoveFile2File(string file1, string file2)
         {
             new CopyMove
@@ -62,6 +79,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 将特定File移动为特定的Blob
+        /// </summary>
         public void MoveFile2Blob(string file, string blob)
         {
             new CopyMove
@@ -76,6 +96,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 复制特定Blob为特定的File
+        /// </summary>
         public void CopyBlob2File(string blob, string file)
         {
             new CopyMove
@@ -90,6 +113,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 复制特定Blob为特定的Blob
+        /// </summary>
         public void CopyBlob2Blob(string blob1, string blob2)
         {
             new CopyMove
@@ -104,6 +130,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 复制特定File为特定的File
+        /// </summary>
         public void CopyFile2File(string file1, string file2)
         {
             new CopyMove
@@ -118,6 +147,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 复制特定File为特定的Blob
+        /// </summary>
         public void CopyFile2Blob(string file, string blob)
         {
             new CopyMove
@@ -132,6 +164,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 判断某Blob是否存在
+        /// </summary>
         public bool HasBlob(string name)
         {
             using (MemoryStream mem = new MemoryStream())
@@ -157,6 +192,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 判断某File是否存在
+        /// </summary>
         public bool HasFile(string name)
         {
             using (MemoryStream mem = new MemoryStream())
@@ -182,6 +220,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 上传一个Blob
+        /// </summary>
         public void PutBlob(string name, byte[] bytes)
         {
             new PutBlob()
@@ -196,6 +237,9 @@ namespace AllKorrect
             }
         }
 
+        /// <summary>
+        /// 下载一个Blob
+        /// </summary>
         public byte[] GetBlob(string name)
         {
             new GetBlob()
@@ -210,6 +254,17 @@ namespace AllKorrect
             return reply.Body;
         }
 
+        /// <summary>
+        /// 远程执行一个程序
+        /// </summary>
+        /// <param name="command">若为系统程序，直接填入程序名，如g++，若为某File，则在程序名前加"./"，如./code</param>
+        /// <param name="argv">程序的命令行参数，如new[]{"-o","code","code.cpp"}</param>
+        /// <param name="memoryLimit">运行时内存限制，单位为字节。-1为不限制。</param>
+        /// <param name="timeLimit">运行时用户态时间限制，单位为毫秒。-1为不限制。</param>
+        /// <param name="outputLimit">程序输出大小限制，单位为字节。-1为不限制。</param>
+        /// <param name="restriction">程序限制级别</param>
+        /// <param name="inputBlob">输入文件的Blob名称，null为没有输出文件。</param>
+        /// <returns>程序运行结果</returns>
         public ExecuteResult Execute(string command, IEnumerable<string> argv, long memoryLimit, int timeLimit, long outputLimit, RestrictionLevel restriction, string inputBlob)
         {
             new Exec()

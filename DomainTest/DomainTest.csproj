@@ -54,8 +54,13 @@
   <ItemGroup>
     <Compile Include="DomainUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestAK.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AllKorrect\AllKorrect.csproj">
+      <Project>{d9a3c7fe-689e-4c7f-83db-cac4fe27db0a}</Project>
+      <Name>AllKorrect</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ContestHunter\ContestHunter.csproj">
       <Project>{ff6a73f9-d7e0-464c-9527-7d17a1b9200e}</Project>
       <Name>ContestHunter</Name>
