@@ -260,6 +260,7 @@ namespace ContestHunter.Models.Domain
                     RECORD1 = curRecord,
                     User = Domain.User.CurrentUser.ID,
                     Status = (int)Domain.Hunt.StatusType.Pending,
+                    Time = DateTime.Now
                 });
                 db.SaveChanges();
             }
