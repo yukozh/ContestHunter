@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using ContestHunter.Models.Domain;
 namespace ContestHunter.ViewHelpers
 {
@@ -62,6 +63,16 @@ namespace ContestHunter.ViewHelpers
             var description = metadata.Description;
 
             return MvcHtmlString.Create(string.Format(@"<span{0}>{1}</span>", sb.ToString(), description));
+        }
+
+        public static RouteValueDictionary DisabledIf(this object htmlAttributes, bool disabled)
+        {
+            var attributes = new RouteValueDictionary(htmlAttributes);
+            if (disabled)
+            {
+                attributes["disabled"] = "disabled";
+            }
+            return attributes;
         }
     }
 }

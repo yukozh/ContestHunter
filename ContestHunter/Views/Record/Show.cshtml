@@ -71,12 +71,19 @@
                                 ViewBag.Label = "";
                                 ViewBag.Message = "编译失败";
                                 break;
+                            case Record.StatusType.Hacked:
+                                ViewBag.Label = "label-inverse";
+                                ViewBag.Message = "被猎杀";
+                                break;
                             default:
                                 throw new Exception("错误的类型");
                         }
                         <td>
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span>
-                            <input class="btn btn-danger btn-small" value="Hunt!" type="submit" style="float:right; font-weight:bold">
+                            @if (Model.Status == Record.StatusType.Accept)
+                            {
+                                @Html.ActionLink("Hunt!", "Hunt", new { id = Model.ID }, new { @class = "btn btn-danger btn-small", style = "float:right; font-weight:bold" })
+                            }
                         </td>
                     </tr>
                     @if (Model.Score.HasValue)
@@ -134,26 +141,6 @@
         <div class="alert" style="float: right; width: 550px">
             <h5 style="color: red; float: right">v-Judge-Kernel @@ Contest Hunter</h5>
             @Html.Sanitized(Model.Detail)
-            @*
-            <h5>编译信息：</h5>
-            <div style="padding-left: 10px">
-                Warning blablabla<br />
-                ……………………<br />
-            </div>
-            <h5>各测试点详细信息：</h5>
-            <div style="padding-left: 10px">
-                #1：<span class="score_100"><b>通过</b></span> (????? ms / ????? KB)<br />
-                #2：<span class="score_0">答案错误</span> (????? ms / ????? KB)<br />
-                #3：<span class="score_0">超过时间限制</span> (????? ms / ????? KB)<br />
-                #4：<span class="score_100"><b>通过</b></span> (????? ms / ????? KB)<br />
-                #5：<span class="score_0">答案错误</span> (????? ms / ????? KB)<br />
-                #6：<span class="score_0">超过时间限制</span> (????? ms / ????? KB)<br />
-                #7：<span class="score_100"><b>通过</b></span> (????? ms / ????? KB)<br />
-                #8：<span class="score_0">答案错误</span> (????? ms / ????? KB)<br />
-                #9：<span class="score_0">超过时间限制</span> (????? ms / ????? KB)<br />
-                #10：<span class="score_100"><b>通过</b></span> (????? ms / ????? KB)<br />
-            </div>
-            *@
         </div>
         <div style="clear: both; padding: 5px">
             @switch (Model.Language)

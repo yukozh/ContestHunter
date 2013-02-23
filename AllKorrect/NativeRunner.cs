@@ -328,7 +328,10 @@ namespace AllKorrect
             tcp.Close();
         }
 
-        string RandomString()
+        /// <summary>
+        /// 制造一个随机字符串，可作为Blob或File的名称
+        /// </summary>
+        public string RandomString()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("__");

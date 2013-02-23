@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
+using System.Text;
 using ContestHunter.Models.Domain;
 using ContestHunter.Models.View;
 namespace ContestHunter.Controllers
@@ -42,9 +43,69 @@ namespace ContestHunter.Controllers
             return View(record);
         }
 
-        public ActionResult Hunt()
+        [HttpGet]
+        public ActionResult Hunt(Guid id)
         {
-            return View();
+            HuntModel model = new HuntModel();
+            try
+            {
+                Record record = Record.ByID(id);
+                model.HisCode = record.Code;
+                model.HisLanguage = record.Language;
+                model.HisName = record.User;
+                model.Problem = record.Problem;
+                model.Contest = record.Contest;
+            }
+            catch (ContestNotEndedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，不可查询代码" });
+            }
+            catch (RecordNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您要猎杀的记录不存在" });
+            }
+            catch (ProblemNotLockedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您的相应题目没有锁定" });
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Hunt(Guid id,HuntModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                Record record = Record.ByID(id);
+                record.Hunt(Encoding.UTF8.GetBytes(model.MyCode));
+            }
+            catch (ContestNotEndedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，不可查询代码" });
+            }
+            catch (ContestEndedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "比赛已结束，不可Hunt" });
+            }
+            catch (RecordNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您要猎杀的记录不存在" });
+            }
+            catch (RecordStatusMismatchException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "此条记录测试结果不为“正确”" });
+            }
+            catch (ContestTypeMismatchException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "这场比赛不是Codeforces赛制" });
+            }
+            catch (ProblemNotLockedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您的相应题目没有锁定" });
+            }
+            return RedirectToAction("Show", new { id = id });
         }
     }
 }

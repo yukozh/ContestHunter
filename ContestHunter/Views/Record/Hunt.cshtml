@@ -1,11 +1,35 @@
-﻿@{
+﻿@model ContestHunter.Models.View.HuntModel
+@using ContestHunter.Models.Domain
+@{
     ViewBag.Title = "Hunt";
+    ViewBag.ActivedNav = "Contest";
 }
 
 <div class="span12">
     <div class="alert alert-info" style="margin-top: 20px">
         <fieldset>
-            <legend style="color:red; text-align:center">Make a Hunt！</legend>
+            <legend style="color: red; text-align: center">Make a Hunt！</legend>
+            <p>您即将对 @Html.UserLink(Model.HisName) 对于 @Html.ActionLink(Model.Problem, "Show", "Problem", new { id = Model.Problem, contest = Model.Contest }, null) 的解答展开猎杀。</p>
+            <p>Ta的代码如下：</p>
+            <p style="font-size: 20px; color: red;">此处文本需要美化</p>
+            <div style="padding: 5px">
+                @switch (Model.HisLanguage)
+                {
+                    case Record.LanguageType.C:
+                        ViewBag.Brush = "c";
+                        break;
+                    case Record.LanguageType.CPP:
+                        ViewBag.Brush = "cpp";
+                        break;
+                    case Record.LanguageType.Pascal:
+                        ViewBag.Brush = "pascal";
+                        break;
+                    case Record.LanguageType.Java:
+                        ViewBag.Brush = "java";
+                        break;
+                }
+                <pre class="brush:@ViewBag.Brush;">@Model.HisCode</pre>
+            </div>
             <div style="text-align: center; font-family: 微软雅黑">
                 Hunt成功可以得到100分，失败将被扣除25分<br />
                 如果您提交的数据不合法，那么本次Hunt不计入总成绩<br />
@@ -14,18 +38,23 @@
                 <br />
             </div>
             <div style="width: 800px; margin: auto; text-align: center">
-                <div>
-                    选项：
-                    <select>
-                        <option value="Data">直接提交输入数据</option>
-                        <option value="CPP">数据生成器(C++)</option>
-                        <option value="C">数据生成器(C)</option>
-                        <option value="Pascal">数据生成器(Pascal)</option>
-                        <option value="Java">数据生成器(Java)</option>
-                    </select>
-                </div>
-                <textarea style="width: 800px; height: 400px"></textarea>
-                <input type="submit" value="Hunt!" class="btn btn-danger" />
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div>
+                        选项：
+                    @Html.DropDownListFor(x => x.MyLanague, new SelectListItem[]
+                       {
+                           new SelectListItem{Text="直接提交输入数据",Value=""},
+                           new SelectListItem{Text="[不支持]数据生成器(C++)",Value="CPP"},
+                           new SelectListItem{Text="[不支持]数据生成器(C)",Value="C"},
+                           new SelectListItem{Text="[不支持]数据生成器(Pascal)",Value="Pascal"},
+                           new SelectListItem{Text="[不支持]数据生成器(Java)",Value="Java"}
+                       })
+                    </div>
+                    @Html.TextAreaFor(x => x.MyCode, new { style = "width: 800px; height: 400px" })
+                    <input type="submit" value="Hunt!" class="btn btn-danger" />
+                }
             </div>
         </fieldset>
     </div>

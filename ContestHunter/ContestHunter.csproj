@@ -194,6 +194,7 @@
     <Compile Include="Models\View\ContestBasicInfoModel.cs" />
     <Compile Include="Models\View\ContestDescriptionModel.cs" />
     <Compile Include="Models\View\ContestProblemsModel.cs" />
+    <Compile Include="Models\View\HuntModel.cs" />
     <Compile Include="Models\View\MyContestModel.cs" />
     <Compile Include="Models\View\ProblemInfo.cs" />
     <Compile Include="Models\View\ProblemProgramModel.cs" />

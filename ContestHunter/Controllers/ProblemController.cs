@@ -689,5 +689,41 @@ namespace ContestHunter.Controllers
                 return RedirectToAction("Error", "Shared", new { msg = "没有找到相应的测试数据" });
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Lock(string id, string contest)
+        {
+            try
+            {
+                Problem problem = Contest.ByName(contest).ProblemByName(id);
+                problem.Lock();
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您要找的比赛不存在" });
+            }
+            catch (ProblemNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您要找的题目不存在" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (NotAttendedContestException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有报名相应的比赛" });
+            }
+            catch (ContestTypeMismatchException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "赛制不是Codeforces" });
+            }
+            catch (AttendedNotNormalException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有正式报名参加比赛" });
+            }
+            return RedirectToAction("Show", new { id = id, contest = contest });
+        }
     }
 }

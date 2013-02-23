@@ -24,9 +24,9 @@
             </colgroup>
             <tbody>
                 <tr>
-                    <td><b>总时限</b></td>
+                    <th>总时限</th>
                     <td>@(Math.Round(ViewBag.TotalTimeLimit / 1000.0, 1))s</td>
-                    <td><b>内存限制</b></td>
+                    <th>内存限制</th>
                     <td>
                         @if (ViewBag.MinimumMemoryLimit == ViewBag.MaximumMemoryLimit)
                         {
@@ -39,11 +39,31 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><b>出题人</b></td>
+                    <th>出题人</th>
                     <td>@Html.UserLink(Model.Owner)</td>
-                    <td><b>提交情况</b></td>
+                    <th>提交情况</th>
                     <td>暂不支持</td>
                 </tr>
+                @if (Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
+                {
+                    <tr>
+                        <th>锁定情况</th>
+                        <td colspan="3">
+                            @if (Model.IsLock())
+                            {
+                                @:已锁定
+                        }
+                            else
+                            {
+                                using (Html.BeginForm("Lock", "Problem", new { id = Model.Name, contest = Model.Contest }, FormMethod.Post, new { style = "margin:0;", onsubmit = "return confirm('锁定此题后，您将不能再提交代码，确实要锁定吗？');" }))
+                                {
+                                @Html.AntiForgeryToken()
+                                <input type="submit" value="将此题锁定以查看他人代码" class="btn btn-danger" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

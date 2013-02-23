@@ -42,8 +42,25 @@
             <table class="table" style="margin: 0px; border: 0px; background-color: rgb(217,237,247)">
                 <tr>
                     <td style="text-align: left">
-                        <input class="input-small search-query" type="text" placeholder="搜索用户">
-                        <input type="submit" class="btn btn-primary btn-small" value="查询" />
+                        <script>
+                            $(document).ready(function () {
+                                $(window).keydown(function (event) {
+                                    if (event.keyCode == 13) {
+                                        event.preventDefault();
+                                        return false;
+                                    }
+                                });
+                            });
+                            function SelectByUser(user) {
+                                $('#tableStanding > tbody > tr').filter(function () {
+                                    return $(this).attr('data-user').toLowerCase().indexOf(user.toLowerCase()) != -1;
+                                }).show();
+                                $('#tableStanding > tbody > tr').filter(function () {
+                                    return $(this).attr('data-user').toLowerCase().indexOf(user.toLowerCase()) == -1;
+                                }).hide();
+                            }
+                        </script>
+                        <input type="text" class="input-medium search-query" placeholder="本页中搜索用户" oninput="SelectByUser($(this).val());" />
                     </td>
                     <td style="text-align: right">
                         @Html.CheckBoxFor(x => x.ShowVirtual, new { onchange = "$('#frmList').submit();" })
@@ -52,7 +69,7 @@
                     </td>
                 </tr>
             </table>
-            <table class="table table-bordered table-striped table-hover">
+            <table id="tableStanding" class="table table-bordered table-striped table-hover">
                 <colgroup>
                     <col style="width: 50px">
                     <col style="width: 150px">
@@ -99,7 +116,7 @@
                         for (int i = 0; i < Model.ACM.Count; i++)
                         {
                             ACMStanding standing = Model.ACM[i];
-                        <tr>
+                        <tr dat-user="@standing.User">
                             <td><b>@(i + Model.StartIndex + 1)</b></td>
                             <td>
                                 @Html.UserLink(standing.User)
@@ -133,7 +150,7 @@
                         for (int i = 0; i < Model.OI.Count; i++)
                         {
                             OIStanding standing = Model.OI[i];
-                        <tr>
+                        <tr data-user="@standing.User">
                             <td><b>@(i + Model.StartIndex + 1)</b></td>
                             <td>
                                 @Html.UserLink(standing.User)
@@ -160,7 +177,7 @@
                         for (int i = 0; i < Model.CF.Count; i++)
                         {
                             CFStanding standing = Model.CF[i];
-                        <tr>
+                        <tr data-user="@standing.User">
                             <td><b>@(i + Model.StartIndex + 1)</b></td>
                             <td>
                                 @Html.UserLink(standing.User)
