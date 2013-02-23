@@ -64,13 +64,13 @@ namespace ContestHunter.Controllers
                 switch (contest.Type)
                 {
                     case Contest.ContestType.ACM:
-                        model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual);
+                        model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual,model.ShowNoSubmit);
                         break;
                     case Contest.ContestType.OI:
-                        model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual);
+                        model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual,model.ShowNoSubmit);
                         break;
                     case Contest.ContestType.CF:
-                        model.CF = contest.GetCFStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual);
+                        model.CF = contest.GetCFStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual,model.ShowNoSubmit);
                         break;
                 }
             }

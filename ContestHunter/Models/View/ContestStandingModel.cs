@@ -13,6 +13,8 @@ namespace ContestHunter.Models.View
 
         [Display(Name = "显示模拟比赛用户")]
         public bool ShowVirtual { get; set; }
+        [Display(Name="显示没有提交任何代码的用户")]
+        public bool ShowNoSubmit { get; set; }
 
         public int PageCount { get; set; }
         public int PageIndex { get; set; }

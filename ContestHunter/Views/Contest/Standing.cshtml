@@ -65,6 +65,8 @@
                     <td style="text-align: right">
                         @Html.CheckBoxFor(x => x.ShowVirtual, new { onchange = "$('#frmList').submit();" })
                         @Html.LabelFor(x => x.ShowVirtual)
+                        @Html.CheckBoxFor(x => x.ShowNoSubmit, new { onchange = "$('#frmList').submit();" })
+                        @Html.LabelFor(x => x.ShowNoSubmit)
                         <b>@Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest }, null)</b>
                     </td>
                 </tr>
