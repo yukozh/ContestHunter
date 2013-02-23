@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ContestHunterModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ContestHunterModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ContestHunterModelStoreContainer">
           <EntitySet Name="CONTEST" EntityType="ContestHunterModel.Store.CONTEST" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterModel.Store.CONTEST_ATTEND" store:Type="Tables" Schema="dbo" />
@@ -98,6 +98,7 @@
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="IsOfficial" Type="bit" Nullable="false" />
+          <Property Name="Weight" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="CONTEST_ATTEND">
@@ -451,8 +452,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ContestHunterModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -534,6 +534,7 @@
           <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="IsOfficial" Type="Boolean" Nullable="false" />
+          <Property Name="Weight" Type="Int32" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_CONTEST" FromRole="CONTEST" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterModel.FK_PROBLEM_CONTEST1" FromRole="CONTEST" ToRole="PROBLEM" />
@@ -593,7 +594,7 @@
           <NavigationProperty Name="OWNER" Relationship="ContestHunterModel.FK_PROBLEM_USER" FromRole="PROBLEM" ToRole="USER" />
           <NavigationProperty Name="RECORDs" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="PROBLEM" ToRole="RECORD" />
           <NavigationProperty Name="TESTDATAs" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="PROBLEM" ToRole="TESTDATA" />
-          <NavigationProperty Name="LOCKs" Relationship="ContestHunterModel.LOCK" FromRole="PROBLEM" ToRole="USER" />
+          <NavigationProperty Name="USERs" Relationship="ContestHunterModel.LOCK" FromRole="PROBLEM" ToRole="USER" />
         </EntityType>
         <EntityType Name="RATING">
           <Key>
@@ -837,6 +838,7 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="IsOfficial" ColumnName="IsOfficial" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>

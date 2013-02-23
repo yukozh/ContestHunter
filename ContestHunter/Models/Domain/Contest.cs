@@ -706,7 +706,7 @@ namespace ContestHunter.Models.Domain
         /// <param name="HasVirtual"></param>
         /// <returns></returns>
         /// <exception cref="ContestTypeMismatchException"></exception>
-        public List<ACMStanding> GetACMStanding(int skip, int top,bool HasVirtual)
+        public List<ACMStanding> GetACMStanding(int skip, int top,bool HasVirtual,bool HasNotSubmit)
         {
             if (Type != ContestType.ACM)
                 throw new ContestTypeMismatchException();
@@ -716,6 +716,10 @@ namespace ContestHunter.Models.Domain
                            where c.ID==ID
                            select c).Single();
                 var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
+                              where HasNotSubmit?true:(from r in db.RECORDs
+                                                       where r.USER1==u
+                                                       && r.PROBLEM1.CONTEST1==con
+                                                       select r).Any()
                               let des = from p in con.PROBLEMs
                                         orderby p.Name ascending
                                         let ACTimeList = (from r in p.RECORDs
@@ -758,7 +762,7 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         /// <exception cref="ContestTypeMismatchException"></exception>
         /// <exception cref="ContestNotEndedException"></exception>
-        public List<OIStanding> GetOIStanding(int skip, int top,bool HasVirtual)
+        public List<OIStanding> GetOIStanding(int skip, int top,bool HasVirtual,bool HasNotSubmit)
         {
             if (Type != ContestType.OI)
                 throw new ContestTypeMismatchException();
@@ -770,6 +774,10 @@ namespace ContestHunter.Models.Domain
                 if (DateTime.Now <= con.EndTime)
                     throw new ContestNotEndedException();
                 return (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
+                        where HasNotSubmit ? true : (from r in db.RECORDs
+                                                     where r.USER1 == u
+                                                     && r.PROBLEM1.CONTEST1 == con
+                                                     select r).Any()
                         let des = (from p in con.PROBLEMs
                                    orderby p.Name ascending
                                    let score = (from r in p.RECORDs
@@ -832,7 +840,7 @@ namespace ContestHunter.Models.Domain
         /// <param name="HasVirtual"></param>
         /// <returns></returns>
         /// <exception cref="ContestTypeMismatchException"></exception>
-        public List<CFStanding> GetCFStanding(int skip, int top, bool HasVirtual)
+        public List<CFStanding> GetCFStanding(int skip, int top, bool HasVirtual,bool HasNotSubmit)
         {
             if (Type != ContestType.CF)
                 throw new ContestTypeMismatchException();
@@ -842,6 +850,10 @@ namespace ContestHunter.Models.Domain
                            where c.ID==ID
                            select c).Single();
                 var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
+                              where HasNotSubmit ? true : (from r in db.RECORDs
+                                                           where r.USER1 == u
+                                                           && r.PROBLEM1.CONTEST1 == con
+                                                           select r).Any()
                               let des = from p in con.PROBLEMs
                                         orderby p.Name ascending
                                         let ACTimeList = (from r in p.RECORDs

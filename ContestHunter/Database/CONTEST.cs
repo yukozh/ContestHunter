@@ -29,6 +29,7 @@ namespace ContestHunter.Database
         public string Description { get; set; }
         public int Type { get; set; }
         public bool IsOfficial { get; set; }
+        public int Weight { get; set; }
         public int Status { get; set; }
     
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }

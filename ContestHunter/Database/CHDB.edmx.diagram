@@ -4,8 +4,8 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7c2bb293d60c4970bd38d08e497dad19" Name="Diagram1">
-        <EntityTypeShape EntityType="ContestHunterModel.CONTEST" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+      <Diagram DiagramId="771ab1edaa8d4b8cb53b5bb1b4b7ef22" Name="Diagram1">
+        <EntityTypeShape EntityType="ContestHunterModel.CONTEST" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.CONTEST_ATTEND" Width="1.5" PointX="3" PointY="8.25" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.GROUP" Width="1.5" PointX="9" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterModel.HUNT" Width="1.5" PointX="13.5" PointY="8" IsExpanded="true" />

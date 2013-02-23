@@ -166,6 +166,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestNotEndedException"></exception>
         /// <exception cref="RecordNotFoundException"></exception>
         /// <exception cref="ProblemNotLockedException"></exception>
+        /// <exception cref="ProblemNotPassedException"></exception>
         public static Record ByID(Guid id)
         {
             using (var db = new CHDB())
@@ -193,6 +194,12 @@ namespace ContestHunter.Models.Domain
                                   where l == result.PROBLEM1
                                   select l).Any())
                                 throw new ProblemNotLockedException();
+                            if (!(from r in db.RECORDs
+                                  where r.USER1.ID == Domain.User.CurrentUser.ID
+                                  && r.PROBLEM1.ID == result.PROBLEM1.ID
+                                  && r.Status == (int)Record.StatusType.Accept
+                                  select r).Any())
+                                throw new ProblemNotPassedException();
                         }
                     }
                 }
@@ -236,6 +243,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestTypeMismatchException"></exception>
         /// <exception cref="ContestEndedException"></exception>
         /// <exception cref="ProblemNotLockedException"></exception>
+        /// <exception cref="ProblemNotPassedException"></exception>
         public void Hunt(string Data,LanguageType Type)
         {
             using (var db = new CHDB())
@@ -255,7 +263,7 @@ namespace ContestHunter.Models.Domain
                     throw new ProblemNotLockedException();
                 if (!(from r in db.RECORDs
                       where r.USER1.ID == Domain.User.CurrentUser.ID
-                      && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
+                      && r.PROBLEM1.ID == curProbelm.ID
                       && r.Status == (int)Record.StatusType.Accept
                       select r).Any())
                     throw new ProblemNotPassedException();
