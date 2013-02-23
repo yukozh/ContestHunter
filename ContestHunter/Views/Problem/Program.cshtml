@@ -34,8 +34,13 @@
                     <div class="bar" style="width: 80%;"></div>
                 </div>
             </div>
-            <h5>请为您的题目提交一份<b>标程(Standard Program)</b>和一个<b>运行结果比较器(Special Judge)</b></h5>
-            <h5>您可以将<b>运行结果比较器</b>一栏留空，这样会使用预置的默认比较器，它可以支持忽略文末换行符和行末空格后的全文比较</h5>
+            <div style="text-align: center; font-family: 微软雅黑">
+                请为您的题目提交一份<b>标程(Standard Program)</b>和一个<b>运行结果比较器(Special Judge)</b><br />
+                您可以将<b>运行结果比较器</b>一栏留空，这样会使用预置的默认比较器，它可以支持忽略文末换行符和行末空格后的全文比较<br />
+                标程<b>必须包含对数据合法性的校验</b>，以检查参赛者Hunt时提交的数据的合法性<br />
+                若读入的数据不合法，标程应当返回非零值结束程序，测评器检测到标程运行时错误，将判定数据非法<br/>
+                <br />
+            </div>
             <div class="accordion" id="accordion2">
                 <div class="accordion-group">
                     <div class="accordion-heading">
@@ -45,12 +50,12 @@
                         <div class="accordion-inner">
                             @Html.DropDownListFor(x=>x.StdLanguage,new SelectListItem[]
                                {
+                                   new SelectListItem{Text="语言",Value=""},
                                    new SelectListItem{Text="C++",Value="CPP"},
                                    new SelectListItem{Text="C",Value="C"},
                                    new SelectListItem{Text="Java",Value="Java"},
                                    new SelectListItem{Text="Pascal",Value="Pascal"}
                                },new{@class="input-small"})
-                            <span style="font-size: 12px; color: gray">*标准输入输出，C/C++代码中的long long(%lld)和__int64(%I64d)均可使用</span>
                             @Html.TextAreaFor(x => x.Std)
                         </div>
                     </div>

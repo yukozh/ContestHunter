@@ -9,10 +9,11 @@
     <div class="alert alert-info" style="margin-top: 20px">
         <fieldset>
             <legend style="color: red; text-align: center">Make a Hunt！</legend>
-            <p>您即将对 @Html.UserLink(Model.HisName) 对于 @Html.ActionLink(Model.Problem, "Show", "Problem", new { id = Model.Problem, contest = Model.Contest }, null) 的解答展开猎杀。</p>
-            <p>Ta的代码如下：</p>
-            <p style="font-size: 20px; color: red;">此处文本需要美化</p>
-            <div style="padding: 5px">
+            <div style="text-align: center; font-family: 微软雅黑">
+                您即将对 @Html.UserLink(Model.HisName) 对于 @Html.ActionLink(Model.Problem, "Show", "Problem", new { id = Model.Problem, contest = Model.Contest }, null) 的解答展开猎杀<br />
+                Ta的代码如下：<br />
+            </div>
+            <div>
                 @switch (Model.HisLanguage)
                 {
                     case Record.LanguageType.C:
@@ -33,8 +34,7 @@
             <div style="text-align: center; font-family: 微软雅黑">
                 Hunt成功可以得到100分，失败将被扣除25分<br />
                 如果您提交的数据不合法，那么本次Hunt不计入总成绩<br />
-                可以直接提交输入数据，也可以上传数据生成器<br />
-                如果提交数据生成器，请采用标准输出，C++代码中%lld和%I64d均可<br />
+                可以直接提交输入数据，也可以上传数据生成器(采用标准输出)<br />
                 <br />
             </div>
             <div style="width: 800px; margin: auto; text-align: center">

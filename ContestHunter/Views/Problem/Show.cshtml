@@ -6,7 +6,8 @@
 }
 
 <style type="text/css">
-    .table td {
+    .table td,.table th
+    {
         font-family: 微软雅黑;
         text-align: center;
     }
@@ -41,38 +42,41 @@
                 <tr>
                     <th>出题人</th>
                     <td>@Html.UserLink(Model.Owner)</td>
-                    <th>提交情况</th>
-                    <td>
-                        @try
-                        {
-                            Problem.ProblemStatus status = Model.Status();
-                            @status.PassedUsers
-                            @:/
-                            @status.SubmitUsers
-                        }
-                        catch { }
-                    </td>
-                </tr>
-                @if (Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
-                {
-                    <tr>
+                    @if (Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
+                    {
                         <th>锁定情况</th>
                         <td colspan="3">
                             @if (Model.IsLock())
                             {
                                 @:已锁定
-                        }
+                            }
                             else
                             {
-                                using (Html.BeginForm("Lock", "Problem", new { id = Model.Name, contest = Model.Contest }, FormMethod.Post, new { style = "margin:0;", onsubmit = "return confirm('锁定此题后，您将不能再提交代码，确实要锁定吗？');" }))
+                                using (Html.BeginForm("Lock", "Problem", new { id = Model.Name, contest = Model.Contest }, FormMethod.Post, new { style = "margin:0;", onsubmit = "return confirm('锁定此题后，您将可以Hunt其他参赛者的代码，但不能再修改该题代码，确实要锁定吗？');" }))
                                 {
                                 @Html.AntiForgeryToken()
-                                <input type="submit" value="将此题锁定以查看他人代码" class="btn btn-danger" />
+                                <input type="submit" value="锁定该题" class="btn btn-danger btn-small" />
                                 }
                             }
                         </td>
-                    </tr>
-                }
+                    }
+                    else
+                    {
+                        <th>提交情况</th>
+                        <td>
+                            <code>
+                                @try
+                                {
+                                    Problem.ProblemStatus status = Model.Status();
+                                    @status.PassedUsers
+                                    @:/
+                                    @status.SubmitUsers
+                                }
+                                catch { }
+                            </code>
+                        </td>
+                    }
+                </tr>
             </tbody>
         </table>
     </div>
