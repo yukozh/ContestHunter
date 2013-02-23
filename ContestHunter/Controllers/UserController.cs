@@ -119,7 +119,7 @@ namespace ContestHunter.Controllers
             string token;
             try
             {
-                token = USER.Login(model.UserName, model.Password,Request.UserHostAddress);
+                token = USER.Login(model.UserName, model.Password, Request.Headers["X-Forwarded-For"] ?? Request.UserHostAddress);
             }
             catch (UserNotFoundException)
             {
