@@ -253,6 +253,12 @@ namespace ContestHunter.Models.Domain
                 var curProbelm = curContest.ProblemByName(curRecord.PROBLEM1.Name);
                 if (!curProbelm.IsLock())
                     throw new ProblemNotLockedException();
+                if (!(from r in db.RECORDs
+                      where r.USER1.ID == Domain.User.CurrentUser.ID
+                      && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
+                      && r.Status == (int)Record.StatusType.Accept
+                      select r).Any())
+                    throw new ProblemNotPassedException();
                 db.HUNTs.Add(new HUNT()
                 {
                     HuntData = Data,

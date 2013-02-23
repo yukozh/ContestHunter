@@ -323,5 +323,21 @@ namespace ContestHunter.Models.Domain
                 };
             }
         }
+
+        /// <summary>
+        /// 返回当前用户是否通过某题目
+        /// </summary>
+        /// <returns></returns>
+        public bool isPassed()
+        {
+            using (var db = new CHDB())
+            {
+                return (from r in db.RECORDs
+                        where r.PROBLEM1.ID == ID
+                        && r.Status == (int)Record.StatusType.Accept
+                        && r.USER1.ID==User.CurrentUser.ID
+                        select r).Any();
+            }
+        }
     }
 }

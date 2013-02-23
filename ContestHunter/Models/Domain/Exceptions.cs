@@ -117,4 +117,8 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class ProblemNotPassedException : Exception
+    {
+    }
+
 }
