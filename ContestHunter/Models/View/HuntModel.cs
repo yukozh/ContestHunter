@@ -14,7 +14,7 @@ namespace ContestHunter.Models.View
         public string HisCode { get; set; }
         public Record.LanguageType HisLanguage { get; set; }
 
-        public Record.LanguageType? MyLanague { get; set; }
+        public Record.LanguageType MyLanague { get; set; }
         [DisplayFormat(ConvertEmptyStringToNull=false)]
         public string MyCode { get; set; }
     }

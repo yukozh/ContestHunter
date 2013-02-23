@@ -42,7 +42,16 @@
                     <th>出题人</th>
                     <td>@Html.UserLink(Model.Owner)</td>
                     <th>提交情况</th>
-                    <td>暂不支持</td>
+                    <td>
+                        @try
+                        {
+                            Problem.ProblemStatus status = Model.Status();
+                            @status.PassedUsers
+                            @:/
+                            @status.SubmitUsers
+                        }
+                        catch { }
+                    </td>
                 </tr>
                 @if (Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
                 {

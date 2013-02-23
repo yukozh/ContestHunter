@@ -249,7 +249,13 @@
                                 Problem p = Model.ProblemByName(problem);
                                 <tr>
                                     <td>
-                                        @Html.ActionLink(problem, "Show", "Problem", new { id = problem, contest = Model.Name }, null)<code>此处通过率</code>
+                                        @Html.ActionLink(problem, "Show", "Problem", new { id = problem, contest = Model.Name }, null)
+                                        @try
+                                        {
+                                            Problem.ProblemStatus status = p.Status();
+                                            <code>@status.PassedUsers/@status.SubmitUsers</code>
+                                        }
+                                        catch { }
                                     </td>
                                     <td style="text-align: right; border-left: 0px">From @Html.UserLink(p.Owner)
                                     </td>

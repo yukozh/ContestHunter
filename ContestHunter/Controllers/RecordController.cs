@@ -79,7 +79,7 @@ namespace ContestHunter.Controllers
             try
             {
                 Record record = Record.ByID(id);
-                record.Hunt(Encoding.UTF8.GetBytes(model.MyCode));
+                record.Hunt(model.MyCode,model.MyLanague);
             }
             catch (ContestNotEndedException)
             {
