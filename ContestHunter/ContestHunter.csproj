@@ -340,27 +340,6 @@
     <Content Include="Views\Problem\TestCaseList.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="Database\CHDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Database\CHDB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CHDB.edmx</DependentUpon>
-      <LastGenOutput>CHDB.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Database\CHDB.edmx.diagram">
-      <DependentUpon>CHDB.edmx</DependentUpon>
-    </Content>
-    <Content Include="Database\CHDB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CHDB.edmx</DependentUpon>
-      <LastGenOutput>CHDB.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Contest\Mine.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +368,27 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Record\Hunt.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="Database\CHDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Database\CHDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CHDB.edmx</DependentUpon>
+      <LastGenOutput>CHDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Database\CHDB.edmx.diagram">
+      <DependentUpon>CHDB.edmx</DependentUpon>
+    </Content>
+    <Content Include="Database\CHDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CHDB.edmx</DependentUpon>
+      <LastGenOutput>CHDB.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

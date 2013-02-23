@@ -21,7 +21,8 @@ namespace ContestHunter.Models.Domain
             C,
             CPP,
             Pascal,
-            Java
+            Java,
+            Data
         };
         public LanguageType Language;
         public DateTime SubmitTime;
@@ -235,7 +236,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestTypeMismatchException"></exception>
         /// <exception cref="ContestEndedException"></exception>
         /// <exception cref="ProblemNotLockedException"></exception>
-        public void Hunt(byte[] Data)
+        public void Hunt(string Data,LanguageType Type)
         {
             using (var db = new CHDB())
             {
@@ -255,6 +256,7 @@ namespace ContestHunter.Models.Domain
                 db.HUNTs.Add(new HUNT()
                 {
                     HuntData = Data,
+                    DataType = (int)Type,
                     RECORD1 = curRecord,
                     User = Domain.User.CurrentUser.ID,
                     Status = (int)Domain.Hunt.StatusType.Pending,

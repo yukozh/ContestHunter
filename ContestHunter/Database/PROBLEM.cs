@@ -18,7 +18,7 @@ namespace ContestHunter.Database
         {
             this.RECORDs = new HashSet<RECORD>();
             this.TESTDATAs = new HashSet<TESTDATA>();
-            this.USERs = new HashSet<USER>();
+            this.LOCKs = new HashSet<USER>();
         }
     
         public System.Guid ID { get; set; }
@@ -36,6 +36,6 @@ namespace ContestHunter.Database
         public virtual USER OWNER { get; set; }
         public virtual ICollection<RECORD> RECORDs { get; set; }
         public virtual ICollection<TESTDATA> TESTDATAs { get; set; }
-        public virtual ICollection<USER> USERs { get; set; }
+        public virtual ICollection<USER> LOCKs { get; set; }
     }
 }

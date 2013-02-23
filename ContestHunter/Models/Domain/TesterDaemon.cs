@@ -94,6 +94,24 @@ namespace ContestHunter.Models.Domain
             return new Out(sock);
         }
 
+        byte[] GetHuntData(HUNT rec,Socket sock,int TimeLimit,long MemoryLimit)
+        {
+            switch ((Record.LanguageType)rec.DataType)
+            {
+                case Record.LanguageType.Data:
+                    return Encoding.UTF8.GetBytes(rec.HuntData);
+                default:
+                    Out DataMaker=Compile(rec.HuntData,(Record.LanguageType)rec.DataType,sock);
+                    if(DataMaker.Type!=Out.ResultType.Success)
+                        throw new NotImplementedException();
+                    Out Transfer=Compile(Resources.DataTransfer,Record.LanguageType.CPP,sock);
+                    if(Transfer.Type!=Out.ResultType.Success)
+                        throw new NotImplementedException();
+                    Out Msg = Test(new byte[] { }, new byte[] { }, TimeLimit, MemoryLimit, sock, Transfer.Message, DataMaker.Message);
+                    return Encoding.UTF8.GetBytes(Msg.Message);
+            }
+        }
+
         bool DealRecord(CHDB db,Socket sock)
         {
             var rec = (from r in db.RECORDs
@@ -191,7 +209,13 @@ namespace ContestHunter.Models.Domain
                        select h).FirstOrDefault();
             if (null == rec)
                 return false;
-
+            int TimeLimit = (from t in db.TESTDATAs
+                             where t.PROBLEM1 == rec.RECORD1.PROBLEM1
+                             select t).Max(x => x.TimeLimit);
+            long MemoryLimit = (from t in db.TESTDATAs
+                                where t.PROBLEM1 == rec.RECORD1.PROBLEM1
+                                select t).Max(x => x.MemoryLimit);
+            byte[] HuntData = GetHuntData(rec,sock,TimeLimit,MemoryLimit);
             Out DataChecker = Compile(rec.RECORD1.PROBLEM1.DataChecker, (Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage, sock);
             if (DataChecker.Type != Out.ResultType.Success)
             {
@@ -204,13 +228,7 @@ namespace ContestHunter.Models.Domain
                 rec.Status=(int)Hunt.StatusType.OtherError;
                 return false;
             }
-            int TimeLimit = (from t in db.TESTDATAs
-                              where t.PROBLEM1 == rec.RECORD1.PROBLEM1
-                              select t).Max(x => x.TimeLimit);
-            long MemoryLimit = (from t in db.TESTDATAs
-                                where t.PROBLEM1 == rec.RECORD1.PROBLEM1
-                                select t).Max(x => x.MemoryLimit);
-            Out result = Test(rec.HuntData, new byte[] { }, TimeLimit, MemoryLimit, sock, DataChecker.Message, OriRec.Message);
+            Out result = Test(HuntData, new byte[] { }, TimeLimit, MemoryLimit, sock, DataChecker.Message, OriRec.Message);
             if (result.Type == Out.ResultType.Success)
             {
                 rec.Status = (int)Hunt.StatusType.Success;
@@ -219,7 +237,7 @@ namespace ContestHunter.Models.Domain
                 {
                     Available = false,
                     Data = Encoding.UTF8.GetBytes(result.Message),
-                    Input = rec.HuntData,
+                    Input = HuntData,
                     ID = Guid.NewGuid(),
                     MemoryLimit = MemoryLimit,
                     TimeLimit = TimeLimit,
