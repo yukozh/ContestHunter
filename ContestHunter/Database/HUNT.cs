@@ -16,7 +16,8 @@ namespace ContestHunter.Database
     {
         public System.Guid User { get; set; }
         public System.Guid Record { get; set; }
-        public byte[] HuntData { get; set; }
+        public string HuntData { get; set; }
+        public int DataType { get; set; }
         public System.DateTime Time { get; set; }
         public int Status { get; set; }
         public string Detail { get; set; }

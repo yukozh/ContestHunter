@@ -61,6 +61,15 @@ namespace ContestHunter {
         }
         
         /// <summary>
+        ///   查找类似  的本地化字符串。
+        /// </summary>
+        internal static string DataTransfer {
+            get {
+                return ResourceManager.GetString("DataTransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 #include &lt;cassert&gt;
         ///#include &lt;cstdio&gt;
         ///#include &lt;cstdlib&gt;

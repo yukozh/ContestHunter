@@ -132,7 +132,8 @@
           </Key>
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Record" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="HuntData" Type="varbinary(max)" Nullable="false" />
+          <Property Name="HuntData" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DataType" Type="int" Nullable="false" />
           <Property Name="Time" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="Detail" Type="nvarchar(max)" />
@@ -566,7 +567,8 @@
           </Key>
           <Property Name="User" Type="Guid" Nullable="false" />
           <Property Name="Record" Type="Guid" Nullable="false" />
-          <Property Name="HuntData" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="HuntData" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="DataType" Type="Int32" Nullable="false" />
           <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="Detail" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -591,7 +593,7 @@
           <NavigationProperty Name="OWNER" Relationship="ContestHunterModel.FK_PROBLEM_USER" FromRole="PROBLEM" ToRole="USER" />
           <NavigationProperty Name="RECORDs" Relationship="ContestHunterModel.FK_RECORD_PROBLEM" FromRole="PROBLEM" ToRole="RECORD" />
           <NavigationProperty Name="TESTDATAs" Relationship="ContestHunterModel.FK_TESTDATA_PROBLEM" FromRole="PROBLEM" ToRole="TESTDATA" />
-          <NavigationProperty Name="USERs" Relationship="ContestHunterModel.LOCK" FromRole="PROBLEM" ToRole="USER" />
+          <NavigationProperty Name="LOCKs" Relationship="ContestHunterModel.LOCK" FromRole="PROBLEM" ToRole="USER" />
         </EntityType>
         <EntityType Name="RATING">
           <Key>
@@ -863,6 +865,7 @@
                 <ScalarProperty Name="User" ColumnName="User" />
                 <ScalarProperty Name="Record" ColumnName="Record" />
                 <ScalarProperty Name="HuntData" ColumnName="HuntData" />
+                <ScalarProperty Name="DataType" ColumnName="DataType" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Detail" ColumnName="Detail" />

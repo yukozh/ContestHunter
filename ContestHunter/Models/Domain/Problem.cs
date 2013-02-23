@@ -21,6 +21,12 @@ namespace ContestHunter.Models.Domain
         internal Guid ID;
         internal Contest contest;
 
+        public class ProblemStatus
+        {
+            public int SubmitUsers;
+            public int PassedUsers;
+        }
+
         /*
         public override bool Equals(object obj)
         {
@@ -220,7 +226,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 (from u in db.USERs
-                 where u.Name == User.CurrentUser.name
+                 where u.ID==User.CurrentUser.ID
                  select u.LOCKs).Single().Add((from p in db.PROBLEMs
                                                where p.ID==ID
                                                select p).Single());
@@ -238,7 +244,7 @@ namespace ContestHunter.Models.Domain
             {
                 return (from l in
                             (from u in db.USERs
-                             where u.Name == User.CurrentUser.name
+                             where u.ID==User.CurrentUser.ID
                              select u.LOCKs).Single()
                         where l.ID==ID
                         select l).Any();
@@ -282,6 +288,37 @@ namespace ContestHunter.Models.Domain
                 pro.DataCheckerLanguage = (int)DataCheckerLanguage;
                 pro.ComparerLanguage = (int)ComparerLanguage;
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 返回题目 Status OI赛制在比赛未结束的时候有异常
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ContestNotEndedException"></exception>
+        public ProblemStatus Status()
+        {
+            if (contest.Type == Domain.Contest.ContestType.OI && contest.RelativeNow <= contest.RelativeEndTime)
+            {
+                throw new ContestNotEndedException();
+            }
+            using (var db = new CHDB())
+            {
+                var s = (from r in db.RECORDs
+                         where r.PROBLEM1.ID == ID
+                         group r by r.USER1.ID into tmp
+                         let isAC = (from t in tmp
+                                     where t.Status == (int)Record.StatusType.Accept
+                                     select t).Any()
+                         select new
+                         {
+                             isAC
+                         });
+                return new ProblemStatus
+                {
+                    SubmitUsers = s.Count(),
+                    PassedUsers = s.Sum(x => x.isAC ? 1 : 0)
+                };
             }
         }
     }

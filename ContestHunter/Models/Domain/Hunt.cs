@@ -20,7 +20,7 @@ namespace ContestHunter.Models.Domain
         public string User;
         public string Contest;
         public string Problem;
-        public byte[] Data;
+        public string Data;
 
         public Guid Record;
         public StatusType Status;
@@ -51,7 +51,7 @@ namespace ContestHunter.Models.Domain
                         User = h.USER1.Name,
                         Detail = (h.USER1.Name == Domain.User.CurrentUser.name ? h.Detail : null),
                         Time = h.Time,
-                        Data = h.HuntData.Length > 1024 ? h.HuntData.Take(1024).ToArray() : h.HuntData
+                        Data = h.HuntData.Length > 10240 ? h.HuntData.Substring(0, 10240) : h.HuntData
                     });
                 }
                 return Ret;
