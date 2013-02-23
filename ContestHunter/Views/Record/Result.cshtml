@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Result";
+}
+
+<div class="span12">
+    <div class="alert alert-info" style="margin-top: 20px; padding: 5px; font-family: 微软雅黑; color: black">
+        <div style="float: left; width: 320px">
+            <table class="table table-bordered table-striped table-hover" style="background-color: white">
+                <colgroup>
+                    <col style="width: 100px">
+                    <col style="width: 220px">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td><b>题目名称</b></td>
+                        <td>OrzCYF</td>
+                    </tr>
+                    <tr>
+                        <td><b>提交者</b></td>
+                        <td>onetwogoo</td>
+                    </tr>
+                    <tr>
+                        <td><b>评测结果</b></td>
+                        <td>
+                            <span class="label label-success" style="font-size: 15px">猎杀成功</span>
+                            @*<span class="label label-important" style="font-size: 15px">猎杀失败</span>
+                            <span class="label" style="font-size: 15px">数据不合法</span>
+                            <span class="label label-inverse" style="font-size: 15px">系统错误</span>*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>得分</b></td>
+                        <td>
+                            @*成功*@<span style="color:green"><b>100</b></span>
+                            @*（不合法）<span style="color:blue"><b>0</b></span>
+                            （失败）<span style="color:gray"><b>-25</b></span>*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>类型</b></td>
+                        <td>
+                            直接提交数据
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>提交时间</b></td>
+                        <td>2013/2/23 22:02:00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="alert" style="float: right; width: 550px">
+            <h5 style="color: red; float: right">v-Judge-Kernel @@ Contest Hunter</h5>
+            测评机详细输出
+        </div>
+        <div style="clear: both; padding: 5px">
+            <pre class="brush:cpp;">此处Hunt数据或生成器</pre>
+        </div>
+    </div>
+</div>
+
