@@ -229,7 +229,7 @@ namespace ContestHunter.Models.Domain
             {
                 (from u in db.USERs
                  where u.ID==User.CurrentUser.ID
-                 select u.LOCKs).Single().Add((from p in db.PROBLEMs
+                 select u).Single().LOCKs.Add((from p in db.PROBLEMs
                                                where p.ID==ID
                                                select p).Single());
                 db.SaveChanges();
