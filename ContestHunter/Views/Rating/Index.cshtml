@@ -1,18 +1,18 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@model ContestHunter.Models.View.RatingIndexModel
+@{
+    ViewBag.Title = "能力排名";
+    ViewBag.ActivedNav = "Rating";
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td
-        {
+        .table td {
             text-align: center;
             vertical-align: middle;
             font-family: 微软雅黑;
@@ -21,9 +21,9 @@
 
 <div class="span12">
     <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
-        <div class="form-search" style="margin:0px 5px">
+        <div class="form-search" style="margin: 0px 5px">
             <h4 style="float: left; font-family: 微软雅黑; font-weight: normal;">能力排名</h4>
-            <div style="float: right; margin-top:5px">
+            <div style="float: right; margin-top: 5px">
                 <input type="text" class="input-small search-query" placeholder="检索用户">
                 <input type="submit" class="btn btn-small btn-success" value="查询">
             </div>
@@ -45,23 +45,57 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><a href="#"><b>VariantF</b></a></td>
-                    <td>Shi Qing is all my love...</td>
-                    <td><a href="#"@*链接到History*@ style="color:black"><b>2600</b></a></td>
-                </tr>
+                @for (int i = 0; i < Model.Users.Count; i++)
+                {
+                    <tr>
+                        <td>@(i + Model.StartIndex+1)</td>
+                        <td>@Html.UserLink(Model.Users[i].Name)</td>
+                        <td>@Model.Users[i].Motto</td>
+                        <td>
+                            @{
+                    RatingInfo info = new RatingInfo(Model.Users[i]);
+                            }
+                            @Html.ActionLink(info.Rating.ToString(), "History", new { id = Model.Users[i].Name }, new { title = info.Caption, style = "color:" + info.Color })
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
-        <div class="pagination" style="text-align:center; margin:3px">
-            <ul>
-                <li><a href="#">«</a></li>
-                <li class="active"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">»</a></li>
-            </ul>
-        </div>
+        @using (Html.BeginForm("Index", "Rating", FormMethod.Get, new { id = "frmList" }))
+        {
+            @Html.HiddenFor(x => x.PageIndex)
+            <script>
+                function ChangePage(index) {
+                    $('#PageIndex').val(index);
+                    $('#frmList').submit();
+                }
+            </script>
+            if (Model.PageCount > 1)
+            {
+            <div class="pagination" style="text-align: center; margin: 3px">
+                <ul>
+                    @if (Model.PageIndex > 0)
+                    {
+                        <li><a href="javascript:ChangePage(0)">«</a></li>
+                    }
+                    @for (int i = 0; i < Model.PageCount; i++)
+                    {
+                        if (i == Model.PageIndex)
+                        {
+                        <li class="active"><a href="javascript:ChangePage(@i)">@(i + 1)</a></li>
+                        }
+                        else
+                        {
+                        <li><a href="javascript:ChangePage(@i)">@(i + 1)</a></li>
+                        }
+                    }
+                    @if (Model.PageIndex != Model.PageCount - 1)
+                    {
+                        <li><a href="javascript:ChangePage(@(Model.PageCount - 1))">»</a></li>
+                    }
+                </ul>
+            </div>
+            }
+        }
     </div>
 </div>
