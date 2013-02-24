@@ -244,7 +244,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestEndedException"></exception>
         /// <exception cref="ProblemNotLockedException"></exception>
         /// <exception cref="ProblemNotPassedException"></exception>
-        public void Hunt(string Data,LanguageType Type)
+        public Guid Hunt(string Data,LanguageType Type)
         {
             using (var db = new CHDB())
             {
@@ -267,8 +267,10 @@ namespace ContestHunter.Models.Domain
                       && r.Status == (int)Record.StatusType.Accept
                       select r).Any())
                     throw new ProblemNotPassedException();
+                Guid newid = Guid.NewGuid();
                 db.HUNTs.Add(new HUNT()
                 {
+                    ID = newid,
                     HuntData = Data,
                     DataType = (int)Type,
                     RECORD1 = curRecord,
@@ -277,6 +279,7 @@ namespace ContestHunter.Models.Domain
                     Time = DateTime.Now
                 });
                 db.SaveChanges();
+                return newid;
             }
         }
 

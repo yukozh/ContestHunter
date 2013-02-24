@@ -14,6 +14,7 @@ namespace ContestHunter.Models.Domain
             Success,
             Fail,
             BadData,
+            CompileError,
             OtherError
         }
 
@@ -21,13 +22,15 @@ namespace ContestHunter.Models.Domain
         public string Contest;
         public string Problem;
         public string Data;
+        public Guid ID;
 
         public Guid Record;
         public StatusType Status;
         public string Detail;
         public DateTime Time;
+        public Record.LanguageType DataType;
 
-        public static List<Hunt> Get(string user, string contest,string problem)
+        public static List<Hunt> Get(int top,int skip,string user, string contest,string problem)
         {
             using (var db = new CHDB())
             {
@@ -39,6 +42,7 @@ namespace ContestHunter.Models.Domain
                     ht = ht.Where(x => x.RECORD1.PROBLEM1.CONTEST1.Name == contest);
                 if (null != problem)
                     ht = ht.Where(x => x.RECORD1.PROBLEM1.Name == problem);
+                ht.OrderByDescending(x => x.Time).Skip(skip).Take(top);
                 List<Hunt> Ret = new List<Hunt>();
                 foreach (var h in ht)
                 {
@@ -49,12 +53,34 @@ namespace ContestHunter.Models.Domain
                         Record = h.RECORD1.ID,
                         Status = (StatusType)h.Status,
                         User = h.USER1.Name,
-                        Detail = (h.USER1.Name == Domain.User.CurrentUser.name ? h.Detail : null),
                         Time = h.Time,
-                        Data = h.HuntData.Length > 10240 ? h.HuntData.Substring(0, 10240) : h.HuntData
+                        Detail = h.Detail,
+                        DataType = (Record.LanguageType)h.DataType
                     });
                 }
                 return Ret;
+            }
+        }
+
+        public static Hunt ByID(Guid ID)
+        {
+            using (var db = new CHDB())
+            {
+                return (from h in db.HUNTs
+                        where h.ID == ID
+                        select new Hunt()
+                        {
+                            Contest = h.RECORD1.PROBLEM1.CONTEST1.Name,
+                            Problem = h.RECORD1.PROBLEM1.Name,
+                            Record = h.RECORD1.ID,
+                            Status = (StatusType)h.Status,
+                            User = h.USER1.Name,
+                            Time = h.Time,
+                            Data = (Domain.User.CurrentUser.ID == h.USER1.ID ? h.HuntData : null),
+                            ID = h.ID,
+                            Detail = h.Detail,
+                            DataType = (Record.LanguageType)h.DataType
+                        }).Single();
             }
         }
     }

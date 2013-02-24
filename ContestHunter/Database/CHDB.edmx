@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ContestHunterModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="ContestHunterModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ContestHunterModelStoreContainer">
           <EntitySet Name="CONTEST" EntityType="ContestHunterModel.Store.CONTEST" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterModel.Store.CONTEST_ATTEND" store:Type="Tables" Schema="dbo" />
@@ -128,9 +128,9 @@
         </EntityType>
         <EntityType Name="HUNT">
           <Key>
-            <PropertyRef Name="User" />
-            <PropertyRef Name="Record" />
+            <PropertyRef Name="ID" />
           </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Record" Type="uniqueidentifier" Nullable="false" />
           <Property Name="HuntData" Type="nvarchar(max)" Nullable="false" />
@@ -452,7 +452,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ContestHunterModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -563,9 +564,9 @@
         </EntityType>
         <EntityType Name="HUNT">
           <Key>
-            <PropertyRef Name="User" />
-            <PropertyRef Name="Record" />
+            <PropertyRef Name="ID" />
           </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
           <Property Name="User" Type="Guid" Nullable="false" />
           <Property Name="Record" Type="Guid" Nullable="false" />
           <Property Name="HuntData" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -864,6 +865,7 @@
           <EntitySetMapping Name="HUNTs">
             <EntityTypeMapping TypeName="ContestHunterModel.HUNT">
               <MappingFragment StoreEntitySet="HUNT">
+                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="User" ColumnName="User" />
                 <ScalarProperty Name="Record" ColumnName="Record" />
                 <ScalarProperty Name="HuntData" ColumnName="HuntData" />

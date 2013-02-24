@@ -374,5 +374,43 @@ namespace ContestHunter.Models.Domain
                         select u.GROUPs).Single().Where(x => x.Name == "Administrators").Any();
             }
         }
+
+        public static List<User> List(int skip, int top)
+        {
+            using (var db = new CHDB())
+            {
+                return (from u in db.USERs
+                        let rating = u.RATINGs.OrderByDescending(x => x.CONTEST1.EndTime).Select(x => x.Rating1).FirstOrDefault()
+                        orderby rating descending
+                        select new User()
+                        {
+                            Name = u.Name,
+                            Motto = u.Motto,
+                            ID=u.ID
+                        }).Skip(skip).Take(top).ToList();
+            }
+        }
+
+        public int Rank()
+        {
+            using (var db = new CHDB())
+            {
+                return (from u in db.USERs
+                        let rating = u.RATINGs.OrderByDescending(x => x.CONTEST1.EndTime).Select(x => x.Rating1).FirstOrDefault()
+                        where rating > Rating()
+                        select u).Count();
+            }
+        }
+
+        public List<int> RatingHistory()
+        {
+            using (var db = new CHDB())
+            {
+                return (from r in db.RATINGs
+                        where r.USER1.ID == ID
+                        orderby r.CONTEST1.EndTime ascending
+                        select r.Rating1).ToList();
+            }
+        }
     }
 }

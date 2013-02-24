@@ -14,6 +14,7 @@ namespace ContestHunter.Database
     
     public partial class HUNT
     {
+        public System.Guid ID { get; set; }
         public System.Guid User { get; set; }
         public System.Guid Record { get; set; }
         public string HuntData { get; set; }

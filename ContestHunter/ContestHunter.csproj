@@ -177,6 +177,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Domain\AllKorrectDaemon.cs" />
     <Compile Include="Models\Domain\Contest.cs" />
     <Compile Include="Models\Domain\ContestDaemon.cs" />
     <Compile Include="Models\Domain\Daemon.cs" />
@@ -370,6 +371,15 @@
     <Content Include="Views\Record\Hunt.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Record\Result.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AllKorrect\AllKorrect.csproj">
+      <Project>{d9a3c7fe-689e-4c7f-83db-cac4fe27db0a}</Project>
+      <Name>AllKorrect</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <EntityDeploy Include="Database\CHDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
@@ -389,9 +399,6 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Record\Result.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -7,7 +7,7 @@ namespace DomainTest
     [TestClass]
     public class TestAK
     {
-        const string HOST = "127.0.0.1";
+        const string HOST = "222.66.130.13";
         const int PORT = 10010;
 
         [TestMethod]
