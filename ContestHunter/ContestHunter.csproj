@@ -229,6 +229,7 @@
     <Content Include="Content\ProblemTemplate.html" />
     <Content Include="Content\ScoreColor.css" />
     <Content Include="Global.asax" />
+    <Content Include="Image\ContestHunter.png" />
     <Content Include="Image\Error.gif" />
     <Content Include="Image\Login.png" />
     <Content Include="Script\bootstrap.js" />
