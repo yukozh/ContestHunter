@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Text;
 using ContestHunter.Models.Domain;
 using ContestHunter.Models.View;
+using HUNT = ContestHunter.Models.Domain.Hunt;
 namespace ContestHunter.Controllers
 {
     public class RecordController : Controller
@@ -76,10 +77,11 @@ namespace ContestHunter.Controllers
         public ActionResult Hunt(Guid id,HuntModel model)
         {
             if (!ModelState.IsValid) return View(model);
+            Guid huntID;
             try
             {
                 Record record = Record.ByID(id);
-                record.Hunt(model.MyCode,model.MyLanague);
+                huntID=record.Hunt(model.MyCode,model.MyLanague);
             }
             catch (ContestNotEndedException)
             {
@@ -105,13 +107,14 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "您的相应题目没有锁定" });
             }
-            return RedirectToAction("Show", new { id = id });
+            return RedirectToAction("HuntResult", new { id = huntID });
         }
 
         [HttpGet]
-        public ActionResult HuntResult()
+        public ActionResult HuntResult(Guid id)
         {
-            return View();
+            HUNT hunt=HUNT.ByID(id);
+            return View(hunt);
         }
     }
 }
