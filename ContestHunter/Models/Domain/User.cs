@@ -375,6 +375,12 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 按照 Rating 排名返回用户列表
+        /// </summary>
+        /// <param name="skip"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
         public static List<User> List(int skip, int top)
         {
             using (var db = new CHDB())
@@ -391,6 +397,10 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 获得当前用户的名次
+        /// </summary>
+        /// <returns></returns>
         public int Rank()
         {
             using (var db = new CHDB())
@@ -402,6 +412,10 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 获得用户所有Rating记录
+        /// </summary>
+        /// <returns></returns>
         public List<int> RatingHistory()
         {
             using (var db = new CHDB())
@@ -410,6 +424,19 @@ namespace ContestHunter.Models.Domain
                         where r.USER1.ID == ID
                         orderby r.CONTEST1.EndTime ascending
                         select r.Rating1).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 获得用户总数
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            using (var db = new CHDB())
+            {
+                return (from u in db.USERs
+                        select u).Count();
             }
         }
     }
