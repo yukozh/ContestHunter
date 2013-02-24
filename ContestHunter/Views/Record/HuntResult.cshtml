@@ -1,5 +1,7 @@
-﻿@{
-    ViewBag.Title = "Result";
+﻿@model ContestHunter.Models.Domain.Hunt
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = "猎杀结果";
 }
 
 <div class="span12">
@@ -12,49 +14,99 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <td><b>题目名称</b></td>
-                        <td>OrzCYF</td>
+                        <th>题目名称</th>
+                        <td>@Html.ActionLink(Model.Problem, "Show", "Problem", new { id = Model.Problem, contest = Model.Contest }, null)</td>
                     </tr>
                     <tr>
-                        <td><b>提交者</b></td>
-                        <td>onetwogoo</td>
+                        <th>猎杀者</th>
+                        <td>@Html.UserLink(Model.User)</td>
                     </tr>
                     <tr>
-                        <td><b>评测结果</b></td>
+                        <th>被猎杀</th>
+                        <td>@Html.ActionLink(Record.ByID(Model.Record).User + "提交的记录", "Show", new { id = Model.Record })</td>
+                    </tr>
+                    <tr>
+                        <th>评测结果</th>
                         <td>
-                            <span class="label label-success" style="font-size: 15px">猎杀成功</span>
-                            @*<span class="label label-important" style="font-size: 15px">猎杀失败</span>
-                            <span class="label" style="font-size: 15px">数据不合法</span>
-                            <span class="label label-inverse" style="font-size: 15px">系统错误</span>*@
+                            @switch (Model.Status)
+                            {
+                                case Hunt.StatusType.BadData:
+                                    ViewBag.Label = "";
+                                    ViewBag.Text = "数据不合法";
+                                    ViewBag.Score = 0;
+                                    break;
+                                case Hunt.StatusType.CompileError:
+                                    ViewBag.Label = "label-warning";
+                                    ViewBag.Text = "编译错误";
+                                    ViewBag.Score = 0;
+                                    break;
+                                case Hunt.StatusType.Fail:
+                                    ViewBag.Label = "label-important";
+                                    ViewBag.Text = "猎杀失败";
+                                    ViewBag.Score = -25;
+                                    break;
+                                case Hunt.StatusType.Pending:
+                                    ViewBag.Label = "label-info";
+                                    ViewBag.Text = "正在测评";
+                                    ViewBag.Score = 0;
+                                    break;
+                                case Hunt.StatusType.Success:
+                                    ViewBag.Label = "label-success";
+                                    ViewBag.Text = "猎杀成功";
+                                    ViewBag.Score = 100;
+                                    break;
+                                default:
+                                    ViewBag.Label = "label-inverse";
+                                    ViewBag.Text = "其他错误";
+                                    ViewBag.Score = 0;
+                                    break;
+                            }
+                            <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Text</span>
                         </td>
                     </tr>
                     <tr>
-                        <td><b>得分</b></td>
+                        <th>得分</th>
                         <td>
-                            @*成功*@<span style="color:green"><b>100</b></span>
-                            @*（不合法）<span style="color:blue"><b>0</b></span>
-                            （失败）<span style="color:gray"><b>-25</b></span>*@
+                            <span style="color: green"><b>@ViewBag.Score</b></span>
                         </td>
                     </tr>
                     <tr>
-                        <td><b>类型</b></td>
+                        <th>类型</th>
                         <td>
-                            直接提交数据
+                            @switch (Model.DataType)
+                            {
+                                case Record.LanguageType.C:
+                                    ViewBag.Text = "数据生成器(C)";
+                                    break;
+                                case Record.LanguageType.CPP:
+                                    ViewBag.Text = "数据生成器(C++)";
+                                    break;
+                                case Record.LanguageType.Data:
+                                    ViewBag.Text = "直接提交数据";
+                                    break;
+                                case Record.LanguageType.Java:
+                                    ViewBag.Text = "数据生成器(Java)";
+                                    break;
+                                case Record.LanguageType.Pascal:
+                                    ViewBag.Text = "数据生成器(Pascal)";
+                                    break;
+                            }
+                            @ViewBag.Text
                         </td>
                     </tr>
                     <tr>
-                        <td><b>提交时间</b></td>
-                        <td>2013/2/23 22:02:00</td>
+                        <th>提交时间</th>
+                        <td>@Model.Time</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="alert" style="float: right; width: 550px">
             <h5 style="color: red; float: right">v-Judge-Kernel @@ Contest Hunter</h5>
-            测评机详细输出
+            @Html.Sanitized(Model.Detail)
         </div>
         <div style="clear: both; padding: 5px">
-            <pre class="brush:cpp;">此处Hunt数据或生成器</pre>
+            <pre class="brush:cpp;">@Model.Data</pre>
         </div>
     </div>
 </div>
