@@ -5,14 +5,19 @@
 }
 
 <script>
-    function RegSucc() { $('#RegisterContent').removeClass('alert-info').addClass('alert-success') }
-    function RegFail() { $('#RegisterContent').removeClass('alert-info').addClass('alert-error') }
     function CheckPassword() {
         if ($('#Password').val() != $('#PasswordAgain').val()) {
-            ShowValidationMessage($('#Password'), '两次输入的密码不匹配');
+            $('#pwdAgain').text('两次输入的密码不匹配')
+            $('#pwdAgain')
+                .removeClass('field-validation-valid')
+                .addClass('field-validation-error');
+            RefreshValidationMessage();
             return false;
         } else {
-            HideValidationMessage($('#Password'));
+            $('#pwdAgain')
+                .addClass('field-validation-valid')
+                .removeClass('field-validation-error');
+            RefreshValidationMessage();
         }
     }
 </script>
@@ -57,6 +62,7 @@
                 @Html.Label("PasswordAgain", "重复密码", new { @class = "control-label" })
                 <div class="controls">
                     @Html.Password("PasswordAgain", null, new { @class = "input-xlarge" })
+                    @Html.ValidationMessage("PasswordAgain", new { id = "pwdAgain" })
                     <p class="help-block">再次输入您的密码，以供核对</p>
                 </div>
             </div>

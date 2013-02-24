@@ -329,7 +329,7 @@ namespace ContestHunter.Models.Domain
                     var usr = (from u in db.USERs
                                where u.ID == ID
                                select u).Single();
-                    if (!hash.ComputeHash(Encoding.Unicode.GetBytes(oriPassword)).Equals(usr.Password))
+                    if (!hash.ComputeHash(Encoding.Unicode.GetBytes(oriPassword)).SequenceEqual(usr.Password))
                         throw new PasswordMismatchException();
                     if (null != Password)
                         usr.Password = hash.ComputeHash(Encoding.Unicode.GetBytes(Password));

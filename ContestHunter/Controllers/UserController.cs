@@ -163,9 +163,59 @@ namespace ContestHunter.Controllers
             return View(user);
         }
 
+        [HttpGet]
         public ActionResult Edit()
         {
-            return View();
+            USER user = USER.ByName(USER.CurrentUserName);
+            UserEditModel model = new UserEditModel
+            {
+                City=user.City,
+                Country=user.Country,
+                Email=user.Email,
+                Motto=user.Motto,
+                Province=user.Province,
+                RealName=user.RealName,
+                School=user.School
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(UserEditModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                USER user = USER.ByName(USER.CurrentUserName);
+                user.City = model.City;
+                user.Country = model.Country;
+                user.Motto = model.Motto;
+                if (model.NewPassword != null)
+                    user.Password = model.NewPassword;
+                user.Province = model.Province;
+                user.RealName = model.RealName;
+                user.School = model.School;
+                user.Change(model.OldPassword);
+            }
+            catch (UserNotFoundException)
+            {
+                throw;
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "由于某种原因，您无权更改用户信息" });
+            }
+            catch (PasswordMismatchException)
+            {
+                ModelState.AddModelError("OldPassword", "密码不正确");
+                return View(model);
+            }
+
+            return RedirectToAction("Show", new { id = USER.CurrentUserName });
         }
     }
 }

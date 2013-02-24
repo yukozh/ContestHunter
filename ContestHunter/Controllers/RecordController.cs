@@ -108,7 +108,8 @@ namespace ContestHunter.Controllers
             return RedirectToAction("Show", new { id = id });
         }
 
-        public ActionResult Result()
+        [HttpGet]
+        public ActionResult HuntResult()
         {
             return View();
         }

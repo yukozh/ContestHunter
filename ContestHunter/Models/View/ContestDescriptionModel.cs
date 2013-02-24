@@ -17,7 +17,6 @@ namespace ContestHunter.Models.View
 
         public string Contest { get; set; }
 
-        [Required(AllowEmptyStrings=true)]
         [DisplayFormat(ConvertEmptyStringToNull=false)]
         public string Description { get; set; }
     }
