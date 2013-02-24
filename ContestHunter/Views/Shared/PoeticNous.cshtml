@@ -31,6 +31,7 @@
     <!--End SyntaxHighlighter-->
 
     <script src="~/Script/site.js"></script>
+    <link href="~/Content/site.css" rel="stylesheet" type="text/css" />
     <title>@ViewBag.Title - Contest Hunter</title>
 </head>
 <body>
@@ -43,8 +44,7 @@
                     <span class="icon-bar"></span>
                 </a>
                 <a class="brand" href="@Url.Content("~")" style="font-family: Copperplate Gothic Light">
-                    <span style="color: #1fb6ef"><span style="color: red"><b>C</b></span>ontest</span>
-                    <span style="color: #00cf00"><span style="color: orange"><b>H</b></span>unter</span>
+                    <img src="~/Image/ContestHunter.png" style="margin: 0px" />
                 </a>
                 @if (ViewBag.ActivedNav != null)
                 {
@@ -58,7 +58,7 @@
                     <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
                         <li id="navHome">@Html.ActionLink("主页", "Index", "Home")</li>
                         <li id="navContest">@Html.ActionLink("比赛", "Index", "Contest")</li>
-                        <li id="navRank">@Html.ActionLink("能力排名", "Index", "Rank")</li>
+                        <li id="navRating">@Html.ActionLink("能力排名", "Index", "Rating")</li>
                         <li id="navRecord">@Html.ActionLink("提交记录", "Index", "Record")</li>
                     </ul>
                 </div>
@@ -70,8 +70,8 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">@USER.CurrentUserName<span class="caret" /></a>
                                 <ul class="dropdown-menu">
                                     <li>@Html.ActionLink("我的用户信息", "Show", "User", new { id = USER.CurrentUserName }, null)</li>
-                                    <li>@Html.ActionLink("修改个人资料", "??", "User", new { id = USER.CurrentUserName }, null)</li>
-                                    <li>@Html.ActionLink("我举办的比赛","Mine","Contest",null,null)</li>
+                                    <li>@Html.ActionLink("修改个人资料", "Edit", "User", null, null)</li>
+                                    <li>@Html.ActionLink("我举办的比赛", "Mine", "Contest", null, null)</li>
                                 </ul>
                             </li>
                             <li>

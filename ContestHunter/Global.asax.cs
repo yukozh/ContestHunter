@@ -36,7 +36,7 @@ namespace ContestHunter
             {
                 try
                 {
-                    USER.Authenticate(User.Identity.Name,Request.UserHostAddress);
+                    USER.Authenticate(User.Identity.Name, Request.Headers["X-Forwarded-For"] ?? Request.UserHostAddress);
                 }
                 catch (BadTokenException)
                 {

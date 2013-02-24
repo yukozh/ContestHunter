@@ -129,6 +129,7 @@
     <Compile Include="Controllers\CRC32.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProblemController.cs" />
+    <Compile Include="Controllers\RatingController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Models\View\TestCaseUploadModel.cs" />
     <Compile Include="Models\View\LoginModel.cs" />
     <Compile Include="Models\View\RegisterModel.cs" />
+    <Compile Include="Models\View\UserEditModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -228,7 +230,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\ProblemTemplate.html" />
     <Content Include="Content\ScoreColor.css" />
+    <Content Include="Content\site.css" />
     <Content Include="Global.asax" />
+    <Content Include="Image\ContestHunter.png" />
     <Content Include="Image\Error.gif" />
     <Content Include="Image\Login.png" />
     <Content Include="Script\bootstrap.js" />
@@ -400,6 +404,13 @@
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+    <Content Include="Views\Record\HuntResult.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Rating\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Rating\History.cshtml" />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

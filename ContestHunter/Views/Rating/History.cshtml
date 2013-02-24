@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "History";
+}
+
+<style type="text/css">
+    .table
+    {
+        background-color: white;
+        color: black;
+        margin: 0px;
+    }
+
+        .table th,
+        .table td
+        {
+            text-align: center;
+            vertical-align: middle;
+            font-family: 微软雅黑;
+        }
+</style>
+
+<div class="span12">
+    <fieldset style="margin-top:20px">
+        <legend>用户VariantF的能力排名历史记录</legend>
+        <table class="table table-bordered table-striped table-hover">
+            <colgroup>
+                <col style="width: 60px">
+                <col style="width: 270px">
+                <col style="width: 60px">
+                <col style="width: 80px">
+                <col style="width: 80px">
+                <col style="width: 390px">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>次数</th>
+                    <th>比赛名称</th>
+                    <th>名次</th>
+                    <th>增减</th>
+                    <th>新值</th>
+                    <th>名称变化</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2</td>
+                    <td><a href="#">OrzCYF杯模拟赛</a></td>
+                    <td>1</td>
+                    <td>
+                        <span style="color:green"><b>+</b>200</span>
+                        @*<span style="color:gray"><b>-</b>50</span>*@
+                    </td>
+                    <td><b>1650</b></td>
+                    <td>
+                        @*无变化则此格留空*@
+                        <span style="color:#008000">VariantF</span> → <span style="color:#0099CC">VariantF</span>
+                        <br/>成为：大牛(Bull)
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><a href="#">OrzSJY杯模拟赛</a></td>
+                    <td>1</td>
+                    <td>
+                        <span style="color:gray"><b>-</b>50</span>
+                    </td>
+                    <td><b>1450</b></td>
+                    <td>
+                        @*无变化则此格留空*@
+                        <span style="color:#CC9966">VariantF</span> → <span style="color:#008000">VariantF</span>
+                        <br/>成为：领先学习者(Advanced Learner)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+</div>

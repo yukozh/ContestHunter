@@ -1,41 +1,34 @@
-﻿function ShowValidationMessage(input,msg) {
-    var controlGroup = input.parent().parent();
-    controlGroup.addClass('error');
-    var span = $('span.field-validation-error', controlGroup);
-    span
-        .show()
-        .addClass('label')
-        .addClass('label-important')
-        .css({
-            'font-size': 'medium',
-        });
-    if (msg !== undefined) {
-        span.text(msg);
-    }
-}
-
-function HideValidationMessage(input) {
-    var controlGroup = input.parent().parent();
-    controlGroup.removeClass('error');
-    var span = $('span.field-validation-valid, span.field-validation-error', controlGroup);
-    span.hide();
+﻿
+function RefreshValidationMessage() {
+    $('span.field-validation-valid').each(function () {
+        var cgroup = $(this);
+        while (cgroup.length > 0 && !cgroup.hasClass('control-group'))
+            cgroup = cgroup.parent();
+        if (cgroup.hasClass('control-group')) {
+            cgroup.removeClass('error');
+        }
+    })
+    $('span.field-validation-error').each(function () {
+        var cgroup = $(this);
+        while (cgroup.length > 0 && !cgroup.hasClass('control-group'))
+            cgroup = cgroup.parent();
+        if (cgroup.hasClass('control-group')) {
+            cgroup.addClass('error');
+        }
+    })
 }
 
 $(function () {
-    /*
-    $('input.input-validation-error').each(function () {
-        var parent = $(this).parent().parent();
-        parent.addClass('error');
-    });
-    */
+    $('input,textarea,select').filter('[data-val-required]').attr('required', 'required');
+
     $('span.field-validation-valid, span.field-validation-error').each(function () {
         $(this).wrap('<div style="margin: 5px; text-align: right;"/>');
-        var controlGroup = $(this).parent().parent().parent();
-        var input = $('input,select',controlGroup);
-        if ($(this).hasClass('field-validation-error')) {
-            ShowValidationMessage(input);
-        } else {
-            HideValidationMessage(input);
-        }
+        $(this)
+            .addClass('label')
+            .addClass('label-important')
+            .css({
+                'font-size': 'medium',
+            });
+        RefreshValidationMessage();
     })
 });

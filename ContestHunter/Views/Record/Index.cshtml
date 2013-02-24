@@ -25,9 +25,9 @@
     <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
         @using (Html.BeginForm("Index", "Record", FormMethod.Get, new { id = "frmList" }))
         {
-            <div class="form-search" style="text-align: right; margin: 5px">
+            <div class="form-search" style="text-align: right; margin:0px 5px">
                 <h4 style="float: left; font-family: 微软雅黑; font-weight: normal;">提交记录</h4>
-                <div style="float: right">
+                <div style="float: right; margin-top:5px">
                     @Html.TextBoxFor(x => x.UserName, new { @class = "input-small search-query", placeholder = "用户名" })
                     @Html.TextBoxFor(x => x.ProblemName, new { @class = "input-small search-query", placeholder = "题目名称" })
                     @Html.TextBoxFor(x => x.ContestName, new { @class = "input-small search-query", placeholder = "比赛名称" })
@@ -64,7 +64,7 @@
                 </div>
                 <div style="clear: both"></div>
             </div>
-            <table class="table table-bordered table-striped table-hover" style="background-color: white">
+            <table class="table table-bordered table-striped table-hover">
                 <colgroup>
                     <col style="width: 300px">
                     <col style="width: 150px">
