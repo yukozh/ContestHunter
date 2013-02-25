@@ -15,7 +15,9 @@ namespace ContestHunter.Models.Domain
             Fail,
             BadData,
             CompileError,
-            OtherError
+            DataCheckerError,
+            HackedByOther,
+            OtherError = -1
         }
 
         public string User;
