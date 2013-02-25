@@ -43,7 +43,7 @@ namespace ContestHunter.Models.Domain
             }
         }
         static ContestDaemon contest = new ContestDaemon();
-        static TesterDaemon tester = new TesterDaemon();
+        static AllKorrectDaemon tester = new AllKorrectDaemon();
         public static void DomainStart()
         {
             contest.Start();

@@ -431,7 +431,7 @@ namespace ContestHunter.Models.Domain
         /// 获得用户总数
         /// </summary>
         /// <returns></returns>
-        public int Count()
+        public static int Count()
         {
             using (var db = new CHDB())
             {
