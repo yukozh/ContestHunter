@@ -8,21 +8,17 @@ namespace ContestHunter.ViewHelpers
     public class RatingInfo
     {
         public string Color, Caption;
+        public int Rating;
 
         public RatingInfo(string userName)
             : this(User.ByName(userName))
         {
         }
 
-        public RatingInfo(User user)
+        public RatingInfo(int rating)
         {
-            int rating = user.Rating();
-            if (user.IsAdmin())
-            {
-                Caption = "管理员(Administrator)";
-                Color = "#000000";
-            }
-            else if (rating >= 2600 && rating <= 3000)
+            Rating = rating;
+            if (rating >= 2600 && rating <= 3000)
             {
                 Caption = "国际首席猎手(International Chief Hunter)";
                 Color = "#FF0000";
@@ -71,6 +67,16 @@ namespace ContestHunter.ViewHelpers
             {
                 Caption = "尚未排名的(Unrated)";
                 Color = "#CC9966";
+            }
+        }
+
+        public RatingInfo(User user)
+            : this(user.Rating())
+        {
+            if (user.IsAdmin())
+            {
+                Caption = "管理员(Administrator)";
+                Color = "#000000";
             }
         }
     }

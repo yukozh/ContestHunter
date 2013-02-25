@@ -206,6 +206,7 @@
     <Compile Include="Models\View\ProblemBasicInfoModel.cs" />
     <Compile Include="Models\View\ProblemContentModel.cs" />
     <Compile Include="Models\View\ProblemSubmitModel.cs" />
+    <Compile Include="Models\View\RatingIndexModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />
     <Compile Include="Models\View\TestCaseInfo.cs" />
     <Compile Include="Models\View\TestCaseListModel.cs" />
