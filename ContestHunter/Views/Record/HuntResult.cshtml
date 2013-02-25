@@ -67,7 +67,13 @@
                     <tr>
                         <th>得分</th>
                         <td>
-                            <span style="color: green"><b>@ViewBag.Score</b></span>
+                            @if(ViewBag.Score>0)
+                            {
+                                <span style="color: green"><b>@ViewBag.Score</b></span>
+                            }
+                            else{
+                                <span style="color: gray"><b>@ViewBag.Score</b></span>
+                            }
                         </td>
                     </tr>
                     <tr>

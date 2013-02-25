@@ -116,5 +116,10 @@ namespace ContestHunter.Controllers
             HUNT hunt=HUNT.ByID(id);
             return View(hunt);
         }
+
+        public ActionResult HuntList()
+        {
+            return View();
+        }
     }
 }
