@@ -717,8 +717,8 @@ namespace ContestHunter.Models.Domain
                            select c).Single();
                 var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                               where HasNotSubmit?true:(from r in db.RECORDs
-                                                       where r.USER1==u
-                                                       && r.PROBLEM1.CONTEST1==con
+                                                       where r.USER1.ID == u.ID
+                                                       && r.PROBLEM1.CONTEST1.ID == con.ID
                                                        select r).Any()
                               let des = from p in con.PROBLEMs
                                         orderby p.Name ascending
@@ -775,8 +775,8 @@ namespace ContestHunter.Models.Domain
                     throw new ContestNotEndedException();
                 return (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                         where HasNotSubmit ? true : (from r in db.RECORDs
-                                                     where r.USER1 == u
-                                                     && r.PROBLEM1.CONTEST1 == con
+                                                     where r.USER1.ID == u.ID
+                                                     && r.PROBLEM1.CONTEST1.ID == con.ID
                                                      select r).Any()
                         let des = (from p in con.PROBLEMs
                                    orderby p.Name ascending
@@ -851,8 +851,8 @@ namespace ContestHunter.Models.Domain
                            select c).Single();
                 var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                               where HasNotSubmit ? true : (from r in db.RECORDs
-                                                           where r.USER1 == u
-                                                           && r.PROBLEM1.CONTEST1 == con
+                                                           where r.USER1.ID == u.ID
+                                                           && r.PROBLEM1.CONTEST1.ID == con.ID
                                                            select r).Any()
                               let des = from p in con.PROBLEMs
                                         orderby p.Name ascending

@@ -28,6 +28,7 @@ namespace AllKorrect
         public NativeRunner(string host, int port)
         {
             tcp = new TcpClient(host, port);
+            tcp.SendTimeout = 5000;
             reader = new BinaryReader(tcp.GetStream(), Encoding.ASCII, true);
             writer = new BinaryWriter(tcp.GetStream(), Encoding.ASCII, true);
         }

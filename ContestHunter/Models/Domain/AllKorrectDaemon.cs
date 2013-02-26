@@ -15,7 +15,7 @@ namespace ContestHunter.Models.Domain
                 Record.LanguageType.CPP,
                 new Dictionary<string,string[]>()
                 {
-                    {"compileargv",new string[]{"-O2","-o a.out","code.cpp"}},
+                    {"compileargv",new string[]{"-O2","-o","a.out","code.cpp"}},
                     {"extname",new string[]{"cpp"}},
                     {"compile",new string[]{"g++"}},
                     {"execname",new string[]{"a.out"}}
@@ -25,7 +25,7 @@ namespace ContestHunter.Models.Domain
                 Record.LanguageType.C,
                 new Dictionary<string,string[]>()
                 {
-                    {"compileargv",new string[]{"-O2","-o a.out","code.c"}},
+                    {"compileargv",new string[]{"-O2","-o","a.out","code.c"}},
                     {"extname",new string[]{"c"}},
                     {"compile",new string[]{"gcc"}},
                     {"execname",new string[]{"a.out"}}
@@ -174,10 +174,10 @@ namespace ContestHunter.Models.Domain
             if (null == rec)
                 return false;
             int TimeLimit = (from t in db.TESTDATAs
-                             where t.PROBLEM1 == rec.RECORD1.PROBLEM1
+                             where t.PROBLEM1.ID == rec.RECORD1.PROBLEM1.ID
                              select t).Max(x => x.TimeLimit);
             long MemoryLimit = (from t in db.TESTDATAs
-                                where t.PROBLEM1 == rec.RECORD1.PROBLEM1
+                                where t.PROBLEM1.ID == rec.RECORD1.PROBLEM1.ID
                                 select t).Max(x => x.MemoryLimit);
             string Detail = "";
             try
