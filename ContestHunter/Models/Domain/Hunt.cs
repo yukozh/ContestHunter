@@ -24,6 +24,7 @@ namespace ContestHunter.Models.Domain
         public string Contest;
         public string Problem;
         public string Data;
+        public string UserBeHunted;
         public Guid ID;
 
         public Guid Record;
@@ -57,10 +58,27 @@ namespace ContestHunter.Models.Domain
                         User = h.USER1.Name,
                         Time = h.Time,
                         Detail = h.Detail,
-                        DataType = (Record.LanguageType)h.DataType
+                        DataType = (Record.LanguageType)h.DataType,
+                        UserBeHunted = h.RECORD1.USER1.Name
                     });
                 }
                 return Ret;
+            }
+        }
+
+        public static int Count(string user, string contest, string problem)
+        {
+            using (var db = new CHDB())
+            {
+                var ht = from h in db.HUNTs
+                         select h;
+                if (null != user)
+                    ht = ht.Where(x => x.USER1.Name == user);
+                if (null != contest)
+                    ht = ht.Where(x => x.RECORD1.PROBLEM1.CONTEST1.Name == contest);
+                if (null != problem)
+                    ht = ht.Where(x => x.RECORD1.PROBLEM1.Name == problem);
+                return ht.Count();
             }
         }
 
@@ -81,7 +99,8 @@ namespace ContestHunter.Models.Domain
                             Data = (Domain.User.CurrentUser.ID == h.USER1.ID ? h.HuntData : null),
                             ID = h.ID,
                             Detail = h.Detail,
-                            DataType = (Record.LanguageType)h.DataType
+                            DataType = (Record.LanguageType)h.DataType,
+                            UserBeHunted = h.RECORD1.USER1.Name
                         }).Single();
             }
         }

@@ -97,10 +97,10 @@ namespace ContestHunter.Models.Domain
                             tester.PutBlob(inputName, test.Input);
                         if (!tester.HasBlob(outputName))
                             tester.PutBlob(outputName, test.Data);
-                        var result = tester.Execute("exec", new string[] { }, test.MemoryLimit, test.TimeLimit, -1, RestrictionLevel.Strict, inputName);
+                        var result = tester.Execute("./exec", new string[] { }, test.MemoryLimit, test.TimeLimit, -1, RestrictionLevel.Strict, inputName);
                         if (result.Type == ExecuteResultType.Success)
                         {
-                            result = tester.Execute("comparer", new string[] { outputName, result.OutputBlob, inputName }, test.MemoryLimit, test.TimeLimit, 10240, RestrictionLevel.Strict, null);
+                            result = tester.Execute("./comparer", new string[] { outputName, result.OutputBlob, inputName }, test.MemoryLimit, test.TimeLimit, 10240, RestrictionLevel.Strict, null);
                             switch (result.Type)
                             {
                                 case ExecuteResultType.Success:
