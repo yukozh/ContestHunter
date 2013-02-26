@@ -13,6 +13,7 @@ namespace ContestHunter.Controllers
     public class RecordController : Controller
     {
         static readonly int INDEX_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Record.Index.PageSize"]);
+        static readonly int HUNT_LIST_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Record.HuntList.PageSize"]);
 
         [AllowAnonymous]
         public ActionResult Index(RecordListModel model)
@@ -117,9 +118,12 @@ namespace ContestHunter.Controllers
             return View(hunt);
         }
 
-        public ActionResult HuntList()
+        public ActionResult HuntList(HuntListModel model)
         {
-            return View();
+            if(model==null)model=new HuntListModel();
+            model.Hunts=HUNT.Get(HUNT_LIST_PAGE_SIZE, HUNT_LIST_PAGE_SIZE * model.PageIndex, model.UserName, model.ContestName, model.ProblemName);
+            model.PageCount = 10;
+            return View(model);
         }
     }
 }
