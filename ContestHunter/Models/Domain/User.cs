@@ -416,14 +416,18 @@ namespace ContestHunter.Models.Domain
         /// 获得用户所有Rating记录
         /// </summary>
         /// <returns></returns>
-        public List<int> RatingHistory()
+        public List<Rating> RatingHistory()
         {
             using (var db = new CHDB())
             {
                 return (from r in db.RATINGs
                         where r.USER1.ID == ID
                         orderby r.CONTEST1.EndTime ascending
-                        select r.Rating1).ToList();
+                        select new Rating()
+                        {
+                            Rating = r.Rating1,
+                            Time = r.CONTEST1.EndTime
+                        }).ToList();
             }
         }
 

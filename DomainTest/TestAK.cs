@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AllKorrect;
 using System.Text;
+using System.Threading;
 namespace DomainTest
 {
     [TestClass]
@@ -250,8 +251,11 @@ namespace DomainTest
             using (NativeRunner runner = new NativeRunner(HOST, PORT))
             {
                 runner.PutFile("code.cpp", Encoding.UTF8.GetBytes("int main(){}"));
+                Thread.Sleep(1000);
                 runner.Execute("g++", new string[] { "-O2", "-o", "a.out","code.cpp" }, 64 * 1024 * 1024, 1000, 100 * 1024, RestrictionLevel.Loose, null);
+                Thread.Sleep(1000);
                 runner.MoveFile2File("a.out", "exec");
+                Thread.Sleep(1000);
                 runner.PutFile("code.cpp", Encoding.UTF8.GetBytes("哈哈"));
             }
         }

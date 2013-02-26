@@ -226,12 +226,23 @@ namespace ContestHunter.Models.Domain
         /// 返回记录总条数
         /// </summary>
         /// <returns></returns>
-        public static int Count()
+        public static int Count(string user, string problem, string contest, LanguageType? language, StatusType? status)
         {
             using (var db = new CHDB())
             {
-                return (from r in db.RECORDs
-                        select r).Count();
+                IQueryable<RECORD> records = db.RECORDs;
+                if (user != null)
+                    records = records.Where(r => r.USER1.Name == user);
+                if (problem != null)
+                    records = records.Where(r => r.PROBLEM1.Name == problem);
+                if (contest != null)
+                    records = records.Where(r => r.PROBLEM1.CONTEST1.Name == contest);
+                if (language != null)
+                    records = records.Where(r => r.Language == (int)language);
+                if (status != null)
+                    records = records.Where(r => r.Status == (int)status);
+                return records.Count();
+
             }
         }
 
