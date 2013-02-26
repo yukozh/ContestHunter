@@ -23,7 +23,7 @@
                     </tr>
                     <tr>
                         <th>被猎杀</th>
-                        <td>@Html.ActionLink(Record.ByID(Model.Record).User + "提交的记录", "Show", new { id = Model.Record })</td>
+                        <td>@Html.UserLink(Model.UserBeHunted)</td>
                     </tr>
                     <tr>
                         <th>评测结果</th>

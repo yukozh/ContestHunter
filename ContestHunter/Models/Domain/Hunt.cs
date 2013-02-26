@@ -33,7 +33,7 @@ namespace ContestHunter.Models.Domain
         public DateTime Time;
         public Record.LanguageType DataType;
 
-        public static List<Hunt> Get(int top,int skip,string user, string contest,string problem)
+        public static List<Hunt> List(int top, int skip, string user, string contest, string problem, StatusType? status)
         {
             using (var db = new CHDB())
             {
@@ -45,12 +45,15 @@ namespace ContestHunter.Models.Domain
                     ht = ht.Where(x => x.RECORD1.PROBLEM1.CONTEST1.Name == contest);
                 if (null != problem)
                     ht = ht.Where(x => x.RECORD1.PROBLEM1.Name == problem);
+                if (null != status)
+                    ht = ht.Where(x => x.Status == (int)status);
                 ht.OrderByDescending(x => x.Time).Skip(skip).Take(top);
                 List<Hunt> Ret = new List<Hunt>();
                 foreach (var h in ht)
                 {
                     Ret.Add(new Hunt()
                     {
+                        ID = h.ID,
                         Contest = h.RECORD1.PROBLEM1.CONTEST1.Name,
                         Problem = h.RECORD1.PROBLEM1.Name,
                         Record = h.RECORD1.ID,
@@ -66,7 +69,7 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        public static int Count(string user, string contest, string problem)
+        public static int Count(string user, string contest, string problem, StatusType? status)
         {
             using (var db = new CHDB())
             {
@@ -78,6 +81,8 @@ namespace ContestHunter.Models.Domain
                     ht = ht.Where(x => x.RECORD1.PROBLEM1.CONTEST1.Name == contest);
                 if (null != problem)
                     ht = ht.Where(x => x.RECORD1.PROBLEM1.Name == problem);
+                if (null != status)
+                    ht = ht.Where(x => x.Status == (int)status);
                 return ht.Count();
             }
         }

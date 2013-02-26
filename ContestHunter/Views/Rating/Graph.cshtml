@@ -60,8 +60,8 @@
         }
 
         .trapezoidals {
-            fill: #888888;
-            opacity: 0.5;
+            fill: black;
+            opacity: 0.2;
         }
     </style>
 
@@ -92,22 +92,40 @@
         <polygon class="trapezoidals" points="@(Model.Points[i - 1].X + 1),@Model.Points[i - 1].Y @(Model.Points[i - 1].X + 1),3000 @(Model.Points[i].X - 1),3000 @(Model.Points[i].X - 1),@Model.Points[i].Y" />
         }
 
+        double textX;
+        if (Model.Points.Count == 1)
+        {
+            textX = Model.Points[0].X - 400;
+        }
+        else if (i == 0)
+        {
+            textX = 20;
+        }
+        else if (i == Model.Points.Count - 1)
+        {
+            textX = Model.Points[i].X - 750;
+        }
+        else
+        {
+            textX = Model.Points[i].X - 400;
+        }
+
         if (i == 0)
         {
         <circle class="startPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="30" />
-        @:<text class="startText" x="@(Model.Points[i].X - 350)" y="@(Model.Points[i].Y + 100)" >@(3000 - Model.Points[i].Y)(2010-01-01)</text>
+        @:<text class="startText" x="@textX" y="@(Model.Points[i].Y + 100)" >@(3000 - Model.Points[i].Y)(@Model.Times[i])</text>
         }
         else if (Model.Points[i].Y > Model.Points[i - 1].Y)
         {
         <circle class="downBigPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="30"  />
         <circle class="downSmallPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="15" />
-        @:<text class="downText" x="@(Model.Points[i].X - 350)" y="@(Model.Points[i].Y + 100)" >@(3000 - Model.Points[i].Y)(2010-01-01)</text>
+        @:<text class="downText" x="@textX" y="@(Model.Points[i].Y + 100)" >@(3000 - Model.Points[i].Y)(@Model.Times[i])</text>
         }
         else
         {
         <circle class="upBigPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="30"  />
         <circle class="upSmallPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="15" />
-        @:<text class="upText" x="@(Model.Points[i].X - 350)" y="@(Model.Points[i].Y - 50)" >@(3000 - Model.Points[i].Y)(2010-01-01)</text>
+        @:<text class="upText" x="@textX" y="@(Model.Points[i].Y - 50)" >@(3000 - Model.Points[i].Y)(@Model.Times[i])</text>
         }
     }
 </svg>

@@ -425,7 +425,7 @@ namespace ContestHunter.Models.Domain
                         orderby r.CONTEST1.EndTime ascending
                         select new Rating()
                         {
-                            Rating = r.Rating1,
+                            Score = r.Rating1,
                             Time = r.CONTEST1.EndTime
                         }).ToList();
             }

@@ -19,7 +19,7 @@ namespace ContestHunter.Controllers
         public ActionResult Index(RecordListModel model)
         {
             model.Records = Record.Select(model.PageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE, model.UserName, model.ProblemName, model.ContestName, model.Language, model.Status, model.OrderBy);
-            model.PageCount = (int)Math.Ceiling(Record.Count() / (double)INDEX_PAGE_SIZE);
+            model.PageCount = (int)Math.Ceiling(Record.Count(model.UserName, model.ProblemName, model.ContestName, model.Language, model.Status) / (double)INDEX_PAGE_SIZE);
             return View(model);
         }
 
@@ -75,14 +75,14 @@ namespace ContestHunter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Hunt(Guid id,HuntModel model)
+        public ActionResult Hunt(Guid id, HuntModel model)
         {
             if (!ModelState.IsValid) return View(model);
             Guid huntID;
             try
             {
                 Record record = Record.ByID(id);
-                huntID=record.Hunt(model.MyCode,model.MyLanague);
+                huntID = record.Hunt(model.MyCode, model.MyLanague);
             }
             catch (ContestNotEndedException)
             {
@@ -114,15 +114,15 @@ namespace ContestHunter.Controllers
         [HttpGet]
         public ActionResult HuntResult(Guid id)
         {
-            HUNT hunt=HUNT.ByID(id);
+            HUNT hunt = HUNT.ByID(id);
             return View(hunt);
         }
 
         public ActionResult HuntList(HuntListModel model)
         {
-            if(model==null)model=new HuntListModel();
-            model.Hunts=HUNT.Get(HUNT_LIST_PAGE_SIZE, HUNT_LIST_PAGE_SIZE * model.PageIndex, model.UserName, model.ContestName, model.ProblemName);
-            model.PageCount = 10;
+            if (model == null) model = new HuntListModel();
+            model.Hunts = HUNT.List(HUNT_LIST_PAGE_SIZE, HUNT_LIST_PAGE_SIZE * model.PageIndex, model.UserName, model.ContestName, model.ProblemName, model.Status);
+            model.PageCount = (int)Math.Ceiling(HUNT.Count(model.UserName, model.ContestName, model.ProblemName, model.Status) / (double)HUNT_LIST_PAGE_SIZE);
             return View(model);
         }
     }

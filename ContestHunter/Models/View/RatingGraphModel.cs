@@ -13,6 +13,7 @@ namespace ContestHunter.Models.View
         }
 
         public List<Point> Points { get; set; }
+        public List<DateTime> Times { get; set; }
         public double Width { get; set; }
     }
 }

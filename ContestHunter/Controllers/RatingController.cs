@@ -35,14 +35,25 @@ namespace ContestHunter.Controllers
             Response.ContentType = "image/svg+xml";
             RatingGraphModel model = new RatingGraphModel()
             {
-                Width=GRAPH_WIDTH,
+                Width = GRAPH_WIDTH,
                 Points = new List<RatingGraphModel.Point>()
             };
-            List<int> history = USER.ByName(id).RatingHistory();
-            double each = GRAPH_WIDTH / (history.Count + 1);
-            for (int i = 0; i < history.Count; i++)
+            var history = USER.ByName(id).RatingHistory();
+            model.Times = history.Select(h => h.Time).ToList();
+            if (history.Count == 0)
             {
-                model.Points.Add(new RatingGraphModel.Point { X = each * (i + 1), Y = 3000 - history[i] });
+            }
+            else if (history.Count == 1)
+            {
+                model.Points.Add(new RatingGraphModel.Point { X = GRAPH_WIDTH / 2, Y = 3000 - history[0].Score });
+            }
+            else
+            {
+                double each = GRAPH_WIDTH / (history.Count - 1);
+                for (int i = 0; i < history.Count; i++)
+                {
+                    model.Points.Add(new RatingGraphModel.Point { X = each * i, Y = 3000 - history[i].Score });
+                }
             }
             return View(model);
         }

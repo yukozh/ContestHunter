@@ -7,7 +7,7 @@ namespace ContestHunter.Models.Domain
 {
     public class Rating
     {
-        public int Rating;
+        public int Score;
         public DateTime Time;
     }
 }
