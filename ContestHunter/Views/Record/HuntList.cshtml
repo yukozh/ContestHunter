@@ -1,18 +1,19 @@
-﻿@{
-    ViewBag.Title = "HuntList";
+﻿@model ContestHunter.Models.View.HuntListModel
+@using ContestHunter.Models.Domain
+@{
+    ViewBag.Title = "猎杀列表";
+    ViewBag.Title = "Record";
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td
-        {
+        .table td {
             text-align: center;
             vertical-align: middle;
             font-family: 微软雅黑;
@@ -20,64 +21,108 @@
 </style>
 
 <div class="span12">
-    <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
-        <div class="form-search" style="text-align: right; margin: 0px 5px">
-            <h4 style="float: left; font-family: 微软雅黑; font-weight: normal;">提交记录</h4>
-            <div style="float: right; margin-top: 5px">
-                <input type="text" class="input-small search-query" placeholder="用户名">
-                <input type="text" class="input-small search-query" placeholder="题目名称">
-                <input type="text" class="input-small search-query" placeholder="比赛名称">
-                <select class="input-small">
-                    <option value="">状态</option>
-                    <option value="">猎杀成功</option>
-                    <option value="">猎杀失败</option>
-                    <option value="">数据不合法</option>
-                    <option value="">编译错误</option>
-                    <option value="">正在测评</option>
-                    <option value="">其他错误</option>
-                </select>
-                <input type="submit" class="btn btn-primary btn-small" value="查询" />
+    @using (Html.BeginForm("HuntList", "Record", FormMethod.Get, new { id = "frmList" }))
+    {
+        <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
+            <div class="form-search" style="text-align: right; margin: 0px 5px">
+                <h4 style="float: left; font-family: 微软雅黑; font-weight: normal;">猎杀列表</h4>
+                <div style="float: right; margin-top: 5px">
+                    @Html.TextBoxFor(x => x.UserName, new { @class = "input-small search-query", placeholder = "用户名" })
+                    @Html.TextBoxFor(x => x.ProblemName, new { @class = "input-small search-query", placeholder = "题目名称" })
+                    @Html.TextBoxFor(x => x.ContestName, new { @class = "input-small search-query", placeholder = "比赛名称" })
+                    @Html.DropDownListFor(x => x.Status, new SelectListItem[]
+                        {
+                            new SelectListItem{Text="状态",Value=""},
+                            new SelectListItem{Text="猎杀成功",Value="Success"},
+                            new SelectListItem{Text="猎杀失败",Value="Fail"},
+                            new SelectListItem{Text="数据不合法",Value="BadData"},
+                            new SelectListItem{Text="编译错误",Value="CompileError"},
+                            new SelectListItem{Text="正在测评",Value="Pending"},
+                        }, new { @class = "input-small" })
+                    <input type="submit" class="btn btn-primary btn-small" value="查询" />
+                </div>
+                <div style="clear: both"></div>
             </div>
-            <div style="clear: both"></div>
-        </div>
-        <table class="table table-bordered table-striped table-hover">
-            <colgroup>
-                <col style="width: 260px">
-                <col style="width: 150px">
-                <col style="width: 300px">
-                <col style="width: 60px">
-                <col style="width: 170px">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>题目名称</th>
-                    <th>评测结果</th>
-                    <th>猎杀者/被猎杀</th>
-                    <th>得分</th>
-                    <th>提交时间</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <a href="#">OrzSJY Problem</a>
-                    </td>
-                    <td>
-                        <span class="label label-success" style="font-size: 15px">猎杀成功</span>
-                        @*失败：label label-important；数据不合法/编译错误：label label-warning；正在评测：label label-info；其它：label*@
-                    </td>
-                    <td>
-                        <a href="#">VariantF</a> → <a href="#">Damin</a>
-                    </td>
-                    <td>
-                        @*<span style="color: green"><b>100</b></span>*@
-                        <span style="color: gray"><b>-25</b></span>
-                    </td>
-                    <td>2013/2/25 23:08:00</td>
-                </tr>
-            </tbody>
-        </table>
-        @*此处翻页，样式同record页面<div class="pagination" style="text-align: center; margin: 3px">
+            <table class="table table-bordered table-striped table-hover">
+                <colgroup>
+                    <col style="width: 260px">
+                    <col style="width: 150px">
+                    <col style="width: 300px">
+                    <col style="width: 60px">
+                    <col style="width: 170px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>题目名称</th>
+                        <th>评测结果</th>
+                        <th>猎杀者/被猎杀</th>
+                        <th>得分</th>
+                        <th>提交时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var hunt in Model.Hunts)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(hunt.Problem, "Show", "Problem", new { id = hunt.Problem, contest = hunt.Contest }, null)
+                            </td>
+                            <td>
+                                @switch (hunt.Status)
+                                {
+                                    case Hunt.StatusType.BadData:
+                                        ViewBag.Label = "label-important";
+                                        ViewBag.Text = "数据不合法";
+                                        ViewBag.Score = 0;
+                                        break;
+                                    case Hunt.StatusType.CompileError:
+                                        ViewBag.Label = "label-important";
+                                        ViewBag.Text = "编译错误";
+                                        ViewBag.Score = 0;
+                                        break;
+                                    case Hunt.StatusType.Fail:
+                                        ViewBag.Label = "label-info";
+                                        ViewBag.Text = "猎杀失败";
+                                        ViewBag.Score = -25;
+                                        break;
+                                    case Hunt.StatusType.Pending:
+                                        ViewBag.Label = "label-warning";
+                                        ViewBag.Text = "正在测评";
+                                        ViewBag.Score = 0;
+                                        break;
+                                    case Hunt.StatusType.Success:
+                                        ViewBag.Label = "label-success";
+                                        ViewBag.Text = "猎杀成功";
+                                        ViewBag.Score = 100;
+                                        break;
+                                    default:
+                                        ViewBag.Label = "label-inverse";
+                                        ViewBag.Text = "其他错误";
+                                        ViewBag.Score = 0;
+                                        break;
+                                }
+                                <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Text</span>
+                            </td>
+                            <td>
+                                @Html.UserLink(hunt.User) → @Html.UserLink(Record.ByID(hunt.Record).User)
+                            </td>
+                            <td>
+                                @if (ViewBag.Score > 0)
+                                {
+                                    <span style="color: green"><b>@ViewBag.Score</b></span>
+                                }
+                                else
+                                {
+                                    <span style="color: gray"><b>@ViewBag.Score</b></span>
+                                }
+                            </td>
+                            <td>@hunt.Time</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" style="text-align: center; margin: 3px">
                 @Html.HiddenFor(x => x.PageIndex)
                 <script>
                     function ChangePage(index) {
@@ -106,6 +151,7 @@
                         <li><a href="javascript:ChangePage(@(Model.PageCount - 1))">»</a></li>
                     }
                 </ul>
-            </div>*@
-    </div>
+            </div>
+        </div>
+    }
 </div>
