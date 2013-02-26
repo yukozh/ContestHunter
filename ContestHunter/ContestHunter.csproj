@@ -207,6 +207,7 @@
     <Compile Include="Models\View\ProblemBasicInfoModel.cs" />
     <Compile Include="Models\View\ProblemContentModel.cs" />
     <Compile Include="Models\View\ProblemSubmitModel.cs" />
+    <Compile Include="Models\View\RatingGraphModel.cs" />
     <Compile Include="Models\View\RatingIndexModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />
     <Compile Include="Models\View\TestCaseInfo.cs" />
@@ -414,6 +415,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Record\HuntList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Rating\Graph.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

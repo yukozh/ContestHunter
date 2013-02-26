@@ -11,13 +11,14 @@ namespace ContestHunter.Controllers
 {
     public class RatingController : Controller
     {
-        static readonly int INDEX_PAGE_SIZE=int.Parse(ConfigurationManager.AppSettings["Rating.Index.PageSize"]);
+        static readonly int INDEX_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Rating.Index.PageSize"]);
+        static readonly double GRAPH_WIDTH = 3000 * 1.618;
 
         [AllowAnonymous]
         public ActionResult Index(RatingIndexModel model)
         {
             if (model == null) model = new RatingIndexModel();
-            model.Users=USER.List(model.PageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
+            model.Users = USER.List(model.PageIndex * INDEX_PAGE_SIZE, INDEX_PAGE_SIZE);
             model.PageCount = (int)Math.Ceiling(USER.Count() / (double)INDEX_PAGE_SIZE);
             model.StartIndex = model.PageIndex * INDEX_PAGE_SIZE;
             return View(model);
@@ -26,6 +27,24 @@ namespace ContestHunter.Controllers
         public ActionResult History()
         {
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult Graph(string id)
+        {
+            Response.ContentType = "image/svg+xml";
+            RatingGraphModel model = new RatingGraphModel()
+            {
+                Width=GRAPH_WIDTH,
+                Points = new List<RatingGraphModel.Point>()
+            };
+            List<int> history = USER.ByName(id).RatingHistory();
+            double each = GRAPH_WIDTH / (history.Count + 1);
+            for (int i = 0; i < history.Count; i++)
+            {
+                model.Points.Add(new RatingGraphModel.Point { X = each * (i + 1), Y = 3000 - history[i] });
+            }
+            return View(model);
         }
     }
 }

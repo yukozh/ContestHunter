@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" standalone="no" ?>
+@model ContestHunter.Models.View.RatingGraphModel
+@using System.Text
+@{
+    Layout = null;
+}
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="@Model.Width" height="3000" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <style type="text/css">
+        .levels {
+            opacity: 0.5;
+        }
+
+        polyline {
+            fill: transparent;
+            stroke: #606060;
+            stroke-width: 20;
+            opacity: .75;
+        }
+
+        .startPoint {
+            opacity: 0.7;
+            fill: black;
+        }
+
+        .startText {
+            font-size: 80px;
+        }
+
+        .downBigPoint {
+            fill: green;
+            opacity: .7;
+        }
+
+        .downSmallPoint {
+            fill: orange;
+            opacity: .7;
+        }
+
+        .downText {
+            fill: green;
+            font-size: 80px;
+        }
+
+        .upBigPoint {
+            fill: red;
+            opacity: .7;
+        }
+
+        .upSmallPoint {
+            fill: orange;
+            opacity: .7;
+        }
+
+        .upText {
+            fill: red;
+            font-size: 80px;
+        }
+
+        .trapezoidals {
+            fill: #888888;
+            opacity: 0.5;
+        }
+    </style>
+
+    <rect class="levels" x="0" y="0" width="100%" height="400" style="fill: #FF0000;" />
+    <rect class="levels" x="0" y="400" width="100%" height="250" style="fill: #F66F00;" />
+    <rect class="levels" x="0" y="650" width="100%" height="250" style="fill: #FF8C00;" />
+    <rect class="levels" x="0" y="900" width="100%" height="200" style="fill: #CC0066;" />
+    <rect class="levels" x="0" y="1100" width="100%" height="200" style="fill: #3366CC;" />
+    <rect class="levels" x="0" y="1300" width="100%" height="200" style="fill: #0099CC;" />
+    <rect class="levels" x="0" y="1500" width="100%" height="250" style="fill: #008000;" />
+    <rect class="levels" x="0" y="1750" width="100%" height="250" style="fill: #77CC77;" />
+    <rect class="levels" x="0" y="2000" width="100%" height="999" style="fill: #C0C0C0;" />
+    <rect class="levels" x="0" y="2999" width="100%" height="1" style="fill: #CC9966;" />
+
+    @{
+        StringBuilder polypoints = new StringBuilder();
+        foreach (var p in Model.Points)
+        {
+            polypoints.AppendFormat(" {0},{1}", p.X, p.Y);
+        }
+    }
+    <polyline points="@polypoints.ToString()" />
+
+    @for (int i = 0; i < Model.Points.Count; i++)
+    {
+        if (i != 0)
+        {
+        <polygon class="trapezoidals" points="@(Model.Points[i - 1].X + 1),@Model.Points[i - 1].Y @(Model.Points[i - 1].X + 1),3000 @(Model.Points[i].X - 1),3000 @(Model.Points[i].X - 1),@Model.Points[i].Y" />
+        }
+
+        if (i == 0)
+        {
+        <circle class="startPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="30" />
+        @:<text class="startText" x="@(Model.Points[i].X - 350)" y="@(Model.Points[i].Y + 100)" >@(3000 - Model.Points[i].Y)(2010-01-01)</text>
+        }
+        else if (Model.Points[i].Y > Model.Points[i - 1].Y)
+        {
+        <circle class="downBigPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="30"  />
+        <circle class="downSmallPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="15" />
+        @:<text class="downText" x="@(Model.Points[i].X - 350)" y="@(Model.Points[i].Y + 100)" >@(3000 - Model.Points[i].Y)(2010-01-01)</text>
+        }
+        else
+        {
+        <circle class="upBigPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="30"  />
+        <circle class="upSmallPoint" cx="@Model.Points[i].X" cy="@Model.Points[i].Y" r="15" />
+        @:<text class="upText" x="@(Model.Points[i].X - 350)" y="@(Model.Points[i].Y - 50)" >@(3000 - Model.Points[i].Y)(2010-01-01)</text>
+        }
+    }
+</svg>

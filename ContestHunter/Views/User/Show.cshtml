@@ -66,35 +66,6 @@
                 </td>
             </tr>
         </table>
-        <table class="table table-bordered table-striped table-hover" style="background-color: white; margin-top: 10px">
-            <colgroup>
-                <col style="width: 380px">
-                <col style="width: 200px">
-                <col style="width: 270px">
-                <col style="width: 80px">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>Ta举办的比赛</th>
-                    <th>赛制</th>
-                    <th>开始时刻/时长</th>
-                    <th>参赛人数</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">这是比赛名称</a></td>
-                    <td><b>OI</b> - <span style="color: red">Official</span></td>
-                    <td>2013/2/21 19:00:00 持续3小时</td>
-                    <td><code>1000</code></td>
-                </tr>
-                <tr>
-                    <td><a href="#">这是比赛名称</a></td>
-                    <td><b>Codeforces</b> - <span style="color: blue">Unofficial</span></td>
-                    <td>2013/2/20 19:00:00 持续2小时</td>
-                    <td><code>1000</code></td>
-                </tr>
-            </tbody>
-        </table>
+        <img src="@Url.Action("Graph", "Rating", new { id = Model.Name })" alt="Rating" style="width:100%; margin:10px 0;"/>
     </div>
 </div>
