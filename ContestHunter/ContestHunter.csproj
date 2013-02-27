@@ -238,6 +238,7 @@
     <Content Include="Global.asax" />
     <Content Include="Image\ContestHunter.png" />
     <Content Include="Image\Error.gif" />
+    <Content Include="Image\Keyboard-Clone-Invasion-Make.jpg" />
     <Content Include="Image\Login.png" />
     <Content Include="Script\bootstrap.js" />
     <Content Include="Script\ckeditor\config.js" />
