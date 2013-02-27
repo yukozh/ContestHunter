@@ -18,7 +18,7 @@ namespace ContestHunter.Models.Domain
                     {"compileargv",new string[]{"-O2","-o","a.out","code.cpp"}},
                     {"extname",new string[]{"cpp"}},
                     {"compile",new string[]{"g++"}},
-                    {"execname",new string[]{"a.out"}}
+                    {"execname",new string[]{"./a.out"}}
                 }
             },
             {
@@ -28,7 +28,7 @@ namespace ContestHunter.Models.Domain
                     {"compileargv",new string[]{"-O2","-o","a.out","code.c"}},
                     {"extname",new string[]{"c"}},
                     {"compile",new string[]{"gcc"}},
-                    {"execname",new string[]{"a.out"}}
+                    {"execname",new string[]{"./a.out"}}
                 }
             },
             {
@@ -38,12 +38,12 @@ namespace ContestHunter.Models.Domain
                     {"compileargv",new string[]{"-O2","-ocode","code.pas"}},
                     {"extname",new string[]{"pas"}},
                     {"compile",new string[]{"fpc"}},
-                    {"execname",new string[]{"code"}}
+                    {"execname",new string[]{"./code"}}
                 }
             }
         };
         static int CompileTime=10000;
-        static long CompileMemory=64*1024*1024;
+        static long CompileMemory=256*1024*1024;
         string Host = "222.66.130.13";
         int Port = 10010;
 
@@ -76,13 +76,13 @@ namespace ContestHunter.Models.Domain
                     string comparer = rec.PROBLEM1.Comparer == "" ? Resources.DefaultComparer : rec.PROBLEM1.Comparer;
                     var comparerLanguage = rec.PROBLEM1.Comparer == "" ? Record.LanguageType.CPP : (Record.LanguageType)rec.PROBLEM1.ComparerLanguage;
                     ExecuteResult CompileCMP = Compile(comparer, comparerLanguage, tester);
-                    tester.MoveFile2File(commands[comparerLanguage]["execname"][0], "comparer");
                     if (CompileCMP.Type != ExecuteResultType.Success)
                     {
                         rec.Status = (int)Record.StatusType.CMP_Error;
                         Detail.Append("比较器编译失败");
                         return true;
                     }
+                    tester.MoveFile2File(commands[comparerLanguage]["execname"][0], "comparer");
                     Detail.Append("<h5>各测试点详细信息：</h5>\r\n<div style=\"padding-left: 10px\">");
                     int totalTests = 0;
                     int passedTests = 0;
@@ -100,6 +100,9 @@ namespace ContestHunter.Models.Domain
                         var result = tester.Execute("./exec", new string[] { }, test.MemoryLimit, test.TimeLimit, -1, RestrictionLevel.Strict, inputName);
                         if (result.Type == ExecuteResultType.Success)
                         {
+                            tester.CopyBlob2File(outputName, outputName);
+                            tester.CopyBlob2File(result.OutputBlob, result.OutputBlob);
+                            tester.CopyBlob2File(inputName, inputName);
                             result = tester.Execute("./comparer", new string[] { outputName, result.OutputBlob, inputName }, test.MemoryLimit, test.TimeLimit, 10240, RestrictionLevel.Strict, null);
                             switch (result.Type)
                             {
@@ -107,7 +110,7 @@ namespace ContestHunter.Models.Domain
                                     passedTests++;
                                     rec.MemoryUsed += result.Memory;
                                     rec.ExecutedTime += result.Time;
-                                    Detail.AppendFormat("#{0}：<span class=\"score_100\"><b>通过</b></span> ({1} ms / {2} KB)<br />", totalTests, result.Time, result.Memory);
+                                    Detail.AppendFormat("#{0}：<span class=\"score_100\"><b>通过</b></span> ({1} ms / {2} KB)<br />", totalTests, result.Time, result.Memory / 1024);
                                     break;
                                 case ExecuteResultType.Failure:
                                     switch (result.ExitStatus)
@@ -118,9 +121,13 @@ namespace ContestHunter.Models.Domain
                                             break;
                                         default:
                                             rec.Status = (int)Record.StatusType.CMP_Error;
-                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误</b></span> (???? ms / ???? KB)<br />", totalTests);
+                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误:{1}</b></span> (???? ms / ???? KB)<br />", totalTests,Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)));
                                             break;
                                     }
+                                    break;
+                                default:
+                                    rec.Status = (int)Record.StatusType.CMP_Error;
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误:{1}</b></span> (???? ms / ???? KB)<br />", totalTests, Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)));
                                     break;
                             }
                         }
@@ -195,7 +202,7 @@ namespace ContestHunter.Models.Domain
                                 rec.Status = (int)Hunt.StatusType.CompileError;
                                 break;
                             }
-                            result = tester.Execute(commands[(Record.LanguageType)rec.DataType]["exec"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, null);
+                            result = tester.Execute(commands[(Record.LanguageType)rec.DataType]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, null);
                             if (result.Type != ExecuteResultType.Success)
                             {
                                 rec.Status = (int)Hunt.StatusType.BadData;
@@ -216,7 +223,7 @@ namespace ContestHunter.Models.Domain
                         rec.Status = (int)Hunt.StatusType.DataCheckerError;
                         return true;
                     }
-                    result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage]["exec"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
+                    result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
                     if (result.Type != ExecuteResultType.Success)
                     {
                         if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
@@ -235,7 +242,7 @@ namespace ContestHunter.Models.Domain
                         Detail += "原记录编译失败";
                         return true;
                     }
-                    result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.Language]["exec"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
+                    result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
                     if (result.Type == ExecuteResultType.Success)
                     {
                         string userout = result.OutputBlob;
@@ -248,7 +255,7 @@ namespace ContestHunter.Models.Domain
                             Detail += "比较器编译失败";
                             return true;
                         }
-                        result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.Language]["exec"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, HuntData);
+                        result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, HuntData);
                         if (result.Type == ExecuteResultType.Success)
                         {
                             rec.Status = (int)Hunt.StatusType.Success;
