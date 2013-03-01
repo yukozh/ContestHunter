@@ -79,7 +79,7 @@ namespace ContestHunter.Models.Domain
                     if (CompileCMP.Type != ExecuteResultType.Success)
                     {
                         rec.Status = (int)Record.StatusType.CMP_Error;
-                        Detail.Append("比较器编译失败");
+                        Detail.AppendFormat("<h5>比较器编译失败：</h5>\r\n<div style=\"padding-left: 10px\">\r\n{0}{1}</div>", ret.Type.ToString(), Encoding.UTF8.GetString(tester.GetBlob(ret.ErrorBlob)));
                         return true;
                     }
                     tester.MoveFile2File(commands[comparerLanguage]["execname"][0], "comparer");
@@ -100,6 +100,8 @@ namespace ContestHunter.Models.Domain
                         var result = tester.Execute("./exec", new string[] { }, test.MemoryLimit, test.TimeLimit, -1, RestrictionLevel.Strict, inputName);
                         if (result.Type == ExecuteResultType.Success)
                         {
+                            int Time = result.Time;
+                            long Memory = result.Memory / 1024;
                             tester.CopyBlob2File(outputName, outputName);
                             tester.CopyBlob2File(result.OutputBlob, result.OutputBlob);
                             tester.CopyBlob2File(inputName, inputName);
@@ -117,7 +119,7 @@ namespace ContestHunter.Models.Domain
                                     {
                                         case 1:
                                             rec.Status = (int)Record.StatusType.Wrong_Answer;
-                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>答案错误</b></span> (???? ms / ???? KB)<br />", totalTests);
+                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>答案错误</b></span> ({1} ms / {2} KB)<br />", totalTests, result.Time, result.Memory / 1024);
                                             break;
                                         default:
                                             rec.Status = (int)Record.StatusType.CMP_Error;
