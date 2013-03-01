@@ -238,9 +238,15 @@
     <Content Include="Global.asax" />
     <Content Include="Image\ContestHunter.png" />
     <Content Include="Image\Error.gif" />
+    <Content Include="Image\Keyboard-Clone-Invasion-Make.jpg" />
     <Content Include="Image\Login.png" />
+    <Content Include="Script\bootstrap-popover.js" />
     <Content Include="Script\bootstrap.js" />
+    <Content Include="Script\ckeditor\build-config.js" />
+    <Content Include="Script\ckeditor\ckeditor.js" />
     <Content Include="Script\ckeditor\config.js" />
+    <Content Include="Script\ckeditor\contents.css" />
+    <Content Include="Script\ckeditor\styles.js" />
     <Content Include="Script\jquery.js" />
     <Content Include="Script\site.js" />
     <Content Include="Web.config">
@@ -419,6 +425,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Rating\Graph.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\CHConfig.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
