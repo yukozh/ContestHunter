@@ -33,6 +33,12 @@
     <script src="~/Script/site.js"></script>
     <link href="~/Content/site.css" rel="stylesheet" type="text/css" />
     <title>@ViewBag.Title - Contest Hunter</title>
+    <style type="text/css">
+        body
+        {
+            background-color: RGB(240,240,240);
+        }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-static-top">
@@ -44,7 +50,7 @@
                     <span class="icon-bar"></span>
                 </a>
                 <a class="brand" href="@Url.Content("~")" style="font-family: Copperplate Gothic Light">
-                    <img src="~/Image/ContestHunter.png" width="222" style="margin: 0px"/>
+                    <img src="~/Image/ContestHunter.png" width="222" style="margin: 0px" />
                 </a>
                 @if (ViewBag.ActivedNav != null)
                 {
