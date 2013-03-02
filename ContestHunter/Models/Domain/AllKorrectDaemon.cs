@@ -50,7 +50,7 @@ namespace ContestHunter.Models.Domain
         ExecuteResult Compile(string code,Record.LanguageType language,NativeRunner runner)
         {
             runner.PutFile("code."+commands[language]["extname"][0],Encoding.UTF8.GetBytes(code));
-            return runner.Execute(commands[language]["compile"][0],commands[language]["compileargv"],CompileMemory,CompileTime,10240,RestrictionLevel.Loose,null);
+            return runner.Execute(commands[language]["compile"][0],commands[language]["compileargv"],CompileMemory,CompileTime,-1,RestrictionLevel.Loose,null);
         }
 
         bool DealRecord(CHDB db)
@@ -98,10 +98,10 @@ namespace ContestHunter.Models.Domain
                         if (!tester.HasBlob(outputName))
                             tester.PutBlob(outputName, test.Data);
                         var result = tester.Execute("./exec", new string[] { }, test.MemoryLimit, test.TimeLimit, -1, RestrictionLevel.Strict, inputName);
+                        int Time = result.Time;
+                        long Memory = result.Memory / 1024;
                         if (result.Type == ExecuteResultType.Success)
                         {
-                            int Time = result.Time;
-                            long Memory = result.Memory / 1024;
                             tester.CopyBlob2File(outputName, outputName);
                             tester.CopyBlob2File(result.OutputBlob, result.OutputBlob);
                             tester.CopyBlob2File(inputName, inputName);
@@ -112,24 +112,24 @@ namespace ContestHunter.Models.Domain
                                     passedTests++;
                                     rec.MemoryUsed += result.Memory;
                                     rec.ExecutedTime += result.Time;
-                                    Detail.AppendFormat("#{0}：<span class=\"score_100\"><b>通过</b></span> ({1} ms / {2} KB)<br />", totalTests, result.Time, result.Memory / 1024);
+                                    Detail.AppendFormat("#{0}：<span class=\"score_100\"><b>通过</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
                                     break;
                                 case ExecuteResultType.Failure:
                                     switch (result.ExitStatus)
                                     {
                                         case 1:
                                             rec.Status = (int)Record.StatusType.Wrong_Answer;
-                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>答案错误</b></span> ({1} ms / {2} KB)<br />", totalTests, result.Time, result.Memory / 1024);
+                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>答案错误</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
                                             break;
                                         default:
                                             rec.Status = (int)Record.StatusType.CMP_Error;
-                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误:{1}</b></span> (???? ms / ???? KB)<br />", totalTests,Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)));
+                                            Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误:{1}</b></span> ({2} ms / {3} KB)<br />", totalTests, Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)), Time, Memory);
                                             break;
                                     }
                                     break;
                                 default:
                                     rec.Status = (int)Record.StatusType.CMP_Error;
-                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误:{1}</b></span> (???? ms / ???? KB)<br />", totalTests, Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)));
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误:{1}</b></span> ({2} ms / {3} KB)<br />", totalTests, Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)), Time, Memory);
                                     break;
                             }
                         }
@@ -138,23 +138,36 @@ namespace ContestHunter.Models.Domain
                             {
                                 case ExecuteResultType.MemoryLimitExceeded:
                                     rec.Status = (int)Record.StatusType.Memory_Limit_Execeeded;
-                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>内存超过限定</b></span> (???? ms / ???? KB)<br />", totalTests);
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>内存超过限定</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
                                     break;
                                 case ExecuteResultType.Crashed:
+                                    rec.Status = (int)Record.StatusType.Runtime_Error;
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误(程序崩溃)</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
+                                    break;
                                 case ExecuteResultType.MathError:
+                                    rec.Status = (int)Record.StatusType.Runtime_Error;
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误(数学错误)</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
+                                    break;
                                 case ExecuteResultType.Failure:
+
+                                    rec.Status = (int)Record.StatusType.Runtime_Error;
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误(返回值不为0)</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
+                                    break;
                                 case ExecuteResultType.MemoryAccessViolation:
+                                    rec.Status = (int)Record.StatusType.Runtime_Error;
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误(内存不可访问)</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
+                                    break;
                                 case ExecuteResultType.Violation:
                                     rec.Status = (int)Record.StatusType.Runtime_Error;
-                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误</b></span> (???? ms / ???? KB)<br />", totalTests);
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>运行时错误(受限指令)</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
                                     break;
                                 case ExecuteResultType.TimeLimitExceeded:
                                     rec.Status = (int)Record.StatusType.Time_Limit_Execeeded;
-                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>超时</b></span> (???? ms / ???? KB)<br />", totalTests);
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>超时</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
                                     break;
                                 case ExecuteResultType.OutputLimitExceeded:
                                     rec.Status = (int)Record.StatusType.Output_Limit_Execeeded;
-                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>程序吐槽过多</b></span> (???? ms / ???? KB)<br />", totalTests);
+                                    Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>程序吐槽过多</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
                                     break;
                             }
                         if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI && result.Type != ExecuteResultType.Success)

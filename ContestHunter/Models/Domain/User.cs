@@ -52,6 +52,21 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        static public Record.LanguageType? CurrentUserPreferLanguage
+        {
+            get
+            {
+                if (null == CurrentUser)
+                    throw new UserNotLoginException();
+                using(var db=new CHDB())
+                {
+                    return (Record.LanguageType?)(from u in db.USERs
+                            where u.ID == CurrentUser.ID
+                            select u.PreferLanguage).Single();
+                }
+            }
+        }
+
         /// <summary>
         /// 验证Token
         /// </summary>

@@ -8,7 +8,7 @@ namespace DomainTest
     [TestClass]
     public class TestAK
     {
-        const string HOST = "moo.imeng.de";
+        const string HOST = "sx.imeng.de";
         const int PORT = 10010;
 
         [TestMethod]
@@ -235,10 +235,10 @@ namespace DomainTest
                 string input = "1 2";
                 runner.PutFile("code.pas", Encoding.UTF8.GetBytes(src));
                 runner.PutBlob("input", Encoding.UTF8.GetBytes(input));
-                var result = runner.Execute("fpc", new[] { "-O2","-oabalbal","code.pas" }, 100 * 1024 * 1024, 3000, 10 * 1024 * 1024, RestrictionLevel.Loose, null);
+                var result = runner.Execute("fpc", new[] { "-O2","-ocode","code.pas" }, 100 * 1024 * 1024, 3000, 10*1024*1024, RestrictionLevel.Loose, null);
                 Assert.AreEqual(ExecuteResultType.Success, result.Type);
 
-                result = runner.Execute("./src", new string[] { }, 100 * 1024 * 1024, 1000, 10 * 1024 * 1024, RestrictionLevel.Strict, "input");
+                result = runner.Execute("./code", new string[] { }, 100 * 1024 * 1024, 1000, 10 * 1024 * 1024, RestrictionLevel.Strict, "input");
                 var output = Encoding.ASCII.GetString(runner.GetBlob(result.OutputBlob));
                 Assert.AreEqual(ExecuteResultType.Success, result.Type);
                 Assert.AreEqual("3\n", output);

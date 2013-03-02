@@ -174,6 +174,9 @@ namespace ContestHunter.Models.Domain
                 throw new UserNotLoginException();
             using (var db = new CHDB())
             {
+                (from u in db.USERs
+                 where u.ID == User.CurrentUser.ID
+                 select u).Single().PreferLanguage = (int)record.Language;
                 var currpro = (from p in db.PROBLEMs
                                where p.ID == ID
                                select p).Single();

@@ -389,27 +389,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="Database\CHDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Database\CHDB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CHDB.edmx</DependentUpon>
-      <LastGenOutput>CHDB.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Database\CHDB.edmx.diagram">
-      <DependentUpon>CHDB.edmx</DependentUpon>
-    </Content>
-    <Content Include="Database\CHDB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CHDB.edmx</DependentUpon>
-      <LastGenOutput>CHDB.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Record\HuntResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +404,23 @@
     <Content Include="Views\Rating\Graph.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <EntityDeploy Include="Database\CHDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CHDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Database\CHDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CHDB.edmx</DependentUpon>
+      <LastGenOutput>CHDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Database\CHDB.edmx.diagram">
+      <DependentUpon>CHDB.edmx</DependentUpon>
+    </Content>
+    <Content Include="Database\CHDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CHDB.edmx</DependentUpon>
+      <LastGenOutput>CHDB.cs</LastGenOutput>
+    </Content>
     <None Include="Properties\PublishProfiles\CHConfig.pubxml" />
   </ItemGroup>
   <PropertyGroup>
