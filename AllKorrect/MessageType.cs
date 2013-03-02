@@ -26,6 +26,10 @@ namespace AllKorrect
         HasBlob,
         HasFile,
         HasBlobReply,
-        HasFileReply
+        HasFileReply,
+        GetBlobParticle,
+        GetBlobParticleReply,
+        GetBlobLength,
+        GetBlobLengthReply
     }
 }

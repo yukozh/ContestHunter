@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AllKorrect;
@@ -8,7 +9,7 @@ namespace DomainTest
     [TestClass]
     public class TestAK
     {
-        const string HOST = "sx.imeng.de";
+        const string HOST = "moo.imeng.de";
         const int PORT = 10010;
 
         [TestMethod]
@@ -258,6 +259,42 @@ namespace DomainTest
                     + "Linus举了一个单向链表的例子，但给出的代码太短了，一般的人很难搞明白这两个代码后面的含义。正好，有个编程爱好者阅读了这段话，并给出了一个比较完整的代码。他的话我就不翻译了，下面给出代码说明。";
                 runner.PutFile("code.cpp", Encoding.UTF8.GetBytes(longFile));
                 Assert.AreEqual(longFile, Encoding.UTF8.GetString(runner.GetFile("code.cpp")));
+            }
+        }
+
+        [TestMethod]
+        public void TestGetBlobParticle()
+        {
+            using (NativeRunner runner = new NativeRunner(HOST, PORT))
+            {
+                byte[] bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                runner.PutBlob("_part", bytes);
+
+                Assert.IsTrue(runner.GetBlob("_part", 0, 10).SequenceEqual(bytes));
+                
+                byte[] res = runner.GetBlob("_part", 1, 3);
+                Assert.AreEqual(3, res.Length);
+                Assert.AreEqual(1, res[0]);
+                Assert.AreEqual(2, res[1]);
+                Assert.AreEqual(3, res[2]);
+
+                res = runner.GetBlob("_part", 1000, 1);
+                Assert.AreEqual(0, res.Length);
+
+                res = runner.GetBlob("_part", 8, 10);
+                Assert.AreEqual(2, res.Length);
+                Assert.AreEqual(8, res[0]);
+                Assert.AreEqual(9, res[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestGetBlobLength()
+        {
+            using (NativeRunner runner = new NativeRunner(HOST, PORT))
+            {
+                runner.PutBlob("_tmp", new byte[10]);
+                Assert.AreEqual(10, runner.GetBlobLength("_tmp"));
             }
         }
     }
