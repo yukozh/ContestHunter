@@ -11,7 +11,7 @@ namespace ContestHunter.Models.View
         public string Contest { get; set; }
 
         [Required]
-        [Display(Name = "比赛名称")]
+        [Display(Name = "比赛名称",Description="不能包含 . / % : 等特殊字符")]
         [MaxLength(50)]
         public string Name { get; set; }
 

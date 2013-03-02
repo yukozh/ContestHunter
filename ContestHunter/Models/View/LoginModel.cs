@@ -9,7 +9,7 @@ namespace ContestHunter.Models.View
     {
         [Required]
         [Display(Name = "用户名")]
-        [MaxLength(50)]
+        [MaxLength(20)]
         public string UserName { get; set; }
 
         [Required]

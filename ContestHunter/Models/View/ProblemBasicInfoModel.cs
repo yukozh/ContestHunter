@@ -13,13 +13,13 @@ namespace ContestHunter.Models.View
         public Contest.ContestType ContestType { get; set; }
 
         [Required]
-        [Display(Name = "题目名称")]
+        [Display(Name = "题目名称", Description = "不能包含 . / % : 等特殊字符")]
         [MaxLength(50)]
         public string Name { get; set; }
 
         [Required]
         [Display(Name = "出题人", Description = "出题人的用户名")]
-        [MaxLength(50)]
+        [MaxLength(20)]
         public string Owner { get; set; }
 
         [Display(Name = "初始分数", Description = "此题的初始最高分值，随着比赛的进行，实际分值会不断减少")]
