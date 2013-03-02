@@ -197,6 +197,7 @@
     <Compile Include="Models\View\ContestBasicInfoModel.cs" />
     <Compile Include="Models\View\ContestDescriptionModel.cs" />
     <Compile Include="Models\View\ContestProblemsModel.cs" />
+    <Compile Include="Models\View\HomeIndexModel.cs" />
     <Compile Include="Models\View\HuntListModel.cs" />
     <Compile Include="Models\View\HuntModel.cs" />
     <Compile Include="Models\View\MyContestModel.cs" />
@@ -314,9 +315,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CKEditor\Upload.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Home\TestRichText.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Submit.cshtml" />
