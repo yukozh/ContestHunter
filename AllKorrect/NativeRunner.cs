@@ -260,6 +260,56 @@ namespace AllKorrect
         }
 
         /// <summary>
+        /// 下载一个Blob的部分字节
+        /// </summary>
+        /// <param name="skip">跳过前多少字节</param>
+        /// <param name="top">继续读取最多多少字节</param>
+        public byte[] GetBlob(string name, int skip, int top)
+        {
+            new GetBlobParticle()
+            {
+                Name = name,
+                Skip = skip,
+                Top = top
+            }.ToMessage().Send(writer);
+            var reply = new Message(reader);
+            if (reply.Type != MessageType.GetBlobParticleReply)
+            {
+                throw new Exception("收到错误的消息类型");
+            }
+            return reply.Body;
+        }
+
+        /// <summary>
+        /// 获取Blob的字节长度
+        /// </summary>
+        public int GetBlobLength(string name)
+        {
+            new GetBlobLength()
+            {
+                Name = name
+            }.ToMessage().Send(writer);
+            var reply = new Message(reader);
+            if (reply.Type != MessageType.GetBlobLengthReply)
+            {
+                throw new Exception("收到错误的消息类型");
+            }
+            return BitConverter.ToInt32(reply.Body, 0);
+        }
+
+        /// <summary>
+        /// 获取File的字节长度
+        /// </summary>
+        public int GetFileLength(string name)
+        {
+            string tmpBlob = RandomString();
+            MoveFile2Blob(name, tmpBlob);
+            int result = GetBlobLength(tmpBlob);
+            MoveBlob2File(tmpBlob, name);
+            return result;
+        }
+
+        /// <summary>
         /// 上传一个File
         /// </summary>
         public void PutFile(string name, byte[] bytes)
@@ -278,6 +328,20 @@ namespace AllKorrect
             MoveFile2Blob(name, blobname);
             byte[] result = GetBlob(blobname);
             MoveBlob2File(blobname, name);
+            return result;
+        }
+
+        /// <summary>
+        /// 下载一个File的部分字节
+        /// </summary>
+        /// <param name="skip">跳过前多少字节</param>
+        /// <param name="top">继续读取最多多少字节</param>
+        public byte[] GetFile(string name, int skip, int top)
+        {
+            string tmpBlob = RandomString();
+            MoveFile2Blob(name, tmpBlob);
+            byte[] result = GetBlob(tmpBlob, skip, top);
+            MoveBlob2File(tmpBlob, name);
             return result;
         }
 
