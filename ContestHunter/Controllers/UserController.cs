@@ -41,7 +41,8 @@ namespace ContestHunter.Controllers
 
             try
             {
-                USER.SendValidationEmail(model.Name, model.Password, model.Email, Url.Action("ValidateEmail", "User", null, "http"));
+                string returnUrl=Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action("ValidateEmail", "User");
+                USER.SendValidationEmail(model.Name, model.Password, model.Email, returnUrl);
             }
             catch
             {
