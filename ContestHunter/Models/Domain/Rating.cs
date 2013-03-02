@@ -9,5 +9,6 @@ namespace ContestHunter.Models.Domain
     {
         public int Score;
         public DateTime Time;
+        public string Contest;
     }
 }

@@ -18,7 +18,7 @@ namespace ContestHunter.Models.Domain
                     {"compileargv",new string[]{"-O2","-o","a.out","code.cpp"}},
                     {"extname",new string[]{"cpp"}},
                     {"compile",new string[]{"g++"}},
-                    {"execname",new string[]{"./a.out"}}
+                    {"execname",new string[]{"a.out"}}
                 }
             },
             {
@@ -28,17 +28,17 @@ namespace ContestHunter.Models.Domain
                     {"compileargv",new string[]{"-O2","-o","a.out","code.c"}},
                     {"extname",new string[]{"c"}},
                     {"compile",new string[]{"gcc"}},
-                    {"execname",new string[]{"./a.out"}}
+                    {"execname",new string[]{"a.out"}}
                 }
             },
             {
                 Record.LanguageType.Pascal,
                 new Dictionary<string,string[]>()
                 {
-                    {"compileargv",new string[]{"-O2","-ocode","code.pas"}},
+                    {"compileargv",new string[]{"-O2","code.pas"}},
                     {"extname",new string[]{"pas"}},
                     {"compile",new string[]{"fpc"}},
-                    {"execname",new string[]{"./code"}}
+                    {"execname",new string[]{"code"}}
                 }
             }
         };
@@ -204,7 +204,7 @@ namespace ContestHunter.Models.Domain
                                 rec.Status = (int)Hunt.StatusType.CompileError;
                                 break;
                             }
-                            result = tester.Execute(commands[(Record.LanguageType)rec.DataType]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, null);
+                            result = tester.Execute("./"+commands[(Record.LanguageType)rec.DataType]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, null);
                             if (result.Type != ExecuteResultType.Success)
                             {
                                 rec.Status = (int)Hunt.StatusType.BadData;
@@ -225,7 +225,7 @@ namespace ContestHunter.Models.Domain
                         rec.Status = (int)Hunt.StatusType.DataCheckerError;
                         return true;
                     }
-                    result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
+                    result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
                     if (result.Type != ExecuteResultType.Success)
                     {
                         if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
@@ -244,7 +244,7 @@ namespace ContestHunter.Models.Domain
                         Detail += "原记录编译失败";
                         return true;
                     }
-                    result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
+                    result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
                     if (result.Type == ExecuteResultType.Success)
                     {
                         string userout = result.OutputBlob;
@@ -257,7 +257,7 @@ namespace ContestHunter.Models.Domain
                             Detail += "比较器编译失败";
                             return true;
                         }
-                        result = tester.Execute(commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, HuntData);
+                        result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, HuntData);
                         if (result.Type == ExecuteResultType.Success)
                         {
                             rec.Status = (int)Hunt.StatusType.Success;

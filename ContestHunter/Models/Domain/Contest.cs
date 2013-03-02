@@ -295,12 +295,12 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
-                if (IsOfficial && !User.CurrentUser.IsAdmin &&
-                    User.ByName(User.CurrentUser.name).Rating() < 2100)
-                    throw new PermissionDeniedException();
                 var con = (from c in db.CONTESTs
                            where c.ID==ID
                            select c).Single();
+                if (IsOfficial != con.IsOfficial && !User.CurrentUser.IsAdmin &&
+                    User.ByName(User.CurrentUser.name).Rating() < 2100)
+                    throw new PermissionDeniedException(); 
                 if (con.Name != Name)
                 {
                     if ((from c in db.CONTESTs
@@ -323,6 +323,7 @@ namespace ContestHunter.Models.Domain
                 con.IsOfficial = IsOfficial;
                 con.StartTime = AbsoluteStartTime;
                 con.EndTime = AbsoluteEndTime;
+                con.Type = (int)Type;
                 db.SaveChanges();
             }
         }
@@ -771,7 +772,7 @@ namespace ContestHunter.Models.Domain
                 var con = (from c in db.CONTESTs
                            where c.ID==ID
                            select c).Single();
-                if (DateTime.Now <= con.EndTime)
+                if (DateTime.Now <= RelativeEndTime && !User.CurrentUser.IsAdmin && !Owner.Contains(User.CurrentUserName))
                     throw new ContestNotEndedException();
                 return (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                         where HasNotSubmit ? true : (from r in db.RECORDs

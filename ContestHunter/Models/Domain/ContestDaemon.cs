@@ -87,7 +87,7 @@ namespace ContestHunter.Models.Domain
                         else
                         {
                             if (!(from r in db.RECORDs
-                                  where r.PROBLEM1.CONTEST1 == con &&
+                                  where r.PROBLEM1.CONTEST1.ID == con.ID &&
                                   r.SubmitTime <= con.EndTime &&
                                   r.Status == (int)Record.StatusType.Pending
                                   select r).Any())
@@ -102,13 +102,13 @@ namespace ContestHunter.Models.Domain
                         if (con.Status == (int)Contest.StatusType.BeforeFinalTest)
                         {
                             foreach (TESTDATA test in (from t in db.TESTDATAs
-                                                       where t.PROBLEM1.CONTEST1 == con && t.Available == false
+                                                       where t.PROBLEM1.CONTEST1.ID == con.ID && t.Available == false
                                                        select t))
                             {
                                 test.Available = true;
                             }
                             foreach (RECORD rec in (from r in db.RECORDs
-                                                    where r.PROBLEM1.CONTEST1 == con
+                                                    where r.PROBLEM1.CONTEST1.ID == con.ID
                                                     select r))
                             {
                                 rec.Status = (int)Record.StatusType.Pending;
@@ -118,7 +118,7 @@ namespace ContestHunter.Models.Domain
                         else
                         {
                             if (!(from r in db.RECORDs
-                                  where r.PROBLEM1.CONTEST1 == con &&
+                                  where r.PROBLEM1.CONTEST1.ID == con.ID &&
                                   r.SubmitTime <= con.EndTime &&
                                   r.Status == (int)Record.StatusType.Pending
                                   select r).Any())
@@ -137,7 +137,7 @@ namespace ContestHunter.Models.Domain
                         else
                         {
                             if (!(from r in db.RECORDs
-                                  where r.PROBLEM1.CONTEST1 == con &&
+                                  where r.PROBLEM1.CONTEST1.ID == con.ID &&
                                   r.SubmitTime <= con.EndTime &&
                                   r.Status == (int)Record.StatusType.Pending
                                   select r).Any())

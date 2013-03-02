@@ -405,9 +405,10 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
+                int _rating = Rating();
                 return (from u in db.USERs
                         let rating = u.RATINGs.OrderByDescending(x => x.CONTEST1.EndTime).Select(x => x.Rating1).FirstOrDefault()
-                        where rating > Rating()
+                        where rating > _rating
                         select u).Count();
             }
         }
@@ -426,7 +427,8 @@ namespace ContestHunter.Models.Domain
                         select new Rating()
                         {
                             Score = r.Rating1,
-                            Time = r.CONTEST1.EndTime
+                            Time = r.CONTEST1.EndTime,
+                            Contest = r.CONTEST1.Name
                         }).ToList();
             }
         }
