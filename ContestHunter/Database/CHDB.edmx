@@ -209,6 +209,7 @@
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="Password" Type="binary" Nullable="false" MaxLength="32" />
           <Property Name="Email" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="PreferLanguage" Type="int" />
           <Property Name="RealName" Type="nvarchar" MaxLength="50" />
           <Property Name="Country" Type="nvarchar" MaxLength="50" />
           <Property Name="Province" Type="nvarchar" MaxLength="50" />
@@ -650,6 +651,7 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Password" Type="Binary" Nullable="false" MaxLength="32" FixedLength="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="PreferLanguage" Type="Int32" />
           <Property Name="RealName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Country" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Province" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
@@ -940,6 +942,7 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PreferLanguage" ColumnName="PreferLanguage" />
                 <ScalarProperty Name="RealName" ColumnName="RealName" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="Province" ColumnName="Province" />

@@ -50,7 +50,7 @@ namespace ContestHunter.Models.Domain
         ExecuteResult Compile(string code,Record.LanguageType language,NativeRunner runner)
         {
             runner.PutFile("code."+commands[language]["extname"][0],Encoding.UTF8.GetBytes(code));
-            return runner.Execute(commands[language]["compile"][0],commands[language]["compileargv"],CompileMemory,CompileTime,10240,RestrictionLevel.Loose,null);
+            return runner.Execute(commands[language]["compile"][0],commands[language]["compileargv"],CompileMemory,CompileTime,-1,RestrictionLevel.Loose,null);
         }
 
         bool DealRecord(CHDB db)
