@@ -57,7 +57,11 @@
             <div class="control-group">
                 @Html.LabelFor(x => x.IsOfficial, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.CheckBoxFor(x => x.IsOfficial, new { disabled = USER.ByName(USER.CurrentUserName).Rating() < 2100 })
+                    @{
+            USER currentUser = USER.ByName(USER.CurrentUserName);
+            bool canEditOfficial = currentUser.IsAdmin() || currentUser.Rating() >= 2100;
+                    }
+                    @Html.CheckBoxFor(x => x.IsOfficial, new { }.DisabledIf(!canEditOfficial))
                     @Html.ValidationMessageFor(x => x.IsOfficial)
                     @Html.DescriptionFor(x => x.IsOfficial)
                 </div>
