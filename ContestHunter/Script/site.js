@@ -19,7 +19,7 @@ function RefreshValidationMessage() {
 }
 
 $(function () {
-    $('input,textarea,select').filter('[data-val-required]').attr('required', 'required');
+    $('input[type!="checkbox"],textarea,select').filter('[data-val-required]').attr('required', 'required');
 
     $('span.field-validation-valid, span.field-validation-error').each(function () {
         $(this).wrap('<div style="margin: 5px; text-align: right;"/>');

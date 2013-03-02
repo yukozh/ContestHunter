@@ -8,7 +8,7 @@ namespace DomainTest
     [TestClass]
     public class TestAK
     {
-        const string HOST = "sx.imeng.de";
+        const string HOST = "moo.imeng.de";
         const int PORT = 10010;
 
         [TestMethod]

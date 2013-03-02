@@ -1,31 +1,28 @@
-﻿@{
+﻿@model ContestHunter.Models.View.HomeIndexModel
+@{
     ViewBag.Title = "主页";
     ViewBag.ActivedNav = "Home";
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td
-        {
+        .table td {
             text-align: center;
             vertical-align: middle;
             font-family: 微软雅黑;
         }
 
-    fieldset
-    {
+    fieldset {
         font-family: 微软雅黑;
     }
 
-    legend
-    {
+    legend {
         font-size: 16px;
         margin: 0px;
     }
@@ -93,56 +90,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>VariantF</td>
-                        <td>2600</td>
-                    </tr>
+                    @for (int i = 0; i < Model.Rating.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Html.UserLink(Model.Rating[i].Name)</td>
+                            <td>@Model.Rating[i].Rating()</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

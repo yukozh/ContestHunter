@@ -288,7 +288,7 @@ namespace ContestHunter.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Preview", new { id = id });
+            return RedirectToAction("Preview", new { id = model.Name });
         }
 
         [HttpGet]
