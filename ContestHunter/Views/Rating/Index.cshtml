@@ -23,13 +23,22 @@
     <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
         <div class="form-search" style="margin: 0px 5px">
             <h4 style="float: left;  font-weight: normal;">能力排名</h4>
-            <div style="float: right; margin-top: 5px">
-                <input type="text" class="input-small search-query" placeholder="检索用户">
-                <input type="submit" class="btn btn-small btn-success" value="查询">
+            <script>
+                function SelectByName(user) {
+                    $('#tableRating > tbody > tr').filter(function () {
+                        return $(this).attr('data-user').toLowerCase().indexOf(user.toLowerCase()) != -1;
+                    }).show();
+                    $('#tableRating > tbody > tr').filter(function () {
+                        return $(this).attr('data-user').toLowerCase().indexOf(user.toLowerCase()) == -1;
+                    }).hide();
+                }
+            </script>
+            <div style="float: right; margin-top:5px;">
+                <input type="text" class="input-medium search-query" placeholder="本页中检索用户" oninput="SelectByName($(this).val())">
             </div>
             <div style="clear: both"></div>
         </div>
-        <table class="table table-bordered table-striped table-hover">
+        <table id="tableRating" class="table table-bordered table-striped table-hover">
             <colgroup>
                 <col style="width: 80px">
                 <col style="width: 200px">
@@ -47,7 +56,7 @@
             <tbody>
                 @for (int i = 0; i < Model.Users.Count; i++)
                 {
-                    <tr>
+                    <tr data-user="@Model.Users[i].Name">
                         <td>@(i + Model.StartIndex+1)</td>
                         <td>@Html.UserLink(Model.Users[i].Name)</td>
                         <td>@Model.Users[i].Motto</td>

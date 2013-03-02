@@ -1,77 +1,78 @@
-﻿@{
+﻿@model ContestHunter.Models.View.RatingHistoryModel
+@{
     ViewBag.Title = "排名记录";
     ViewBag.ActivedNav = "Rating";
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td
-        {
+        .table td {
             text-align: center;
             vertical-align: middle;
-            
         }
 </style>
 
 <div class="span12">
-    <fieldset style="margin-top:20px">
-        <legend>VariantF的能力排名历史记录</legend>
+    <h1>由于增减列，表格colgroup已被移除，请重新构建colgroup</h1>
+    <fieldset style="margin-top: 20px">
+        <legend>@Html.UserLink(Model.User)的能力排名历史记录</legend>
         <table class="table table-bordered table-striped table-hover">
-            <colgroup>
-                <col style="width: 60px">
-                <col style="width: 270px">
-                <col style="width: 60px">
-                <col style="width: 80px">
-                <col style="width: 80px">
-                <col style="width: 390px">
-            </colgroup>
             <thead>
                 <tr>
-                    <th>次数</th>
+                    <th>时间</th>
                     <th>比赛名称</th>
-                    <th>名次</th>
                     <th>增减</th>
                     <th>新值</th>
                     <th>名称变化</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>2</td>
-                    <td><a href="#">OrzCYF杯模拟赛</a></td>
-                    <td>1</td>
-                    <td>
-                        <span style="color:green"><b>+</b>200</span>
-                        @*<span style="color:gray"><b>-</b>50</span>*@
-                    </td>
-                    <td><b>1650</b></td>
-                    <td>
-                        @*无变化则此格留空*@
-                        <span style="color:#008000">VariantF</span> → <span style="color:#0099CC">VariantF</span>
-                        <br/>成为：大牛(Bull)
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td><a href="#">OrzSJY杯模拟赛</a></td>
-                    <td>1</td>
-                    <td>
-                        <span style="color:gray"><b>-</b>50</span>
-                    </td>
-                    <td><b>1450</b></td>
-                    <td>
-                        @*无变化则此格留空*@
-                        <span style="color:#CC9966">VariantF</span> → <span style="color:#008000">VariantF</span>
-                        <br/>成为：领先学习者(Advanced Learner)
-                    </td>
-                </tr>
+                @for (int i = Model.Ratings.Count - 1; i >= 0; i--)
+                {
+                    var rating = Model.Ratings[i];
+                    <tr>
+                        <td>@rating.Time</td>
+                        <td>@Html.ActionLink(rating.Contest, "Show", "Contest", new { id = rating.Contest }, null)</td>
+                        <td>
+                            @{
+                    var delta = rating.Score - (i == 0 ? 0 : Model.Ratings[i - 1].Score);
+                            }
+                            @if (delta >= 0)
+                            {
+                                <span style="color: green"><b>+</b>@delta</span>
+                            }
+                            else
+                            {
+                                <span style="color: gray"><b>-</b>@(-delta)</span>
+                            }
+                        </td>
+                        <td><b>@rating.Score</b></td>
+                        <td>
+                            @{
+                            var curRating = new RatingInfo(rating.Score);
+                            var prevRating = new RatingInfo(i == 0 ? 0 : Model.Ratings[i - 1].Score);
+                            }
+                            @if (curRating.Caption == prevRating.Caption)
+                            {
+                                @:没有变化
+                            }
+                            else
+                            {
+                                @Html.UserLink(Model.User, new { title = prevRating.Caption, style = "color:" + prevRating.Color })
+                                @:→
+                                @Html.UserLink(Model.User, new { title = curRating.Caption, style = "color:" + curRating.Color })
+                                <br />
+                                @:成为: @curRating.Caption
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </fieldset>

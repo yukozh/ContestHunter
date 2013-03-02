@@ -210,6 +210,7 @@
     <Compile Include="Models\View\ProblemContentModel.cs" />
     <Compile Include="Models\View\ProblemSubmitModel.cs" />
     <Compile Include="Models\View\RatingGraphModel.cs" />
+    <Compile Include="Models\View\RatingHistoryModel.cs" />
     <Compile Include="Models\View\RatingIndexModel.cs" />
     <Compile Include="Models\View\RecordListModel.cs" />
     <Compile Include="Models\View\TestCaseInfo.cs" />

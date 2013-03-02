@@ -24,9 +24,23 @@ namespace ContestHunter.Controllers
             return View(model);
         }
 
-        public ActionResult History()
+        [HttpGet]
+        public ActionResult History(string id)
         {
-            return View();
+            RatingHistoryModel model = new RatingHistoryModel
+            {
+                User = id
+            };
+            try
+            {
+                USER user = USER.ByName(id);
+                model.Ratings = user.RatingHistory();
+            }
+            catch (UserNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有这个用户" });
+            }
+            return View(model);
         }
 
         [HttpGet]

@@ -52,6 +52,11 @@ namespace ContestHunter.ViewHelpers
             return self.ActionLink(userName, action, controller, routeValues, new { title = info.Caption, style = "color: " + info.Color });
         }
 
+        public static MvcHtmlString UserLink<TModel>(this HtmlHelper<TModel> self, string userName, object htmlAttr)
+        {
+            return self.ActionLink(userName, "Show", "User", new { id = userName }, htmlAttr);
+        }
+
         public static MvcHtmlString DescriptionFor<TModel, TValue>(this HtmlHelper<TModel> self, Expression<Func<TModel, TValue>> expression)
         {
             return DescriptionFor(self, expression, new object());

@@ -11,9 +11,9 @@ namespace ContestHunter.Models.View
         [Required]
         [Display(Name="代码")]
         public string Code { get; set; }
-        [Required]
+
         [Display(Name="语言")]
-        public Record.LanguageType? Language { get; set; }
+        public Record.LanguageType Language { get; set; }
 
         public string Problem { get; set; }
         public string Contest { get; set; }

@@ -58,7 +58,7 @@
                             <a href="#">Ta的比赛记录</a><br />
                             @if (USER.CurrentUserName == Model.Name)
                             {
-                                @Html.ActionLink("修改我的用户资料", "Edit")
+                                @Html.ActionLink("修改我的用户资料", "Edit")<br />
                             }
                             <a href="#">设为/取消管理员</a><br />
                         </h5>
@@ -67,6 +67,8 @@
                 </td>
             </tr>
         </table>
-        <img src="@Url.Action("Graph", "Rating", new { id = Model.Name })" alt="Rating" style="width:100%; margin:10px 0;"/>
+        <a href="@Url.Action("History", "Rating", new { id = Model.Name })">
+            <img src="@Url.Action("Graph", "Rating", new { id = Model.Name })" alt="Rating" style="width:100%; margin:10px 0;"/>
+        </a>
     </div>
 </div>

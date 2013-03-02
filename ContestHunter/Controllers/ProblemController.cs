@@ -64,6 +64,7 @@ namespace ContestHunter.Controllers
             ProblemSubmitModel model = new ProblemSubmitModel();
             model.Problem = id;
             model.Contest = contest;
+            model.Language = USER.CurrentUserPreferLanguage ?? Record.LanguageType.CPP;
 
             Problem problem;
             try
