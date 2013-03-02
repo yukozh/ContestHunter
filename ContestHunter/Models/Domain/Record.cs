@@ -176,10 +176,10 @@ namespace ContestHunter.Models.Domain
                               select r).SingleOrDefault();
                 if (null == result)
                     throw new RecordNotFoundException();
-                if (result.USER1.Name != Domain.User.CurrentUser.name)
+                if (result.USER1.Name != Domain.User.CurrentUser.name && !Domain.User.CurrentUser.IsAdmin)
                 {
                     var con = Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name);
-                    if (DateTime.Now <= Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name).RelativeEndTime)
+                    if (DateTime.Now <= con.RelativeEndTime && !con.Owner.Contains(Domain.User.CurrentUserName))
                     {
                         if (con.Type != Domain.Contest.ContestType.CF)
                         {
