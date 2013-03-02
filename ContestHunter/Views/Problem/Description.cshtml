@@ -6,7 +6,7 @@
 
 <style type="text/css">
     h5 {
-        font-family: 微软雅黑;
+        
         font-weight: normal;
     }
 
@@ -40,7 +40,7 @@
                 <input class="btn btn-warning" type="submit" value="效果预览" onclick="$('#Action').val('Preview')" /></h2>
             <h3 style="margin-bottom: 0px; color: black">@Model.Problem</h3>
             <h5 style="margin-top: 0px; color: black">From @Html.UserLink(Model.ProblemOwner)</h5>
-            <div class="well" style="color: black; font-family: 微软雅黑; text-align: left;">
+            <div class="well" style="color: black;  text-align: left;">
                 @Html.Sanitized(Model.Content)
             </div>
             <div class="btn-group">

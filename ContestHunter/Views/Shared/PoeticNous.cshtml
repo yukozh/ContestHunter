@@ -37,6 +37,7 @@
         body
         {
             background-color: RGB(240,240,240);
+            font-family:微软雅黑, WenQuanYi Micro Hei;
         }
     </style>
 </head>
@@ -68,7 +69,7 @@
                     </script>
                 }
                 <div class="nav-collapse">
-                    <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
+                    <ul class="nav" style=" font-size: 14px">
                         <li id="navHome">@Html.ActionLink("主页", "Index", "Home")</li>
                         <li id="navContest">@Html.ActionLink("比赛", "Index", "Contest")</li>
                         <li id="navRating">@Html.ActionLink("能力排名", "Index", "Rating")</li>
@@ -76,7 +77,7 @@
                     </ul>
                 </div>
                 <div class="nav-collapse" style="float: right">
-                    <ul class="nav" style="font-family: 微软雅黑; font-size: 14px">
+                    <ul class="nav" style=" font-size: 14px">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="dropdown">
@@ -145,7 +146,7 @@
         </div>
     </div>
     <hr style="border-top-color: lightgray" />
-    <div style="text-align: center; font-family: 微软雅黑; font-size: 14px; margin-top: 10px; margin-bottom: 10px;">
+    <div style="text-align: center;  font-size: 14px; margin-top: 10px; margin-bottom: 10px;">
         Contest Hunter 信息学自助比赛平台 - Alpha<br />
         Developed by lydrainbowcat, VariantF and onetwogoo<br />
         Server time: @DateTimeOffset.Now<br />
