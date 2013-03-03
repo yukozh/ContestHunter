@@ -79,7 +79,7 @@ namespace ContestHunter.Controllers
 
             try
             {
-                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash, "中国", "山东省", "青岛市", "第二中学", "大家好，我是唐山一中石豪悦。", "王强松");
+                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash, "中国", "山东省", "青岛市", "第二中学", "我是神犇", "王强松");
             }
             catch (PasswordMismatchException)
             {
@@ -182,6 +182,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(UserEditModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -217,6 +218,43 @@ namespace ContestHunter.Controllers
             }
 
             return RedirectToAction("Show", new { id = USER.CurrentUserName });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SetAdmin(string id) {
+            try
+            {
+                Group.ByName("Administrators").AddUser(USER.ByName(id));
+            }
+            catch (GroupNotFoundException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您无权设置管理员" });
+            }
+            return RedirectToAction("Show", new { id = id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UnsetAdmin(string id)
+        {
+            try
+            {
+                Group.ByName("Administrators").RemoveUser(USER.ByName(id));
+            }
+            catch (GroupNotFoundException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您无权取消管理员" });
+            }
+            return RedirectToAction("Show", new { id = id });
         }
     }
 }
