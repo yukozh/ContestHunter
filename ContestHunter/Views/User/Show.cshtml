@@ -66,7 +66,7 @@
                                 using (Html.BeginForm("SetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
                                 {
                                 @Html.AntiForgeryToken()
-                                <input type="submit" class="btn btn-danger" value="设为管理员" onclick="return confirm('确实要将其设为管理员吗？');" />
+                                <input type="submit" class="btn btn-danger btn-small" value="设为管理员" onclick="return confirm('确实要将其设为管理员吗？');" />
                                 }
                             }
                             else
@@ -74,7 +74,7 @@
                                 using (Html.BeginForm("UnsetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
                                 {
                                 @Html.AntiForgeryToken()
-                                <input type="submit" class="btn btn-danger" value="取消管理员" onclick="return confirm('确实要取消其管理员身份吗？');" />
+                                <input type="submit" class="btn btn-danger btn-small" value="取消管理员" onclick="return confirm('确实要取消其管理员身份吗？');" />
                                 }
                             }
                         </h5>
