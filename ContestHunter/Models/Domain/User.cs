@@ -424,7 +424,7 @@ namespace ContestHunter.Models.Domain
                 return (from u in db.USERs
                         let rating = u.RATINGs.OrderByDescending(x => x.CONTEST1.EndTime).Select(x => x.Rating1).FirstOrDefault()
                         where rating > _rating
-                        select u).Count() + 1;
+                        select u).Count();
             }
         }
 
