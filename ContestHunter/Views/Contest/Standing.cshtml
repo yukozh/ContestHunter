@@ -25,7 +25,7 @@
 
 <div class="span12" style="margin-top: 30px">
     <h2 style="text-align: center">@Model.Contest.Name</h2>
-    <h5 style="text-align: center; font-family: 微软雅黑">
+    <h5 style="text-align: center; ">
         @if (DateTime.Now < Model.Contest.RelativeEndTime)
         {
             TimeSpan span = DateTime.Now - Model.Contest.RelativeStartTime;
