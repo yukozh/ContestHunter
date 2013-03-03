@@ -86,6 +86,8 @@ namespace ContestHunter.Models.Domain
                     Detail.Append("<h5>各测试点详细信息：</h5>\r\n<div style=\"padding-left: 10px\">");
                     int totalTests = 0;
                     int passedTests = 0;
+                    rec.MemoryUsed = 0;
+                    rec.ExecutedTime = 0;
                     foreach (TESTDATA test in (from t in db.TESTDATAs
                                                where t.PROBLEM1.ID == rec.PROBLEM1.ID && t.Available
                                                select t))
