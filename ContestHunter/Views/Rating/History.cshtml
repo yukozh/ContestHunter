@@ -19,10 +19,16 @@
 </style>
 
 <div class="span12">
-    <h1>由于增减列，表格colgroup已被移除，请重新构建colgroup</h1>
     <fieldset style="margin-top: 20px">
         <legend>@Html.UserLink(Model.User)的能力排名历史记录</legend>
         <table class="table table-bordered table-striped table-hover">
+            <colgroup>
+                <col style="width:120px">
+                <col>
+                <col style="width:80px">
+                <col style="width:80px">
+                <col style="width:360px">
+            </colgroup>
             <thead>
                 <tr>
                     <th>时间</th>
