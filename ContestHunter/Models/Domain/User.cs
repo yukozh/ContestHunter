@@ -150,7 +150,7 @@ namespace ContestHunter.Models.Domain
                     db.USERs.Add(new USER()
                     {
                         ID = Guid.NewGuid(),
-                        Name = name,
+                        Name = Helper.GetLegalName(name),
                         Password = hash.ComputeHash(Encoding.Unicode.GetBytes(originalPassword)),
                         Email = email,
                         Country = country,

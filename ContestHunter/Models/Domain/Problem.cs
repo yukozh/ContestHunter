@@ -280,11 +280,11 @@ namespace ContestHunter.Models.Domain
                              select u).SingleOrDefault();
                 if (null == owner)
                     throw new UserNotFoundException();
-                if (pro.Name != Name && (from p in db.PROBLEMs
-                                         where p.Name == Name && p.CONTEST1.ID == contest.ID
+                if (pro.Name != Helper.GetLegalName(Name) && (from p in db.PROBLEMs
+                                         where p.Name == Helper.GetLegalName(Name) && p.CONTEST1.ID == contest.ID
                                          select p).Any())
                     throw new ProblemNameExistedException();
-                pro.Name = Name;
+                pro.Name = Helper.GetLegalName(Name);
                 pro.OriginRating = OriginRating;
                 pro.Content = Content;
                 pro.Comparer = Comparer;

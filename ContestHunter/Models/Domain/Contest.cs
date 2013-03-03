@@ -259,7 +259,7 @@ namespace ContestHunter.Models.Domain
                 var curContest = db.CONTESTs.Add(new CONTEST()
                 {
                     ID = Guid.NewGuid(),
-                    Name = contest.Name,
+                    Name = Helper.GetLegalName(contest.Name),
                     StartTime = contest.AbsoluteStartTime,
                     EndTime = contest.AbsoluteEndTime,
                     Description = contest.Description,
@@ -301,13 +301,13 @@ namespace ContestHunter.Models.Domain
                 if (IsOfficial != con.IsOfficial && !User.CurrentUser.IsAdmin &&
                     User.ByName(User.CurrentUser.name).Rating() < 2100)
                     throw new PermissionDeniedException(); 
-                if (con.Name != Name)
+                if (con.Name != Helper.GetLegalName(Name))
                 {
                     if ((from c in db.CONTESTs
-                         where c.Name == Name
+                         where c.Name == Helper.GetLegalName(Name)
                          select c).Any())
                         throw new ContestNameExistedException();
-                    con.Name = Name;
+                    con.Name = Helper.GetLegalName(Name);
                 }
                 con.Description = Description;
                 if (Owner != Owners)
@@ -648,7 +648,7 @@ namespace ContestHunter.Models.Domain
                 db.PROBLEMs.Add(new PROBLEM()
                 {
                     ID = Guid.NewGuid(),
-                    Name = problem.Name,
+                    Name = Helper.GetLegalName(problem.Name),
                     Content = problem.Content,
                     Comparer = problem.Comparer,
                     ComparerLanguage = (int)problem.ComparerLanguage,

@@ -186,6 +186,7 @@
     <Compile Include="Models\Domain\Exceptions.cs" />
     <Compile Include="Models\Domain\Framework.cs" />
     <Compile Include="Models\Domain\Group.cs" />
+    <Compile Include="Models\Domain\Helper.cs" />
     <Compile Include="Models\Domain\Hunt.cs" />
     <Compile Include="Models\Domain\Problem.cs" />
     <Compile Include="Models\Domain\Rating.cs" />
