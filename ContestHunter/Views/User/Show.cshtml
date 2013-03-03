@@ -45,7 +45,7 @@
                     <h4 style="color: @ViewBag.Rating.Color">@ViewBag.Rating.Caption，@Model.Name</h4>
                     <div style="float: left; width: 350px">
                         <h5 style="color: green">能力评估值：@Model.Rating()</h5>
-                        <h5 style="color: green">当前排名：@(Model.Rank()+1)</h5>
+                        <h5 style="color: green">当前排名：@(Model.Rank() + 1)</h5>
                         <h5>基本信息：@Model.RealName - @Model.Country,@Model.Province,@Model.City,@Model.School</h5>
                         <h5>电子邮件：<a href="mailto:@Model.Email">@Model.Email</a></h5>
                         <h5>上次登录：@Model.LastLoginTime</h5>
@@ -60,7 +60,23 @@
                             {
                                 @Html.ActionLink("修改我的用户资料", "Edit")<br />
                             }
-                            <a href="#">设为/取消管理员</a><br />
+
+                            @if (!Model.IsAdmin())
+                            {
+                                using (Html.BeginForm("SetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
+                                {
+                                @Html.AntiForgeryToken()
+                                <input type="submit" class="btn btn-danger" value="设为管理员" onclick="return confirm('确实要将其设为管理员吗？');" />
+                                }
+                            }
+                            else
+                            {
+                                using (Html.BeginForm("UnsetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
+                                {
+                                @Html.AntiForgeryToken()
+                                <input type="submit" class="btn btn-danger" value="取消管理员" onclick="return confirm('确实要取消其管理员身份吗？');" />
+                                }
+                            }
                         </h5>
                     </div>
                     <div style="clear: both"></div>
