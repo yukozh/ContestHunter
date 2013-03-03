@@ -79,7 +79,7 @@ namespace ContestHunter.Controllers
 
             try
             {
-                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash, "中国", "山东省", "青岛市", "第二中学", "I'm too shy to say something...", "王强松");
+                USER.Register(model.Name, model.Password, passwordHash, model.Email, emailHash, "中国", "山东省", "青岛市", "第二中学", "大家好，我是唐山一中石豪悦。", "王强松");
             }
             catch (PasswordMismatchException)
             {
