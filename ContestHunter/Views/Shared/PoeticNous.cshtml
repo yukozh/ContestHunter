@@ -109,7 +109,7 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#" onclick="$('#frmLogout').submit();">登出</a>
+                                <a href="javascript:$('#frmLogout').submit();">登出</a>
                                 @using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "frmLogout", style = "display:none;" }))
                                 {
                                     @Html.AntiForgeryToken()

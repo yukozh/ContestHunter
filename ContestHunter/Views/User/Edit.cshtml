@@ -29,6 +29,7 @@
             onsubmit = "return CheckPassword();"
         }))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(x=>x.Email)
             <div class="control-group">
                 @Html.LabelFor(x => x.OldPassword, new { @class = "control-label" })
