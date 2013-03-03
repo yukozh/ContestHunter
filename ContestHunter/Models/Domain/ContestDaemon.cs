@@ -73,7 +73,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.EndTime < DateTime.Now && c.Status!=(int)Contest.StatusType.Done
+                           where c.EndTime+TimeSpan.FromMinutes(30) < DateTime.Now && c.Status!=(int)Contest.StatusType.Done
                            select c).FirstOrDefault();
                 if (null == con)
                     return 300000;

@@ -113,7 +113,8 @@ namespace ContestHunter.Models.Domain
                         SubmitTime = r.SubmitTime,
                         User = r.USER1.Name
                     };
-                    if (DateTime.Now <= Domain.Contest.ByName(r.PROBLEM1.CONTEST1.Name).RelativeEndTime)
+                    var con=Domain.Contest.ByName(r.PROBLEM1.CONTEST1.Name);
+                    if (DateTime.Now <= con.RelativeEndTime && !Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName))
                     {
                         switch (r.PROBLEM1.CONTEST1.Type)
                         {
