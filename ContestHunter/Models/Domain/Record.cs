@@ -114,7 +114,7 @@ namespace ContestHunter.Models.Domain
                         User = r.USER1.Name
                     };
                     var con=Domain.Contest.ByName(r.PROBLEM1.CONTEST1.Name);
-                    if (DateTime.Now <= con.RelativeEndTime && ( null==Domain.User.CurrentUser || !Domain.User.CurrentUser.IsAdmin || !con.Owner.Contains(Domain.User.CurrentUserName)))
+                    if (DateTime.Now <= con.RelativeEndTime && ( null==Domain.User.CurrentUser || (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName))))
                     {
                         switch (r.PROBLEM1.CONTEST1.Type)
                         {
@@ -128,6 +128,12 @@ namespace ContestHunter.Models.Domain
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
+                                break;
+                            case (int)Domain.Contest.ContestType.OI:
+                                if (r.Status==(int)StatusType.Compile_Error)
+                                {
+                                    nrec.Status = StatusType.Compile_Error;
+                                }
                                 break;
                         }
                     }
@@ -169,8 +175,11 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="RecordNotFoundException"></exception>
         /// <exception cref="ProblemNotLockedException"></exception>
         /// <exception cref="ProblemNotPassedException"></exception>
+        /// <exception cref="UserNotLoginException"></exception>
         public static Record ByID(Guid id)
         {
+            if (null == Domain.User.CurrentUser)
+                throw new UserNotLoginException();
             using (var db = new CHDB())
             {
                 var result = (from r in db.RECORDs
@@ -178,17 +187,12 @@ namespace ContestHunter.Models.Domain
                               select r).SingleOrDefault();
                 if (null == result)
                     throw new RecordNotFoundException();
-                if (result.USER1.Name != Domain.User.CurrentUser.name && !Domain.User.CurrentUser.IsAdmin)
+                var con = Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name);
+                if (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName) && DateTime.Now <= con.RelativeEndTime && result.Status!=(int)StatusType.Compile_Error)
                 {
-                    var con = Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name);
-                    if (DateTime.Now <= con.RelativeEndTime && !con.Owner.Contains(Domain.User.CurrentUserName))
+                    switch (con.Type)
                     {
-                        if (con.Type != Domain.Contest.ContestType.CF)
-                        {
-                            throw new ContestNotEndedException();
-                        }
-                        else
-                        {
+                        case Domain.Contest.ContestType.CF:
                             if (!(from l in
                                       (from u in db.USERs
                                        where u.Name == Domain.User.CurrentUser.name
@@ -202,7 +206,15 @@ namespace ContestHunter.Models.Domain
                                   && r.Status == (int)Record.StatusType.Accept
                                   select r).Any())
                                 throw new ProblemNotPassedException();
-                        }
+                            break;
+                        case Domain.Contest.ContestType.ACM:
+                            if (result.USER1.Name != Domain.User.CurrentUser.name)
+                                throw new ContestNotEndedException();
+                            break;
+                        case Domain.Contest.ContestType.OI:
+                            if (result.USER1.Name != Domain.User.CurrentUser.name)
+                                throw new ContestNotEndedException();
+                            break;
                     }
                 }
                 return new Record()
