@@ -15,7 +15,7 @@ namespace ContestHunter.Models.Domain
                 Record.LanguageType.CPP,
                 new Dictionary<string,string[]>()
                 {
-                    {"compileargv",new string[]{"-O2","-o","a.out","code.cpp"}},
+                    {"compileargv",new string[]{"-O2","-o","a.out","-DONLINE_JUDGE","-Wall","-lm","--static","--std=c++11","-fno-asm","code.cpp"}},
                     {"extname",new string[]{"cpp"}},
                     {"compile",new string[]{"g++"}},
                     {"execname",new string[]{"a.out"}}
@@ -25,7 +25,7 @@ namespace ContestHunter.Models.Domain
                 Record.LanguageType.C,
                 new Dictionary<string,string[]>()
                 {
-                    {"compileargv",new string[]{"-O2","-o","a.out","code.c"}},
+                    {"compileargv",new string[]{"-O2","-o","a.out","-DONLINE_JUDGE","-Wall","-lm","--static","--std=c99","-fno-asm","code.c"}},
                     {"extname",new string[]{"c"}},
                     {"compile",new string[]{"gcc"}},
                     {"execname",new string[]{"a.out"}}
@@ -35,7 +35,7 @@ namespace ContestHunter.Models.Domain
                 Record.LanguageType.Pascal,
                 new Dictionary<string,string[]>()
                 {
-                    {"compileargv",new string[]{"-O2","code.pas"}},
+                    {"compileargv",new string[]{"-O1","-dONLINE_JUDGE","code.pas"}},
                     {"extname",new string[]{"pas"}},
                     {"compile",new string[]{"fpc"}},
                     {"execname",new string[]{"code"}}
