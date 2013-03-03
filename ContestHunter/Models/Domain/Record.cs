@@ -113,7 +113,8 @@ namespace ContestHunter.Models.Domain
                         SubmitTime = r.SubmitTime,
                         User = r.USER1.Name
                     };
-                    if (DateTime.Now <= Domain.Contest.ByName(r.PROBLEM1.CONTEST1.Name).RelativeEndTime)
+                    var con=Domain.Contest.ByName(r.PROBLEM1.CONTEST1.Name);
+                    if (DateTime.Now <= con.RelativeEndTime && ( null==Domain.User.CurrentUser || !Domain.User.CurrentUser.IsAdmin || !con.Owner.Contains(Domain.User.CurrentUserName)))
                     {
                         switch (r.PROBLEM1.CONTEST1.Type)
                         {
@@ -147,6 +148,7 @@ namespace ContestHunter.Models.Domain
                                 break;
                             case (int)Domain.Contest.ContestType.OI:
                                 nrec.Score = r.Score;
+                                nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
                                 break;

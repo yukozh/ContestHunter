@@ -55,7 +55,7 @@
                         @Model.Motto
                         <h5 style="text-align: right">
                             @Html.ActionLink("Ta的提交记录", "Index", "Record", new { UserName = Model.Name }, null)<br />
-                            <a href="#">Ta的比赛记录</a><br />
+                            @Html.ActionLink("Ta的比赛记录", "History", "Rating", new { id = Model.Name }, null)<br />
                             @if (USER.CurrentUserName == Model.Name)
                             {
                                 @Html.ActionLink("修改我的用户资料", "Edit")<br />
