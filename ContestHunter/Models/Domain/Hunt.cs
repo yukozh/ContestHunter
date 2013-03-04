@@ -87,12 +87,21 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 返回指定ID的Hunt结果
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotLoginException"></exception>
         public static Hunt ByID(Guid ID)
         {
+            if (null == Domain.User.CurrentUser)
+                throw new UserNotLoginException();
             using (var db = new CHDB())
             {
                 return (from h in db.HUNTs
                         where h.ID == ID
+                        let flag=Domain.User.CurrentUser.ID == h.USER1.ID || Domain.User.CurrentUser.IsAdmin || h.RECORD1.PROBLEM1.CONTEST1.OWNERs.Where(x=>x.Name==Domain.User.CurrentUserName).Any()
                         select new Hunt()
                         {
                             Contest = h.RECORD1.PROBLEM1.CONTEST1.Name,
@@ -101,7 +110,7 @@ namespace ContestHunter.Models.Domain
                             Status = (StatusType)h.Status,
                             User = h.USER1.Name,
                             Time = h.Time,
-                            Data = (Domain.User.CurrentUser.ID == h.USER1.ID ? h.HuntData : null),
+                            Data = ( flag ? h.HuntData : null),
                             ID = h.ID,
                             Detail = h.Detail,
                             DataType = (Record.LanguageType)h.DataType,

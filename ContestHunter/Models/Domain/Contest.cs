@@ -806,33 +806,38 @@ namespace ContestHunter.Models.Domain
         int CalcRating(int? ACTime, int totoalRating, int failedTimes, int succssfullyHunt, int unsuccessfullyHunt)
         {
             if (null == ACTime)
-                return 0;
-            int ratingbase = totoalRating * 3 / 5;
-            int minRating = totoalRating * 2 / 5;
-            int time = (int)ACTime;
-            if (time > 30)
             {
-                totoalRating -= ratingbase * 2 / 10;
-                if (time > 60)
-                {
-                    totoalRating -= ratingbase * 4 / 10;
-                    if (time > 90)
-                    {
-                        totoalRating -= ratingbase * 3 / 10;
-                        totoalRating -= ratingbase * 1 / 10 * (time - 90) / 30;
-                    }
-                    else
-                        totoalRating -= ratingbase * 3 / 10 * (time - 60) / 30;
-                }
-                else
-                    totoalRating -= ratingbase * 4 / 10 * (time - 30) / 30;
+                totoalRating = 0;
             }
             else
-                totoalRating -= ratingbase * 2 / 10 * time / 30;
-            totoalRating -= failedTimes * 50;
+            {
+                int ratingbase = totoalRating * 3 / 5;
+                int minRating = totoalRating * 2 / 5;
+                int time = (int)ACTime;
+                if (time > 30)
+                {
+                    totoalRating -= ratingbase * 2 / 10;
+                    if (time > 60)
+                    {
+                        totoalRating -= ratingbase * 4 / 10;
+                        if (time > 90)
+                        {
+                            totoalRating -= ratingbase * 3 / 10;
+                            totoalRating -= ratingbase * 1 / 10 * (time - 90) / 30;
+                        }
+                        else
+                            totoalRating -= ratingbase * 3 / 10 * (time - 60) / 30;
+                    }
+                    else
+                        totoalRating -= ratingbase * 4 / 10 * (time - 30) / 30;
+                }
+                else
+                    totoalRating -= ratingbase * 2 / 10 * time / 30;
+                totoalRating -= failedTimes * 50;
+                totoalRating = Math.Max(totoalRating, minRating);
+            }
             totoalRating += succssfullyHunt * 100;
             totoalRating -= unsuccessfullyHunt * 25;
-            totoalRating = Math.Max(totoalRating, minRating);
             return totoalRating;
         }
 
@@ -866,7 +871,7 @@ namespace ContestHunter.Models.Domain
                                                           && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
                                                           && r.Status == (int)Record.StatusType.Accept
                                                           select r.VirtualSubmitTime)
-                                        let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Min() : null
+                                        let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Max() : null
                                         let FailedTimes = (from r in p.RECORDs
                                                            where r.USER1 == u
                                                            && r.VirtualSubmitTime >= con.StartTime

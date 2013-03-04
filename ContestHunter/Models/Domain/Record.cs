@@ -193,26 +193,55 @@ namespace ContestHunter.Models.Domain
                     switch (con.Type)
                     {
                         case Domain.Contest.ContestType.CF:
-                            if (result.USER1.Name == Domain.User.CurrentUser.name)
-                                break;
-                            if (!(from l in
-                                      (from u in db.USERs
-                                       where u.Name == Domain.User.CurrentUser.name
-                                       select u).Single().LOCKs
-                                  where l == result.PROBLEM1
-                                  select l).Any())
-                                throw new ProblemNotLockedException();
-                            if (!(from r in db.RECORDs
-                                  where r.USER1.ID == Domain.User.CurrentUser.ID
-                                  && r.PROBLEM1.ID == result.PROBLEM1.ID
-                                  && r.Status == (int)Record.StatusType.Accept
-                                  select r).Any())
-                                throw new ProblemNotPassedException();
-                            break;
+                            if (result.USER1.Name != Domain.User.CurrentUser.name)
+                            {
+                                if (!(from l in
+                                          (from u in db.USERs
+                                           where u.Name == Domain.User.CurrentUser.name
+                                           select u).Single().LOCKs
+                                      where l == result.PROBLEM1
+                                      select l).Any())
+                                    throw new ProblemNotLockedException();
+                                if (!(from r in db.RECORDs
+                                      where r.USER1.ID == Domain.User.CurrentUser.ID
+                                      && r.PROBLEM1.ID == result.PROBLEM1.ID
+                                      && r.Status == (int)Record.StatusType.Accept
+                                      select r).Any())
+                                    throw new ProblemNotPassedException();
+                            }
+                            return new Record()
+                            {
+                                ID = result.ID,
+                                Code = result.Code,
+                                CodeLength = result.CodeLength,
+                                Contest = result.PROBLEM1.CONTEST1.Name,
+                                Detail = result.Detail,
+                                ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
+                                Language = (LanguageType)result.Language,
+                                Memory = result.MemoryUsed,
+                                Problem = result.PROBLEM1.Name,
+                                Status = (StatusType)result.Status,
+                                SubmitTime = result.SubmitTime,
+                                User = result.USER1.Name,
+                                Score=result.Score
+                            };
                         case Domain.Contest.ContestType.ACM:
                             if (result.USER1.Name != Domain.User.CurrentUser.name)
                                 throw new ContestNotEndedException();
-                            break;
+                            return new Record()
+                            {
+                                ID = result.ID,
+                                Code = result.Code,
+                                CodeLength = result.CodeLength,
+                                Contest = result.PROBLEM1.CONTEST1.Name,
+                                ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
+                                Language = (LanguageType)result.Language,
+                                Memory = result.MemoryUsed,
+                                Problem = result.PROBLEM1.Name,
+                                Status = (StatusType)result.Status,
+                                SubmitTime = result.SubmitTime,
+                                User = result.USER1.Name
+                            };
                         case Domain.Contest.ContestType.OI:
                             if (result.USER1.Name != Domain.User.CurrentUser.name)
                                 throw new ContestNotEndedException();
@@ -228,24 +257,63 @@ namespace ContestHunter.Models.Domain
                                 User = result.USER1.Name,
                                 Detail = result.Status == (int)StatusType.Compile_Error ? result.Detail : null
                             };
+                        default:
+                            throw new NotImplementedException();
                     }
                 }
-                return new Record()
+                else
                 {
-                    ID = result.ID,
-                    Code = result.Code,
-                    CodeLength = result.CodeLength,
-                    Contest = result.PROBLEM1.CONTEST1.Name,
-                    Detail = result.Detail,
-                    ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
-                    Language = (LanguageType)result.Language,
-                    Memory = result.MemoryUsed,
-                    Problem = result.PROBLEM1.Name,
-                    Status = (StatusType)result.Status,
-                    SubmitTime = result.SubmitTime,
-                    User = result.USER1.Name,
-                    Score = result.Score
-                };
+                    switch (con.Type)
+                    {
+                        case Domain.Contest.ContestType.OI:
+                            return new Record()
+                            {
+                                ID = result.ID,
+                                Code = result.Code,
+                                CodeLength = result.CodeLength,
+                                Contest = result.PROBLEM1.CONTEST1.Name,
+                                Language = (LanguageType)result.Language,
+                                Problem = result.PROBLEM1.Name,
+                                SubmitTime = result.SubmitTime,
+                                User = result.USER1.Name,
+                                Detail = result.Status == (int)StatusType.Compile_Error ? result.Detail : null
+                            };
+                        case Domain.Contest.ContestType.CF:
+                            return new Record()
+                            {
+                                ID = result.ID,
+                                Code = result.Code,
+                                CodeLength = result.CodeLength,
+                                Contest = result.PROBLEM1.CONTEST1.Name,
+                                Detail = result.Detail,
+                                ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
+                                Language = (LanguageType)result.Language,
+                                Memory = result.MemoryUsed,
+                                Problem = result.PROBLEM1.Name,
+                                Status = (StatusType)result.Status,
+                                SubmitTime = result.SubmitTime,
+                                User = result.USER1.Name,
+                                Score=result.Score
+                            };
+                        case Domain.Contest.ContestType.ACM:
+                            return new Record()
+                            {
+                                ID = result.ID,
+                                Code = result.Code,
+                                CodeLength = result.CodeLength,
+                                Contest = result.PROBLEM1.CONTEST1.Name,
+                                ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
+                                Language = (LanguageType)result.Language,
+                                Memory = result.MemoryUsed,
+                                Problem = result.PROBLEM1.Name,
+                                Status = (StatusType)result.Status,
+                                SubmitTime = result.SubmitTime,
+                                User = result.USER1.Name
+                            };
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
             }
         }
 

@@ -112,7 +112,7 @@ namespace ContestHunter.Models.Domain
                             {
                                 case ExecuteResultType.Success:
                                     passedTests++;
-                                    rec.MemoryUsed += result.Memory;
+                                    rec.MemoryUsed = Math.Max((long)rec.MemoryUsed, result.Memory);
                                     rec.ExecutedTime += result.Time;
                                     Detail.AppendFormat("#{0}：<span class=\"score_100\"><b>通过</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory);
                                     break;
@@ -276,7 +276,7 @@ namespace ContestHunter.Models.Domain
                         tester.MoveBlob2File(HuntData, HuntData);
                         tester.MoveBlob2File(userout, userout);
                         result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, null);
-                        if (result.Type == ExecuteResultType.Success)
+                        if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
                         {
                             rec.Status = (int)Hunt.StatusType.Success;
                             rec.RECORD1.PROBLEM1.TESTDATAs.Add(new TESTDATA()
@@ -298,7 +298,7 @@ namespace ContestHunter.Models.Domain
                             }
                             return true;
                         }
-                        else if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
+                        else if (result.Type == ExecuteResultType.Success)
                         {
                             rec.Status = (int)Hunt.StatusType.Fail;
                             return true;
