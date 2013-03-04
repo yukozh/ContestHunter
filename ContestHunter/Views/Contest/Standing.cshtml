@@ -133,7 +133,7 @@
                                 <td>
                                     @if (desc.isAC)
                                     {
-                                        <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)).(@desc.FailedTimes)</span>
+                                        <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)) (@desc.FailedTimes)</span>
                                     }
                                     else if (desc.FailedTimes > 0)
                                     {
@@ -209,7 +209,10 @@
                                     {
                                     <span style="color: green">+@standing.SuccessHack</span>
                                     }
-                                    @: :
+                                    if (standing.SuccessHack > 0 && standing.FailedHack > 0)
+                                    {
+                                        @: :
+                                    }
                                     if (standing.FailedHack > 0)
                                     {
                                     <span style="color: gray">-@standing.FailedHack</span>
