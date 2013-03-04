@@ -272,6 +272,9 @@ namespace ContestHunter.Models.Domain
                             Detail += "比较器编译失败";
                             return true;
                         }
+                        tester.MoveBlob2File(stdout, stdout);
+                        tester.MoveBlob2File(HuntData, HuntData);
+                        tester.MoveBlob2File(userout, userout);
                         result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, HuntData);
                         if (result.Type == ExecuteResultType.Success)
                         {
@@ -282,8 +285,8 @@ namespace ContestHunter.Models.Domain
                                 Available = false,
                                 MemoryLimit = MemoryLimit,
                                 TimeLimit = TimeLimit,
-                                Data = tester.GetBlob(stdout),
-                                Input = tester.GetBlob(HuntData)
+                                Data = tester.GetFile(stdout),
+                                Input = tester.GetFile(HuntData)
                             });
                             rec.RECORD1.Status = (int)Record.StatusType.Hacked;
                             foreach (var hunt in (from h in db.HUNTs
@@ -315,8 +318,8 @@ namespace ContestHunter.Models.Domain
                             Available = false,
                             MemoryLimit = MemoryLimit,
                             TimeLimit = TimeLimit,
-                            Data = tester.GetBlob(stdout),
-                            Input = tester.GetBlob(HuntData)
+                            Data = tester.GetFile(stdout),
+                            Input = tester.GetFile(HuntData)
                         });
                         rec.RECORD1.Status = (int)Record.StatusType.Hacked;
                         foreach (var hunt in (from h in db.HUNTs

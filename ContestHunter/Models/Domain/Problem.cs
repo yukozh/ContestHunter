@@ -127,16 +127,16 @@ namespace ContestHunter.Models.Domain
                 var currcon = currprob.CONTEST1;
                 if (!flag)
                 {
-                    if (DateTime.Now < currcon.EndTime)
-                        throw new ContestNotEndedException();
+                    if (DateTime.Now > currcon.EndTime)
+                        flag = true;
                 }
                 var result = (from t in currprob.TESTDATAs
                               where t.ID == testCase
                               select new TestCase
                               {
                                   ID = t.ID,
-                                  Input = t.Input,
-                                  Data = t.Data,
+                                  Input = flag ? t.Input : null,
+                                  Data = flag ? t.Data : null,
                                   TimeLimit = t.TimeLimit,
                                   MemoryLimit = t.MemoryLimit,
                                   Available = t.Available
