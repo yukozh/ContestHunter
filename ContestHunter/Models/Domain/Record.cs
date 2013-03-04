@@ -188,11 +188,13 @@ namespace ContestHunter.Models.Domain
                 if (null == result)
                     throw new RecordNotFoundException();
                 var con = Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name);
-                if (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName) && DateTime.Now <= con.RelativeEndTime && result.Status!=(int)StatusType.Compile_Error)
+                if (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName) && DateTime.Now <= con.RelativeEndTime)
                 {
                     switch (con.Type)
                     {
                         case Domain.Contest.ContestType.CF:
+                            if (result.USER1.Name == Domain.User.CurrentUser.name)
+                                break;
                             if (!(from l in
                                       (from u in db.USERs
                                        where u.Name == Domain.User.CurrentUser.name
@@ -214,7 +216,18 @@ namespace ContestHunter.Models.Domain
                         case Domain.Contest.ContestType.OI:
                             if (result.USER1.Name != Domain.User.CurrentUser.name)
                                 throw new ContestNotEndedException();
-                            break;
+                            return new Record()
+                            {
+                                ID = result.ID,
+                                Code = result.Code,
+                                CodeLength = result.CodeLength,
+                                Contest = result.PROBLEM1.CONTEST1.Name,
+                                Language = (LanguageType)result.Language,
+                                Problem = result.PROBLEM1.Name,
+                                SubmitTime = result.SubmitTime,
+                                User = result.USER1.Name,
+                                Detail = result.Status == (int)StatusType.Compile_Error ? result.Detail : null
+                            };
                     }
                 }
                 return new Record()

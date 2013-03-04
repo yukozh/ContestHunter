@@ -780,7 +780,7 @@ namespace ContestHunter.Models.Domain
                                                      && r.PROBLEM1.CONTEST1.ID == con.ID
                                                      select r).Any()
                         let des = (from p in con.PROBLEMs
-                                   orderby p.Name ascending
+                                   orderby p.OriginRating,p.Name ascending
                                    let score = (from r in p.RECORDs
                                                 where r.USER1 == u
                                                 && r.PROBLEM1 == p
@@ -856,7 +856,7 @@ namespace ContestHunter.Models.Domain
                                                            && r.PROBLEM1.CONTEST1.ID == con.ID
                                                            select r).Any()
                               let des = from p in con.PROBLEMs
-                                        orderby p.Name ascending
+                                        orderby p.OriginRating,p.Name ascending
                                         let ACTimeList = (from r in p.RECORDs
                                                           where r.USER1 == u
                                                           && r.VirtualSubmitTime >= con.StartTime
