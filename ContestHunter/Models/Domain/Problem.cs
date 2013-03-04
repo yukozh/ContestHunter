@@ -304,18 +304,16 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestNotEndedException"></exception>
         public ProblemStatus Status()
         {
-            if (contest.Type == Domain.Contest.ContestType.OI && contest.RelativeNow <= contest.RelativeEndTime)
+            if (contest.Type == Domain.Contest.ContestType.OI && contest.RelativeNow <= contest.RelativeEndTime && !User.CurrentUser.IsAdmin && !contest.Owner.Contains(User.CurrentUserName))
             {
                 throw new ContestNotEndedException();
             }
             using (var db = new CHDB())
             {
                 var s = (from r in db.RECORDs
-                         where r.PROBLEM1.ID == ID
-                         group r by r.USER1.ID into tmp
-                         let isAC = (from t in tmp
-                                     where t.Status == (int)Record.StatusType.Accept
-                                     select t).Any()
+                         where r.PROBLEM1.ID == ID &&
+                         r.VirtualSubmitTime<=contest.RelativeNow
+                         let isAC= r.Status==(int)Record.StatusType.Accept
                          select new
                          {
                              isAC

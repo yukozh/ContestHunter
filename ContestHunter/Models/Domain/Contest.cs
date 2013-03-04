@@ -450,7 +450,7 @@ namespace ContestHunter.Models.Domain
                              where u.ID == User.CurrentUser.ID
                              select u).Single(),
                     Type = (int)AttendType.Practice,
-                    Time = DateTime.Now
+                    Time = con.StartTime
                 });
                 db.SaveChanges();
             }
@@ -558,6 +558,7 @@ namespace ContestHunter.Models.Domain
 
                 return (from p in db.PROBLEMs
                         where p.CONTEST1.ID==ID
+                        orderby p.OriginRating,p.Name ascending
                         select p.Name).ToList();
             }
         }
@@ -741,7 +742,7 @@ namespace ContestHunter.Models.Domain
                                                            select r).Count()
                                         select new ACMStanding.DescriptionClass()
                                         {
-                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
+                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
                                             isAC = null != ACTime,
                                             FailedTimes = FailedTimes
                                         }
@@ -886,10 +887,10 @@ namespace ContestHunter.Models.Domain
                                                           select h).Count()
                                         select new CFStanding.DescriptionClass()
                                         {
-                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
+                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
                                             isAC = null != ACTime,
                                             FailedTimes = FailedTimes,
-                                            Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).Minutes,
+                                            Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
                                                     (int)p.OriginRating, FailedTimes, SuccessfulHack, FailedHack),
                                             _huntFailed = FailedHack,
                                             _huntSuccessfully = SuccessfulHack

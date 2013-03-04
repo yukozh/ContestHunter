@@ -57,6 +57,7 @@ namespace ContestHunter.Models.Domain
         {
             var rec = (from r in db.RECORDs
                        where r.Status == (int)Record.StatusType.Pending
+                       orderby r.SubmitTime ascending
                        select r).FirstOrDefault();
             if (null == rec)
                 return false;
@@ -194,6 +195,7 @@ namespace ContestHunter.Models.Domain
         {
             var rec = (from h in db.HUNTs
                        where h.Status == (int)Hunt.StatusType.Pending
+                       orderby h.Time ascending
                        select h).FirstOrDefault();
             if (null == rec)
                 return false;
@@ -217,12 +219,14 @@ namespace ContestHunter.Models.Domain
                             if (result.Type != ExecuteResultType.Success)
                             {
                                 rec.Status = (int)Hunt.StatusType.CompileError;
+                                Detail = Encoding.UTF8.GetString(tester.GetBlob(result.ErrorBlob, 0, 10240));
                                 break;
                             }
                             result = tester.Execute("./"+commands[(Record.LanguageType)rec.DataType]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, null);
                             if (result.Type != ExecuteResultType.Success)
                             {
                                 rec.Status = (int)Hunt.StatusType.BadData;
+                                Detail = Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob));
                                 break;
                             }
                             HuntData = result.OutputBlob;
@@ -246,6 +250,7 @@ namespace ContestHunter.Models.Domain
                         if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
                         {
                             rec.Status = (int)Hunt.StatusType.BadData;
+                            Detail = Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob));
                         }
                         else
                             rec.Status = (int)Hunt.StatusType.DataCheckerError;
@@ -275,10 +280,9 @@ namespace ContestHunter.Models.Domain
                         tester.MoveBlob2File(stdout, stdout);
                         tester.MoveBlob2File(HuntData, HuntData);
                         tester.MoveBlob2File(userout, userout);
-                        result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, null);
+                        result = tester.Execute("./"+commands[comparerLanguage]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, null);
                         if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
                         {
-                            rec.Status = (int)Hunt.StatusType.Success;
                             rec.RECORD1.PROBLEM1.TESTDATAs.Add(new TESTDATA()
                             {
                                 ID = Guid.NewGuid(),
@@ -296,6 +300,7 @@ namespace ContestHunter.Models.Domain
                             {
                                 hunt.Status = (int)Hunt.StatusType.HackedByOther;
                             }
+                            rec.Status = (int)Hunt.StatusType.Success;
                             return true;
                         }
                         else if (result.Type == ExecuteResultType.Success)
