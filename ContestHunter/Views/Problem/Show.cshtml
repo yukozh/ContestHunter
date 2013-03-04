@@ -39,8 +39,23 @@
                     </td>
                 </tr>
                 <tr>
-                    @if (Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
-                    {
+                    <th>出题人</th>
+                    <td>@Html.UserLink(Model.Owner)</td>
+                    <th>提交情况</th>
+                    <td>
+                        <code>
+                            @try
+                            {
+                                Problem.ProblemStatus status = Model.Status();
+                                @status.PassedUsers@:/@status.SubmitUsers
+                            }
+                            catch { }
+                        </code>
+                    </td>
+                </tr>
+                @if (Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
+                {
+                    <tr>
                         <th>初始分值</th>
                         <td>1000</td>
                         <th>锁定情况</th>
@@ -58,26 +73,9 @@
                                 }
                             }
                         </td>
-                    }
-                    else
-                    {
-                        <th>出题人</th>
-                        <td>@Html.UserLink(Model.Owner)</td>
-                        <th>提交情况</th>
-                        <td>
-                            <code>
-                                @try
-                                {
-                                    Problem.ProblemStatus status = Model.Status();
-                                    @status.PassedUsers
-                                    @:/
-                                    @status.SubmitUsers
-                                }
-                                catch { }
-                            </code>
-                        </td>
-                    }
-                </tr>
+                    </tr>
+                }
+
             </tbody>
         </table>
     </div>
