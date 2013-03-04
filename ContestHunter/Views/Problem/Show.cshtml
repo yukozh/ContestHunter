@@ -6,9 +6,8 @@
 }
 
 <style type="text/css">
-    .table td,.table th
+    .table td, .table th
     {
-        
         text-align: center;
     }
 </style>
@@ -40,12 +39,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>出题人</th>
-                    <td>@Html.UserLink(Model.Owner)</td>
                     @if (Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
                     {
+                        <th>初始分值</th>
+                        <td>1000</td>
                         <th>锁定情况</th>
-                        <td colspan="3">
+                        <td>
                             @if (Model.IsLock())
                             {
                                 @:已锁定
@@ -62,6 +61,8 @@
                     }
                     else
                     {
+                        <th>出题人</th>
+                        <td>@Html.UserLink(Model.Owner)</td>
                         <th>提交情况</th>
                         <td>
                             <code>
