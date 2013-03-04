@@ -65,7 +65,7 @@ namespace ContestHunter.Models.Domain
                         UserBeHunted = h.RECORD1.USER1.Name
                     });
                 }
-                return Ret;
+                return Ret.OrderByDescending(x=>x.Time).ToList();
             }
         }
 

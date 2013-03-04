@@ -275,7 +275,7 @@ namespace ContestHunter.Models.Domain
                         tester.MoveBlob2File(stdout, stdout);
                         tester.MoveBlob2File(HuntData, HuntData);
                         tester.MoveBlob2File(userout, userout);
-                        result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, HuntData);
+                        result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, null);
                         if (result.Type == ExecuteResultType.Success)
                         {
                             rec.Status = (int)Hunt.StatusType.Success;
