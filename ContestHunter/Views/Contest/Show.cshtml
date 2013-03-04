@@ -238,8 +238,8 @@
                                         <li>@Html.ActionLink("所有提交记录", "Index", "Record", new { ContestName = Model.Name }, null)</li>
                                         @if (Model.Type == Contest.ContestType.CF)
                                         {
-                                            <li>@Html.ActionLink("我的猎杀记录", "Huntlist", "Record", new { ContestName = Model.Name, UserName = USER.CurrentUserName }, null)</li>
-                                            <li>@Html.ActionLink("所有猎杀记录", "Huntlist", "Record", new { ContestName = Model.Name }, null)</li>
+                                            <li>@Html.ActionLink("我的猎杀记录", "HuntList", "Record", new { ContestName = Model.Name, UserName = USER.CurrentUserName }, null)</li>
+                                            <li>@Html.ActionLink("所有猎杀记录", "HuntList", "Record", new { ContestName = Model.Name }, null)</li>
                                         }
                                     </ul>
                                 </td>
