@@ -684,7 +684,7 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
-    <None Include="Properties\PublishProfiles\ToCH.TK.pubxml" />
+    <None Include="Properties\PublishProfiles\ToLydrainbowcat.pubxml" />
     <None Include="Properties\PublishProfiles\ToMr.Phone.pubxml" />
     <Content Include="Script\ckeditor\CHANGES.md" />
     <Content Include="Script\ckeditor\LICENSE.md" />

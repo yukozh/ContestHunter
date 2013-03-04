@@ -51,7 +51,7 @@
                         @Html.DescriptionFor(x => x.Owner, new { @class = "help-block" })
                     </div>
                 </div>
-                if (Model.ContestType == Contest.ContestType.CF)
+                if (Model.ContestType == Contest.ContestType.CF || Model.ContestType == Contest.ContestType.OI)
                 {
                 <div class="control-group">
                     @Html.LabelFor(x => x.OriginalRating, new { @class = "control-label" })
