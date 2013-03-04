@@ -71,17 +71,17 @@
                                 @switch (hunt.Status)
                                 {
                                     case Hunt.StatusType.BadData:
-                                        ViewBag.Label = "label-important";
+                                        ViewBag.Label = "";
                                         ViewBag.Text = "数据不合法";
                                         ViewBag.Score = 0;
                                         break;
                                     case Hunt.StatusType.CompileError:
-                                        ViewBag.Label = "label-important";
+                                        ViewBag.Label = "";
                                         ViewBag.Text = "编译错误";
                                         ViewBag.Score = 0;
                                         break;
                                     case Hunt.StatusType.Fail:
-                                        ViewBag.Label = "label-info";
+                                        ViewBag.Label = "label-important";
                                         ViewBag.Text = "猎杀失败";
                                         ViewBag.Score = -25;
                                         break;
