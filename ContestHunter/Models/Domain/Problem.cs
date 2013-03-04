@@ -272,6 +272,7 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                Name = Helper.GetLegalName(Name);
                 var pro = (from p in db.PROBLEMs
                            where p.ID==ID
                            select p).Single();
@@ -280,11 +281,11 @@ namespace ContestHunter.Models.Domain
                              select u).SingleOrDefault();
                 if (null == owner)
                     throw new UserNotFoundException();
-                if (pro.Name != Helper.GetLegalName(Name) && (from p in db.PROBLEMs
-                                         where p.Name == Helper.GetLegalName(Name) && p.CONTEST1.ID == contest.ID
+                if (pro.Name != Name && (from p in db.PROBLEMs
+                                         where p.Name == Name && p.CONTEST1.ID == contest.ID
                                          select p).Any())
                     throw new ProblemNameExistedException();
-                pro.Name = Helper.GetLegalName(Name);
+                pro.Name = Name;
                 pro.OriginRating = OriginRating;
                 pro.Content = Content;
                 pro.Comparer = Comparer;

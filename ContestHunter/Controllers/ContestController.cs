@@ -182,6 +182,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Add(ContestBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -250,6 +251,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, ContestBasicInfoModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -269,6 +271,7 @@ namespace ContestHunter.Controllers
                 con.Type = model.Type.Value;
                 con.Owners = owners;
                 con.Change();
+                model.Name = con.Name;
             }
             catch (ContestNotFoundException)
             {

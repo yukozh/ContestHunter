@@ -243,6 +243,7 @@ namespace ContestHunter.Controllers
                 problem.OriginRating = model.OriginalRating;
                 problem.Owner = model.Owner;
                 problem.Change();
+                model.Name = problem.Name;
             }
             catch (ProblemNotFoundException)
             {

@@ -35,6 +35,7 @@
         <h5>本向导将引导您向系统中添加一场比赛</h5>
         @using (Html.BeginForm("Add", "Contest", FormMethod.Post, new { @class = "form-horizontal" }))
         {
+            @Html.AntiForgeryToken()
             <div class="control-group">
                 @Html.LabelFor(x => x.Name, new { @class = "control-label" })
                 <div class="controls">

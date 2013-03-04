@@ -252,6 +252,7 @@ namespace ContestHunter.Models.Domain
                 if (contest.IsOfficial && !User.CurrentUser.IsAdmin
                     && User.ByName(User.CurrentUser.name).Rating() < 2100)
                     throw new PermissionDeniedException();
+                contest.Name = Helper.GetLegalName(contest.Name);
                 if ((from c in db.CONTESTs
                      where c.Name == contest.Name
                      select c).Any())
@@ -300,14 +301,15 @@ namespace ContestHunter.Models.Domain
                            select c).Single();
                 if (IsOfficial != con.IsOfficial && !User.CurrentUser.IsAdmin &&
                     User.ByName(User.CurrentUser.name).Rating() < 2100)
-                    throw new PermissionDeniedException(); 
+                    throw new PermissionDeniedException();
+                Name = Helper.GetLegalName(Name);
                 if (con.Name != Helper.GetLegalName(Name))
                 {
                     if ((from c in db.CONTESTs
-                         where c.Name == Helper.GetLegalName(Name)
+                         where c.Name == Name
                          select c).Any())
                         throw new ContestNameExistedException();
-                    con.Name = Helper.GetLegalName(Name);
+                    con.Name = Name;
                 }
                 con.Description = Description;
                 if (Owner != Owners)
@@ -636,6 +638,7 @@ namespace ContestHunter.Models.Domain
                 throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                problem.Name = Helper.GetLegalName(problem.Name);
                 if ((from p in db.PROBLEMs
                      where p.Name == problem.Name && p.CONTEST1.ID==ID
                      select p).Any())
@@ -648,7 +651,7 @@ namespace ContestHunter.Models.Domain
                 db.PROBLEMs.Add(new PROBLEM()
                 {
                     ID = Guid.NewGuid(),
-                    Name = Helper.GetLegalName(problem.Name),
+                    Name = problem.Name,
                     Content = problem.Content,
                     Comparer = problem.Comparer,
                     ComparerLanguage = (int)problem.ComparerLanguage,
@@ -656,7 +659,7 @@ namespace ContestHunter.Models.Domain
                     DataChecker = problem.DataChecker,
                     DataCheckerLanguage = (int)problem.DataCheckerLanguage,
                     CONTEST1 = (from c in db.CONTESTs
-                                where c.Name == Name
+                                where c.ID == ID
                                 select c).Single(),
                     OWNER = owner
                 });
