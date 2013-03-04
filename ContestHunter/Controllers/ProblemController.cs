@@ -352,8 +352,8 @@ namespace ContestHunter.Controllers
                 ID = t.ID,
                 Memory = t.MemoryLimit / (double)(1024 * 1024),
                 Time = t.TimeLimit / 1000.0,
-                InputHash = t.Input == null ? "" : new CRC32().AsString(t.Input),
-                OutputHash = t.Data == null ? "" : new CRC32().AsString(t.Data),
+                InputHash = t.Input == null ? "00000000" : new CRC32().AsString(t.Input),
+                OutputHash = t.Data == null ? "00000000" : new CRC32().AsString(t.Data),
                 InputSize = t.Input == null ? 0 : t.Input.Length,
                 OutputSize = t.Data == null ? 0 : t.Data.Length,
                 Input = t.Input == null ? "" : Encoding.Default.GetString(t.Input.Take(100).ToArray()),
@@ -649,6 +649,10 @@ namespace ContestHunter.Controllers
             try
             {
                 TestCase testCase = Contest.ByName(contest).ProblemByName(id).TestCaseByID(testCaseID);
+                if (testCase.Input == null || testCase.Data == null)
+                {
+                    return RedirectToAction("Error", "Shared", new { msg = "无权下载测试数据" });
+                }
                 using (MemoryStream mem = new MemoryStream())
                 {
                     using (ZipOutputStream zip = new ZipOutputStream(mem))
