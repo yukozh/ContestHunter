@@ -272,6 +272,9 @@ namespace ContestHunter.Models.Domain
                             Detail += "比较器编译失败";
                             return true;
                         }
+                        tester.CopyBlob2File(stdout, stdout);
+                        tester.CopyBlob2File(HuntData, HuntData);
+                        tester.CopyBlob2File(userout, userout);
                         result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, HuntData);
                         if (result.Type == ExecuteResultType.Success)
                         {
