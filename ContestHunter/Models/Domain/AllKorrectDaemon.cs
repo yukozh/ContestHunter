@@ -296,6 +296,7 @@ namespace ContestHunter.Models.Domain
                             foreach (var hunt in (from h in db.HUNTs
                                                   where h.RECORD1.ID == rec.RECORD1.ID
                                                   && h.Status == (int)Hunt.StatusType.Pending
+                                                  && h.ID != rec.ID
                                                   select h))
                             {
                                 hunt.Status = (int)Hunt.StatusType.HackedByOther;
@@ -330,6 +331,7 @@ namespace ContestHunter.Models.Domain
                         foreach (var hunt in (from h in db.HUNTs
                                               where h.RECORD1.ID == rec.RECORD1.ID
                                               && h.Status == (int)Hunt.StatusType.Pending
+                                              && h.ID != rec.ID
                                               select h))
                         {
                             hunt.Status = (int)Hunt.StatusType.HackedByOther;
