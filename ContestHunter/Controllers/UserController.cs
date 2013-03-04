@@ -41,7 +41,7 @@ namespace ContestHunter.Controllers
 
             try
             {
-                string returnUrl=Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action("ValidateEmail", "User");
+                string returnUrl = "http://" + Request.Headers["Host"] + Url.Action("ValidateEmail", "User");
                 USER.SendValidationEmail(model.Name, model.Password, model.Email, returnUrl);
             }
             catch
@@ -170,13 +170,13 @@ namespace ContestHunter.Controllers
             USER user = USER.ByName(USER.CurrentUserName);
             UserEditModel model = new UserEditModel
             {
-                City=user.City,
-                Country=user.Country,
-                Email=user.Email,
-                Motto=user.Motto,
-                Province=user.Province,
-                RealName=user.RealName,
-                School=user.School
+                City = user.City,
+                Country = user.Country,
+                Email = user.Email,
+                Motto = user.Motto,
+                Province = user.Province,
+                RealName = user.RealName,
+                School = user.School
             };
             return View(model);
         }
@@ -222,7 +222,8 @@ namespace ContestHunter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SetAdmin(string id) {
+        public ActionResult SetAdmin(string id)
+        {
             try
             {
                 Group.ByName("Administrators").AddUser(USER.ByName(id));
