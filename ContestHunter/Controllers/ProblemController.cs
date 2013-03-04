@@ -352,12 +352,12 @@ namespace ContestHunter.Controllers
                 ID = t.ID,
                 Memory = t.MemoryLimit / (double)(1024 * 1024),
                 Time = t.TimeLimit / 1000.0,
-                InputHash = new CRC32().AsString(t.Input),
-                OutputHash = new CRC32().AsString(t.Data),
-                InputSize = t.Input.Length,
-                OutputSize = t.Data.Length,
-                Input = Encoding.Default.GetString(t.Input.Take(100).ToArray()),
-                Output = Encoding.Default.GetString(t.Data.Take(100).ToArray()),
+                InputHash = t.Input == null ? "" : new CRC32().AsString(t.Input),
+                OutputHash = t.Data == null ? "" : new CRC32().AsString(t.Data),
+                InputSize = t.Input == null ? 0 : t.Input.Length,
+                OutputSize = t.Data == null ? 0 : t.Data.Length,
+                Input = t.Input == null ? "" : Encoding.Default.GetString(t.Input.Take(100).ToArray()),
+                Output = t.Input == null ? "" : Encoding.Default.GetString(t.Data.Take(100).ToArray()),
                 Enabled = t.Available
             };
         }
