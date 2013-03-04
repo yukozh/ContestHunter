@@ -92,12 +92,12 @@
                             <td>
                                 @contest.AbsoluteStartTime<br />
                                 持续<b>@(Math.Round((contest.AbsoluteEndTime - contest.AbsoluteStartTime).TotalHours, 1))</b>小时
-                                @if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
+                                @*if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
                                 {
                                     <div class="alert alert-success">
                                         模拟比赛于 @contest.RelativeStartTime 开始
                                     </div>
-                                }
+                                }*@
                             </td>
                             <td>
                                 <div>
@@ -217,12 +217,12 @@
                             <td>
                                 @contest.AbsoluteStartTime<br />
                                 持续<b>@(Math.Round((contest.AbsoluteEndTime - contest.AbsoluteStartTime).TotalHours, 1))</b>小时
-                                @if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
+                                @*if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
                                 {
                                     <div class="alert alert-success">
                                         模拟比赛于 @contest.RelativeStartTime 开始
                                     </div>
-                                }
+                                }*@
                             </td>
                             <td>
                                 <div><code>@contest.AttendedUsersCount()</code></div>
@@ -340,12 +340,12 @@
                             <td>
                                 @contest.AbsoluteStartTime<br />
                                 持续<b>@(Math.Round((contest.AbsoluteEndTime - contest.AbsoluteStartTime).TotalHours, 1))</b>小时
-                                @if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
+                                @*if (User.Identity.IsAuthenticated && contest.IsAttended() && contest.GetAttendType() == Contest.AttendType.Virtual)
                                 {
                                     <div class="alert alert-success">
                                         模拟比赛于 @contest.RelativeStartTime 开始
                                     </div>
-                                }
+                                }*@
                             </td>
                             <td>
                                 <div><code>@contest.AttendedUsersCount()</code></div>

@@ -81,7 +81,7 @@
                         }
                         <td>
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span>
-                            @if (Model.Status == Record.StatusType.Accept)
+                            @if (Model.Status == Record.StatusType.Accept && Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
                             {
                                 @Html.ActionLink("Hunt!", "Hunt", new { id = Model.ID }, new { @class = "btn btn-danger btn-small", style = "float:right; font-weight:bold" })
                             }
