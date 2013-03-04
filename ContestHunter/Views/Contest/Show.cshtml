@@ -7,22 +7,26 @@
 }
 
 <style type="text/css">
-    .table {
+    .table
+    {
         background-color: white;
     }
 
         .table td h2,
         .table td h4,
-        .table td h5 {
+        .table td h5
+        {
             margin: 0px;
             text-align: center;
         }
 
-        .table td h5 {
+        .table td h5
+        {
             font-weight: normal;
         }
 
-        .table td code {
+        .table td code
+        {
             margin-left: 5px;
         }
 </style>
@@ -232,6 +236,11 @@
                                         <li>@Html.ActionLink("实时排名版", "Standing", new { id = Model.Name })</li>
                                         <li>@Html.ActionLink("我的提交记录", "Index", "Record", new { ContestName = Model.Name, UserName = USER.CurrentUserName }, null)</li>
                                         <li>@Html.ActionLink("所有提交记录", "Index", "Record", new { ContestName = Model.Name }, null)</li>
+                                        @if (Model.Type == Contest.ContestType.CF)
+                                        {
+                                            <li>@Html.ActionLink("我的猎杀记录", "Huntlist", "Record", new { ContestName = Model.Name, UserName = USER.CurrentUserName }, null)</li>
+                                            <li>@Html.ActionLink("所有猎杀记录", "Huntlist", "Record", new { ContestName = Model.Name }, null)</li>
+                                        }
                                     </ul>
                                 </td>
                             </tr>
