@@ -51,25 +51,14 @@
                         @Html.DescriptionFor(x => x.Owner, new { @class = "help-block" })
                     </div>
                 </div>
-                if (Model.ContestType == Contest.ContestType.CF || Model.ContestType == Contest.ContestType.OI)
-                {
                 <div class="control-group">
                     @Html.LabelFor(x => x.OriginalRating, new { @class = "control-label" })
                     <div class="controls">
-                        @Html.DropDownListFor(x => x.OriginalRating, new SelectListItem[]
-                                {
-                                    new SelectListItem{Text="500"},
-                                    new SelectListItem{Text="1000"},
-                                    new SelectListItem{Text="1500"},
-                                    new SelectListItem{Text="2000"},
-                                    new SelectListItem{Text="2500"},
-                                    new SelectListItem{Text="3000"}
-                                }, new { @class = "input-xlarge" })
+                        @Html.TextBoxFor(x=>x.OriginalRating,new{@class="input-xlarge"})
                         @Html.ValidationMessageFor(x => x.OriginalRating)
                         @Html.DescriptionFor(x => x.OriginalRating, new { @class = "help-block" })
                     </div>
                 </div>
-                }
                 <input type="submit" value="开始添加" class="btn btn-primary" />
             }
         </div>

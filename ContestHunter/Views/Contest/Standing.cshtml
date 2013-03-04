@@ -9,7 +9,6 @@
 <style type="text/css">
     .table {
         background-color: white;
-        
         color: black;
     }
 
@@ -25,7 +24,7 @@
 
 <div class="span12" style="margin-top: 30px">
     <h2 style="text-align: center">@Model.Contest.Name</h2>
-    <h5 style="text-align: center; ">
+    <h5 style="text-align: center;">
         @if (DateTime.Now < Model.Contest.RelativeEndTime)
         {
             TimeSpan span = DateTime.Now - Model.Contest.RelativeStartTime;
@@ -95,9 +94,9 @@
                         {   
                             <th>总分</th>
                         }
-                        @foreach (var p in Model.Problems)
+                        @for (int i = 0; i < Model.Problems.Count; i++)
                         {
-                            <th>@p</th>
+                            <th>@Html.ActionLink(((char)('A' + i)).ToString(), "Show", "Problem", new { id = Model.Problems[i], contest = Model.Contest.Name }, new { title = Model.Problems[i] })</th>
                         }
                         @switch (Model.Contest.Type)
                         {
@@ -134,7 +133,7 @@
                                 <td>
                                     @if (desc.isAC)
                                     {
-                                        <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)).(@desc.FailedTimes)</span>
+                                        <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)) (@desc.FailedTimes)</span>
                                     }
                                     else if (desc.FailedTimes > 0)
                                     {
@@ -210,7 +209,10 @@
                                     {
                                     <span style="color: green">+@standing.SuccessHack</span>
                                     }
-                                    @: :
+                                    if (standing.SuccessHack > 0 && standing.FailedHack > 0)
+                                    {
+                                        @: :
+                                    }
                                     if (standing.FailedHack > 0)
                                     {
                                     <span style="color: gray">-@standing.FailedHack</span>
