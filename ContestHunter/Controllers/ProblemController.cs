@@ -155,11 +155,6 @@ namespace ContestHunter.Controllers
             try
             {
                 Contest con = Contest.ByName(contest);
-                if (con.Type == Contest.ContestType.CF && model.OriginalRating == null)
-                {
-                    ModelState.AddModelError("OriginalRating", "不可为空");
-                    return View(model);
-                }
                 con.AddProblem(new Problem
                 {
                     Content = System.IO.File.ReadAllText(Server.MapPath("~/Content/ProblemTemplate.html")),
@@ -210,7 +205,7 @@ namespace ContestHunter.Controllers
                 Contest con = Contest.ByName(contest);
                 Problem problem = con.ProblemByName(id);
                 model.Owner = problem.Owner;
-                model.OriginalRating = problem.OriginRating;
+                model.OriginalRating = problem.OriginRating.Value;
                 model.ContestType = con.Type;
                 model.Name = problem.Name;
             }
@@ -233,11 +228,6 @@ namespace ContestHunter.Controllers
             try
             {
                 Contest con = Contest.ByName(contest);
-                if (con.Type == Contest.ContestType.CF && model.OriginalRating == null)
-                {
-                    ModelState.AddModelError("OriginalRating", "不可为空");
-                    return View(model);
-                }
                 Problem problem = con.ProblemByName(id);
                 problem.Name = model.Name;
                 problem.OriginRating = model.OriginalRating;
