@@ -11,14 +11,13 @@ namespace DomainTest
     [TestClass]
     public class DomainUser
     {
-        /*
         [TestMethod]
         public void TestSendEmail()
         {
             
-//            User.SendValidationEmail("name", "password", "variantf@gmail.com", "http://contesthunter.com/regiser");
-//            User.Register("name", "password", HttpUtility.UrlDecode("LH4FVB8uwbL%2bk1QGPIYAEA%3d%3d"), "variantf@gmail.com", HttpUtility.UrlDecode("Cw%2fiKgKrOnHQ4QiPeyydziybbu1%2f3Z2b"));
+            User.SendValidationEmail("name1", "password", "variantf@gmail.com", "http://contesthunter.tk:777/regiser");
         }
+         /*
         [TestMethod]
         public void TestUser()
         {
