@@ -13,7 +13,7 @@ namespace ContestHunter.Models.View
         public Contest.ContestType ContestType { get; set; }
 
         [Required]
-        [Display(Name = "题目名称", Description = "不能包含 . / % : 等特殊字符")]
+        [Display(Name = "题目名称")]
         [MaxLength(50)]
         public string Name { get; set; }
 

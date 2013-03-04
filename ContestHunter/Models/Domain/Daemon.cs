@@ -41,16 +41,22 @@ namespace ContestHunter.Models.Domain
                 {
                     Thread.Sleep(Run());
                 }
-                catch (Exception e)
+                catch
                 {
-                    if (e is ThreadInterruptedException)
+                    if (!running)
                     {
-                        //Going to Stop
+                        break;
                     }
                     else
                     {
-                        //Sleep a while to prevent fill the disk
-                        Thread.Sleep(10000);
+                        try
+                        {
+                            //Sleep a while to prevent fill the disk
+                            Thread.Sleep(10000);
+                        }
+                        catch (ThreadInterruptedException)
+                        {
+                        }
                     }
                 }
             }

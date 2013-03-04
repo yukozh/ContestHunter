@@ -33,8 +33,9 @@
             </div>
         </div>
         <h5>本向导将引导您修改 @Html.ActionLink(Model.Contest, "Show", new { id = Model.Contest })</h5>
-        @using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { @class = "form-horizontal" }))
+        @using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { onsubmit = "$('#chkOfficial').removeAttr('disabled');", @class = "form-horizontal" }))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.Contest)
             <div class="control-group">
                 @Html.LabelFor(x => x.Name, new { @class = "control-label" })
@@ -62,7 +63,7 @@
             USER currentUser = USER.ByName(USER.CurrentUserName);
             bool canEditOfficial = currentUser.IsAdmin() || currentUser.Rating() >= 2100;
                     }
-                    @Html.CheckBoxFor(x => x.IsOfficial, new { }.DisabledIf(!canEditOfficial))
+                    @Html.CheckBoxFor(x => x.IsOfficial, new { id="chkOfficial" }.DisabledIf(!canEditOfficial))
                     @Html.ValidationMessageFor(x => x.IsOfficial)
                     @Html.DescriptionFor(x => x.IsOfficial)
                 </div>

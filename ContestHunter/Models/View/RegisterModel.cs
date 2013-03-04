@@ -9,7 +9,7 @@ namespace ContestHunter.Models.View
     public class RegisterModel
     {
         [Required]
-        [Display(Name = "用户名", Description = "您的账户名称，20字以内，请勿使用 . / % : 等特殊字符")]
+        [Display(Name = "用户名", Description = "您的账户名称，20字以内，请勿使用 . / % : # 等特殊字符")]
         [MaxLength(20)]
         public string Name { get; set; }
 
