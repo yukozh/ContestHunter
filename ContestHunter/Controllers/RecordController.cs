@@ -108,6 +108,10 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "您的相应题目没有锁定" });
             }
+            catch (ProblemNotPassedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您的相应题目没有通过" });
+            }
             return RedirectToAction("HuntResult", new { id = huntID });
         }
 
