@@ -1,4 +1,5 @@
 ﻿@model ContestHunter.Models.Domain.Record
+@using USER = ContestHunter.Models.Domain.User
 @using ContestHunter.Models.Domain
 @{
     ViewBag.Title = Model.Problem + "的一条记录";
@@ -8,7 +9,7 @@
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 
 <div class="span12">
-    <div class="alert alert-info" style="margin-top: 20px; padding: 5px;  color: black">
+    <div class="alert alert-info" style="margin-top: 20px; padding: 5px; color: black">
         <div style="float: left; width: 320px">
             <table class="table table-bordered table-striped table-hover" style="background-color: white">
                 <colgroup>
@@ -83,7 +84,7 @@
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span>
                             @if (Model.Status == Record.StatusType.Accept && Contest.ByName(Model.Contest).Type == Contest.ContestType.CF)
                             {
-                                @Html.ActionLink("Hunt!", "Hunt", new { id = Model.ID }, new { @class = "btn btn-danger btn-small", style = "float:right; font-weight:bold" })
+                                @Html.ActionLink("Hunt!", "Hunt", new { id = Model.ID }, new { @class = "btn btn-danger btn-small", style = "float: right;font-weight:bold" })
                             }
                         </td>
                     </tr>
@@ -105,7 +106,7 @@
                     {
                         <tr>
                             <td><b>占用内存</b></td>
-                            <td><span style="color: orange"><b>@(Model.Memory / 1024 / 1024)</b></span><span style="color: blue"> KB</span></td>
+                            <td><span style="color: orange"><b>@(Model.Memory / 1024)</b></span><span style="color: blue"> KB</span></td>
                         </tr>
                     }
                     <tr>
@@ -140,9 +141,16 @@
             </table>
         </div>
         <div class="alert" style="float: right; width: 550px">
-            <h5 style="color: red; float: right; text-align:right">
-                v-Judge-Kernel(for Windows)<br/>AllKorrect(for Linux)<br/>
-                <input type="submit" class="btn btn-warning btn-small" value="重测此条记录">
+            <h5 style="color: red; float: right; text-align: right">v-Judge-Kernel(for Windows)<br />
+                AllKorrect(for Linux)<br />
+                @if (USER.ByName(USER.CurrentUserName).IsAdmin())
+                {
+                    using (Html.BeginForm("Rejudge", "Record", new { id = Model.ID }, FormMethod.Post))
+                    {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" class="btn btn-warning btn-small" value="重测" />
+                    }
+                }
             </h5>
             @Html.Sanitized(Model.Detail)
         </div>

@@ -1,4 +1,5 @@
 ﻿@model ContestHunter.Models.Domain.Hunt
+@using USER=ContestHunter.Models.Domain.User
 @using ContestHunter.Models.Domain
 @{
     ViewBag.Title = "猎杀结果";
@@ -111,7 +112,14 @@
         <div class="alert" style="float: right; width: 550px">
             <h5 style="color: red; float: right; text-align:right">
                 v-Judge-Kernel(for Windows)<br/>AllKorrect(for Linux)<br/>
-                <input type="submit" class="btn btn-warning btn-small" value="重测此条记录">
+                @if (USER.ByName(USER.CurrentUserName).IsAdmin())
+                {
+                    using (Html.BeginForm("RejudgeHunt", "Record", new { id = Model.ID }, FormMethod.Post))
+                    {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" class="btn btn-warning btn-small" value="重测" />
+                    }
+                }
             </h5>
             @Html.Sanitized(Model.Detail)
         </div>

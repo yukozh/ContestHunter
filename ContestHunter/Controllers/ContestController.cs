@@ -424,6 +424,27 @@ namespace ContestHunter.Controllers
             return View(model);
         }
 
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReCalcRating(string id)
+        {
+            try
+            {
+                Contest.ByName(id).ReCalcRating();
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有这场比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有权限重算Rating" });
+            }
+            return RedirectToAction("Show", new { id = id });
+        }
     }
 }

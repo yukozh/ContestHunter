@@ -7,26 +7,22 @@
 }
 
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
     }
 
         .table td h2,
         .table td h4,
-        .table td h5
-        {
+        .table td h5 {
             margin: 0px;
             text-align: center;
         }
 
-        .table td h5
-        {
+        .table td h5 {
             font-weight: normal;
         }
 
-        .table td code
-        {
+        .table td code {
             margin-left: 5px;
         }
 </style>
@@ -231,6 +227,18 @@
                                         @if (Model.Owners.Contains(USER.CurrentUserName) || USER.ByName(USER.CurrentUserName).IsAdmin())
                                         {
                                             <li>@Html.ActionLink("管理这场比赛", "Edit", new { id = Model.Name })</li>
+                                            <li>
+                                                <a href="javascript:$('#frmReCalcRating').submit();">重算Rating</a>
+                                                @using (Html.BeginForm("ReCalcRating", "Contest", new { id = Model.Name }, FormMethod.Post, new
+                                                {
+                                                    id = "frmReCalcRating",
+                                                    style = "display:none;",
+                                                    onsubmit = "return confirm('确定要重算Rating吗？这将给系统带来很大压力') && confirm('**再次警告** 重算将带来很大系统压力，您最好放弃重算。请问真的要重算吗？');"
+                                                }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                }
+                                            </li>
                                         }
                                         <li>@Html.ActionLink("报名与取消", "Signup", new { id = Model.Name })</li>
                                         <li>@Html.ActionLink("实时排名版", "Standing", new { id = Model.Name })</li>

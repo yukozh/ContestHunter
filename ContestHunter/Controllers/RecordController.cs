@@ -125,5 +125,43 @@ namespace ContestHunter.Controllers
             model.PageCount = (int)Math.Ceiling(HUNT.Count(model.UserName, model.ContestName, model.ProblemName, model.Status) / (double)HUNT_LIST_PAGE_SIZE);
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Rejudge(Guid id)
+        {
+            try
+            {
+                Record.ByID(id).ReJudge();
+            }
+            catch (RecordNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有那条记录" });
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有权限重测记录" });
+            }
+            return RedirectToAction("Show", new { id = id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RejudgeHunt(Guid id)
+        {
+            try
+            {
+                HUNT.ByID(id).ReJudge();
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有权限重测猎杀记录" });
+            }
+            return RedirectToAction("HuntResult", new { id = id });
+        }
     }
 }
