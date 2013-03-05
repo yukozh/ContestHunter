@@ -38,6 +38,8 @@
                             new SelectListItem{Text="数据不合法",Value="BadData"},
                             new SelectListItem{Text="编译错误",Value="CompileError"},
                             new SelectListItem{Text="正在测评",Value="Pending"},
+                            new SelectListItem{Text="数据不正确",Value="DataCheckerError"},
+                            new SelectListItem{Text="被他人抢先Hunt",Value="HackedByOther"}
                         }, new { @class = "input-small" })
                     <input type="submit" class="btn btn-primary btn-small" value="查询" />
                 </div>
@@ -94,6 +96,16 @@
                                         ViewBag.Label = "label-success";
                                         ViewBag.Text = "猎杀成功";
                                         ViewBag.Score = 100;
+                                        break;
+                                    case Hunt.StatusType.HackedByOther:
+                                        ViewBag.Label = "";
+                                        ViewBag.Text = "被他人抢先Hunt";
+                                        ViewBag.Score = 0;
+                                        break;
+                                    case Hunt.StatusType.DataCheckerError:
+                                        ViewBag.Label = "";
+                                        ViewBag.Text = "数据不正确";
+                                        ViewBag.Score = 0;
                                         break;
                                     default:
                                         ViewBag.Label = "label-inverse";

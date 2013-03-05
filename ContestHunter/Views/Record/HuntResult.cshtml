@@ -1,5 +1,5 @@
 ﻿@model ContestHunter.Models.Domain.Hunt
-@using USER=ContestHunter.Models.Domain.User
+@using USER = ContestHunter.Models.Domain.User
 @using ContestHunter.Models.Domain
 @{
     ViewBag.Title = "猎杀结果";
@@ -7,7 +7,7 @@
 }
 
 <div class="span12">
-    <div class="alert alert-info" style="margin-top: 20px; padding: 5px;  color: black">
+    <div class="alert alert-info" style="margin-top: 20px; padding: 5px; color: black">
         <div style="float: left; width: 320px">
             <table class="table table-bordered table-striped table-hover" style="background-color: white">
                 <colgroup>
@@ -57,6 +57,16 @@
                                     ViewBag.Text = "猎杀成功";
                                     ViewBag.Score = 100;
                                     break;
+                                case Hunt.StatusType.HackedByOther:
+                                    ViewBag.Label = "";
+                                    ViewBag.Text = "被他人抢先Hunt";
+                                    ViewBag.Score = 0;
+                                    break;
+                                case Hunt.StatusType.DataCheckerError:
+                                    ViewBag.Label = "";
+                                    ViewBag.Text = "数据不正确";
+                                    ViewBag.Score = 0;
+                                    break;
                                 default:
                                     ViewBag.Label = "label-inverse";
                                     ViewBag.Text = "其他错误";
@@ -69,11 +79,12 @@
                     <tr>
                         <th>得分</th>
                         <td>
-                            @if(ViewBag.Score>0)
+                            @if (ViewBag.Score > 0)
                             {
                                 <span style="color: green"><b>@ViewBag.Score</b></span>
                             }
-                            else{
+                            else
+                            {
                                 <span style="color: gray"><b>@ViewBag.Score</b></span>
                             }
                         </td>
@@ -110,8 +121,8 @@
             </table>
         </div>
         <div class="alert" style="float: right; width: 550px">
-            <h5 style="color: red; float: right; text-align:right">
-                v-Judge-Kernel(for Windows)<br/>AllKorrect(for Linux)<br/>
+            <h5 style="color: red; float: right; text-align: right">v-Judge-Kernel(for Windows)<br />
+                AllKorrect(for Linux)<br />
                 @if (USER.ByName(USER.CurrentUserName).IsAdmin())
                 {
                     using (Html.BeginForm("RejudgeHunt", "Record", new { id = Model.ID }, FormMethod.Post))
