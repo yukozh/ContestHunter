@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
+using System.Security.Principal;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
@@ -26,7 +28,7 @@ namespace ContestHunter.Models.Domain
         public string Motto;
 
         internal Guid ID;
-        internal class OnlineUser
+        internal class OnlineUser : IIdentity
         {
             public Guid ID;
             public Guid Token;
@@ -35,20 +37,68 @@ namespace ContestHunter.Models.Domain
             public string ip;
             public List<string> groups;
             public bool IsAdmin;
+
+            public string AuthenticationType
+            {
+                get { return "CHCustom"; }
+            }
+
+            public bool IsAuthenticated
+            {
+                get { return true; }
+            }
+
+            public string Name
+            {
+                get { return name; }
+            }
+        }
+
+        class CustomPriciple : IPrincipal
+        {
+            public OnlineUser TheUser;
+            public IIdentity Identity
+            {
+                get { return TheUser; }
+            }
+
+            public bool IsInRole(string role)
+            {
+                return TheUser.groups.Contains(role);
+            }
         }
 
         static Dictionary<Guid, OnlineUser> OnlineUsers = new Dictionary<Guid, OnlineUser>();
 
-        [ThreadStatic]
-        static internal OnlineUser CurrentUser;
+        static internal OnlineUser CurrentUser
+        {
+            get
+            {
+                IPrincipal principal = Thread.CurrentPrincipal;
+                if (!(principal is CustomPriciple)) return null;
+                return (OnlineUser)principal.Identity;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(""), new string[0]);
+                }
+                else
+                {
+                    HttpContext.Current.User = new CustomPriciple() { TheUser = value };
+                }
+                Thread.CurrentPrincipal = HttpContext.Current.User;
+            }
+        }
 
         static public string CurrentUserName
         {
-            get 
+            get
             {
                 if (null == CurrentUser)
                     throw new UserNotLoginException();
-                return CurrentUser.name; 
+                return CurrentUser.name;
             }
         }
 
@@ -58,11 +108,11 @@ namespace ContestHunter.Models.Domain
             {
                 if (null == CurrentUser)
                     throw new UserNotLoginException();
-                using(var db=new CHDB())
+                using (var db = new CHDB())
                 {
                     return (Record.LanguageType?)(from u in db.USERs
-                            where u.ID == CurrentUser.ID
-                            select u.PreferLanguage).Single();
+                                                  where u.ID == CurrentUser.ID
+                                                  select u.PreferLanguage).Single();
                 }
             }
         }
@@ -72,7 +122,7 @@ namespace ContestHunter.Models.Domain
         /// </summary>
         /// <param name="Token"></param>
         /// <exception cref="BadTokenException"></exception>
-        public static void Authenticate(string Token,string ip)
+        public static void Authenticate(string Token, string ip)
         {
             lock (OnlineUsers)
             {
@@ -136,7 +186,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="PasswordMismatchException"></exception>
         /// <exception cref="EmailMismatchException"></exception>
         public static void Register(string name, string originalPassword, string encryptedPassword, string email, string emailHash,
-            string country,string province,string city,string school,string motto,string realName)
+            string country, string province, string city, string school, string motto, string realName)
         {
             if (originalPassword != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(encryptedPassword))))
                 throw new PasswordMismatchException();
@@ -203,7 +253,7 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         /// <exception cref="UserNotFoundException"></exception>
         /// <exception cref="PasswordMismatchException"></exception>
-        public static string Login(string name, string password,string ip)
+        public static string Login(string name, string password, string ip)
         {
 
             using (var sha = SHA256.Create())
@@ -407,7 +457,7 @@ namespace ContestHunter.Models.Domain
                         {
                             Name = u.Name,
                             Motto = u.Motto,
-                            ID=u.ID
+                            ID = u.ID
                         }).Skip(skip).Take(top).ToList();
             }
         }
