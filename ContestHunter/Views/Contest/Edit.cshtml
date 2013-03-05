@@ -8,14 +8,12 @@
 
 <style type="text/css">
     h5 {
-        
         font-weight: normal;
     }
 
     .form-horizontal {
         width: 550px;
         margin: 10px auto;
-        
     }
 
     .controls {
@@ -33,7 +31,11 @@
             </div>
         </div>
         <h5>本向导将引导您修改 @Html.ActionLink(Model.Contest, "Show", new { id = Model.Contest })</h5>
-        @using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { onsubmit = "$('#chkOfficial').removeAttr('disabled');", @class = "form-horizontal" }))
+        @using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new
+        {
+            onsubmit = "$('#chkOfficial,#txtWeight').removeAttr('disabled');",
+            @class = "form-horizontal"
+        }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.Contest)
@@ -53,7 +55,7 @@
                     @Html.TextBoxFor(x => x.Owner3, new { @class = "input-small" })
                     @Html.ValidationMessageFor(x => x.Owner2)
                     @Html.ValidationMessageFor(x => x.Owner3)
-                    @Html.DescriptionFor(x => x.Owner1)
+                    @Html.DescriptionFor(x => x.Owner1, new { @class = "help-block" })
                 </div>
             </div>
             <div class="control-group">
@@ -74,7 +76,7 @@
                 <div class="controls">
                     @Html.TextBoxFor(x => x.StartTime, new { @class = "input-xlarge" })
                     @Html.ValidationMessageFor(x => x.StartTime)
-                    @Html.DescriptionFor(x => x.StartTime)
+                    @Html.DescriptionFor(x => x.StartTime, new { @class = "help-block" })
                 </div>
             </div>
             <div class="control-group">
@@ -95,20 +97,17 @@
             USER currentUser = USER.ByName(USER.CurrentUserName);
             bool canEditOfficial = currentUser.IsAdmin() || currentUser.Rating() >= 2100;
                     }
-                    @Html.CheckBoxFor(x => x.IsOfficial, new { id="chkOfficial" }.DisabledIf(!canEditOfficial))
+                    @Html.CheckBoxFor(x => x.IsOfficial, new { id = "chkOfficial" }.DisabledIf(!canEditOfficial))
                     @Html.ValidationMessageFor(x => x.IsOfficial)
-                    @Html.DescriptionFor(x => x.IsOfficial)
+                    @Html.DescriptionFor(x => x.IsOfficial, new { @class = "help-block" })
                 </div>
             </div>
             <div class="control-group">
                 @Html.LabelFor(x => x.Weight, new { @class = "control-label" })
                 <div class="controls">
-                    @{
-            canEditOfficial = currentUser.IsAdmin();
-                    }
-                    @Html.TextBoxFor(x => x.Weight, new { @class = "input-small"}.DisabledIf(!canEditOfficial))
+                    @Html.TextBoxFor(x => x.Weight, new { id = "txtWeight", @class = "input-small" }.DisabledIf(!currentUser.IsAdmin()))
                     @Html.ValidationMessageFor(x => x.Weight)
-                    @Html.DescriptionFor(x => x.Weight)
+                    @Html.DescriptionFor(x => x.Weight, new { @class = "help-block" })
                 </div>
             </div>
             <input type="submit" class="btn btn-primary" value="下一步">
