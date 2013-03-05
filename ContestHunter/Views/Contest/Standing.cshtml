@@ -67,7 +67,7 @@
                         @Html.LabelFor(x => x.ShowVirtual)
                         @Html.CheckBoxFor(x => x.ShowNoSubmit, new { onchange = "$('#frmList').submit();" })
                         @Html.LabelFor(x => x.ShowNoSubmit)
-                        <b>@Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest }, null)</b>
+                        <b>@Html.ActionLink("返回比赛", "Show", "Contest", new { id = Model.Contest.Name }, null)</b>
                     </td>
                 </tr>
             </table>
