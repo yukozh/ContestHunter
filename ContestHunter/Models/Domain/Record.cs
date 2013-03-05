@@ -273,7 +273,11 @@ namespace ContestHunter.Models.Domain
                                 Problem = result.PROBLEM1.Name,
                                 SubmitTime = result.SubmitTime,
                                 User = result.USER1.Name,
-                                Detail = result.Status == (int)StatusType.Compile_Error ? result.Detail : null
+                                Detail = result.Detail,
+                                Score = result.Score,
+                                ExecutedTime = TimeSpan.FromMilliseconds(result.ExecutedTime ?? 0),
+                                Memory = result.MemoryUsed,
+                                Status = (StatusType)result.Status
                             };
                         case Domain.Contest.ContestType.CF:
                             return new Record()

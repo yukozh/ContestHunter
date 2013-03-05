@@ -46,13 +46,13 @@ namespace DomainTest
             Group.ByName("blabla").Remove();
             User.Logout();
         }
-
+        */
         [TestMethod]
         public void TestFramework()
         {
             Framework.DomainInstallation();
         }
-
+        /*
         [TestMethod]
         public void TestContest()
         {
