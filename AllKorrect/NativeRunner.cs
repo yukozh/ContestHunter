@@ -11,7 +11,7 @@ namespace AllKorrect
     /// <summary>
     /// 封装好的NativeRunner类。此类为IDisposable，注意适当处理
     /// </summary>
-    public class NativeRunner : IDisposable
+    public sealed class NativeRunner : IDisposable
     {
         const int RANDOM_STRING_LENGTH = 10;
         static readonly Random RAND = new Random();
