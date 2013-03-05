@@ -40,6 +40,17 @@ namespace ContestHunter.Models.Domain
                     {"compile",new string[]{"fpc"}},
                     {"execname",new string[]{"code"}}
                 }
+            },
+            {
+                Record.LanguageType.Java,
+                new Dictionary<string,string[]>()
+                {
+                    {"compileargv",new string[]{"Main.java"}},
+                    {"extname",new string[]{"java"}},
+                    {"compile",new string[]{"javac"}},
+                    {"execname",new string[]{"java"}},
+                    {"execargv",new string[]{"Main"}}
+                }
             }
         };
         static int CompileTime=10000;
@@ -243,6 +254,7 @@ namespace ContestHunter.Models.Domain
                     if (result.Type != ExecuteResultType.Success)
                     {
                         rec.Status = (int)Hunt.StatusType.DataCheckerError;
+                        Detail += Encoding.UTF8.GetString(tester.GetBlob(result.ErrorBlob));
                         return true;
                     }
                     result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.PROBLEM1.DataCheckerLanguage]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);

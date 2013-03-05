@@ -18,8 +18,8 @@ namespace ContestHunter.Models.Domain
             {
                 des.GenerateIV();
                 des.GenerateKey();
-                IV = new byte[] { 251, 186, 193, 202, 240, 1, 248, 44 };
-                Key = new byte[] { 122, 96, 163, 60, 124, 253, 148, 105 };
+                IV = des.IV;
+                Key = des.Key;
             }
         }
 

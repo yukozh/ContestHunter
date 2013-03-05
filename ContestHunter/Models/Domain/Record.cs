@@ -390,6 +390,37 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
+        /// 返回本记录是否可以被当前用户Hunt
+        /// </summary>
+        /// <returns></returns>
+        public bool CanHunt()
+        {
+            using (var db = new CHDB())
+            {
+
+                var curRecord = (from r in db.RECORDs
+                                 where r.ID == ID
+                                 select r).Single();
+                if (curRecord.Status != (int)Record.StatusType.Accept)
+                    return false;
+                var curContest = Domain.Contest.ByName(curRecord.PROBLEM1.CONTEST1.Name);
+                if (curContest.Type != Domain.Contest.ContestType.CF)
+                    return false;
+                if (DateTime.Now > curContest.AbsoluteEndTime)
+                    return false;
+                var curProbelm = curContest.ProblemByName(curRecord.PROBLEM1.Name);
+                if (!curProbelm.IsLock())
+                    return false;
+                if (!(from r in db.RECORDs
+                      where r.USER1.ID == Domain.User.CurrentUser.ID
+                      && r.PROBLEM1.ID == curProbelm.ID
+                      && r.Status == (int)Record.StatusType.Accept
+                      select r).Any())
+                    return false;
+            }
+            return true;
+        }
+        /// <summary>
         /// 重测指定记录
         /// </summary>
         /// <exception cref="PermissionDeniedException"></exception>
