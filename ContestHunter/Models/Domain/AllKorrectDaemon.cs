@@ -81,7 +81,7 @@ namespace ContestHunter.Models.Domain
                     if (ret.Type != ExecuteResultType.Success)
                     {
                         rec.Status = (int)Record.StatusType.Compile_Error;
-                        Detail.AppendFormat("<h5>编译失败：</h5>\r\n<div style=\"padding-left: 10px\">\r\n{0}{1}</div>", ret.Type.ToString(), Encoding.UTF8.GetString(tester.GetBlob(ret.ErrorBlob, 0, 10240)));
+                        Detail.AppendFormat("<h5>编译失败：</h5>\r\n<pre style=\"padding-left: 10px\">\r\n{0}{1}</pre>", ret.Type.ToString(), Encoding.UTF8.GetString(tester.GetBlob(ret.ErrorBlob, 0, 10240)));
                         return true;
                     }
                     tester.MoveFile2File(commands[(Record.LanguageType)rec.Language]["execname"][0], "exec");
@@ -91,7 +91,7 @@ namespace ContestHunter.Models.Domain
                     if (CompileCMP.Type != ExecuteResultType.Success)
                     {
                         rec.Status = (int)Record.StatusType.CMP_Error;
-                        Detail.AppendFormat("<h5>比较器编译失败：</h5>\r\n<div style=\"padding-left: 10px\">\r\n{0}{1}</div>", ret.Type.ToString(), Encoding.UTF8.GetString(tester.GetBlob(ret.ErrorBlob)));
+                        Detail.AppendFormat("<h5>比较器编译失败：</h5>\r\n<pre style=\"padding-left: 10px\">\r\n{0}{1}</pre>", ret.Type.ToString(), Encoding.UTF8.GetString(tester.GetBlob(ret.ErrorBlob)));
                         return true;
                     }
                     tester.MoveFile2File(commands[comparerLanguage]["execname"][0], "comparer");
