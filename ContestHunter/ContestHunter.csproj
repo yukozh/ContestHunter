@@ -698,6 +698,7 @@
     <Content Include="Script\ckeditor\samples\plugins\htmlwriter\assets\outputforflash\outputforflash.fla" />
     <Content Include="Script\ckeditor\samples\sample_posteddata.php" />
     <Content Include="Script\ckeditor\skins\moono\readme.md" />
+    <None Include="Properties\PublishProfiles\ToVariantF.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

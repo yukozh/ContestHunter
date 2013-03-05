@@ -187,7 +187,7 @@ namespace ContestHunter.Models.Domain
                     if (DateTime.Now <= contest.RelativeEndTime && !contest.IsAttended())
                         throw new NotAttendedContestException();
                 }
-                if (contest.Type == Domain.Contest.ContestType.CF && IsLock())
+                if (contest.Type == Domain.Contest.ContestType.CF && IsLock() && contest.RelativeNow < contest.RelativeEndTime)
                     throw new ProblemLockedException();
                 Guid ret;
                 db.RECORDs.Add(new RECORD()

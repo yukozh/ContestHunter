@@ -118,5 +118,20 @@ namespace ContestHunter.Models.Domain
                         }).Single();
             }
         }
+
+        public void ReJudge()
+        {
+            if (null == Domain.User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!Domain.User.CurrentUser.IsAdmin)
+                throw new PermissionDeniedException();
+            using (var db = new CHDB())
+            {
+                (from h in db.HUNTs
+                 where h.ID == ID
+                 select h).Single().Status = (int)StatusType.Pending;
+                db.SaveChanges();
+            }
+        }
     }
 }

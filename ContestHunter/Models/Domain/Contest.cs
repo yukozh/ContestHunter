@@ -1018,5 +1018,25 @@ namespace ContestHunter.Models.Domain
                 return Ret;
             }
         }
+
+        public void ReCalcRating()
+        {
+            if (null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if (!User.CurrentUser.IsAdmin && !Owner.Contains(User.CurrentUserName))
+                throw new PermissionDeniedException();
+            using (var db = new CHDB())
+            {
+
+                foreach (var r in (from r in db.RATINGs
+                                   where r.CONTEST1.ID == ID
+                                   select r))
+                    db.RATINGs.Remove(r);
+                (from c in db.CONTESTs
+                 where c.ID == ID
+                 select c).Single().Status = (int)StatusType.BeforeFinalTest;
+                db.SaveChanges();
+            }
+        }
     }
 }
