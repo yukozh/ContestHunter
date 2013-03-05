@@ -34,7 +34,11 @@
             </div>
         </div>
         <h5>本向导将引导您向系统中添加一场比赛</h5>
-        @using (Html.BeginForm("Add", "Contest", FormMethod.Post, new { @class = "form-horizontal" }))
+        @using (Html.BeginForm("Add", "Contest", FormMethod.Post, new 
+        { 
+            @class = "form-horizontal" ,
+            onsubmit="$('#chkOfficial,#txtWeight').removeAttr('disabled')"
+        }))
         {
             @Html.AntiForgeryToken()
             <div class="control-group">
@@ -74,7 +78,7 @@
                 <div class="controls">
                     @Html.TextBoxFor(x => x.StartTime, new { @class = "input-xlarge" })
                     @Html.ValidationMessageFor(x => x.StartTime)
-                    @Html.DescriptionFor(x => x.StartTime)
+                    @Html.DescriptionFor(x => x.StartTime, new { @class = "help-block" })
                 </div>
             </div>
             <div class="control-group">
@@ -95,20 +99,17 @@
             USER currentUser = USER.ByName(USER.CurrentUserName);
             bool canEditOfficial = currentUser.IsAdmin() || currentUser.Rating() >= 2100;
                     }
-                    @Html.CheckBoxFor(x => x.IsOfficial, new { }.DisabledIf(!canEditOfficial))
+                    @Html.CheckBoxFor(x => x.IsOfficial, new { id="chkOfficial"}.DisabledIf(!canEditOfficial))
                     @Html.ValidationMessageFor(x => x.IsOfficial)
-                    @Html.DescriptionFor(x => x.IsOfficial)
+                    @Html.DescriptionFor(x => x.IsOfficial, new { @class = "help-block" })
                 </div>
             </div>
             <div class="control-group">
                 @Html.LabelFor(x => x.Weight, new { @class = "control-label" })
                 <div class="controls">
-                    @{
-            canEditOfficial = currentUser.IsAdmin();
-                    }
-                    @Html.TextBoxFor(x => x.Weight, new { @class = "input-small"}.DisabledIf(!canEditOfficial))
+                    @Html.TextBoxFor(x => x.Weight, new { id="txtWeight",@class = "input-small"}.DisabledIf(!currentUser.IsAdmin()))
                     @Html.ValidationMessageFor(x => x.Weight)
-                    @Html.DescriptionFor(x => x.Weight)
+                    @Html.DescriptionFor(x => x.Weight, new { @class = "help-block" })
                 </div>
             </div>
             <input type="submit" class="btn btn-primary" value="下一步">

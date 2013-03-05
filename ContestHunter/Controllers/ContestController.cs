@@ -56,7 +56,7 @@ namespace ContestHunter.Controllers
             try
             {
                 Contest contest = Contest.ByName(id);
-                model.Problems = contest.Problems().OrderBy(n => n).ToList(); 
+                model.Problems = contest.Problems().OrderBy(n => n).ToList();
                 model.PageCount = (int)Math.Ceiling(contest.AttendedUsersCount() / (double)STANDING_PAGE_SIZE);
                 model.Contest = contest;
                 model.StartIndex = model.PageIndex * STANDING_PAGE_SIZE;
@@ -64,13 +64,13 @@ namespace ContestHunter.Controllers
                 switch (contest.Type)
                 {
                     case Contest.ContestType.ACM:
-                        model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual,model.ShowNoSubmit);
+                        model.ACM = contest.GetACMStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual, model.ShowNoSubmit);
                         break;
                     case Contest.ContestType.OI:
-                        model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual,model.ShowNoSubmit);
+                        model.OI = contest.GetOIStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual, model.ShowNoSubmit);
                         break;
                     case Contest.ContestType.CF:
-                        model.CF = contest.GetCFStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual,model.ShowNoSubmit);
+                        model.CF = contest.GetCFStanding(model.StartIndex, STANDING_PAGE_SIZE, model.ShowVirtual, model.ShowNoSubmit);
                         break;
                 }
             }
@@ -175,7 +175,8 @@ namespace ContestHunter.Controllers
                 Owner1 = USER.CurrentUserName,
                 StartTime = DateTime.Now,
                 Hour = 0,
-                Minute = 0
+                Minute = 0,
+                Weight = 16
             };
 
             return View(model);
@@ -203,6 +204,7 @@ namespace ContestHunter.Controllers
                     Name = model.Name,
                     Type = model.Type.Value,
                     Owners = owners,
+                    Weight = model.Weight
                 });
             }
             catch (UserNotLoginException)
@@ -242,6 +244,7 @@ namespace ContestHunter.Controllers
                 model.Owner3 = otherOwners.Skip(1).FirstOrDefault();
                 model.StartTime = con.AbsoluteStartTime;
                 model.Type = con.Type;
+                model.Weight = con.Weight;
             }
             catch (ContestNotFoundException)
             {
@@ -270,6 +273,7 @@ namespace ContestHunter.Controllers
                 con.Name = model.Name;
                 con.Type = model.Type.Value;
                 con.Owners = owners;
+                con.Weight = model.Weight;
                 con.Change();
                 model.Name = con.Name;
             }

@@ -19,6 +19,7 @@ namespace ContestHunter.Models.View
         public bool IsOfficial { get; set; }
 
         [Display(Name = "比赛权重", Description = "代表比赛对能力评估影响的重要程度，默认为16，只有管理员有权调整")]
+        [Range(2, 30)]
         public int Weight { get; set; }
 
         [Display(Name = "比赛管理者", Description = "最多三位比赛管理者，必须包含自己，少于三位请留空其中1~2个文本框")]

@@ -113,6 +113,8 @@ namespace ContestHunter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string ReturnUrl)
         {
+            if (Request.UrlReferrer == null)
+                return RedirectToAction("Error", "Shared", new { msg = "登录姿势不对" });
             ViewBag.ReturnUrl = ReturnUrl;
             if (!ModelState.IsValid)
                 return View(model);
@@ -135,16 +137,32 @@ namespace ContestHunter.Controllers
 
             FormsAuthentication.SetAuthCookie(token, model.KeepOnline);
 
-            return Redirect(ReturnUrl ?? Url.Action("Index", "Home"));
+            string referrer = Request.UrlReferrer.ToString();
+            if (ReturnUrl != null)
+            {
+                return Redirect(ReturnUrl);
+            }
+            else if (!referrer.Contains("Login") && !referrer.Contains("Error"))
+            {
+                return Redirect(referrer);
+            }
+            else
+            {
+                return Redirect("~");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
+            if (Request.UrlReferrer == null)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "登出姿势不对" });
+            }
             USER.Logout();
             FormsAuthentication.SignOut();
-            return Redirect("~");
+            return Redirect(Request.UrlReferrer.ToString());
         }
         #endregion
 
