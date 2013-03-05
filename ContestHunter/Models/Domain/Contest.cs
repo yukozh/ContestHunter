@@ -66,6 +66,7 @@ namespace ContestHunter.Models.Domain
         public bool IsOfficial;
         internal List<string> Owner;
         public List<string> Owners;
+        public int Weight;
 
         public enum AttendType
         {
@@ -265,7 +266,8 @@ namespace ContestHunter.Models.Domain
                     EndTime = contest.AbsoluteEndTime,
                     Description = contest.Description,
                     Type = (int)contest.Type,
-                    IsOfficial = contest.IsOfficial
+                    IsOfficial = contest.IsOfficial,
+                    Weight = User.CurrentUser.IsAdmin ? contest.Weight : 16
                 });
 
                 foreach (string name in contest.Owners)
@@ -326,6 +328,8 @@ namespace ContestHunter.Models.Domain
                 con.StartTime = AbsoluteStartTime;
                 con.EndTime = AbsoluteEndTime;
                 con.Type = (int)Type;
+                if (User.CurrentUser.IsAdmin)
+                    con.Weight = Weight;
                 db.SaveChanges();
             }
         }
