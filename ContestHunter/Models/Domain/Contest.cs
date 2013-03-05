@@ -360,7 +360,8 @@ namespace ContestHunter.Models.Domain
                     Type = (ContestType)con.Type,
                     Owner = Own,
                     Owners = Own,
-                    ID = con.ID
+                    ID = con.ID,
+                    Weight = con.Weight
                 };
             }
         }
