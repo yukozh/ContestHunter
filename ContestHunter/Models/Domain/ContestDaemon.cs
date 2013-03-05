@@ -35,23 +35,23 @@ namespace ContestHunter.Models.Domain
                                  select r.Rating1).FirstOrDefault()
                       select Rat == 0 ? 1500 : Rat).ToArray();
             int n = Rank.Length;
-            int m = n / 2 + 1;
+            int m = (n + 1) / 2;
             exp = new double[n];
             double mid = (double)Rating.Sum() / n;
             for (int i = 1; i <= n / 2; i++)
                 exp[i] = mid + (3000 - mid) / Math.Pow(m - 1, 3) * Math.Pow(m - i, 3);
             exp[n / 2 + 1] = mid;
-            for(int i=n/2+2;i<=n;i++)
+            for(int i=n/2+1;i<n;i++)
                 exp[i] = mid - mid / Math.Pow(n-m,3) * Math.Pow(i-m,3);
             int weight = con.Weight;
-            for (int i = 1; i <= n; i++)
+            for (int i = 0; i < n; i++)
             {
                 double k = (double)weight / m * Math.Abs(i - m) + 1;
                 Rating[i] += (int)Math.Round((exp[i] - Rating[i]) * Math.Pow(n, 1.0 / 8.0) / k);
                 Rating[i] = Math.Max(Rating[i], 1);
                 Rating[i] = Math.Min(Rating[i], 3000);
             }
-            for (int i = 1; i <= n; i++)
+            for (int i = 0; i < n; i++)
             {
                 var name = Rank[i];
                 foreach (var u in (from u in db.USERs
@@ -73,7 +73,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.EndTime+TimeSpan.FromMinutes(30) < DateTime.Now && c.Status!=(int)Contest.StatusType.Done
+                           where c.EndTime < DateTime.Now && c.Status!=(int)Contest.StatusType.Done
                            select c).FirstOrDefault();
                 if (null == con)
                     return 300000;
@@ -151,7 +151,8 @@ namespace ContestHunter.Models.Domain
                 }
                 db.SaveChanges();
             }
-            return 300000;
+//            return 300000;
+            return 0;
         }
     }
 }
