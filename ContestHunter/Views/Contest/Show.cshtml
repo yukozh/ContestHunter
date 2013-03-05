@@ -227,8 +227,6 @@
                                         @if (Model.Owners.Contains(USER.CurrentUserName) || USER.ByName(USER.CurrentUserName).IsAdmin())
                                         {
                                             <li>@Html.ActionLink("管理这场比赛", "Edit", new { id = Model.Name })</li>
-                                            @if (USER.ByName(USER.CurrentUserName).IsAdmin())
-                                            {
                                             <li>
                                                 <a href="javascript:$('#frmReCalcRating').submit();">重算Rating</a>
                                                 @using (Html.BeginForm("ReCalcRating", "Contest", new { id = Model.Name }, FormMethod.Post, new
@@ -241,7 +239,6 @@
                                                     @Html.AntiForgeryToken()
                                                 }
                                             </li>
-                                            }
                                         }
                                         <li>@Html.ActionLink("报名与取消", "Signup", new { id = Model.Name })</li>
                                         <li>@Html.ActionLink("实时排名版", "Standing", new { id = Model.Name })</li>
