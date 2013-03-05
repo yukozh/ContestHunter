@@ -18,6 +18,9 @@ namespace ContestHunter.Models.View
         [Display(Name = "Official", Description = "如果比赛为Official，其成绩会记入能力排名。<br/>能力等级在猎手(Hunter,2100)以下的用户，通过<b>自助</b>操作，只能申办Unofficial的比赛。<br/>如果您想申办一场Official的比赛，请在完成比赛配置和题目添加后尽快联系管理员进行审核。")]
         public bool IsOfficial { get; set; }
 
+        [Display(Name = "比赛权重", Description = "代表比赛对能力评估影响的重要程度，默认为16，只有管理员有权调整")]
+        public int Weight { get; set; }
+
         [Display(Name = "比赛管理者", Description = "最多三位比赛管理者，必须包含自己，少于三位请留空其中1~2个文本框")]
         public string Owner1 { get; set; }
         public string Owner2 { get; set; }
