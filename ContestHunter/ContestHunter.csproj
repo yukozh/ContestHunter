@@ -199,7 +199,6 @@
     <Compile Include="Models\Domain\Record.cs" />
     <Compile Include="Models\Domain\Standing.cs" />
     <Compile Include="Models\Domain\TestCase.cs" />
-    <Compile Include="Models\Domain\TesterDaemon.cs" />
     <Compile Include="Models\Domain\User.cs" />
     <Compile Include="Models\View\ContestBasicInfoModel.cs" />
     <Compile Include="Models\View\ContestDescriptionModel.cs" />

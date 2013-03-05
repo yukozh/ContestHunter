@@ -12,7 +12,7 @@ namespace ContestHunter.Models.Domain
         {
             var contest = Contest.ByName(con.Name);
             string[] Rank;
-            int[] Rating;
+            List<int> Rating=new List<int>();
             double[] exp;
             switch (contest.Type)
             {
@@ -28,13 +28,17 @@ namespace ContestHunter.Models.Domain
                 default:
                     throw new NotImplementedException();
             }
-            Rating = (from u in Rank
-                      let Rat = (from r in db.RATINGs
-                                 where r.USER1.Name == u
-                                 orderby r.CONTEST1.EndTime descending
-                                 select r.Rating1).FirstOrDefault()
-                      select Rat == 0 ? 1500 : Rat).ToArray();
+            foreach (var u in Rank)
+            {
+                var Rat = (from r in db.RATINGs
+                           where r.USER1.Name == u
+                           orderby r.CONTEST1.EndTime descending
+                           select r.Rating1).FirstOrDefault();
+                Rating.Add(Rat == 0 ? 1500 : Rat);
+            }
             int n = Rank.Length;
+            if (n < 1)
+                return;
             int m = (n + 1) / 2;
             exp = new double[n];
             double mid = (double)Rating.Sum() / n;
@@ -45,14 +49,12 @@ namespace ContestHunter.Models.Domain
                 exp[i] = mid - mid / Math.Pow(n - m, 3) * Math.Pow(i + 1 - m, 3);
             int weight = con.Weight;
             for (int i = 0; i < n; i++)
-            for (int i = 0; i < n; i++)
             {
                 double k = (double)weight / m * Math.Abs(i + 1 - m) + 1;
                 Rating[i] += (int)Math.Round((exp[i] - Rating[i]) * Math.Pow(n, 1.0 / 8.0) / k);
                 Rating[i] = Math.Max(Rating[i], 1);
                 Rating[i] = Math.Min(Rating[i], 3000);
             }
-            for (int i = 0; i < n; i++)
             for (int i = 0; i < n; i++)
             {
                 var name = Rank[i];
@@ -153,8 +155,7 @@ namespace ContestHunter.Models.Domain
                 }
                 db.SaveChanges();
             }
-//            return 300000;
-            return 0;
+            return 300000;
         }
     }
 }

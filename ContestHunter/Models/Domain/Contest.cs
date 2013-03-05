@@ -1019,6 +1019,11 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 重新计算Rating
+        /// </summary>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="PermissionDeniedException"></exception>
         public void ReCalcRating()
         {
             if (null == User.CurrentUser)

@@ -119,7 +119,6 @@ namespace ContestHunter.Models.Domain
                         switch (r.PROBLEM1.CONTEST1.Type)
                         {
                             case (int)Domain.Contest.ContestType.CF:
-                                nrec.Score = r.Score;
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
@@ -142,7 +141,6 @@ namespace ContestHunter.Models.Domain
                         switch (r.PROBLEM1.CONTEST1.Type)
                         {
                             case (int)Domain.Contest.ContestType.CF:
-                                nrec.Score = r.Score;
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
@@ -222,8 +220,7 @@ namespace ContestHunter.Models.Domain
                                 Problem = result.PROBLEM1.Name,
                                 Status = (StatusType)result.Status,
                                 SubmitTime = result.SubmitTime,
-                                User = result.USER1.Name,
-                                Score=result.Score
+                                User = result.USER1.Name
                             };
                         case Domain.Contest.ContestType.ACM:
                             if (result.USER1.Name != Domain.User.CurrentUser.name)
@@ -292,8 +289,7 @@ namespace ContestHunter.Models.Domain
                                 Problem = result.PROBLEM1.Name,
                                 Status = (StatusType)result.Status,
                                 SubmitTime = result.SubmitTime,
-                                User = result.USER1.Name,
-                                Score=result.Score
+                                User = result.USER1.Name
                             };
                         case Domain.Contest.ContestType.ACM:
                             return new Record()
@@ -393,8 +389,11 @@ namespace ContestHunter.Models.Domain
         /// 重测指定记录
         /// </summary>
         /// <exception cref="PermissionDeniedException"></exception>
+        /// <exception cref="UserNotLoginException"></exception>
         public void ReJudge()
         {
+            if (null == Domain.User.CurrentUser)
+                throw new UserNotLoginException();
             if (!Domain.User.CurrentUser.IsAdmin)
                 throw new PermissionDeniedException();
             using (var db = new CHDB())

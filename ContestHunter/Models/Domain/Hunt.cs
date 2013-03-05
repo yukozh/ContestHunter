@@ -119,6 +119,11 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 重新测评Hunt
+        /// </summary>
+        /// <exception cref="UserNotLoginException"></exception>
+        /// <exception cref="PermissionDeniedExcetpion"></exception>
         public void ReJudge()
         {
             if (null == Domain.User.CurrentUser)
