@@ -15,8 +15,8 @@
         <div style="text-align: center">
             您已经填写完比赛信息了，赶紧发个邮件给ContestHunter中的用户，邀请他们来参赛吧！<br />
             请您不要多次重复发送邀请邮件，以免打扰到用户，造成不必要的麻烦。<br />
-            比赛的时间、赛制、举办者等基本信息，邮件中会自动包含。<br />
-            如果您还有其它需要强调的内容在邮件中说明，请在下方的文本框中输入。
+            <b>比赛的时间、赛制、举办者等基本信息，邮件中已自动包含。</b><br />
+            如果您还有<b>其它需要强调的内容</b>在邮件中说明，请在下方的文本框中输入。
         </div>
         @using (Html.BeginForm())
         {
@@ -25,7 +25,7 @@
                 @Html.HiddenFor(x => x.Contest)
             </div>
             @Html.TextAreaFor(x => x.Content, new { style = "width:500px; height:200px; margin:10px auto;" })
-            <div style="margin-bottom:20px">
+            <div style="margin-bottom: 20px">
                 <input type="submit" class="btn btn-warning" value="确认发送">
             </div>
             <div>
@@ -33,7 +33,7 @@
             </div>
             <div class="btn-group">
                 @Html.ActionLink("上一步", "Problems", new { id = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
-                <input type="submit" class="btn btn-success" value="下一步" />
+                @Html.ActionLink("下一步", "Complete", new { id = Model.Contest }, new { @class = "btn btn-success", style = "display:inline-block;" })
             </div>
         }
     </div>
