@@ -1,0 +1,25 @@
+﻿@model ContestHunter.Models.View.ContestInviteEmailModel
+@{
+    ViewBag.Title = "发送邀请邮件";
+    ViewBag.ActivedNav = "Contest";
+}
+
+<h2>发送邀请邮件</h2>
+<h1 style="color: red;">急需页面美化，此页面目前属于比赛向导的Complete前最后一个页面</h1>
+您TM已经设置好比赛信息了，赶紧发个邮件吧。
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Contest)
+    <div>
+        比赛的基本信息，邮件中会自动包含。如果有除基本信息外的其他内容需要在邮件中说明，请在下方输入
+    </div>
+    @Html.TextAreaFor(x => x.Content)
+    <div>
+        @Html.Sanitized(Model.Content)
+    </div>
+    <div class="btn-group">
+        @Html.ActionLink("上一步", "Problems", new { id = Model.Contest }, new { @class = "btn btn-primary", style = "display:inline-block;" })
+        <input type="submit" class="btn btn-success" value="下一步" />
+    </div>
+}

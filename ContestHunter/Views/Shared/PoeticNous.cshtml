@@ -34,8 +34,7 @@
     <link href="~/Content/site.css" rel="stylesheet" type="text/css" />
     <title>@ViewBag.Title - Contest Hunter</title>
     <style type="text/css">
-        body
-        {
+        body {
             background-color: RGB(240,240,240);
             font-family: "微软雅黑", "Microsoft YaHei", "WenQuanYi Micro Hei", "宋体";
         }
@@ -44,7 +43,7 @@
 <body>
     <!--[if lte IE 8]>
     <script type="text/javascript">
-        location.href="@Url.Action("BadBrowser","Home")";
+        location.href="@Url.Action("BadBrowser", "Home")";
     </script>
     <![endif]-->
     <div class="navbar navbar-inverse navbar-static-top">
@@ -200,7 +199,7 @@
                 copyToClipboardConfirmation: '如果您的浏览器复制下来的代码丢失回车符，请点击"查看代码"再全选复制。',
                 aboutDialog: 'SyntaxHighlighter'
             };
-            SyntaxHighlighter.config.clipboardSwf = '/Content/SyntaxHighlighter/scripts/clipboard.swf';
+            SyntaxHighlighter.config.clipboardSwf = '@Url.Content("~/Content/SyntaxHighlighter/scripts/clipboard.swf")';
             SyntaxHighlighter.all();
         })();
     </script>
