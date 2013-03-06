@@ -719,6 +719,10 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "您没有正式报名参加比赛" });
             }
+            catch (ProblemNotPassedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "此题没有通过，无法锁定" });
+            }
             return RedirectToAction("Show", new { id = id, contest = contest });
         }
     }
