@@ -83,13 +83,16 @@ namespace ContestHunter.Models.Domain
             {
                 if (value == null)
                 {
-                    HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(""), new string[0]);
+                    Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(""), new string[0]);
                 }
                 else
                 {
-                    HttpContext.Current.User = new CustomPriciple() { TheUser = value };
+                    Thread.CurrentPrincipal = new CustomPriciple() { TheUser = value };
                 }
-                Thread.CurrentPrincipal = HttpContext.Current.User;
+                if (null != HttpContext.Current)
+                {
+                    HttpContext.Current.User = Thread.CurrentPrincipal;
+                }
             }
         }
 

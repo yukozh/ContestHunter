@@ -1057,26 +1057,29 @@ namespace ContestHunter.Models.Domain
                 throw new UserNotLoginException();
             if(!User.CurrentUser.IsAdmin && !Owner.Contains(User.CurrentUserName))
                 throw new PermissionDeniedException();
-            string[] Emails;
             using (var db = new CHDB())
             {
-                Emails = (from u in db.USERs
+                var Info = (from u in db.USERs
                           where u.AcceptEmail
-                          select u.Email).ToArray();
-            }
-            string Subject = "ContestHunter将举办 " + Name + " ，欢迎参加！";
-            string link=ConfigurationManager.AppSettings["WebSite"]+"Contest/Show/+"+Name;
-            string Body = "您好："+User.CurrentUserName+"<br />" + HttpUtility.HtmlEncode(Name) + " 将于 " + AbsoluteStartTime + " 在ContestHunter举办。欢迎您访问 <a href=\"" + HttpUtility.HtmlAttributeEncode(link) + "\">" + HttpUtility.HtmlEncode(link) + "</a> 报名参加。<br />" +
-                "本次比赛持续" + (AbsoluteEndTime - AbsoluteStartTime).TotalHours + " 小时，采用 " + Type + " 赛制，由" + string.Join(",", Owner) + " 举办，" + (IsOfficial ? "" : "不") + "计入能力排名。<br />" +
-                "诚邀您即时报名参加本场比赛。如果您不希望再收到此类邮件，请在个人设置中取消";
-            Parallel.ForEach(Emails, email =>
+                          select new 
+                          {
+                              u.Name,
+                              u.Email
+                          }).ToArray();
+                string Subject = "ContestHunter将举办 " + Name + " ，欢迎参加！";
+                string link = ConfigurationManager.AppSettings["WebSite"] + "Contest/Show/" + Name;
+                Parallel.ForEach(Info, info =>
                 {
                     try
                     {
-                        EmailHelper.Send(Subject, email, Body);
+                        string Body = info.Name + "：<br />&nbsp;&nbsp;&nbsp;&nbsp;您好。" + HttpUtility.HtmlEncode(Name) + " 将于 " + AbsoluteStartTime + " 在ContestHunter举办。欢迎您访问 <a href=\"" + HttpUtility.HtmlAttributeEncode(link) + "\">" + HttpUtility.HtmlEncode(link) + "</a> 报名参加。<br />" +
+                            "本次比赛持续 " + (AbsoluteEndTime - AbsoluteStartTime) + " ，采用 " + Type + " 赛制，由 " + string.Join(",", Owner) + " 举办，<b>" + (IsOfficial ? "" : "不") + "计入</b>能力排名。<br />" +
+                            "诚邀您及时报名参加本场比赛。如果您不希望再收到此类邮件，可以在修改个人资料页面取消。";
+                        EmailHelper.Send(Subject, info.Email, Body);
                     }
                     catch { }
                 });
+            }
         }
     }
 }
