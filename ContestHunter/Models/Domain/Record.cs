@@ -360,7 +360,12 @@ namespace ContestHunter.Models.Domain
                            select r).Single();
                 if (curRecord.USER1.ID == Domain.User.CurrentUser.ID)
                     throw new HuntSelfException();
-                if (curRecord.Status != (int)Record.StatusType.Accept)
+                if (curRecord.Status != (int)Record.StatusType.Accept || (from r in db.RECORDs
+                                                                          where r.USER1.ID == curRecord.USER1.ID
+                                                                          && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
+                                                                          && r.Status == (int)Record.StatusType.Accept
+                                                                          orderby r.VirtualSubmitTime descending
+                                                                          select r).First().ID != curRecord.ID)
                     throw new RecordStatusMismatchException();
                 var curContest = Domain.Contest.ByName(curRecord.PROBLEM1.CONTEST1.Name);
                 if (curContest.Type != Domain.Contest.ContestType.CF)
@@ -406,7 +411,12 @@ namespace ContestHunter.Models.Domain
                                  select r).Single();
                 if (curRecord.USER1.ID == Domain.User.CurrentUser.ID)
                     return false;
-                if (curRecord.Status != (int)Record.StatusType.Accept)
+                if (curRecord.Status != (int)Record.StatusType.Accept || (from r in db.RECORDs
+                                                                          where r.USER1.ID == curRecord.USER1.ID
+                                                                          && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
+                                                                          && r.Status == (int)Record.StatusType.Accept
+                                                                          orderby r.VirtualSubmitTime descending
+                                                                          select r).First().ID != curRecord.ID)
                     return false;
                 var curContest = Domain.Contest.ByName(curRecord.PROBLEM1.CONTEST1.Name);
                 if (curContest.Type != Domain.Contest.ContestType.CF)
