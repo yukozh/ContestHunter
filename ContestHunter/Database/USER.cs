@@ -39,6 +39,7 @@ namespace ContestHunter.Database
         public Nullable<System.DateTime> LastLoginTime { get; set; }
         public string LastLoginIP { get; set; }
         public string Motto { get; set; }
+        public bool AcceptEmail { get; set; }
     
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<HUNT> HUNTs { get; set; }

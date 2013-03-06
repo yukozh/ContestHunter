@@ -222,6 +222,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestTypeMismatchException"></exception>
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="NotAttendedContestException"></exception>
+        /// <exception cref="ProblemNotPassedException"></exception>
         public void Lock()
         {
             if (contest.GetAttendType() != Domain.Contest.AttendType.Normal)

@@ -206,7 +206,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="20" />
           <Property Name="Password" Type="binary" Nullable="false" MaxLength="32" />
           <Property Name="Email" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="PreferLanguage" Type="int" />
@@ -218,6 +218,7 @@
           <Property Name="LastLoginTime" Type="datetime" />
           <Property Name="LastLoginIP" Type="nvarchar" MaxLength="50" />
           <Property Name="Motto" Type="nvarchar" MaxLength="100" />
+          <Property Name="AcceptEmail" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="USER_GROUP">
           <Key>
@@ -648,7 +649,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
           <Property Name="Password" Type="Binary" Nullable="false" MaxLength="32" FixedLength="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="PreferLanguage" Type="Int32" />
@@ -660,6 +661,7 @@
           <Property Name="LastLoginTime" Type="DateTime" Precision="3" />
           <Property Name="LastLoginIP" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Motto" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="AcceptEmail" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterModel.FK_CONTEST_ATTEND_USER" FromRole="USER" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="HUNTs" Relationship="ContestHunterModel.FK_HACK_USER" FromRole="USER" ToRole="HUNT" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterModel.FK_PROBLEM_USER" FromRole="USER" ToRole="PROBLEM" />
@@ -951,6 +953,7 @@
                 <ScalarProperty Name="LastLoginTime" ColumnName="LastLoginTime" />
                 <ScalarProperty Name="LastLoginIP" ColumnName="LastLoginIP" />
                 <ScalarProperty Name="Motto" ColumnName="Motto" />
+                <ScalarProperty Name="AcceptEmail" ColumnName="AcceptEmail" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

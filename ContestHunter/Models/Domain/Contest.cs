@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ContestHunter.Database;
+using System.Threading.Tasks;
 
 namespace ContestHunter.Models.Domain
 {
@@ -1046,6 +1047,19 @@ namespace ContestHunter.Models.Domain
                  where c.ID == ID
                  select c).Single().Status = (int)StatusType.BeforeFinalTest;
                 db.SaveChanges();
+            }
+        }
+
+        public void SendEamil()
+        {
+            using (var db = new CHDB())
+            {
+                /*
+                string[] emails=(from u in db.USERs
+                                 wh
+                Parallel.ForEach((from u in db.USERs
+                                  where u.
+                 * */
             }
         }
     }

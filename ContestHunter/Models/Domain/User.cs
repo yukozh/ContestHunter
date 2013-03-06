@@ -26,6 +26,7 @@ namespace ContestHunter.Models.Domain
         public DateTime? LastLoginTime;
         public string Password;
         public string Motto;
+        public bool AcceptEmail;
 
         internal Guid ID;
         internal class OnlineUser : IIdentity
@@ -208,7 +209,8 @@ namespace ContestHunter.Models.Domain
                         City = city,
                         School = school,
                         Motto = motto,
-                        RealName = realName
+                        RealName = realName,
+                        AcceptEmail = true
                     });
                 }
                 db.SaveChanges();
@@ -338,7 +340,8 @@ namespace ContestHunter.Models.Domain
                     RealName = result.RealName,
                     School = result.School,
                     LastLoginTime = privillege ? result.LastLoginTime : null,
-                    LastLoginIP = privillege ? result.LastLoginIP : null
+                    LastLoginIP = privillege ? result.LastLoginIP : null,
+                    AcceptEmail = result.AcceptEmail
                 };
             }
         }
@@ -405,6 +408,7 @@ namespace ContestHunter.Models.Domain
                     usr.Email = Email;
                     usr.RealName = RealName;
                     usr.Motto = Motto;
+                    usr.AcceptEmail = AcceptEmail;
                     db.SaveChanges();
                 }
             }
