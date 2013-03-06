@@ -121,4 +121,7 @@ namespace ContestHunter.Models.Domain
     {
     }
 
+    public class HuntSelfException : Exception
+    {
+    }
 }

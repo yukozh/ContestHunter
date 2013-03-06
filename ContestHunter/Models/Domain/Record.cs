@@ -350,6 +350,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ContestEndedException"></exception>
         /// <exception cref="ProblemNotLockedException"></exception>
         /// <exception cref="ProblemNotPassedException"></exception>
+        /// <exception cref="HuntSelfException"></exception>
         public Guid Hunt(string Data,LanguageType Type)
         {
             using (var db = new CHDB())
@@ -357,6 +358,8 @@ namespace ContestHunter.Models.Domain
                 var curRecord = (from r in db.RECORDs
                            where r.ID == ID
                            select r).Single();
+                if (curRecord.USER1.ID == Domain.User.CurrentUser.ID)
+                    throw new HuntSelfException();
                 if (curRecord.Status != (int)Record.StatusType.Accept)
                     throw new RecordStatusMismatchException();
                 var curContest = Domain.Contest.ByName(curRecord.PROBLEM1.CONTEST1.Name);
@@ -401,6 +404,8 @@ namespace ContestHunter.Models.Domain
                 var curRecord = (from r in db.RECORDs
                                  where r.ID == ID
                                  select r).Single();
+                if (curRecord.USER1.ID == Domain.User.CurrentUser.ID)
+                    return false;
                 if (curRecord.Status != (int)Record.StatusType.Accept)
                     return false;
                 var curContest = Domain.Contest.ByName(curRecord.PROBLEM1.CONTEST1.Name);
@@ -436,6 +441,7 @@ namespace ContestHunter.Models.Domain
                 (from r in db.RECORDs
                  where r.ID == ID
                  select r).Single().Status = (int)StatusType.Pending;
+                db.SaveChanges();
             }
         }
     }

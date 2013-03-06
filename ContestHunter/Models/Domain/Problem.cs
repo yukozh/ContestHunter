@@ -228,8 +228,16 @@ namespace ContestHunter.Models.Domain
                 throw new AttendedNotNormalException();
             if (contest.Type != Domain.Contest.ContestType.CF)
                 throw new ContestTypeMismatchException();
+            if (contest.RelativeNow > contest.RelativeEndTime)
+                throw new ContestEndedException();
             using (var db = new CHDB())
             {
+                if (!(from r in db.RECORDs
+                      where r.USER1.ID == User.CurrentUser.ID
+                      && r.Status == (int)Record.StatusType.Accept
+                      && r.PROBLEM1.ID == ID
+                      select r).Any())
+                    throw new ProblemNotPassedException();
                 (from u in db.USERs
                  where u.ID==User.CurrentUser.ID
                  select u).Single().LOCKs.Add((from p in db.PROBLEMs
