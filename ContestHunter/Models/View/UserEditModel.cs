@@ -35,5 +35,8 @@ namespace ContestHunter.Models.View
 
         [Display(Name="我的格言",Description="对自己的简要介绍，或者您想说的话")]
         public string Motto { get; set; }
+
+        [Display(Name = "接收系统邮件", Description = "接收ContestHunter发送的比赛预告等邮件。")]
+        public bool ReceiveEmail { get; set; }
     }
 }

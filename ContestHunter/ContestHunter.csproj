@@ -698,6 +698,7 @@
     <Content Include="Script\ckeditor\samples\sample_posteddata.php" />
     <Content Include="Script\ckeditor\skins\moono\readme.md" />
     <None Include="Properties\PublishProfiles\ToVariantF.pubxml" />
+    <Content Include="Views\Home\BadBrowser.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -194,7 +194,8 @@ namespace ContestHunter.Controllers
                 Motto = user.Motto,
                 Province = user.Province,
                 RealName = user.RealName,
-                School = user.School
+                School = user.School,
+                ReceiveEmail=user.AcceptEmail
             };
             return View(model);
         }
@@ -215,6 +216,7 @@ namespace ContestHunter.Controllers
                 user.Province = model.Province;
                 user.RealName = model.RealName;
                 user.School = model.School;
+                user.AcceptEmail = model.ReceiveEmail;
                 user.Change(model.OldPassword);
             }
             catch (UserNotFoundException)

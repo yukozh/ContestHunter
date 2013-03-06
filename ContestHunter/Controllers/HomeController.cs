@@ -19,5 +19,11 @@ namespace ContestHunter.Controllers
             };
             return View(model);
         }
+
+        [AllowAnonymous]
+        public ActionResult BadBrowser()
+        {
+            return View();
+        }
     }
 }
