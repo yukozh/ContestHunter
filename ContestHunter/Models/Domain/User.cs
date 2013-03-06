@@ -160,21 +160,7 @@ namespace ContestHunter.Models.Domain
 
             string link = string.Format("<a href='{0}'>{1}</a>", HttpUtility.HtmlAttributeEncode(url), HttpUtility.HtmlEncode(url));
 
-            using (MailMessage msg = new MailMessage())
-            {
-                msg.From = new MailAddress("contesthunter@163.com");
-                msg.To.Add(email);
-                msg.Subject = "ContestHunter注册验证";
-                msg.Body = "请访问 " + link + " 完成注册";
-                msg.IsBodyHtml = true;
-
-                SmtpClient client = new SmtpClient();
-                client.Credentials = new System.Net.NetworkCredential("contesthunter@163.com", "AppleStore123");
-                client.Port = 25;
-                client.Host = "smtp.163.com";
-                //client.EnableSsl = true;
-                client.Send(msg);
-            }
+            EmailHelper.Send("ContestHunter注册验证", email, "请访问 " + link + " 完成注册");
         }
 
         /// <summary>
