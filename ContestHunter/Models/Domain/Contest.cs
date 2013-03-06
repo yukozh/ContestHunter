@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using ContestHunter.Database;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace ContestHunter.Models.Domain
 {
@@ -1050,17 +1051,32 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        public void SendEamil()
+        public void SendEamil(string message)
         {
+            if(null == User.CurrentUser)
+                throw new UserNotLoginException();
+            if(!User.CurrentUser.IsAdmin && !Owner.Contains(User.CurrentUserName))
+                throw new PermissionDeniedException();
+            string[] Emails;
             using (var db = new CHDB())
             {
-                /*
-                string[] emails=(from u in db.USERs
-                                 wh
-                Parallel.ForEach((from u in db.USERs
-                                  where u.
-                 * */
+                Emails = (from u in db.USERs
+                          where u.AcceptEmail
+                          select u.Email).ToArray();
             }
+            string Subject = "ContestHunter将举办 " + Name + " ，欢迎参加！";
+            string link=ConfigurationManager.AppSettings["WebSite"]+"Contest/Show/+"+Name;
+            string Body = "您好："+User.CurrentUserName+"<br />" + HttpUtility.HtmlEncode(Name) + " 将于 " + AbsoluteStartTime + " 在ContestHunter举办。欢迎您访问 <a href=\"" + HttpUtility.HtmlAttributeEncode(link) + "\">" + HttpUtility.HtmlEncode(link) + "</a> 报名参加。<br />" +
+                "本次比赛持续" + (AbsoluteEndTime - AbsoluteStartTime).TotalHours + " 小时，采用 " + Type + " 赛制，由" + string.Join(",", Owner) + " 举办，" + (IsOfficial ? "" : "不") + "计入能力排名。<br />" +
+                "诚邀您即时报名参加本场比赛。如果您不希望再收到此类邮件，请在个人设置中取消";
+            Parallel.ForEach(Emails, email =>
+                {
+                    try
+                    {
+                        EmailHelper.Send(Subject, email, Body);
+                    }
+                    catch { }
+                });
         }
     }
 }
