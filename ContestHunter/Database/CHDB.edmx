@@ -462,6 +462,16 @@
           <Parameter Name="HasVirtual" Type="bit" Mode="In" />
           <Parameter Name="HasNotSubmit" Type="bit" Mode="In" />
         </Function>
+        <Function Name="RecordList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Top" Type="int" Mode="In" />
+          <Parameter Name="Skip" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="Problem" Type="nvarchar" Mode="In" />
+          <Parameter Name="Contest" Type="nvarchar" Mode="In" />
+          <Parameter Name="Status" Type="int" Mode="In" />
+          <Parameter Name="Language" Type="int" Mode="In" />
+          <Parameter Name="Order" Type="int" Mode="In" />
+        </Function>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
@@ -540,6 +550,16 @@
             <Parameter Name="Top" Mode="In" Type="Int32" />
             <Parameter Name="HasVirtual" Mode="In" Type="Boolean" />
             <Parameter Name="HasNotSubmit" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="RecordList" ReturnType="Collection(ContestHunterDbgModel.RecordList_Result)">
+            <Parameter Name="Top" Mode="In" Type="Int32" />
+            <Parameter Name="Skip" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Problem" Mode="In" Type="String" />
+            <Parameter Name="Contest" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="Int32" />
+            <Parameter Name="Language" Mode="In" Type="Int32" />
+            <Parameter Name="Order" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="CONTEST">
@@ -853,6 +873,19 @@
           <Property Type="Int32" Name="FailedHunt" Nullable="true" />
           <Property Type="Int32" Name="SuccessfulHunt" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="RecordList_Result">
+          <Property Type="Guid" Name="ID" Nullable="false" />
+          <Property Type="Int32" Name="Status" Nullable="false" />
+          <Property Type="Int32" Name="Score" Nullable="true" />
+          <Property Type="Int64" Name="MemoryUsed" Nullable="true" />
+          <Property Type="Int32" Name="ExecutedTime" Nullable="true" />
+          <Property Type="Int32" Name="CodeLength" Nullable="false" />
+          <Property Type="String" Name="Contest" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Language" Nullable="false" />
+          <Property Type="String" Name="Problem" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="SubmitTime" Nullable="false" Precision="23" />
+          <Property Type="String" Name="User" Nullable="true" MaxLength="20" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1018,6 +1051,23 @@
                 <ScalarProperty Name="Rating" ColumnName="Rating" />
                 <ScalarProperty Name="FailedHunt" ColumnName="FailedHunt" />
                 <ScalarProperty Name="SuccessfulHunt" ColumnName="SuccessfulHunt" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="RecordList" FunctionName="ContestHunterDbgModel.Store.RecordList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ContestHunterDbgModel.RecordList_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="MemoryUsed" ColumnName="MemoryUsed" />
+                <ScalarProperty Name="ExecutedTime" ColumnName="ExecutedTime" />
+                <ScalarProperty Name="CodeLength" ColumnName="CodeLength" />
+                <ScalarProperty Name="Contest" ColumnName="Contest" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+                <ScalarProperty Name="Problem" ColumnName="Problem" />
+                <ScalarProperty Name="SubmitTime" ColumnName="SubmitTime" />
+                <ScalarProperty Name="User" ColumnName="User" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

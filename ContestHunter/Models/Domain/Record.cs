@@ -73,62 +73,36 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                IQueryable<RECORD> records = db.RECORDs;
-                if (user != null)
-                    records = records.Where(r => r.USER1.Name == user);
-                if (problem != null)
-                    records = records.Where(r => r.PROBLEM1.Name == problem);
-                if (contest != null)
-                    records = records.Where(r => r.PROBLEM1.CONTEST1.Name == contest);
-                if (language != null)
-                    records = records.Where(r => r.Language == (int)language);
-                if (status != null)
-                    records = records.Where(r => r.Status == (int)status);
-                switch (order)
-                {
-                    case OrderByType.CodeLength:
-                        records = records.OrderBy(r => r.CodeLength);
-                        break;
-                    case OrderByType.ExecutedTime:
-                        records = records.OrderBy(r => r.ExecutedTime);
-                        break;
-                    case OrderByType.MemoryUsed:
-                        records = records.OrderBy(r => r.MemoryUsed);
-                        break;
-                    case OrderByType.SubmitTime:
-                        records = records.OrderByDescending(r => r.SubmitTime);
-                        break;
-                }
-                var tmp = records.Skip(skip).Take(top).ToList();
+                var tmp = db.RecordList(top, skip, user, problem, contest, (int?)status, (int?)language, (int?)order);
                 List<Record> Ret = new List<Record>();
-                foreach (RECORD r in tmp)
+                foreach (RecordList_Result r in tmp)
                 {
                     var nrec = new Record()
                     {
                         ID = r.ID,
                         CodeLength = r.CodeLength,
-                        Contest = r.PROBLEM1.CONTEST1.Name,
+                        Contest = r.Contest,
                         Language = (LanguageType)r.Language,
-                        Problem = r.PROBLEM1.Name,
+                        Problem = r.Problem,
                         SubmitTime = r.SubmitTime,
-                        User = r.USER1.Name
+                        User = r.User
                     };
-                    var con=Domain.Contest.ByName(r.PROBLEM1.CONTEST1.Name);
+                    var con=Domain.Contest.ByName(r.Contest);
                     if (DateTime.Now <= con.RelativeEndTime && ( null==Domain.User.CurrentUser || (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName))))
                     {
-                        switch (r.PROBLEM1.CONTEST1.Type)
+                        switch (con.Type)
                         {
-                            case (int)Domain.Contest.ContestType.CF:
+                            case Domain.Contest.ContestType.CF:
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
                                 break;
-                            case (int)Domain.Contest.ContestType.ACM:
+                            case Domain.Contest.ContestType.ACM:
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
                                 break;
-                            case (int)Domain.Contest.ContestType.OI:
+                            case Domain.Contest.ContestType.OI:
                                 if (r.Status==(int)StatusType.Compile_Error)
                                 {
                                     nrec.Status = StatusType.Compile_Error;
@@ -138,19 +112,19 @@ namespace ContestHunter.Models.Domain
                     }
                     else
                     {
-                        switch (r.PROBLEM1.CONTEST1.Type)
+                        switch (con.Type)
                         {
-                            case (int)Domain.Contest.ContestType.CF:
+                            case Domain.Contest.ContestType.CF:
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
                                 break;
-                            case (int)Domain.Contest.ContestType.ACM:
+                            case Domain.Contest.ContestType.ACM:
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
                                 nrec.Memory = r.MemoryUsed;
                                 break;
-                            case (int)Domain.Contest.ContestType.OI:
+                            case Domain.Contest.ContestType.OI:
                                 nrec.Score = r.Score;
                                 nrec.Status = (StatusType)r.Status;
                                 nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);

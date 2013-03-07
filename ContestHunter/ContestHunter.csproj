@@ -178,6 +178,9 @@
     <Compile Include="Database\RECORD.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\RecordList_Result.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\TESTDATA.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>

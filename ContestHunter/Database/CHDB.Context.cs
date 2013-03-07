@@ -66,5 +66,42 @@ namespace ContestHunter.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCFStanding_Result>("GetCFStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
         }
+    
+        public virtual ObjectResult<RecordList_Result> RecordList(Nullable<int> top, Nullable<int> skip, string name, string problem, string contest, Nullable<int> status, Nullable<int> language, Nullable<int> order)
+        {
+            var topParameter = top.HasValue ?
+                new ObjectParameter("Top", top) :
+                new ObjectParameter("Top", typeof(int));
+    
+            var skipParameter = skip.HasValue ?
+                new ObjectParameter("Skip", skip) :
+                new ObjectParameter("Skip", typeof(int));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var problemParameter = problem != null ?
+                new ObjectParameter("Problem", problem) :
+                new ObjectParameter("Problem", typeof(string));
+    
+            var contestParameter = contest != null ?
+                new ObjectParameter("Contest", contest) :
+                new ObjectParameter("Contest", typeof(string));
+    
+            var statusParameter = status.HasValue ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(int));
+    
+            var languageParameter = language.HasValue ?
+                new ObjectParameter("Language", language) :
+                new ObjectParameter("Language", typeof(int));
+    
+            var orderParameter = order.HasValue ?
+                new ObjectParameter("Order", order) :
+                new ObjectParameter("Order", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<RecordList_Result>("RecordList", topParameter, skipParameter, nameParameter, problemParameter, contestParameter, statusParameter, languageParameter, orderParameter);
+        }
     }
 }
