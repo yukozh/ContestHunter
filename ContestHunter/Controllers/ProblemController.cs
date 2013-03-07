@@ -28,7 +28,7 @@ namespace ContestHunter.Controllers
                 problem = con.ProblemByName(id);
                 if (problem.Content == null)
                 {
-                    problem.Content = "<span style='color:red;'>无法查看题目内容</span>";
+                    problem.Content = "<div class=\"alert alert-error\" style=\"text-align:center\">比赛尚未开始或者您尚未报名，无权查看题目内容。</div>";
                 }
                 try
                 {
