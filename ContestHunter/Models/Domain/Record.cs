@@ -363,7 +363,7 @@ namespace ContestHunter.Models.Domain
                 if (curRecord.Status != (int)Record.StatusType.Accept || (from r in db.RECORDs
                                                                           where r.USER1.ID == curRecord.USER1.ID
                                                                           && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
-                                                                          && r.Status == (int)Record.StatusType.Accept
+                                                                          && (r.Status == (int)Record.StatusType.Accept || r.Status==(int)Record.StatusType.Hacked)
                                                                           orderby r.VirtualSubmitTime descending
                                                                           select r).First().ID != curRecord.ID)
                     throw new RecordStatusMismatchException();
@@ -414,7 +414,7 @@ namespace ContestHunter.Models.Domain
                 if (curRecord.Status != (int)Record.StatusType.Accept || (from r in db.RECORDs
                                                                           where r.USER1.ID == curRecord.USER1.ID
                                                                           && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
-                                                                          && r.Status == (int)Record.StatusType.Accept
+                                                                          && (r.Status == (int)Record.StatusType.Accept || r.Status==(int)Record.StatusType.Hacked)
                                                                           orderby r.VirtualSubmitTime descending
                                                                           select r).First().ID != curRecord.ID)
                     return false;

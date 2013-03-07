@@ -811,7 +811,7 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        int CalcRating(int? ACTime, int totoalRating, int failedTimes, int succssfullyHunt, int unsuccessfullyHunt)
+        int CalcRating(int? ACTime, int totoalRating, int failedTimes)
         {
             if (null == ACTime)
             {
@@ -844,8 +844,6 @@ namespace ContestHunter.Models.Domain
                 totoalRating -= failedTimes * 50;
                 totoalRating = Math.Max(totoalRating, minRating);
             }
-            totoalRating += succssfullyHunt * 100;
-            totoalRating -= unsuccessfullyHunt * 25;
             return totoalRating;
         }
 
@@ -864,22 +862,102 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.ID==ID
-                           select c).Single();
+                           where c.ID == ID
+                           select new
+                           {
+                               c.ID,
+                               c.StartTime,
+                               c.EndTime
+                           }).Single();
+                var probs = (from p in db.PROBLEMs
+                             where p.Contest == con.ID
+                             orderby p.OriginRating,p.Name ascending
+                             select new 
+                             {
+                                 p.ID,
+                                 p.OriginRating
+                             }).ToArray();
+                var probids = probs.Select(x => x.ID).ToArray();
+                var users = (from u in db.CONTEST_ATTEND
+                             where u.Contest == ID
+                             && u.Type != (int)AttendType.Practice
+                             && (HasVirtual ? true : u.Type != (int)AttendType.Virtual)
+                             && (HasNotSubmit ? true : (from r in db.RECORDs
+                                                        where r.User == u.User
+                                                        && probids.Contains(r.Problem)
+                                                        select new { }).Any())
+                             select new
+                             {
+                                 ID = u.User,
+                                 u.USER1.Name,
+                                 u.Type
+                             }).ToArray();
+                List<CFStanding> result=new List<CFStanding>();
+                foreach (var u in users)
+                {
+                    List<CFStanding.DescriptionClass> desp=new List<CFStanding.DescriptionClass>();
+                    foreach (var p in probs)
+                    {
+                        var ACTime = (from r in db.RECORDs
+                                      where r.User == u.ID
+                                      && r.Problem== p.ID
+                                      && r.VirtualSubmitTime >= con.StartTime
+                                      && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
+                                      && r.Status == (int)Record.StatusType.Accept
+                                      orderby r.VirtualSubmitTime descending
+                                      select r.VirtualSubmitTime).FirstOrDefault();
+                        var FailedTimes = (from r in db.RECORDs
+                                           where r.User == u.ID
+                                           && r.Problem == p.ID
+                                           && r.VirtualSubmitTime >= con.StartTime
+                                           && r.VirtualSubmitTime <= (ACTime == null ? (con.EndTime < RelativeNow ? con.EndTime : RelativeNow) : ACTime)
+                                           && r.Status > 0
+                                           select r).Count();
+                        var SuccessfulHack = (from h in db.HUNTs
+                                              where h.User == u.ID && h.RECORD1.Problem == p.ID && h.Status == (int)Hunt.StatusType.Success
+                                              select h).Count();
+                        var FailedHack = (from h in db.HUNTs
+                                          where h.User == u.ID && h.RECORD1.Problem == p.ID && h.Status == (int)Hunt.StatusType.Fail
+                                          select h).Count();
+                        desp.Add(new CFStanding.DescriptionClass()
+                            {
+                                ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
+                                isAC = null != ACTime,
+                                FailedTimes = FailedTimes,
+                                Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
+                                        (int)p.OriginRating, FailedTimes),
+                                _huntFailed = FailedHack,
+                                _huntSuccessfully = SuccessfulHack
+                            });
+                    }
+                    var entry = new CFStanding()
+                    {
+                        User = u.Name,
+                        TotalRating = desp.Sum(x => x.Rating),
+                        FailedHack = desp.Sum(x => x._huntFailed),
+                        SuccessHack = desp.Sum(x => x._huntSuccessfully),
+                        IsVirtual = u.Type == (int)AttendType.Virtual,
+                        Description = desp
+                    };
+                    entry.TotalRating = entry.TotalRating + entry.SuccessHack * 100 - entry.FailedHack * 25;
+                    result.Add(entry);
+                }
+                return result.OrderByDescending(x => x.TotalRating).Skip(skip).Take(top).ToList();
+                /*
                 var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
                               where HasNotSubmit ? true : (from r in db.RECORDs
-                                                           where r.USER1.ID == u.ID
-                                                           && r.PROBLEM1.CONTEST1.ID == con.ID
+                                                           where r.User == u.ID
+                                                           && probs.Contains(r.PROBLEM1.ID)
                                                            select r).Any()
                               let des = from p in con.PROBLEMs
                                         orderby p.OriginRating,p.Name ascending
-                                        let ACTimeList = (from r in p.RECORDs
-                                                          where r.USER1 == u
+                                        let ACTime = (from r in p.RECORDs
+                                                          where r.User == u.ID
                                                           && r.VirtualSubmitTime >= con.StartTime
                                                           && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
                                                           && r.Status == (int)Record.StatusType.Accept
-                                                          select r.VirtualSubmitTime)
-                                        let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Max() : null
+                                                          orderby r.VirtualSubmitTime descending
+                                                          select r.VirtualSubmitTime).FirstOrDefault()
                                         let FailedTimes = (from r in p.RECORDs
                                                            where r.USER1 == u
                                                            && r.VirtualSubmitTime >= con.StartTime
@@ -898,7 +976,7 @@ namespace ContestHunter.Models.Domain
                                             isAC = null != ACTime,
                                             FailedTimes = FailedTimes,
                                             Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
-                                                    (int)p.OriginRating, FailedTimes, SuccessfulHack, FailedHack),
+                                                    (int)p.OriginRating, FailedTimes),
                                             _huntFailed = FailedHack,
                                             _huntSuccessfully = SuccessfulHack
                                         }
@@ -910,8 +988,11 @@ namespace ContestHunter.Models.Domain
                                   SuccessHack = des.Sum(x => x._huntSuccessfully),
                                   IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual,
                                   Description = des.ToList()
-                              });
-                return result.OrderByDescending(s=>s.TotalRating).Skip(skip).Take(top).ToList();
+                              }).OrderByDescending(s=>s.TotalRating).Skip(skip).Take(top);
+                foreach (var r in result)
+                    r.TotalRating = r.TotalRating + 100 * r.SuccessHack - 25 * r.FailedHack;
+                return result.ToList();
+                 * */
 
             }
         }
@@ -1074,7 +1155,8 @@ namespace ContestHunter.Models.Domain
                     {
                         string Body = info.Name + "：<br />&nbsp;&nbsp;&nbsp;&nbsp;您好。" + HttpUtility.HtmlEncode(Name) + " 将于 " + AbsoluteStartTime + " 在ContestHunter举办。欢迎您访问 <a href=\"" + HttpUtility.HtmlAttributeEncode(link) + "\">" + HttpUtility.HtmlEncode(link) + "</a> 报名参加。<br />" +
                             "本次比赛持续 " + (AbsoluteEndTime - AbsoluteStartTime) + " ，采用 " + Type + " 赛制，由 " + string.Join(",", Owner) + " 举办，<b>" + (IsOfficial ? "" : "不") + "计入</b>能力排名。<br />" +
-                            "诚邀您及时报名参加本场比赛。如果您不希望再收到此类邮件，可以在修改个人资料页面取消。";
+                            "诚邀您及时报名参加本场比赛。如果您不希望再收到此类邮件，可以在修改个人资料页面取消。<br />" +
+                            (string.IsNullOrWhiteSpace(message) ? "" : "管理员留言：<br />" + HttpUtility.HtmlEncode(message));
                         EmailHelper.Send(Subject, info.Email, Body);
                     }
                     catch { }

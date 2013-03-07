@@ -278,6 +278,8 @@ namespace ContestHunter.Models.Domain
                         return true;
                     }
                     result = tester.Execute("./"+commands[(Record.LanguageType)rec.RECORD1.Language]["execname"][0], new string[] { }, MemoryLimit, TimeLimit, 100 * 1024 * 1024, RestrictionLevel.Strict, HuntData);
+                    tester.MoveBlob2File(stdout, stdout);
+                    tester.MoveBlob2File(HuntData, HuntData);
                     if (result.Type == ExecuteResultType.Success)
                     {
                         string userout = result.OutputBlob;
@@ -290,8 +292,6 @@ namespace ContestHunter.Models.Domain
                             Detail += "比较器编译失败";
                             return true;
                         }
-                        tester.MoveBlob2File(stdout, stdout);
-                        tester.MoveBlob2File(HuntData, HuntData);
                         tester.MoveBlob2File(userout, userout);
                         result = tester.Execute("./"+commands[comparerLanguage]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, null);
                         if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
