@@ -450,5 +450,36 @@ namespace ContestHunter.Controllers
             }
             return RedirectToAction("Show", new { id = id });
         }
+
+        [HttpGet]
+        public ActionResult SendInviteEmail(string id)
+        {
+            ContestInviteEmailModel model = new ContestInviteEmailModel() { Contest = id };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SendInviteEmail(string id,ContestInviteEmailModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                Contest.ByName(id).SendEamil(model.Content);
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有这场比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有权限重算Rating" });
+            }
+            return RedirectToAction("Complete", new { id = id });
+        }
     }
 }
