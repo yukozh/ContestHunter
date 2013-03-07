@@ -456,6 +456,7 @@
         </Association>
         <Function Name="GetCFStanding" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ConID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="RelativeNow" Type="datetime" Mode="In" />
           <Parameter Name="Skip" Type="int" Mode="In" />
           <Parameter Name="Top" Type="int" Mode="In" />
           <Parameter Name="HasVirtual" Type="bit" Mode="In" />
@@ -534,6 +535,7 @@
           </AssociationSet>
           <FunctionImport Name="GetCFStanding" ReturnType="Collection(ContestHunterDbgModel.GetCFStanding_Result)">
             <Parameter Name="ConID" Mode="In" Type="Guid" />
+            <Parameter Name="RelativeNow" Mode="In" Type="DateTime" />
             <Parameter Name="Skip" Mode="In" Type="Int32" />
             <Parameter Name="Top" Mode="In" Type="Int32" />
             <Parameter Name="HasVirtual" Mode="In" Type="Boolean" />
