@@ -56,7 +56,7 @@ namespace ContestHunter.Controllers
             try
             {
                 Contest contest = Contest.ByName(id);
-                model.Problems = contest.Problems().OrderBy(n => n).ToList();
+                model.Problems = contest.Problems();
                 model.PageCount = (int)Math.Ceiling(contest.AttendedUsersCount() / (double)STANDING_PAGE_SIZE);
                 model.Contest = contest;
                 model.StartIndex = model.PageIndex * STANDING_PAGE_SIZE;
