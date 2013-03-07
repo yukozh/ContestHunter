@@ -118,6 +118,7 @@ namespace DomainTest
         {
             using (NativeRunner runner = new NativeRunner(HOST, PORT))
             {
+                runner.MoveBlob2File("alsjdfkjsalkd", "sladfjklsdajlkf");
                 runner.PutBlob("blob", new byte[0]);
                 Assert.IsTrue(runner.HasBlob("blob"));
 

@@ -859,142 +859,43 @@ namespace ContestHunter.Models.Domain
         {
             if (Type != ContestType.CF)
                 throw new ContestTypeMismatchException();
+            List<CFStanding> ret=new List<CFStanding>();
+            var Probs=Problems();
             using (var db = new CHDB())
             {
-                var con = (from c in db.CONTESTs
-                           where c.ID == ID
-                           select new
-                           {
-                               c.ID,
-                               c.StartTime,
-                               c.EndTime
-                           }).Single();
-                var probs = (from p in db.PROBLEMs
-                             where p.Contest == con.ID
-                             orderby p.OriginRating,p.Name ascending
-                             select new 
-                             {
-                                 p.ID,
-                                 p.OriginRating
-                             }).ToArray();
-                var probids = probs.Select(x => x.ID).ToArray();
-                var users = (from u in db.CONTEST_ATTEND
-                             where u.Contest == ID
-                             && u.Type != (int)AttendType.Practice
-                             && (HasVirtual ? true : u.Type != (int)AttendType.Virtual)
-                             && (HasNotSubmit ? true : (from r in db.RECORDs
-                                                        where r.User == u.User
-                                                        && probids.Contains(r.Problem)
-                                                        select new { }).Any())
-                             select new
-                             {
-                                 ID = u.User,
-                                 u.USER1.Name,
-                                 u.Type
-                             }).ToArray();
-                List<CFStanding> result=new List<CFStanding>();
-                foreach (var u in users)
+                var raw = db.GetCFStanding(ID, skip, top, HasVirtual, HasNotSubmit).ToArray();
+
+                for (int i = 0; i < raw.Length; i += Probs.Count())
                 {
-                    List<CFStanding.DescriptionClass> desp=new List<CFStanding.DescriptionClass>();
-                    foreach (var p in probs)
+                    var desp = new List<CFStanding.DescriptionClass>();
+                    for (int jj = 0; jj < Probs.Count(); jj++)
                     {
-                        var ACTime = (from r in db.RECORDs
-                                      where r.User == u.ID
-                                      && r.Problem== p.ID
-                                      && r.VirtualSubmitTime >= con.StartTime
-                                      && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
-                                      && r.Status == (int)Record.StatusType.Accept
-                                      orderby r.VirtualSubmitTime descending
-                                      select r.VirtualSubmitTime).FirstOrDefault();
-                        var FailedTimes = (from r in db.RECORDs
-                                           where r.User == u.ID
-                                           && r.Problem == p.ID
-                                           && r.VirtualSubmitTime >= con.StartTime
-                                           && r.VirtualSubmitTime <= (ACTime == null ? (con.EndTime < RelativeNow ? con.EndTime : RelativeNow) : ACTime)
-                                           && r.Status > 0
-                                           select r).Count();
-                        var SuccessfulHack = (from h in db.HUNTs
-                                              where h.User == u.ID && h.RECORD1.Problem == p.ID && h.Status == (int)Hunt.StatusType.Success
-                                              select h).Count();
-                        var FailedHack = (from h in db.HUNTs
-                                          where h.User == u.ID && h.RECORD1.Problem == p.ID && h.Status == (int)Hunt.StatusType.Fail
-                                          select h).Count();
+                        int j = i + jj;
                         desp.Add(new CFStanding.DescriptionClass()
-                            {
-                                ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
-                                isAC = null != ACTime,
-                                FailedTimes = FailedTimes,
-                                Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
-                                        (int)p.OriginRating, FailedTimes),
-                                _huntFailed = FailedHack,
-                                _huntSuccessfully = SuccessfulHack
-                            });
+                        {
+                            _huntFailed=(int)raw[j].FailedHunt,
+                            _huntSuccessfully=(int)raw[j].SuccessfulHunt,
+                            ACTime=raw[j].ACTime,
+                            isAC=(bool)raw[j].IsAC,
+                            FailedTimes=(int)raw[j].FailedTimes,
+                            Rating=(int)raw[j].Rating
+                        });
                     }
-                    var entry = new CFStanding()
+                    var entity = new CFStanding()
                     {
-                        User = u.Name,
-                        TotalRating = desp.Sum(x => x.Rating),
+                        Description = desp,
                         FailedHack = desp.Sum(x => x._huntFailed),
                         SuccessHack = desp.Sum(x => x._huntSuccessfully),
-                        IsVirtual = u.Type == (int)AttendType.Virtual,
-                        Description = desp
+                        User = raw[i].User,
+                        TotalRating = desp.Sum(x => x.Rating),
+                        IsVirtual = raw[i].Type == (int)AttendType.Virtual
                     };
-                    entry.TotalRating = entry.TotalRating + entry.SuccessHack * 100 - entry.FailedHack * 25;
-                    result.Add(entry);
+                    entity.TotalRating = entity.TotalRating + 100 * entity.SuccessHack - 25 * entity.FailedHack;
+                    ret.Add(entity);
                 }
-                return result.OrderByDescending(x => x.TotalRating).Skip(skip).Take(top).ToList();
-                /*
-                var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
-                              where HasNotSubmit ? true : (from r in db.RECORDs
-                                                           where r.User == u.ID
-                                                           && probs.Contains(r.PROBLEM1.ID)
-                                                           select r).Any()
-                              let des = from p in con.PROBLEMs
-                                        orderby p.OriginRating,p.Name ascending
-                                        let ACTime = (from r in p.RECORDs
-                                                          where r.User == u.ID
-                                                          && r.VirtualSubmitTime >= con.StartTime
-                                                          && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
-                                                          && r.Status == (int)Record.StatusType.Accept
-                                                          orderby r.VirtualSubmitTime descending
-                                                          select r.VirtualSubmitTime).FirstOrDefault()
-                                        let FailedTimes = (from r in p.RECORDs
-                                                           where r.USER1 == u
-                                                           && r.VirtualSubmitTime >= con.StartTime
-                                                           && r.VirtualSubmitTime <= (ACTime == null ? (con.EndTime < RelativeNow ? con.EndTime : RelativeNow) : ACTime)
-                                                           && r.Status > 0
-                                                           select r).Count()
-                                        let SuccessfulHack = (from h in db.HUNTs
-                                                              where h.USER1.ID == u.ID && h.RECORD1.PROBLEM1.ID == p.ID && h.Status == (int)Hunt.StatusType.Success
-                                                              select h).Count()
-                                        let FailedHack = (from h in db.HUNTs
-                                                          where h.USER1.ID == u.ID && h.RECORD1.PROBLEM1.ID == p.ID && h.Status == (int)Hunt.StatusType.Fail
-                                                          select h).Count()
-                                        select new CFStanding.DescriptionClass()
-                                        {
-                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
-                                            isAC = null != ACTime,
-                                            FailedTimes = FailedTimes,
-                                            Rating = CalcRating((null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
-                                                    (int)p.OriginRating, FailedTimes),
-                                            _huntFailed = FailedHack,
-                                            _huntSuccessfully = SuccessfulHack
-                                        }
-                              select new CFStanding
-                              {
-                                  User = u.Name,
-                                  TotalRating = des.Sum(x => x.Rating),
-                                  FailedHack = des.Sum(x => x._huntFailed),
-                                  SuccessHack = des.Sum(x => x._huntSuccessfully),
-                                  IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual,
-                                  Description = des.ToList()
-                              }).OrderByDescending(s=>s.TotalRating).Skip(skip).Take(top);
-                foreach (var r in result)
-                    r.TotalRating = r.TotalRating + 100 * r.SuccessHack - 25 * r.FailedHack;
-                return result.ToList();
-                 * */
-
+                
             }
+            return ret;
         }
 
         /// <summary>

@@ -12,6 +12,9 @@ namespace ContestHunter.Database
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Objects;
+    using System.Data.Objects.DataClasses;
+    using System.Linq;
     
     public partial class CHDB : DbContext
     {
@@ -34,5 +37,30 @@ namespace ContestHunter.Database
         public DbSet<RECORD> RECORDs { get; set; }
         public DbSet<TESTDATA> TESTDATAs { get; set; }
         public DbSet<USER> USERs { get; set; }
+    
+        public virtual ObjectResult<GetCFStanding_Result> GetCFStanding(Nullable<System.Guid> conID, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
+        {
+            var conIDParameter = conID.HasValue ?
+                new ObjectParameter("ConID", conID) :
+                new ObjectParameter("ConID", typeof(System.Guid));
+    
+            var skipParameter = skip.HasValue ?
+                new ObjectParameter("Skip", skip) :
+                new ObjectParameter("Skip", typeof(int));
+    
+            var topParameter = top.HasValue ?
+                new ObjectParameter("Top", top) :
+                new ObjectParameter("Top", typeof(int));
+    
+            var hasVirtualParameter = hasVirtual.HasValue ?
+                new ObjectParameter("HasVirtual", hasVirtual) :
+                new ObjectParameter("HasVirtual", typeof(bool));
+    
+            var hasNotSubmitParameter = hasNotSubmit.HasValue ?
+                new ObjectParameter("HasNotSubmit", hasNotSubmit) :
+                new ObjectParameter("HasNotSubmit", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCFStanding_Result>("GetCFStanding", conIDParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
+        }
     }
 }
