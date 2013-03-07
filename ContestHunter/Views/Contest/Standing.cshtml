@@ -127,17 +127,18 @@
                                     <label class="label">模拟</label>
                                 }
                             </td>
-                            <td><b>@standing.CountAC</b></td>
-                            @foreach (var desc in standing.Description)
+                            <td><b>@Html.ActionLink(standing.CountAC.ToString(), "Index", "Record", new { ContestName = Model.Contest.Name, UserName = standing.User }, null)</b></td>
+                            @for (int j = 0; j < Model.Problems.Count; j++)
                             {
+                                var desc = standing.Description[j];
                                 <td>
                                     @if (desc.isAC)
                                     {
-                                        <span style="color: #50C350">@(new TimeSpan(0, desc.ACTime.Value, 0)) (@desc.FailedTimes)</span>
+                                        @Html.ActionLink(new TimeSpan(0, desc.ACTime.Value, 0) + " " + desc.FailedTimes, "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { style = "color: #50C350" })
                                     }
                                     else if (desc.FailedTimes > 0)
                                     {
-                                        <span style="color: red">-@desc.FailedTimes</span>
+                                        @Html.ActionLink("-" + desc.FailedTimes, "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { style = "color: red" })
                                     }
                                 </td>
                             }
@@ -161,11 +162,15 @@
                                     <label class="label">模拟</label>
                                 }
                             </td>
-                            <td><b>@standing.TotalScore</b></td>
-                            @foreach (var score in standing.Scores)
+                            <td><b>@Html.ActionLink(standing.TotalScore.ToString(), "Index", "Record", new { ContestName = Model.Contest.Name, UserName = standing.User }, null)</b></td>
+                            @for (int j = 0; j < Model.Problems.Count; j++)
                             {
+                                var score = standing.Scores[j];
                                 <td>
-                                    <span class="score_@score"><b>@score</b></span>
+                                    @if (score.HasValue)
+                                    {
+                                        @Html.ActionLink(score.ToString(), "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { @class = "score_" + score })
+                                    }
                                 </td>
                             }
                             <td>
@@ -188,17 +193,18 @@
                                     <label class="label">模拟</label>
                                 }
                             </td>
-                            <td><b>@standing.TotalRating</b></td>
-                            @foreach (var desc in standing.Description)
+                            <td><b>@Html.ActionLink(standing.TotalRating.ToString(), "Index", "Record", new { ContestName = Model.Contest.Name, UserName = standing.User }, null)</b></td>
+                            @for (int j = 0; j < Model.Problems.Count; j++)
                             {
+                                var desc =standing.Description[j];
                                 <td>
                                     @if (desc.isAC)
                                     {
-                                        <span style="color: #50C350">@desc.Rating</span>
+                                        @Html.ActionLink(desc.Rating.ToString(), "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { style = "color: #50C350" })
                                     }
                                     else if (desc.FailedTimes > 0)
                                     {
-                                        <span style="color: red">-@desc.FailedTimes</span>
+                                        @Html.ActionLink("-" + desc.FailedTimes, "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { style = "color: red" })
                                     }
                                 </td>
                             }
@@ -207,15 +213,15 @@
                                 {
                                     if (standing.SuccessHack > 0)
                                     {
-                                    <span style="color: green">+@standing.SuccessHack</span>
+                                        @Html.ActionLink("+"+standing.SuccessHack,"HuntList","Record",new{UserName=standing.User,ContestName=Model.Contest.Name,Status="Success"},new{style="color: green"})
                                     }
                                     if (standing.SuccessHack > 0 && standing.FailedHack > 0)
                                     {
-                                        @: :
+                                    @: :
                                     }
                                     if (standing.FailedHack > 0)
                                     {
-                                    <span style="color: gray">-@standing.FailedHack</span>
+                                        @Html.ActionLink("-"+standing.FailedHack,"HuntList","Record",new{UserName=standing.User,ContestName=Model.Contest.Name,Status="Fail"},new{style="color: gray"})
                                     }
                                 }
                             </td>
