@@ -579,19 +579,19 @@ namespace ContestHunter.Models.Domain
         public Problem ProblemByName(string name)
         {
             bool privillege = true;
+            bool Admin = false;
             using (var db = new CHDB())
             {
                 if (null == User.CurrentUser)
                 {
-                    if (DateTime.Now <= RelativeEndTime)
-                        privillege = false;
+                    privillege = false;
                 }
                 else
                 {
                     if (!Owner.Contains(User.CurrentUser.name) && !User.CurrentUser.IsAdmin)
                     {
                         var con = (from c in db.CONTESTs
-                                   where c.ID==ID
+                                   where c.ID == ID
                                    select c).Single();
                         if (!IsAttended())
                         {
@@ -603,6 +603,8 @@ namespace ContestHunter.Models.Domain
                                 privillege = false;
                         }
                     }
+                    else
+                        Admin = true;
                 }
                 var result = (from p in db.PROBLEMs
                               where p.Name == name && p.CONTEST1.ID==ID
@@ -614,13 +616,13 @@ namespace ContestHunter.Models.Domain
                               {
                                   Name = result.Name,
                                   Content = privillege ? result.Content : null,
-                                  Comparer = privillege ? result.Comparer : null,
+                                  Comparer = Admin ? result.Comparer : null,
                                   ID = result.ID,
                                   Contest = result.CONTEST1.Name,
                                   OriginRating = result.OriginRating,
-                                  DataChecker = privillege ? result.DataChecker : null,
-                                  DataCheckerLanguage = privillege ? ((Record.LanguageType?)result.DataCheckerLanguage) : null,
-                                  ComparerLanguage = privillege ? ((Record.LanguageType?)result.ComparerLanguage) : null,
+                                  DataChecker = Admin ? result.DataChecker : null,
+                                  DataCheckerLanguage = Admin ? ((Record.LanguageType?)result.DataCheckerLanguage) : null,
+                                  ComparerLanguage = Admin ? ((Record.LanguageType?)result.ComparerLanguage) : null,
                                   Owner = result.OWNER.Name,
                                   contest = this,
                                   privillege = privillege
