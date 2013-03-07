@@ -18,6 +18,8 @@ namespace ContestHunter.Models.Domain
         public Record.LanguageType? ComparerLanguage;
         public Record.LanguageType? DataCheckerLanguage;
 
+        internal bool privillege;
+
         internal Guid ID;
         internal Contest contest;
 
@@ -184,7 +186,7 @@ namespace ContestHunter.Models.Domain
                 {
                     if (DateTime.Now < contest.RelativeStartTime)
                         throw new ContestNotStartedException();
-                    if (DateTime.Now <= contest.RelativeEndTime && !contest.IsAttended())
+                    if (!contest.IsAttended())
                         throw new NotAttendedContestException();
                 }
                 if (contest.Type == Domain.Contest.ContestType.CF && IsLock() && contest.RelativeNow < contest.RelativeEndTime)

@@ -188,6 +188,7 @@ namespace ContestHunter.Models.Domain
                 var con = Domain.Contest.ByName(result.PROBLEM1.CONTEST1.Name);
                 if (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName) && DateTime.Now <= con.RelativeEndTime)
                 {
+                    bool isAttend = con.IsAttended();
                     switch (con.Type)
                     {
                         case Domain.Contest.ContestType.CF:
@@ -210,7 +211,7 @@ namespace ContestHunter.Models.Domain
                             return new Record()
                             {
                                 ID = result.ID,
-                                Code = result.Code,
+                                Code = isAttend ? result.Code : null,
                                 CodeLength = result.CodeLength,
                                 Contest = result.PROBLEM1.CONTEST1.Name,
                                 Detail = result.Detail,
@@ -228,7 +229,7 @@ namespace ContestHunter.Models.Domain
                             return new Record()
                             {
                                 ID = result.ID,
-                                Code = result.Code,
+                                Code = isAttend ? result.Code : null,
                                 CodeLength = result.CodeLength,
                                 Contest = result.PROBLEM1.CONTEST1.Name,
                                 ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
@@ -245,7 +246,7 @@ namespace ContestHunter.Models.Domain
                             return new Record()
                             {
                                 ID = result.ID,
-                                Code = result.Code,
+                                Code = isAttend ? result.Code : null,
                                 CodeLength = result.CodeLength,
                                 Contest = result.PROBLEM1.CONTEST1.Name,
                                 Language = (LanguageType)result.Language,
@@ -260,13 +261,14 @@ namespace ContestHunter.Models.Domain
                 }
                 else
                 {
+                    bool isAttend = con.IsAttended();
                     switch (con.Type)
                     {
                         case Domain.Contest.ContestType.OI:
                             return new Record()
                             {
                                 ID = result.ID,
-                                Code = result.Code,
+                                Code = isAttend ? result.Code : null,
                                 CodeLength = result.CodeLength,
                                 Contest = result.PROBLEM1.CONTEST1.Name,
                                 Language = (LanguageType)result.Language,
@@ -283,7 +285,7 @@ namespace ContestHunter.Models.Domain
                             return new Record()
                             {
                                 ID = result.ID,
-                                Code = result.Code,
+                                Code = isAttend ? result.Code : null,
                                 CodeLength = result.CodeLength,
                                 Contest = result.PROBLEM1.CONTEST1.Name,
                                 Detail = result.Detail,
@@ -299,7 +301,7 @@ namespace ContestHunter.Models.Domain
                             return new Record()
                             {
                                 ID = result.ID,
-                                Code = result.Code,
+                                Code = isAttend ? result.Code : null,
                                 CodeLength = result.CodeLength,
                                 Contest = result.PROBLEM1.CONTEST1.Name,
                                 ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),

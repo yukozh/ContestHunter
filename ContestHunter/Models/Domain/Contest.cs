@@ -595,8 +595,7 @@ namespace ContestHunter.Models.Domain
                                    select c).Single();
                         if (!IsAttended())
                         {
-                            if (DateTime.Now <= RelativeEndTime)
-                                privillege = false;
+                            privillege = false;
                         }
                         else
                         {
@@ -623,7 +622,8 @@ namespace ContestHunter.Models.Domain
                                   DataCheckerLanguage = privillege ? ((Record.LanguageType?)result.DataCheckerLanguage) : null,
                                   ComparerLanguage = privillege ? ((Record.LanguageType?)result.ComparerLanguage) : null,
                                   Owner = result.OWNER.Name,
-                                  contest = this
+                                  contest = this,
+                                  privillege = privillege
                               };
             }
 
