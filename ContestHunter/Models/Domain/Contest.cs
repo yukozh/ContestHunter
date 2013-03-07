@@ -863,7 +863,7 @@ namespace ContestHunter.Models.Domain
             var Probs=Problems();
             using (var db = new CHDB())
             {
-                var raw = db.GetCFStanding(ID, skip, top, HasVirtual, HasNotSubmit).ToArray();
+                var raw = db.GetCFStanding(ID, RelativeNow,skip, top, HasVirtual, HasNotSubmit).ToArray();
 
                 for (int i = 0; i < raw.Length; i += Probs.Count())
                 {

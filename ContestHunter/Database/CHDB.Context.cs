@@ -38,11 +38,15 @@ namespace ContestHunter.Database
         public DbSet<TESTDATA> TESTDATAs { get; set; }
         public DbSet<USER> USERs { get; set; }
     
-        public virtual ObjectResult<GetCFStanding_Result> GetCFStanding(Nullable<System.Guid> conID, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
+        public virtual ObjectResult<GetCFStanding_Result> GetCFStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
         {
             var conIDParameter = conID.HasValue ?
                 new ObjectParameter("ConID", conID) :
                 new ObjectParameter("ConID", typeof(System.Guid));
+    
+            var relativeNowParameter = relativeNow.HasValue ?
+                new ObjectParameter("RelativeNow", relativeNow) :
+                new ObjectParameter("RelativeNow", typeof(System.DateTime));
     
             var skipParameter = skip.HasValue ?
                 new ObjectParameter("Skip", skip) :
@@ -60,7 +64,7 @@ namespace ContestHunter.Database
                 new ObjectParameter("HasNotSubmit", hasNotSubmit) :
                 new ObjectParameter("HasNotSubmit", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCFStanding_Result>("GetCFStanding", conIDParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCFStanding_Result>("GetCFStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
         }
     }
 }
