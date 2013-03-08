@@ -163,6 +163,9 @@
     <Compile Include="Database\GetCFStanding_Result.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\GetOIStanding_Result.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\GROUP.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
