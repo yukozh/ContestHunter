@@ -132,5 +132,34 @@ namespace ContestHunter.Database
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOIStanding_Result>("GetOIStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
         }
+    
+        public virtual ObjectResult<GetACMStanding_Result> GetACMStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
+        {
+            var conIDParameter = conID.HasValue ?
+                new ObjectParameter("ConID", conID) :
+                new ObjectParameter("ConID", typeof(System.Guid));
+    
+            var relativeNowParameter = relativeNow.HasValue ?
+                new ObjectParameter("RelativeNow", relativeNow) :
+                new ObjectParameter("RelativeNow", typeof(System.DateTime));
+    
+            var skipParameter = skip.HasValue ?
+                new ObjectParameter("Skip", skip) :
+                new ObjectParameter("Skip", typeof(int));
+    
+            var topParameter = top.HasValue ?
+                new ObjectParameter("Top", top) :
+                new ObjectParameter("Top", typeof(int));
+    
+            var hasVirtualParameter = hasVirtual.HasValue ?
+                new ObjectParameter("HasVirtual", hasVirtual) :
+                new ObjectParameter("HasVirtual", typeof(bool));
+    
+            var hasNotSubmitParameter = hasNotSubmit.HasValue ?
+                new ObjectParameter("HasNotSubmit", hasNotSubmit) :
+                new ObjectParameter("HasNotSubmit", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetACMStanding_Result>("GetACMStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
+        }
     }
 }

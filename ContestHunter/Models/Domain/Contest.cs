@@ -726,44 +726,32 @@ namespace ContestHunter.Models.Domain
                 throw new ContestTypeMismatchException();
             using (var db = new CHDB())
             {
-                var con = (from c in db.CONTESTs
-                           where c.ID==ID
-                           select c).Single();
-                var result = (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
-                              where HasNotSubmit?true:(from r in db.RECORDs
-                                                       where r.USER1.ID == u.ID
-                                                       && r.PROBLEM1.CONTEST1.ID == con.ID
-                                                       select r).Any()
-                              let des = from p in con.PROBLEMs
-                                        orderby p.OriginRating,p.Name ascending
-                                        let ACTimeList = (from r in p.RECORDs
-                                                          where r.USER1 == u
-                                                          && r.VirtualSubmitTime >= con.StartTime
-                                                          && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime : RelativeNow)
-                                                          && r.Status == (int)Record.StatusType.Accept
-                                                          select r.VirtualSubmitTime)
-                                        let ACTime = ACTimeList.Any() ? (DateTime?)ACTimeList.Min() : null
-                                        let FailedTimes = (from r in p.RECORDs
-                                                           where r.USER1 == u
-                                                           && r.VirtualSubmitTime >= con.StartTime
-                                                           && r.VirtualSubmitTime <= (ACTime == null ? (con.EndTime < RelativeNow ? con.EndTime : RelativeNow) : ACTime)
-                                                           && r.Status > 0
-                                                           select r).Count()
-                                        select new ACMStanding.DescriptionClass()
-                                        {
-                                            ACTime = (null == ACTime) ? null : (int?)((DateTime)ACTime - con.StartTime).TotalMinutes,
-                                            isAC = null != ACTime,
-                                            FailedTimes = FailedTimes
-                                        }
-                              select new ACMStanding
-                              {
-                                  User = u.Name,
-                                  TotalTime = des.Sum(d => d.isAC ? d.FailedTimes * 20 + (int)d.ACTime : 0),
-                                  Description = des.ToList(),
-                                  CountAC = des.Sum(d => d.isAC ? 1 : 0),
-                                  IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual
-                              });
-                return result.OrderByDescending(s => s.CountAC).ThenBy(s => s.TotalTime).Skip(skip).Take(top).ToList();
+                var lst = db.GetACMStanding(ID, RelativeNow, skip, top, HasVirtual, HasNotSubmit).ToArray();
+                int count = Problems().Count();
+                var ret = new List<ACMStanding>();
+                for (int i = 0; i < lst.Length; i += count)
+                {
+                    var desp = new List<ACMStanding.DescriptionClass>();
+                    for (int jj = 0; jj < count; jj++)
+                    {
+                        int j = i + jj;
+                        desp.Add(new ACMStanding.DescriptionClass()
+                        {
+                            ACTime = lst[j].ACTime,
+                            FailedTimes = (int)lst[j].FailedTimes,
+                            isAC = (bool)lst[j].IsAC
+                        });
+                    }
+                    ret.Add(new ACMStanding()
+                    {
+                        CountAC = desp.Sum(x => x.isAC ? 1 : 0),
+                        Description = desp,
+                        IsVirtual = lst[i].Type == (int)AttendType.Virtual,
+                        TotalTime = desp.Sum(x => x.isAC ? (int)x.ACTime + 20 * x.FailedTimes : 0),
+                        User = lst[i].User
+                    });
+                }
+                return ret;
             }
         }
 

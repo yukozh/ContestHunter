@@ -160,6 +160,9 @@
     <Compile Include="Database\CONTEST_ATTEND.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\GetACMStanding_Result.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\GetCFStanding_Result.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
