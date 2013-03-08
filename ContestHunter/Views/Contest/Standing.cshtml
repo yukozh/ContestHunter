@@ -7,17 +7,20 @@
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table {
+    .table
+    {
         background-color: white;
         color: black;
     }
 
-        .table th, .table td {
+        .table th, .table td
+        {
             text-align: center;
             vertical-align: middle;
         }
 
-    .label {
+    .label
+    {
         font-weight: normal;
     }
 </style>
@@ -134,7 +137,7 @@
                                 <td>
                                     @if (desc.isAC)
                                     {
-                                        @Html.ActionLink(new TimeSpan(0, desc.ACTime.Value, 0) + " " + desc.FailedTimes, "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { style = "color: #50C350" })
+                                        @Html.ActionLink(new TimeSpan(0, desc.ACTime.Value, 0) + "(" + desc.FailedTimes + ")", "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { style = "color: #50C350" })
                                     }
                                     else if (desc.FailedTimes > 0)
                                     {

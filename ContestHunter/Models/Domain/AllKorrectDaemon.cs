@@ -100,8 +100,14 @@ namespace ContestHunter.Models.Domain
                     int passedTests = 0;
                     rec.MemoryUsed = 0;
                     rec.ExecutedTime = 0;
+                    Guid lastHunt;
+                    lock(ContestDaemon.HuntLst)
+                    {
+                        string key=rec.User.ToString()+rec.Problem.ToString();
+                        lastHunt = ContestDaemon.HuntLst.ContainsKey(key) ? ContestDaemon.HuntLst[key] : Guid.Empty;
+                    }
                     foreach (TESTDATA test in (from t in db.TESTDATAs
-                                               where t.PROBLEM1.ID == rec.PROBLEM1.ID && t.Available
+                                               where t.PROBLEM1.ID == rec.PROBLEM1.ID && (t.Available || t.ID==lastHunt)
                                                select t))
                     {
                         totalTests++;
@@ -149,6 +155,7 @@ namespace ContestHunter.Models.Domain
                             }
                         }
                         else
+                        {
                             switch (result.Type)
                             {
                                 case ExecuteResultType.MemoryLimitExceeded:
@@ -185,8 +192,9 @@ namespace ContestHunter.Models.Domain
                                     Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>程序吐槽过多</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory_KB);
                                     break;
                             }
-                        if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI && result.Type != ExecuteResultType.Success)
-                            break;
+                            if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI)
+                                break;
+                        }
                     }
                     if (totalTests == passedTests)
                     {
@@ -296,9 +304,10 @@ namespace ContestHunter.Models.Domain
                         result = tester.Execute("./"+commands[comparerLanguage]["execname"][0], new string[] { stdout, userout, HuntData }, MemoryLimit, TimeLimit, 10 * 1024, RestrictionLevel.Strict, null);
                         if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
                         {
+                            var newid = Guid.NewGuid();
                             rec.RECORD1.PROBLEM1.TESTDATAs.Add(new TESTDATA()
                             {
-                                ID = Guid.NewGuid(),
+                                ID = newid,
                                 Available = false,
                                 MemoryLimit = MemoryLimit,
                                 TimeLimit = TimeLimit,
@@ -315,6 +324,10 @@ namespace ContestHunter.Models.Domain
                                 hunt.Status = (int)Hunt.StatusType.HackedByOther;
                             }
                             rec.Status = (int)Hunt.StatusType.Success;
+                            lock (ContestDaemon.HuntLst)
+                            {
+                                ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                            }
                             return true;
                         }
                         else if (result.Type == ExecuteResultType.Success)
@@ -331,9 +344,10 @@ namespace ContestHunter.Models.Domain
                     }
                     else
                     {
+                        Guid newid = Guid.NewGuid();
                         rec.RECORD1.PROBLEM1.TESTDATAs.Add(new TESTDATA()
                         {
-                            ID = Guid.NewGuid(),
+                            ID = newid,
                             Available = false,
                             MemoryLimit = MemoryLimit,
                             TimeLimit = TimeLimit,
@@ -350,6 +364,10 @@ namespace ContestHunter.Models.Domain
                             hunt.Status = (int)Hunt.StatusType.HackedByOther;
                         }
                         rec.Status = (int)Hunt.StatusType.Success;
+                        lock (ContestDaemon.HuntLst)
+                        {
+                            ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                        }
                         return true;
                     }
                 }

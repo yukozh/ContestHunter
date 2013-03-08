@@ -1020,5 +1020,21 @@ namespace ContestHunter.Models.Domain
                 });
             }
         }
+        
+        /// <summary>
+        /// 删除本比赛，只有 Administrators 组有此权限
+        /// </summary>
+        /// <exception cref="PermissionDeniedException"></exception>
+        public void Remove()
+        {
+            if (!User.CurrentUser.IsAdmin)
+                throw new PermissionDeniedException();
+            using (var db = new CHDB())
+            {
+                db.CONTESTs.Remove((from c in db.CONTESTs
+                                    where c.ID == ID
+                                    select c).Single());
+            }
+        }
     }
 }

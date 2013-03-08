@@ -69,8 +69,8 @@ namespace ContestHunter.Models.Domain
                 var result = db.TESTDATAs.Add(new TESTDATA()
                 {
                     ID = Guid.NewGuid(),
-                    Input = testCase.Input,
-                    Data = testCase.Data,
+                    Input = testCase._Input,
+                    Data = testCase._Data,
                     TimeLimit = testCase.TimeLimit,
                     MemoryLimit = testCase.MemoryLimit,
                     PROBLEM1 = (from p in db.PROBLEMs
@@ -137,8 +137,7 @@ namespace ContestHunter.Models.Domain
                               select new TestCase
                               {
                                   ID = t.ID,
-                                  Input = flag ? t.Input : null,
-                                  Data = flag ? t.Data : null,
+                                  canGetData = flag,
                                   TimeLimit = t.TimeLimit,
                                   MemoryLimit = t.MemoryLimit,
                                   Available = t.Available

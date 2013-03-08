@@ -158,6 +158,11 @@ namespace DomainTest
             User.Authenticate(User.Login("Administrator","07070078899","1.1.1.1"),"1.1.1.1");
             Contest.ByName("test").SendEamil("blablapilapila");
         }
+
+        [TestMethod]
+        public void TestEF()
+        {
+        }
     }
 }
 

@@ -10,11 +10,48 @@ namespace ContestHunter.Models.Domain
     public class TestCase
     {
         public Guid ID;
-        public byte[] Input;
-        public byte[] Data;
+        internal byte[] _Input;
+        internal byte[] _Data;
+        public byte[] Input
+        {
+            get
+            {
+                if (!canGetData)
+                    return null;
+                using (var db = new CHDB())
+                {
+                    return (from t in db.TESTDATAs
+                            where t.ID == ID
+                            select t.Input).FirstOrDefault();
+                }
+            }
+            set
+            {
+                _Input = value;
+            }
+        }
+        public byte[] Data
+        {
+            get
+            {
+                if (!canGetData)
+                    return null;
+                using (var db = new CHDB())
+                {
+                    return (from t in db.TESTDATAs
+                            where t.ID == ID
+                            select t.Data).FirstOrDefault();
+                }
+            }
+            set
+            {
+                _Data = value;
+            }
+        }
         public int TimeLimit;
         public long MemoryLimit;
         public bool Available;
+        internal bool canGetData;
 
         /// <summary>
         /// 修改测试数据时间/内存限制

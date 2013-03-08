@@ -8,6 +8,7 @@ namespace ContestHunter.Models.Domain
 {
     public class ContestDaemon : Daemon
     {
+        public static Dictionary<string, Guid> HuntLst = new Dictionary<string, Guid>();
         void CalcRating(CONTEST con, CHDB db)
         {
             var contest = Contest.ByName(con.Name);
