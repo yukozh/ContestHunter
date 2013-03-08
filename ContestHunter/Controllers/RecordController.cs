@@ -51,7 +51,10 @@ namespace ContestHunter.Controllers
         [HttpGet]
         public ActionResult Hunt(Guid id)
         {
-            HuntModel model = new HuntModel();
+            HuntModel model = new HuntModel()
+            {
+                MyLanague=Record.LanguageType.Data
+            };
             try
             {
                 Record record = Record.ByID(id);
