@@ -9,7 +9,7 @@
     <div class="alert alert-info" style="margin-top: 20px">
         <fieldset>
             <legend style="color: red; text-align: center">Make a Hunt！</legend>
-            <div style="text-align: center; ">
+            <div style="text-align: center;">
                 您即将对 @Html.UserLink(Model.HisName) 对于 @Html.ActionLink(Model.Problem, "Show", "Problem", new { id = Model.Problem, contest = Model.Contest }, null) 的解答展开猎杀<br />
                 Ta的代码如下：<br />
             </div>
@@ -29,9 +29,9 @@
                         ViewBag.Brush = "java";
                         break;
                 }
-                <pre class="brush:@ViewBag.Brush;">@Model.HisCode</pre>
+                <img src="@Url.Action("CodeImage", new { id = Model.HisCode, width = 900 })" style="width:900px; display:block;margin:auto;" />
             </div>
-            <div style="text-align: center; ">
+            <div style="text-align: center;">
                 Hunt成功可以得到100分，失败将被扣除25分<br />
                 如果您提交的数据不合法，那么本次Hunt不计入总成绩<br />
                 可以直接提交输入数据，也可以上传数据生成器(采用标准输出)<br />
