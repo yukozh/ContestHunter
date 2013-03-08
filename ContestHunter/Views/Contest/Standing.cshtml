@@ -165,12 +165,10 @@
                             <td><b>@Html.ActionLink(standing.TotalScore.ToString(), "Index", "Record", new { ContestName = Model.Contest.Name, UserName = standing.User }, null)</b></td>
                             @for (int j = 0; j < Model.Problems.Count; j++)
                             {
-                                var score = standing.Scores[j];
+                                var desc = standing.desp[j];
                                 <td>
-                                    @if (score.HasValue)
-                                    {
-                                        @Html.ActionLink(score.ToString(), "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { @class = "score_" + score })
-                                    }
+                                    @Html.ActionLink(desc.Score.ToString(), "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { @class = "score_" + desc.Score })
+                                    <div>@desc.ExecTime ms</div>
                                 </td>
                             }
                             <td>
@@ -196,7 +194,7 @@
                             <td><b>@Html.ActionLink(standing.TotalRating.ToString(), "Index", "Record", new { ContestName = Model.Contest.Name, UserName = standing.User }, null)</b></td>
                             @for (int j = 0; j < Model.Problems.Count; j++)
                             {
-                                var desc =standing.Description[j];
+                                var desc = standing.Description[j];
                                 <td>
                                     @if (desc.isAC)
                                     {
@@ -213,7 +211,7 @@
                                 {
                                     if (standing.SuccessHack > 0)
                                     {
-                                        @Html.ActionLink("+"+standing.SuccessHack,"HuntList","Record",new{UserName=standing.User,ContestName=Model.Contest.Name,Status="Success"},new{style="color: green"})
+                                    @Html.ActionLink("+" + standing.SuccessHack, "HuntList", "Record", new { UserName = standing.User, ContestName = Model.Contest.Name, Status = "Success" }, new { style = "color: green" })
                                     }
                                     if (standing.SuccessHack > 0 && standing.FailedHack > 0)
                                     {
@@ -221,7 +219,7 @@
                                     }
                                     if (standing.FailedHack > 0)
                                     {
-                                        @Html.ActionLink("-"+standing.FailedHack,"HuntList","Record",new{UserName=standing.User,ContestName=Model.Contest.Name,Status="Fail"},new{style="color: gray"})
+                                    @Html.ActionLink("-" + standing.FailedHack, "HuntList", "Record", new { UserName = standing.User, ContestName = Model.Contest.Name, Status = "Fail" }, new { style = "color: gray" })
                                     }
                                 }
                             </td>

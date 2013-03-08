@@ -11,7 +11,7 @@ using System.Drawing.Imaging;
 
 namespace Imager
 {
-    class SourceImager
+    public class SourceImager
     {
         static Bitmap SAMPLE_BIT_MAP = new Bitmap(1, 1);
         static Graphics SAMPLE_GRAPHICS = Graphics.FromImage(SAMPLE_BIT_MAP);
@@ -55,7 +55,8 @@ namespace Imager
                     g.DrawBezier(new Pen(Brushes.Black, 2), RandomPoint(bitmap.Width, bitmap.Height), RandomPoint(bitmap.Width, bitmap.Height), RandomPoint(bitmap.Width, bitmap.Height), RandomPoint(bitmap.Width, bitmap.Height));
                 }
                  * */
-                for (int i = 0; i < 30; i++)
+                int numOfLines = bitmap.Height / 50;
+                for (int i = 0; i < numOfLines; i++)
                 {
                     g.DrawLine(new Pen(BACKGROUND, 2), RandomPoint(size.Width, size.Height), RandomPoint(size.Width, size.Height));
                 }
@@ -63,7 +64,7 @@ namespace Imager
             return bitmap;
         }
 
-        public Bitmap Inverse(Bitmap bitmap)
+        Bitmap Inverse(Bitmap bitmap)
         {
             Point center = new Point(rnd.Next(bitmap.Width), rnd.Next(bitmap.Height));
             double r = rnd.NextDouble() * 100;
@@ -78,7 +79,7 @@ namespace Imager
             return bitmap;
         }
 
-        public Bitmap Interference(Bitmap bitmap)
+        Bitmap Interference(Bitmap bitmap)
         {
             Bitmap newBitmap = new Bitmap(bitmap.Width, bitmap.Height);
             PointF center = PointF.Subtract(RandomPoint(bitmap.Width - 50, bitmap.Height - 50), new Size(-50, -50));
@@ -115,7 +116,7 @@ namespace Imager
                 + "\tstd::cout << x+y << std::endl;\n"
                 + "\treturn 0;\n"
                 + "}";
-            src = File.ReadAllText("D:\\C++\\Dinic.cpp");
+            src = File.ReadAllText("D:\\C++\\KMP.cpp");
             new SourceImager().Generate(src,1000,50000).Save("D:\\image.png", ImageFormat.Png);
         }
     }

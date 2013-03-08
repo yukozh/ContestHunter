@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
+using System.IO;
 using System.Text;
 using ContestHunter.Models.Domain;
 using ContestHunter.Models.View;
@@ -14,6 +15,8 @@ namespace ContestHunter.Controllers
     {
         static readonly int INDEX_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Record.Index.PageSize"]);
         static readonly int HUNT_LIST_PAGE_SIZE = int.Parse(ConfigurationManager.AppSettings["Record.HuntList.PageSize"]);
+        static readonly int CODE_IMAGE_MAX_WIDTH = int.Parse(ConfigurationManager.AppSettings["Record.CodeImage.MaxWidth"]);
+        static readonly int CODE_IMAGE_MAX_HEIGHT = int.Parse(ConfigurationManager.AppSettings["Record.CodeImage.MaxHeight"]);
 
         [AllowAnonymous]
         public ActionResult Index(RecordListModel model)
@@ -166,6 +169,43 @@ namespace ContestHunter.Controllers
                 return RedirectToAction("Error", "Shared", new { msg = "您没有权限重测猎杀记录" });
             }
             return RedirectToAction("HuntResult", new { id = id });
+        }
+
+        [HttpGet]
+        public ActionResult CodeImage(Guid id, int width)
+        {
+            width = Math.Max(0, Math.Min(width, CODE_IMAGE_MAX_WIDTH));
+            try
+            {
+                Record record = Record.ByID(id);
+                if (string.IsNullOrWhiteSpace(record.Code)) record.Code = "The code is empty~";
+                var img = new Imager.SourceImager().Generate(record.Code, width, CODE_IMAGE_MAX_HEIGHT);
+                using (MemoryStream mem = new MemoryStream())
+                {
+                    img.Save(mem, System.Drawing.Imaging.ImageFormat.Png);
+                    return File(mem.ToArray(), "image/png");
+                }
+            }
+            catch (ContestNotEndedException)
+            {
+                return RedirectToAction("Error", "Show", new { msg = "比赛尚未结束，不可查看代码" });
+            }
+            catch (RecordNotFoundException)
+            {
+                return RedirectToAction("Error", "Show", new { msg = "您要找的记录不存在" });
+            }
+            catch (ProblemNotLockedException)
+            {
+                return RedirectToAction("Error", "Show", new { msg = "您的相应题目尚未锁定" });
+            }
+            catch (ProblemNotPassedException)
+            {
+                return RedirectToAction("Error", "Show", new { msg = "您的相应题目没有通过" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
         }
     }
 }
