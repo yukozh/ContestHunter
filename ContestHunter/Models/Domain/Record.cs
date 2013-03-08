@@ -430,5 +430,15 @@ namespace ContestHunter.Models.Domain
                 db.SaveChanges();
             }
         }
+
+        public bool ShouldShowImage()
+        {
+            var con =Domain.Contest.ByName(Contest);
+            if (con.RelativeNow <= con.RelativeEndTime && !Domain.User.CurrentUser.IsAdmin
+                && !con.Owner.Contains(Domain.User.CurrentUserName))
+                return true;
+            return false;
+                
+        }
     }
 }
