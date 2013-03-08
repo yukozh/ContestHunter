@@ -29,14 +29,6 @@ namespace ContestHunter.Models.Domain
             public int PassedUsers;
         }
 
-        /*
-        public override bool Equals(object obj)
-        {
-            if (obj is Problem)
-                return ID == ((Problem)obj).ID;
-            return base.Equals(obj);
-        }*/
-
         /// <summary>
         /// 返回题目所有测试数据编号
         /// </summary>
@@ -132,7 +124,7 @@ namespace ContestHunter.Models.Domain
                     if (DateTime.Now > currcon.EndTime)
                         flag = true;
                 }
-                var result = (from t in currprob.TESTDATAs
+                var result = (from t in db.TESTDATAs
                               where t.ID == testCase
                               select new TestCase
                               {
