@@ -149,6 +149,7 @@ namespace ContestHunter.Models.Domain
                             }
                         }
                         else
+                        {
                             switch (result.Type)
                             {
                                 case ExecuteResultType.MemoryLimitExceeded:
@@ -185,8 +186,9 @@ namespace ContestHunter.Models.Domain
                                     Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>程序吐槽过多</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory_KB);
                                     break;
                             }
-                        if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI && result.Type != ExecuteResultType.Success)
-                            break;
+                            if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI)
+                                break;
+                        }
                     }
                     if (totalTests == passedTests)
                     {
