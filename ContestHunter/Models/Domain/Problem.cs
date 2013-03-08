@@ -137,8 +137,7 @@ namespace ContestHunter.Models.Domain
                               select new TestCase
                               {
                                   ID = t.ID,
-                                  Input = flag ? t.Input : null,
-                                  Data = flag ? t.Data : null,
+                                  canGetData = flag,
                                   TimeLimit = t.TimeLimit,
                                   MemoryLimit = t.MemoryLimit,
                                   Available = t.Available
