@@ -10,6 +10,8 @@ namespace ContestHunter.Models.Domain
     public class TestCase
     {
         public Guid ID;
+        internal byte[] _Input;
+        internal byte[] _Data;
         public byte[] Input
         {
             get
@@ -22,6 +24,10 @@ namespace ContestHunter.Models.Domain
                             where t.ID == ID
                             select t.Input).FirstOrDefault();
                 }
+            }
+            set
+            {
+                _Input = value;
             }
         }
         public byte[] Data
@@ -36,6 +42,10 @@ namespace ContestHunter.Models.Domain
                             where t.ID == ID
                             select t.Data).FirstOrDefault();
                 }
+            }
+            set
+            {
+                _Data = value;
             }
         }
         public int TimeLimit;
