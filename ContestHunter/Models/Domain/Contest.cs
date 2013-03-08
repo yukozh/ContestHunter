@@ -787,66 +787,32 @@ namespace ContestHunter.Models.Domain
                            select c).Single();
                 if (DateTime.Now <= RelativeEndTime && !User.CurrentUser.IsAdmin && !Owner.Contains(User.CurrentUserName))
                     throw new ContestNotEndedException();
-                return (from u in con.CONTEST_ATTEND.Where(x => (x.Type != (int)AttendType.Practice && (HasVirtual ? true : x.Type != (int)AttendType.Virtual))).Select(x => x.USER1)
-                        where HasNotSubmit ? true : (from r in db.RECORDs
-                                                     where r.USER1.ID == u.ID
-                                                     && r.PROBLEM1.CONTEST1.ID == con.ID
-                                                     select r).Any()
-                        let des = (from p in con.PROBLEMs
-                                   orderby p.OriginRating,p.Name ascending
-                                   let score = (from r in p.RECORDs
-                                                where r.USER1 == u
-                                                && r.PROBLEM1 == p
-                                                && r.VirtualSubmitTime >= con.StartTime
-                                                && r.VirtualSubmitTime <= (con.EndTime < RelativeNow ? con.EndTime:RelativeNow)
-                                                orderby r.VirtualSubmitTime descending
-                                                select r).FirstOrDefault()
-                                   select score)
-                        select new OIStanding
-                        {
-                            Scores = des.Select(x => (null == x ? null : x.Score)).ToList(),
-                            TotalScore = des.Sum(x => (null == x ? 0 : (null == x.Score ? 0 : (int)x.Score))),
-                            User = u.Name,
-                            TotalTime = des.Sum(x => (null == x ? 0 : (null == x.ExecutedTime ? 0 : (int)x.ExecutedTime))),
-                            IsVirtual = u.CONTEST_ATTEND.Where(x => x.CONTEST1 == con).Single().Type == (int)AttendType.Virtual
-                        }).OrderByDescending(x => x.TotalScore).ThenBy(x => x.TotalTime).Skip(skip).Take(top).ToList();
-            }
-        }
-
-        int CalcRating(int? ACTime, int totoalRating, int failedTimes)
-        {
-            if (null == ACTime)
-            {
-                totoalRating = 0;
-            }
-            else
-            {
-                int ratingbase = totoalRating * 3 / 5;
-                int minRating = totoalRating * 2 / 5;
-                int time = (int)ACTime;
-                if (time > 30)
+                int count = Problems().Count();
+                var lst = db.GetOIStanding(ID, RelativeNow, skip, top, HasVirtual, HasNotSubmit).ToArray();
+                var ret = new List<OIStanding>();
+                for (int i = 0; i < lst.Length; i+=count)
                 {
-                    totoalRating -= ratingbase * 2 / 10;
-                    if (time > 60)
+                    var desp=new List<OIStanding.DescriptionClass>();
+                    for (int jj = 0; jj < count; jj++)
                     {
-                        totoalRating -= ratingbase * 4 / 10;
-                        if (time > 90)
+                        int j = i + jj;
+                        desp.Add(new OIStanding.DescriptionClass()
                         {
-                            totoalRating -= ratingbase * 3 / 10;
-                            totoalRating -= ratingbase * 1 / 10 * (time - 90) / 30;
-                        }
-                        else
-                            totoalRating -= ratingbase * 3 / 10 * (time - 60) / 30;
+                            ExecTime=(int)lst[j].ExecuteTime,
+                            Score=(int)lst[j].Score
+                        });
                     }
-                    else
-                        totoalRating -= ratingbase * 4 / 10 * (time - 30) / 30;
+                    ret.Add(new OIStanding()
+                    {
+                        IsVirtual = lst[i].Type == (int)AttendType.Virtual,
+                        desp = desp,
+                        TotalScore = desp.Sum(x => x.Score),
+                        TotalTime = desp.Sum(x => x.ExecTime),
+                        User = lst[i].User
+                    });
                 }
-                else
-                    totoalRating -= ratingbase * 2 / 10 * time / 30;
-                totoalRating -= failedTimes * 50;
-                totoalRating = Math.Max(totoalRating, minRating);
+                return ret;
             }
-            return totoalRating;
         }
 
         /// <summary>

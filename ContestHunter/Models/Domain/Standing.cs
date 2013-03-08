@@ -42,7 +42,12 @@ namespace ContestHunter.Models.Domain
     public class OIStanding
     {
         public string User;
-        public List<int?> Scores;
+        public class DescriptionClass
+        {
+            public int Score;
+            public int ExecTime;
+        }
+        public List<DescriptionClass> desp;
         public int TotalScore;
         public int TotalTime;
         public bool IsVirtual;
