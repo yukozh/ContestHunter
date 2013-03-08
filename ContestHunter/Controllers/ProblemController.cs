@@ -425,7 +425,8 @@ namespace ContestHunter.Controllers
             Dictionary<int, byte[]> inputFiles = new Dictionary<int, byte[]>();
             Dictionary<int, byte[]> outputFiles = new Dictionary<int, byte[]>();
 
-            if (new[] { "application/zip", "application/x-zip-compressed" }.Contains(file.ContentType))
+            if (new[] { "application/zip", "application/x-zip-compressed", "application/x-zip" }.Contains(file.ContentType)
+                || file.ContentType == "application/octet-stream" && file.FileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
             {
                 using (ZipInputStream stream = new ZipInputStream(file.InputStream))
                 {

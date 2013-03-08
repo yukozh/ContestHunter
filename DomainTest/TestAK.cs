@@ -9,7 +9,7 @@ namespace DomainTest
     [TestClass]
     public class TestAK
     {
-        const string HOST = "moo.imeng.de";
+        const string HOST = "192.168.0.100";
         const int PORT = 10010;
 
         [TestMethod]
@@ -118,7 +118,6 @@ namespace DomainTest
         {
             using (NativeRunner runner = new NativeRunner(HOST, PORT))
             {
-                runner.MoveBlob2File("alsjdfkjsalkd", "sladfjklsdajlkf");
                 runner.PutBlob("blob", new byte[0]);
                 Assert.IsTrue(runner.HasBlob("blob"));
 

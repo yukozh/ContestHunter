@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
+using System.IO.Compression;
 namespace AllKorrect
 {
     /// <summary>
@@ -230,6 +231,7 @@ namespace AllKorrect
         /// </summary>
         public void PutBlob(string name, byte[] bytes)
         {
+            bytes = GzipCompress(bytes);
             new PutBlob()
             {
                 Name = name,
@@ -256,7 +258,7 @@ namespace AllKorrect
             {
                 throw new Exception("收到错误的消息类型");
             }
-            return reply.Body;
+            return GzipDecompress(reply.Body);
         }
 
         /// <summary>
@@ -277,7 +279,7 @@ namespace AllKorrect
             {
                 throw new Exception("收到错误的消息类型");
             }
-            return reply.Body;
+            return GzipDecompress(reply.Body);
         }
 
         /// <summary>
@@ -417,6 +419,33 @@ namespace AllKorrect
                 }
             }
             return sb.ToString();
+        }
+
+        byte[] GzipDecompress(byte[] bytes)
+        {
+            using (MemoryStream mem = new MemoryStream(bytes))
+            {
+                using (GZipStream gzip = new GZipStream(mem, CompressionMode.Decompress))
+                {
+                    using (MemoryStream mem2 = new MemoryStream())
+                    {
+                        gzip.CopyTo(mem2);
+                        return mem2.ToArray();
+                    }
+                }
+            }
+        }
+
+        byte[] GzipCompress(byte[] bytes)
+        {
+            using (MemoryStream mem = new MemoryStream())
+            {
+                using (GZipStream gzip = new GZipStream(mem, CompressionMode.Compress))
+                {
+                    gzip.Write(bytes, 0, bytes.Length);
+                }
+                return mem.ToArray();
+            }
         }
     }
 }
