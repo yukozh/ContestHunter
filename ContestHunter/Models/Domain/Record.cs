@@ -73,7 +73,7 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                var tmp = db.RecordList(top, skip, user, problem, contest, (int?)status, (int?)language, (int?)order);
+                var tmp = db.RecordList(top, skip, user, problem, contest, (int?)status, (int?)language, (int?)order).ToArray();
                 List<Record> Ret = new List<Record>();
                 foreach (RecordList_Result r in tmp)
                 {
@@ -87,7 +87,7 @@ namespace ContestHunter.Models.Domain
                         SubmitTime = r.SubmitTime,
                         User = r.User
                     };
-                    var con=Domain.Contest.ByName(r.Contest);
+                    var con = Domain.Contest.ByName(r.Contest);
                     if (DateTime.Now <= con.RelativeEndTime && ( null==Domain.User.CurrentUser || (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName))))
                     {
                         switch (con.Type)
