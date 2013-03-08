@@ -655,6 +655,10 @@
       <Project>{d9a3c7fe-689e-4c7f-83db-cac4fe27db0a}</Project>
       <Name>AllKorrect</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Imager\Imager.csproj">
+      <Project>{939acb4a-9f5f-48b2-9162-84380b9e3a34}</Project>
+      <Name>Imager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Record\HuntResult.cshtml" />
