@@ -170,8 +170,17 @@
                     ViewBag.Brush = "java";
                     break;
             }
-            <img src="@Url.Action("CodeImage", new { id = Model.ID, width = 900 })" style="width:900px; display:block;margin:auto;" />
-            <pre class="brush:@ViewBag.Brush;">@Model.Code</pre>
+            @if (Model.Code != null)
+            {
+                if (Model.ShouldShowImage())
+                {
+                <img src="@Url.Action("CodeImage", new { id = Model.ID, width = 900 })" style="width:900px; display:block;margin:auto;" />
+                }
+                else
+                {
+                <pre class="brush:@ViewBag.Brush;">@Model.Code</pre>
+                }
+            }
         </div>
     </div>
 </div>
