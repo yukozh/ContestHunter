@@ -171,7 +171,6 @@
                                 var desc = standing.desp[j];
                                 <td>
                                     @Html.ActionLink(desc.Score.ToString(), "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { @class = "score_" + desc.Score })
-                                    <div>@desc.ExecTime ms</div>
                                 </td>
                             }
                             <td>
