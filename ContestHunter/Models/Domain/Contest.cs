@@ -1038,6 +1038,7 @@ namespace ContestHunter.Models.Domain
                 db.CONTESTs.Remove((from c in db.CONTESTs
                                     where c.ID == ID
                                     select c).Single());
+                db.SaveChanges();
             }
         }
     }
