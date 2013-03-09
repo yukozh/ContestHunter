@@ -485,5 +485,28 @@ namespace ContestHunter.Controllers
             }
             return RedirectToAction("Complete", new { id = id });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string id)
+        {
+            try
+            {
+                Contest.ByName(id).Remove();
+            }
+            catch (ContestNotFoundException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "没有这场比赛" });
+            }
+            catch (UserNotLoginException)
+            {
+                throw;
+            }
+            catch (PermissionDeniedException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有权限删除比赛" });
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -7,20 +7,17 @@
 
 <link href="~/Content/ScoreColor.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .table
-    {
+    .table {
         background-color: white;
         color: black;
     }
 
-        .table th, .table td
-        {
+        .table th, .table td {
             text-align: center;
             vertical-align: middle;
         }
 
-    .label
-    {
+    .label {
         font-weight: normal;
     }
 </style>
@@ -170,7 +167,10 @@
                             {
                                 var desc = standing.desp[j];
                                 <td>
-                                    @Html.ActionLink(desc.Score.ToString(), "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { @class = "score_" + desc.Score })
+                                    @if (desc.IsScored)
+                                    {
+                                        @Html.ActionLink(desc.Score.ToString(), "Index", "Record", new { ProblemName = Model.Problems[j], ContestName = Model.Contest.Name, UserName = standing.User }, new { @class = "score_" + desc.Score })
+                                    }
                                 </td>
                             }
                             <td>

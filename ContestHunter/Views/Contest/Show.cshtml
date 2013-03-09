@@ -247,6 +247,18 @@
                                                             @Html.AntiForgeryToken()
                                                         }
                                                     </li>
+                                                    <li>
+                                                        <a href="javascript:$('#frmDelete').submit();">删除这场比赛</a>
+                                                        @using (Html.BeginForm("Delete", "Contest", new { id = Model.Name }, FormMethod.Post, new
+                                                        {
+                                                            id = "frmDelete",
+                                                            style = "display:none;",
+                                                            onsubmit = "return confirm('确定删除这场比赛吗？');"
+                                                        }))
+                                                        {
+                                                            @Html.AntiForgeryToken()
+                                                        }
+                                                    </li>
                                                 </ul>
                                             </li>
                                             
