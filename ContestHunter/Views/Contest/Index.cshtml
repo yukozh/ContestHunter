@@ -6,20 +6,22 @@
 }
 
 <style type="text/css">
-    .table {
+    .table
+    {
         background-color: white;
         color: black;
         margin: 0px;
     }
 
         .table th,
-        .table td {
+        .table td
+        {
             text-align: center;
             vertical-align: middle;
-            
         }
 
-            .table td h6 {
+            .table td h6
+            {
                 font-weight: normal;
             }
 </style>
@@ -154,7 +156,9 @@
     {
     <div class="span12">
         <div class="alert alert-info" style="margin-top: 20px; padding: 0px">
-            <h5 style="margin: 0px 5px">计划中的比赛</h5>
+            <h5 style="margin: 0px 5px">计划中的比赛
+                @Html.ActionLink("我要申办比赛", "Add", null, new { @class = "btn btn-danger btn-small", style = "float: right; font-weight:normal; padding:1px 5px;" })
+            </h5>
             <table class="table table-bordered table-striped table-hover">
                 <colgroup>
                     <col style="width: 450px">
@@ -277,7 +281,12 @@
     {
     <div class="span12">
         <div class="alert" style="margin-top: 20px; padding: 0px">
-            <h5 style="margin: 0px 5px">已举办的比赛</h5>
+            <h5 style="margin: 0px 5px">已举办的比赛
+                @if(Model.Pending.Count==0)
+                {
+                    @Html.ActionLink("我要申办比赛", "Add", null, new { @class = "btn btn-danger btn-small", style = "float: right; font-weight:normal; padding:1px 5px;" })
+                }
+            </h5>
             <table class="table table-bordered table-striped table-hover">
                 <colgroup>
                     <col style="width: 450px">
