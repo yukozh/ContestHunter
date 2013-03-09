@@ -424,7 +424,7 @@ namespace ContestHunter.Models.Domain
         {
             var con = Domain.Contest.ByName(Contest);
             if (con.RelativeNow <= con.RelativeEndTime && !Domain.User.CurrentUser.IsAdmin
-                && !con.Owner.Contains(Domain.User.CurrentUserName))
+                && !con.Owner.Contains(Domain.User.CurrentUserName) && (null == Domain.User.CurrentUser || User!=Domain.User.CurrentUserName))
                 return true;
             return false;
 
