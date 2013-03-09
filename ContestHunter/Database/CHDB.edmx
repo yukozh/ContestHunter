@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ContestHunterDbgModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="ContestHunterDbgModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ContestHunterDbgModelStoreContainer">
           <EntitySet Name="CONTEST" EntityType="ContestHunterDbgModel.Store.CONTEST" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterDbgModel.Store.CONTEST_ATTEND" store:Type="Tables" Schema="dbo" />
@@ -487,8 +487,11 @@
           <Parameter Name="Status" Type="int" Mode="In" />
           <Parameter Name="Language" Type="int" Mode="In" />
           <Parameter Name="Order" Type="int" Mode="In" />
+          <Parameter Name="Privillege" Type="bit" Mode="In" />
+          <Parameter Name="UID" Type="uniqueidentifier" Mode="In" />
         </Function>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ContestHunterDbgModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -558,7 +561,23 @@
             <End Role="GROUP" EntitySet="GROUPs" />
             <End Role="USER" EntitySet="USERs" />
           </AssociationSet>
+          <FunctionImport Name="GetACMStanding" ReturnType="Collection(ContestHunterDbgModel.GetACMStanding_Result)">
+            <Parameter Name="ConID" Mode="In" Type="Guid" />
+            <Parameter Name="RelativeNow" Mode="In" Type="DateTime" />
+            <Parameter Name="Skip" Mode="In" Type="Int32" />
+            <Parameter Name="Top" Mode="In" Type="Int32" />
+            <Parameter Name="HasVirtual" Mode="In" Type="Boolean" />
+            <Parameter Name="HasNotSubmit" Mode="In" Type="Boolean" />
+          </FunctionImport>
           <FunctionImport Name="GetCFStanding" ReturnType="Collection(ContestHunterDbgModel.GetCFStanding_Result)">
+            <Parameter Name="ConID" Mode="In" Type="Guid" />
+            <Parameter Name="RelativeNow" Mode="In" Type="DateTime" />
+            <Parameter Name="Skip" Mode="In" Type="Int32" />
+            <Parameter Name="Top" Mode="In" Type="Int32" />
+            <Parameter Name="HasVirtual" Mode="In" Type="Boolean" />
+            <Parameter Name="HasNotSubmit" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="GetOIStanding" ReturnType="Collection(ContestHunterDbgModel.GetOIStanding_Result)">
             <Parameter Name="ConID" Mode="In" Type="Guid" />
             <Parameter Name="RelativeNow" Mode="In" Type="DateTime" />
             <Parameter Name="Skip" Mode="In" Type="Int32" />
@@ -575,22 +594,8 @@
             <Parameter Name="Status" Mode="In" Type="Int32" />
             <Parameter Name="Language" Mode="In" Type="Int32" />
             <Parameter Name="Order" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="GetOIStanding" ReturnType="Collection(ContestHunterDbgModel.GetOIStanding_Result)">
-            <Parameter Name="ConID" Mode="In" Type="Guid" />
-            <Parameter Name="RelativeNow" Mode="In" Type="DateTime" />
-            <Parameter Name="Skip" Mode="In" Type="Int32" />
-            <Parameter Name="Top" Mode="In" Type="Int32" />
-            <Parameter Name="HasVirtual" Mode="In" Type="Boolean" />
-            <Parameter Name="HasNotSubmit" Mode="In" Type="Boolean" />
-          </FunctionImport>
-          <FunctionImport Name="GetACMStanding" ReturnType="Collection(ContestHunterDbgModel.GetACMStanding_Result)">
-            <Parameter Name="ConID" Mode="In" Type="Guid" />
-            <Parameter Name="RelativeNow" Mode="In" Type="DateTime" />
-            <Parameter Name="Skip" Mode="In" Type="Int32" />
-            <Parameter Name="Top" Mode="In" Type="Int32" />
-            <Parameter Name="HasVirtual" Mode="In" Type="Boolean" />
-            <Parameter Name="HasNotSubmit" Mode="In" Type="Boolean" />
+            <Parameter Name="Privillege" Mode="In" Type="Boolean" />
+            <Parameter Name="UID" Mode="In" Type="Guid" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="CONTEST">
@@ -894,6 +899,13 @@
           <End Role="GROUP" Type="ContestHunterDbgModel.GROUP" Multiplicity="*" />
           <End Role="USER" Type="ContestHunterDbgModel.USER" Multiplicity="*" />
         </Association>
+        <ComplexType Name="GetACMStanding_Result">
+          <Property Type="String" Name="User" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="Type" Nullable="true" />
+          <Property Type="Int32" Name="ACTime" Nullable="true" />
+          <Property Type="Boolean" Name="IsAC" Nullable="true" />
+          <Property Type="Int32" Name="FailedTimes" Nullable="true" />
+        </ComplexType>
         <ComplexType Name="GetCFStanding_Result">
           <Property Type="String" Name="User" Nullable="true" MaxLength="20" />
           <Property Type="Int32" Name="Type" Nullable="true" />
@@ -904,31 +916,24 @@
           <Property Type="Int32" Name="FailedHunt" Nullable="true" />
           <Property Type="Int32" Name="SuccessfulHunt" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="RecordList_Result">
-          <Property Type="Guid" Name="ID" Nullable="false" />
-          <Property Type="Int32" Name="Status" Nullable="false" />
-          <Property Type="Int32" Name="Score" Nullable="true" />
-          <Property Type="Int64" Name="MemoryUsed" Nullable="true" />
-          <Property Type="Int32" Name="ExecutedTime" Nullable="true" />
-          <Property Type="Int32" Name="CodeLength" Nullable="false" />
-          <Property Type="String" Name="Contest" Nullable="true" MaxLength="50" />
-          <Property Type="Int32" Name="Language" Nullable="false" />
-          <Property Type="String" Name="Problem" Nullable="true" MaxLength="50" />
-          <Property Type="DateTime" Name="SubmitTime" Nullable="false" Precision="23" />
-          <Property Type="String" Name="User" Nullable="true" MaxLength="20" />
-        </ComplexType>
         <ComplexType Name="GetOIStanding_Result">
           <Property Type="String" Name="User" Nullable="true" MaxLength="20" />
           <Property Type="Int32" Name="Type" Nullable="true" />
           <Property Type="Int32" Name="Score" Nullable="true" />
           <Property Type="Int32" Name="ExecuteTime" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="GetACMStanding_Result">
-          <Property Type="String" Name="User" Nullable="true" MaxLength="20" />
-          <Property Type="Int32" Name="Type" Nullable="true" />
-          <Property Type="Int32" Name="ACTime" Nullable="true" />
-          <Property Type="Boolean" Name="IsAC" Nullable="true" />
-          <Property Type="Int32" Name="FailedTimes" Nullable="true" />
+        <ComplexType Name="RecordList_Result">
+          <Property Type="Guid" Name="ID" Nullable="true" />
+          <Property Type="Int32" Name="Status" Nullable="true" />
+          <Property Type="Int32" Name="Score" Nullable="true" />
+          <Property Type="Int64" Name="MemoryUsed" Nullable="true" />
+          <Property Type="Int32" Name="ExecutedTime" Nullable="true" />
+          <Property Type="Int32" Name="CodeLength" Nullable="true" />
+          <Property Type="String" Name="Contest" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Language" Nullable="true" />
+          <Property Type="String" Name="Problem" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="SubmitTime" Nullable="true" Precision="23" />
+          <Property Type="String" Name="User" Nullable="true" MaxLength="50" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1084,6 +1089,17 @@
               <ScalarProperty Name="ID" ColumnName="User" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="GetACMStanding" FunctionName="ContestHunterDbgModel.Store.GetACMStanding">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ContestHunterDbgModel.GetACMStanding_Result">
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ACTime" ColumnName="ACTime" />
+                <ScalarProperty Name="IsAC" ColumnName="IsAC" />
+                <ScalarProperty Name="FailedTimes" ColumnName="FailedTimes" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetCFStanding" FunctionName="ContestHunterDbgModel.Store.GetCFStanding">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ContestHunterDbgModel.GetCFStanding_Result">
@@ -1095,6 +1111,16 @@
                 <ScalarProperty Name="Rating" ColumnName="Rating" />
                 <ScalarProperty Name="FailedHunt" ColumnName="FailedHunt" />
                 <ScalarProperty Name="SuccessfulHunt" ColumnName="SuccessfulHunt" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetOIStanding" FunctionName="ContestHunterDbgModel.Store.GetOIStanding">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ContestHunterDbgModel.GetOIStanding_Result">
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="ExecuteTime" ColumnName="ExecuteTime" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -1112,27 +1138,6 @@
                 <ScalarProperty Name="Problem" ColumnName="Problem" />
                 <ScalarProperty Name="SubmitTime" ColumnName="SubmitTime" />
                 <ScalarProperty Name="User" ColumnName="User" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetOIStanding" FunctionName="ContestHunterDbgModel.Store.GetOIStanding">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ContestHunterDbgModel.GetOIStanding_Result">
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Score" ColumnName="Score" />
-                <ScalarProperty Name="ExecuteTime" ColumnName="ExecuteTime" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetACMStanding" FunctionName="ContestHunterDbgModel.Store.GetACMStanding">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ContestHunterDbgModel.GetACMStanding_Result">
-                <ScalarProperty Name="User" ColumnName="User" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="ACTime" ColumnName="ACTime" />
-                <ScalarProperty Name="IsAC" ColumnName="IsAC" />
-                <ScalarProperty Name="FailedTimes" ColumnName="FailedTimes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

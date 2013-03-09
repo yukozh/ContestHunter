@@ -71,70 +71,35 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         public static List<Record> Select(int skip, int top, string user, string problem, string contest, LanguageType? language, StatusType? status, OrderByType order)
         {
+            bool privillege;
+            Guid uid;
+            if (null == Domain.User.CurrentUser)
+            {
+                uid = Guid.Empty;
+                privillege = false;
+            }
+            else
+            {
+                uid = Domain.User.CurrentUser.ID;
+                privillege = Domain.User.CurrentUser.IsAdmin;
+            }
             using (var db = new CHDB())
             {
-                var tmp = db.RecordList(top, skip, user, problem, contest, (int?)status, (int?)language, (int?)order).ToArray();
-                List<Record> Ret = new List<Record>();
-                foreach (RecordList_Result r in tmp)
-                {
-                    var nrec = new Record()
-                    {
-                        ID = r.ID,
-                        CodeLength = r.CodeLength,
-                        Contest = r.Contest,
-                        Language = (LanguageType)r.Language,
-                        Problem = r.Problem,
-                        SubmitTime = r.SubmitTime,
-                        User = r.User
-                    };
-                    var con = Domain.Contest.ByName(r.Contest);
-                    if (DateTime.Now <= con.RelativeEndTime && ( null==Domain.User.CurrentUser || (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName))))
-                    {
-                        switch (con.Type)
+                return (from r in db.RecordList(top, skip, user, problem, contest, (int?)status, (int?)language, (int?)order, privillege, uid)
+                        select new Record
                         {
-                            case Domain.Contest.ContestType.CF:
-                                nrec.Status = (StatusType)r.Status;
-                                nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
-                                nrec.Memory = r.MemoryUsed;
-                                break;
-                            case Domain.Contest.ContestType.ACM:
-                                nrec.Status = (StatusType)r.Status;
-                                nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
-                                nrec.Memory = r.MemoryUsed;
-                                break;
-                            case Domain.Contest.ContestType.OI:
-                                if (r.Status==(int)StatusType.Compile_Error)
-                                {
-                                    nrec.Status = StatusType.Compile_Error;
-                                }
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (con.Type)
-                        {
-                            case Domain.Contest.ContestType.CF:
-                                nrec.Status = (StatusType)r.Status;
-                                nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
-                                nrec.Memory = r.MemoryUsed;
-                                break;
-                            case Domain.Contest.ContestType.ACM:
-                                nrec.Status = (StatusType)r.Status;
-                                nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
-                                nrec.Memory = r.MemoryUsed;
-                                break;
-                            case Domain.Contest.ContestType.OI:
-                                nrec.Score = r.Score;
-                                nrec.Status = (StatusType)r.Status;
-                                nrec.ExecutedTime = r.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)r.ExecutedTime);
-                                nrec.Memory = r.MemoryUsed;
-                                break;
-                        }
-                    }
-                    Ret.Add(nrec);
-                }
-                return Ret;
+                            CodeLength = (int)r.CodeLength,
+                            Contest = r.Contest,
+                            ExecutedTime = null != r.ExecutedTime ? (TimeSpan?)TimeSpan.FromMilliseconds((int)r.ExecutedTime) : null,
+                            ID = (Guid)r.ID,
+                            Language = (LanguageType)r.Language,
+                            Memory = r.MemoryUsed,
+                            Problem = r.Problem,
+                            Score = r.Score,
+                            Status = (StatusType)r.Status,
+                            SubmitTime = (DateTime)r.SubmitTime,
+                            User = r.User
+                        }).ToList();
             }
         }
 

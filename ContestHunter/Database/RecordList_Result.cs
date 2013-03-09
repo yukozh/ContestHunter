@@ -13,16 +13,16 @@ namespace ContestHunter.Database
     
     public partial class RecordList_Result
     {
-        public System.Guid ID { get; set; }
-        public int Status { get; set; }
+        public Nullable<System.Guid> ID { get; set; }
+        public Nullable<int> Status { get; set; }
         public Nullable<int> Score { get; set; }
         public Nullable<long> MemoryUsed { get; set; }
         public Nullable<int> ExecutedTime { get; set; }
-        public int CodeLength { get; set; }
+        public Nullable<int> CodeLength { get; set; }
         public string Contest { get; set; }
-        public int Language { get; set; }
+        public Nullable<int> Language { get; set; }
         public string Problem { get; set; }
-        public System.DateTime SubmitTime { get; set; }
+        public Nullable<System.DateTime> SubmitTime { get; set; }
         public string User { get; set; }
     }
 }

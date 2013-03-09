@@ -38,6 +38,35 @@ namespace ContestHunter.Database
         public DbSet<TESTDATA> TESTDATAs { get; set; }
         public DbSet<USER> USERs { get; set; }
     
+        public virtual ObjectResult<GetACMStanding_Result> GetACMStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
+        {
+            var conIDParameter = conID.HasValue ?
+                new ObjectParameter("ConID", conID) :
+                new ObjectParameter("ConID", typeof(System.Guid));
+    
+            var relativeNowParameter = relativeNow.HasValue ?
+                new ObjectParameter("RelativeNow", relativeNow) :
+                new ObjectParameter("RelativeNow", typeof(System.DateTime));
+    
+            var skipParameter = skip.HasValue ?
+                new ObjectParameter("Skip", skip) :
+                new ObjectParameter("Skip", typeof(int));
+    
+            var topParameter = top.HasValue ?
+                new ObjectParameter("Top", top) :
+                new ObjectParameter("Top", typeof(int));
+    
+            var hasVirtualParameter = hasVirtual.HasValue ?
+                new ObjectParameter("HasVirtual", hasVirtual) :
+                new ObjectParameter("HasVirtual", typeof(bool));
+    
+            var hasNotSubmitParameter = hasNotSubmit.HasValue ?
+                new ObjectParameter("HasNotSubmit", hasNotSubmit) :
+                new ObjectParameter("HasNotSubmit", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetACMStanding_Result>("GetACMStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
+        }
+    
         public virtual ObjectResult<GetCFStanding_Result> GetCFStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
         {
             var conIDParameter = conID.HasValue ?
@@ -67,7 +96,36 @@ namespace ContestHunter.Database
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCFStanding_Result>("GetCFStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
         }
     
-        public virtual ObjectResult<RecordList_Result> RecordList(Nullable<int> top, Nullable<int> skip, string name, string problem, string contest, Nullable<int> status, Nullable<int> language, Nullable<int> order)
+        public virtual ObjectResult<GetOIStanding_Result> GetOIStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
+        {
+            var conIDParameter = conID.HasValue ?
+                new ObjectParameter("ConID", conID) :
+                new ObjectParameter("ConID", typeof(System.Guid));
+    
+            var relativeNowParameter = relativeNow.HasValue ?
+                new ObjectParameter("RelativeNow", relativeNow) :
+                new ObjectParameter("RelativeNow", typeof(System.DateTime));
+    
+            var skipParameter = skip.HasValue ?
+                new ObjectParameter("Skip", skip) :
+                new ObjectParameter("Skip", typeof(int));
+    
+            var topParameter = top.HasValue ?
+                new ObjectParameter("Top", top) :
+                new ObjectParameter("Top", typeof(int));
+    
+            var hasVirtualParameter = hasVirtual.HasValue ?
+                new ObjectParameter("HasVirtual", hasVirtual) :
+                new ObjectParameter("HasVirtual", typeof(bool));
+    
+            var hasNotSubmitParameter = hasNotSubmit.HasValue ?
+                new ObjectParameter("HasNotSubmit", hasNotSubmit) :
+                new ObjectParameter("HasNotSubmit", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOIStanding_Result>("GetOIStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
+        }
+    
+        public virtual ObjectResult<RecordList_Result> RecordList(Nullable<int> top, Nullable<int> skip, string name, string problem, string contest, Nullable<int> status, Nullable<int> language, Nullable<int> order, Nullable<bool> privillege, Nullable<System.Guid> uID)
         {
             var topParameter = top.HasValue ?
                 new ObjectParameter("Top", top) :
@@ -101,65 +159,15 @@ namespace ContestHunter.Database
                 new ObjectParameter("Order", order) :
                 new ObjectParameter("Order", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<RecordList_Result>("RecordList", topParameter, skipParameter, nameParameter, problemParameter, contestParameter, statusParameter, languageParameter, orderParameter);
-        }
+            var privillegeParameter = privillege.HasValue ?
+                new ObjectParameter("Privillege", privillege) :
+                new ObjectParameter("Privillege", typeof(bool));
     
-        public virtual ObjectResult<GetOIStanding_Result> GetOIStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
-        {
-            var conIDParameter = conID.HasValue ?
-                new ObjectParameter("ConID", conID) :
-                new ObjectParameter("ConID", typeof(System.Guid));
+            var uIDParameter = uID.HasValue ?
+                new ObjectParameter("UID", uID) :
+                new ObjectParameter("UID", typeof(System.Guid));
     
-            var relativeNowParameter = relativeNow.HasValue ?
-                new ObjectParameter("RelativeNow", relativeNow) :
-                new ObjectParameter("RelativeNow", typeof(System.DateTime));
-    
-            var skipParameter = skip.HasValue ?
-                new ObjectParameter("Skip", skip) :
-                new ObjectParameter("Skip", typeof(int));
-    
-            var topParameter = top.HasValue ?
-                new ObjectParameter("Top", top) :
-                new ObjectParameter("Top", typeof(int));
-    
-            var hasVirtualParameter = hasVirtual.HasValue ?
-                new ObjectParameter("HasVirtual", hasVirtual) :
-                new ObjectParameter("HasVirtual", typeof(bool));
-    
-            var hasNotSubmitParameter = hasNotSubmit.HasValue ?
-                new ObjectParameter("HasNotSubmit", hasNotSubmit) :
-                new ObjectParameter("HasNotSubmit", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOIStanding_Result>("GetOIStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
-        }
-    
-        public virtual ObjectResult<GetACMStanding_Result> GetACMStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
-        {
-            var conIDParameter = conID.HasValue ?
-                new ObjectParameter("ConID", conID) :
-                new ObjectParameter("ConID", typeof(System.Guid));
-    
-            var relativeNowParameter = relativeNow.HasValue ?
-                new ObjectParameter("RelativeNow", relativeNow) :
-                new ObjectParameter("RelativeNow", typeof(System.DateTime));
-    
-            var skipParameter = skip.HasValue ?
-                new ObjectParameter("Skip", skip) :
-                new ObjectParameter("Skip", typeof(int));
-    
-            var topParameter = top.HasValue ?
-                new ObjectParameter("Top", top) :
-                new ObjectParameter("Top", typeof(int));
-    
-            var hasVirtualParameter = hasVirtual.HasValue ?
-                new ObjectParameter("HasVirtual", hasVirtual) :
-                new ObjectParameter("HasVirtual", typeof(bool));
-    
-            var hasNotSubmitParameter = hasNotSubmit.HasValue ?
-                new ObjectParameter("HasNotSubmit", hasNotSubmit) :
-                new ObjectParameter("HasNotSubmit", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetACMStanding_Result>("GetACMStanding", conIDParameter, relativeNowParameter, skipParameter, topParameter, hasVirtualParameter, hasNotSubmitParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<RecordList_Result>("RecordList", topParameter, skipParameter, nameParameter, problemParameter, contestParameter, statusParameter, languageParameter, orderParameter, privillegeParameter, uIDParameter);
         }
     }
 }

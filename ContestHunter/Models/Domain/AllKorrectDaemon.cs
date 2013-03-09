@@ -238,7 +238,7 @@ namespace ContestHunter.Models.Domain
                         {
                             rec.Status = (int)Record.StatusType.Accept;
                         }
-                        rec.Score = (0 != totalTests ? passedTests / totalTests * 100 : 0);
+                        rec.Score = (0 != totalTests ? passedTests * 100 / totalTests : 0);
                         Detail.Append("</div>");
                         return true;
                     }
