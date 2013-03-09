@@ -379,7 +379,7 @@ namespace ContestHunter.Controllers
             return View(model);
         }
 
-        bool FoundEntry(string filename, byte[] bytes, Dictionary<int, byte[]> inputFiles, Dictionary<int, byte[]> outputFiles)
+        bool DealEntry(string filename, byte[] bytes, Dictionary<int, byte[]> inputFiles, Dictionary<int, byte[]> outputFiles)
         {
             string name = Path.GetFileName(filename);
             Match match = Regex.Match(name, @"(\d+)\.in(put)?$", RegexOptions.IgnoreCase);
@@ -439,7 +439,7 @@ namespace ContestHunter.Controllers
                             stream.CopyTo(mem);
                             bytes = mem.ToArray();
                         }
-                        if (!FoundEntry(entry.Name, bytes, inputFiles, outputFiles))
+                        if (!DealEntry(entry.Name, bytes, inputFiles, outputFiles))
                         {
                             return null;
                         }

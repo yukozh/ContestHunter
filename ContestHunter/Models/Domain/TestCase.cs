@@ -12,10 +12,13 @@ namespace ContestHunter.Models.Domain
         public Guid ID;
         public byte[] _Input;
         public byte[] _Data;
+        bool inputFromSetter;
+        bool dataFromSetter;
         public byte[] Input
         {
             get
             {
+                if (inputFromSetter) return _Input;
                 if (!canGetData)
                     return null;
                 using (var db = new CHDB())
@@ -27,6 +30,7 @@ namespace ContestHunter.Models.Domain
             }
             set
             {
+                inputFromSetter = true;
                 _Input = value;
             }
         }
@@ -34,6 +38,7 @@ namespace ContestHunter.Models.Domain
         {
             get
             {
+                if (dataFromSetter) return _Data;
                 if (!canGetData)
                     return null;
                 using (var db = new CHDB())
@@ -45,6 +50,7 @@ namespace ContestHunter.Models.Domain
             }
             set
             {
+                dataFromSetter = true;
                 _Data = value;
             }
         }

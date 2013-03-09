@@ -99,7 +99,7 @@
                     {
                         <tr>
                             <td><b>用时</b></td>
-                            <td><span style="color: orange"><b>@Model.ExecutedTime.Value.Milliseconds</b></span><span style="color: blue"> ms</span></td>
+                            <td><span style="color: orange"><b>@Model.ExecutedTime.Value.TotalMilliseconds</b></span><span style="color: blue"> ms</span></td>
                         </tr>
                     }
                     @if (Model.Memory.HasValue)
