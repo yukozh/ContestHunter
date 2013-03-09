@@ -76,6 +76,19 @@
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Text</span>
                         </td>
                     </tr>
+                    @if (USER.ByName(USER.CurrentUserName).IsAdmin())
+                    {
+                        <tr>
+                            <th>操作</th>
+                            <td>
+                                @using (Html.BeginForm("RejudgeHunt", "Record", new { id = Model.ID }, FormMethod.Post, new { style="margin:0"}))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="submit" class="btn btn-warning btn-small" value="重测" />
+                                }
+                            </td>
+                        </tr>
+                    }
                     <tr>
                         <th>得分</th>
                         <td>
@@ -121,17 +134,6 @@
             </table>
         </div>
         <div class="alert" style="float: right; width: 550px">
-            <h5 style="color: red; float: right; text-align: right">v-Judge-Kernel(for Windows)<br />
-                AllKorrect(for Linux)<br />
-                @if (USER.ByName(USER.CurrentUserName).IsAdmin())
-                {
-                    using (Html.BeginForm("RejudgeHunt", "Record", new { id = Model.ID }, FormMethod.Post))
-                    {
-                    @Html.AntiForgeryToken()
-                    <input type="submit" class="btn btn-warning btn-small" value="重测" />
-                    }
-                }
-            </h5>
             @Html.Sanitized(Model.Detail)
         </div>
         <div style="clear: both; padding: 5px">
