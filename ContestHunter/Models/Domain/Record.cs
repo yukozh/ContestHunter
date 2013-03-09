@@ -100,8 +100,6 @@ namespace ContestHunter.Models.Domain
                             SubmitTime = (DateTime)r.SubmitTime,
                             User = r.User
                         }).ToList();
-                    if (DateTime.Now <= con.RelativeEndTime && (null == Domain.User.CurrentUser || (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName))))
-                                if (r.Status == (int)StatusType.Compile_Error)
             }
         }
 
