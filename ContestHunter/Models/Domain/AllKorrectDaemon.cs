@@ -73,14 +73,12 @@ namespace ContestHunter.Models.Domain
 
         static List<AKInfo> aks = new List<AKInfo>()
         {
-            /*
             new AKInfo()
             {
-                desp="sx0",
+                desp="Alpaca",
                 ip="222.66.130.13",
                 port=10010
             },
-             * */
             new AKInfo()
             {
                 desp="sx1",
@@ -275,7 +273,6 @@ namespace ContestHunter.Models.Domain
             finally
             {
                 rec.Detail = Detail.ToString();
-                db.SaveChanges();
             }
         }
 
@@ -442,7 +439,6 @@ namespace ContestHunter.Models.Domain
             finally
             {
                 rec.Detail = Detail.ToString();
-                db.SaveChanges();
             }
         }
 
@@ -461,6 +457,7 @@ namespace ContestHunter.Models.Domain
                                 where h.Status == (int)Hunt.StatusType.Pending
                                 select h.ID).Take(aks.Count()).ToList();
                 huntlist.AddRange(Enumerable.Repeat(Guid.Empty, aks.Count() - huntlist.Count()));
+                Shuffle(huntlist);
                 flg |= huntlist.Count > 0;
                 TestInfo[] tinf=new TestInfo[aks.Count()];
                 for(int i=0;i<tinf.Length;i++)
@@ -472,7 +469,6 @@ namespace ContestHunter.Models.Domain
                         record = reclist[i]
                     };
                 }
-                Shuffle(huntlist);
                 Parallel.ForEach(tinf, (TestInfo inf) =>
                     {
                         try
