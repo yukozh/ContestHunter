@@ -184,7 +184,7 @@ namespace ContestHunter.Models.Domain
                 }
                 db.SaveChanges();
             }
-            return 300000;
+            return 60000;
         }
     }
 }
