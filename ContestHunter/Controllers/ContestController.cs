@@ -167,6 +167,10 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "比赛已经开始，不可取消参赛" });
             }
+            catch (VirtualStartTooEarlyException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "模拟比赛开始时间不得早于当前时间" });
+            }
 
             return RedirectToAction("Show", new { id = id });
         }
