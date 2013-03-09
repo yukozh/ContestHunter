@@ -25,7 +25,7 @@
                 font-weight: normal;
             }
 </style>
-@Html.ActionLink("我要申办比赛", "Add", null, new { @class = "btn btn-primary", style = "float: right; margin:10px;" })
+@Html.ActionLink("我要申办比赛", "Add", null, new { @class = "btn btn-primary", style = "float: right; margin-top:10px;" })
 @using (Html.BeginForm("Index", "Contest", null, FormMethod.Get, new { id = "frmList" }))
 {
     if (Model.Testing.Count > 0)
