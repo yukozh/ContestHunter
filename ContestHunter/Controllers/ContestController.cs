@@ -86,6 +86,10 @@ namespace ContestHunter.Controllers
             {
                 return RedirectToAction("Error", "Shared", new { msg = "比赛尚未结束，不能查看排名" });
             }
+            catch (NotAttendedContestException)
+            {
+                return RedirectToAction("Error", "Shared", new { msg = "您没有参与比赛，不能查看排名" });
+            }
 
             return View(model);
         }
