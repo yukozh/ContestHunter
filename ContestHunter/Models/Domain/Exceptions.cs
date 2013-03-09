@@ -124,4 +124,8 @@ namespace ContestHunter.Models.Domain
     public class HuntSelfException : Exception
     {
     }
+
+    public class VirtualStartTooEarlyException : Exception
+    {
+    }
 }

@@ -406,6 +406,7 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="UserNotLoginException"></exception>
         /// <exception cref="AlreadyAttendedContestException"></exception>
         /// <exception cref="ContestNotStartedException"></exception>
+        /// <exception cref="VirtualStartTooEarlyException"></exception>
         public void VirtualAttend(DateTime startTime)
         {
             if (null == User.CurrentUser)
@@ -414,6 +415,8 @@ namespace ContestHunter.Models.Domain
                 throw new AlreadyAttendedContestException();
             if (DateTime.Now <= RelativeStartTime)
                 throw new ContestNotStartedException();
+            if (DateTime.Now <= startTime)
+                throw new VirtualStartTooEarlyException();
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs

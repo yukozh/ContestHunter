@@ -11,21 +11,30 @@ namespace ContestHunter.Models.Domain
         public static Dictionary<string, Guid> HuntLst = new Dictionary<string, Guid>();
         void CalcRating(CONTEST con, CHDB db)
         {
-            var contest = Contest.ByName(con.Name);
-            string[] Rank;
+            List<string> Rank = new List<string>();
             List<int> Rating=new List<int>();
             double[] exp;
-            switch (contest.Type)
+            int probs;
+            switch ((Contest.ContestType)con.Type)
             {
                 case Contest.ContestType.OI:
-                    Rank = contest.GetOIStanding(0, contest.AttendedUsersCount(), false, false).Select(x => x.User).ToArray();
+                    var tmp_oi = db.GetOIStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).Select(x=>x.User).ToArray();
+                    probs=con.PROBLEMs.Count;
+                    for (int i = 0; i < tmp_oi.Length; i += probs)
+                        Rank.Add(tmp_oi[i]);
                     break;
                 case Contest.ContestType.CF:
-                    Rank = contest.GetCFStanding(0, contest.AttendedUsersCount(), false, false).Select(x => x.User).ToArray();
-                    break;
+                    var tmp_cf = db.GetCFStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).Select(x => x.User).ToArray();
+                    probs = con.PROBLEMs.Count;
+                    for (int i = 0; i < tmp_cf.Length; i += probs)
+                        Rank.Add(tmp_cf[i]);
+                        break;
                 case Contest.ContestType.ACM:
-                    Rank = contest.GetACMStanding(0, contest.AttendedUsersCount(), false, false).Select(x => x.User).ToArray();
-                    break;
+                    var tmp_acm = db.GetACMStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).Select(x => x.User).ToArray();
+                    probs = con.PROBLEMs.Count;
+                    for (int i = 0; i < tmp_acm.Length; i += probs)
+                        Rank.Add(tmp_acm[i]);
+                        break;
                 default:
                     throw new NotImplementedException();
             }
@@ -37,7 +46,7 @@ namespace ContestHunter.Models.Domain
                            select r.Rating1).FirstOrDefault();
                 Rating.Add(Rat == 0 ? 1500 : Rat);
             }
-            int n = Rank.Length;
+            int n = Rank.Count;
             if (n < 1)
                 return;
             int m = (n + 1) / 2;
