@@ -125,6 +125,12 @@
                         @Html.ValidationMessageFor(x => x.File)
                         @Html.DescriptionFor(x => x.File)
                     </div>
+                    <div style="text-align:center">
+                        <br/>请将所有数据，压缩为一个<b>.zip</b>文件。压缩包大小不要超过20MB，如果数据较大可以分批上传。<br/>
+                        所有输入文件名应类似 <b>Bala1.in</b>（或.input），所有输出文件名应类似 <b>Bala1.out</b>（或.ou .output）。<br/>
+                        输入文件和输出文件应按编号一一对应，不要在压缩包内包含其他无关文件。<br/>
+                        如果上传后测试数据列表中CRC32值均显示00000000，点击"上一步"再点击"下一步"重新进入本页面即可读取。<br/><br/>
+                    </div>
                     <input type="submit" class="btn btn-warning" value="开始上传" onclick="$('#Action').val('Upload');" />
                 </div>
             </fieldset>
