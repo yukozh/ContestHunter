@@ -73,12 +73,14 @@ namespace ContestHunter.Models.Domain
 
         static List<AKInfo> aks = new List<AKInfo>()
         {
+            /*
             new AKInfo()
             {
                 desp="CH-Alpaca",
                 ip="222.66.130.13",
                 port=10010
             },
+             * */
             new AKInfo()
             {
                 desp="CH-Ycat",
