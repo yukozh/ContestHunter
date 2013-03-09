@@ -119,6 +119,25 @@ namespace ContestHunter.Models.Domain
                                 rec.Status = (int)Record.StatusType.Pending;
                             }
                             con.Status = (int)Contest.StatusType.FinalTesting;
+                            string[] probs = (from p in con.PROBLEMs
+                                              select p.ID.ToString()).ToArray();
+                            lock (HuntLst)
+                            {
+                                foreach (string key in HuntLst.Keys.ToArray())
+                                {
+                                    bool flg=false;
+                                    foreach (string prob in probs)
+                                        if (key.EndsWith(prob))
+                                        {
+                                            flg = true;
+                                            break;
+                                        }
+                                    if (flg)
+                                    {
+                                        HuntLst.Remove(key);
+                                    }
+                                }
+                            }
                         }
                         else
                         {

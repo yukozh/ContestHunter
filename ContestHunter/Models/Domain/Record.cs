@@ -96,7 +96,7 @@ namespace ContestHunter.Models.Domain
                             Memory = r.MemoryUsed,
                             Problem = r.Problem,
                             Score = r.Score,
-                            Status = (StatusType)r.Status,
+                            Status = (StatusType?)r.Status,
                             SubmitTime = (DateTime)r.SubmitTime,
                             User = r.User
                         }).ToList();
