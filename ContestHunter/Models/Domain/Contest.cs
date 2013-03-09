@@ -786,8 +786,9 @@ namespace ContestHunter.Models.Domain
                         int j = i + jj;
                         desp.Add(new OIStanding.DescriptionClass()
                         {
-                            ExecTime=(int)lst[j].ExecuteTime,
-                            Score=(int)lst[j].Score
+                            ExecTime = lst[j].ExecuteTime ?? 0,
+                            Score = lst[j].Score ?? 0,
+                            IsScored = null != lst[j].Score
                         });
                     }
                     ret.Add(new OIStanding()

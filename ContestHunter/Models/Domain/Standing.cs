@@ -46,6 +46,7 @@ namespace ContestHunter.Models.Domain
         {
             public int Score;
             public int ExecTime;
+            public bool IsScored;
         }
         public List<DescriptionClass> desp;
         public int TotalScore;
