@@ -100,6 +100,8 @@ namespace ContestHunter.Models.Domain
                             SubmitTime = (DateTime)r.SubmitTime,
                             User = r.User
                         }).ToList();
+                    if (DateTime.Now <= con.RelativeEndTime && (null == Domain.User.CurrentUser || (!Domain.User.CurrentUser.IsAdmin && !con.Owner.Contains(Domain.User.CurrentUserName))))
+                                if (r.Status == (int)StatusType.Compile_Error)
             }
         }
 
@@ -172,6 +174,7 @@ namespace ContestHunter.Models.Domain
                                 Code = isAttend ? result.Code : null,
                                 CodeLength = result.CodeLength,
                                 Contest = result.PROBLEM1.CONTEST1.Name,
+                                Detail = result.Detail,
                                 ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
                                 Language = (LanguageType)result.Language,
                                 Memory = result.MemoryUsed,
@@ -183,18 +186,41 @@ namespace ContestHunter.Models.Domain
                         case Domain.Contest.ContestType.OI:
                             if (result.USER1.Name != Domain.User.CurrentUser.name && isDuring)
                                 throw new ContestNotEndedException();
-                            return new Record()
+                            if (isDuring)
                             {
-                                ID = result.ID,
-                                Code = isAttend ? result.Code : null,
-                                CodeLength = result.CodeLength,
-                                Contest = result.PROBLEM1.CONTEST1.Name,
-                                Language = (LanguageType)result.Language,
-                                Problem = result.PROBLEM1.Name,
-                                SubmitTime = result.SubmitTime,
-                                User = result.USER1.Name,
-                                Detail = result.Status == (int)StatusType.Compile_Error ? result.Detail : null
-                            };
+                                return new Record()
+                                {
+                                    ID = result.ID,
+                                    Code = isAttend ? result.Code : null,
+                                    CodeLength = result.CodeLength,
+                                    Contest = result.PROBLEM1.CONTEST1.Name,
+                                    Language = (LanguageType)result.Language,
+                                    Problem = result.PROBLEM1.Name,
+                                    SubmitTime = result.SubmitTime,
+                                    User = result.USER1.Name,
+                                    Detail = (result.Status == (int)StatusType.Compile_Error ? result.Detail : null),
+                                    Status = (StatusType)result.Status == StatusType.Compile_Error ? (StatusType?)result.Status : null
+                                };
+                            }
+                            else
+                            {
+                                return new Record()
+                                {
+                                    ID = result.ID,
+                                    Code = isAttend ? result.Code : null,
+                                    CodeLength = result.CodeLength,
+                                    Contest = result.PROBLEM1.CONTEST1.Name,
+                                    Language = (LanguageType)result.Language,
+                                    Problem = result.PROBLEM1.Name,
+                                    SubmitTime = result.SubmitTime,
+                                    User = result.USER1.Name,
+                                    Status = (StatusType)result.Status,
+                                    Score = result.Score,
+                                    ExecutedTime = result.ExecutedTime == null ? null : (TimeSpan?)TimeSpan.FromMilliseconds((double)result.ExecutedTime),
+                                    Memory = result.MemoryUsed,
+                                    Detail = result.Detail
+                                };
+                            }
                         default:
                             throw new NotImplementedException();
                     }
@@ -292,19 +318,19 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="ProblemNotLockedException"></exception>
         /// <exception cref="ProblemNotPassedException"></exception>
         /// <exception cref="HuntSelfException"></exception>
-        public Guid Hunt(string Data,LanguageType Type)
+        public Guid Hunt(string Data, LanguageType Type)
         {
             using (var db = new CHDB())
             {
                 var curRecord = (from r in db.RECORDs
-                           where r.ID == ID
-                           select r).Single();
+                                 where r.ID == ID
+                                 select r).Single();
                 if (curRecord.USER1.ID == Domain.User.CurrentUser.ID)
                     throw new HuntSelfException();
                 if (curRecord.Status != (int)Record.StatusType.Accept || (from r in db.RECORDs
                                                                           where r.USER1.ID == curRecord.USER1.ID
                                                                           && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
-                                                                          && (r.Status == (int)Record.StatusType.Accept || r.Status==(int)Record.StatusType.Hacked)
+                                                                          && (r.Status == (int)Record.StatusType.Accept || r.Status == (int)Record.StatusType.Hacked)
                                                                           orderby r.VirtualSubmitTime descending
                                                                           select r).First().ID != curRecord.ID)
                     throw new RecordStatusMismatchException();
@@ -355,7 +381,7 @@ namespace ContestHunter.Models.Domain
                 if (curRecord.Status != (int)Record.StatusType.Accept || (from r in db.RECORDs
                                                                           where r.USER1.ID == curRecord.USER1.ID
                                                                           && r.PROBLEM1.ID == curRecord.PROBLEM1.ID
-                                                                          && (r.Status == (int)Record.StatusType.Accept || r.Status==(int)Record.StatusType.Hacked)
+                                                                          && (r.Status == (int)Record.StatusType.Accept || r.Status == (int)Record.StatusType.Hacked)
                                                                           orderby r.VirtualSubmitTime descending
                                                                           select r).First().ID != curRecord.ID)
                     return false;
@@ -398,12 +424,12 @@ namespace ContestHunter.Models.Domain
 
         public bool ShouldShowImage()
         {
-            var con =Domain.Contest.ByName(Contest);
+            var con = Domain.Contest.ByName(Contest);
             if (con.RelativeNow <= con.RelativeEndTime && !Domain.User.CurrentUser.IsAdmin
                 && !con.Owner.Contains(Domain.User.CurrentUserName))
                 return true;
             return false;
-                
+
         }
     }
 }
