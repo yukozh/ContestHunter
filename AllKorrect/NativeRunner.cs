@@ -17,9 +17,7 @@ namespace AllKorrect
         const int RANDOM_STRING_LENGTH = 10;
         static readonly Random RAND = new Random();
 
-        TcpClient tcp;
-        BinaryReader reader;
-        BinaryWriter writer;
+        Session session;
 
         /// <summary>
         /// 
@@ -28,10 +26,7 @@ namespace AllKorrect
         /// <param name="port">AllKorrect的端口号</param>
         public NativeRunner(string host, int port)
         {
-            tcp = new TcpClient(host, port);
-            tcp.SendTimeout = 5000;
-            reader = new BinaryReader(tcp.GetStream(), Encoding.ASCII, true);
-            writer = new BinaryWriter(tcp.GetStream(), Encoding.ASCII, true);
+            session = new Session(host, port);
         }
 
         /// <summary>
@@ -39,16 +34,13 @@ namespace AllKorrect
         /// </summary>
         public void MoveBlob2File(string blob, string file)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.MoveBlob2File,
                 OldName = blob,
                 NewName = file
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -56,16 +48,13 @@ namespace AllKorrect
         /// </summary>
         public void MoveBlob2Blob(string blob1, string blob2)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.MoveBlob2Blob,
                 OldName = blob1,
                 NewName = blob2
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -73,16 +62,13 @@ namespace AllKorrect
         /// </summary>
         public void MoveFile2File(string file1, string file2)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.MoveFile2File,
                 OldName = file1,
                 NewName = file2
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -90,16 +76,13 @@ namespace AllKorrect
         /// </summary>
         public void MoveFile2Blob(string file, string blob)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.MoveFile2Blob,
                 OldName = file,
                 NewName = blob
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -107,16 +90,13 @@ namespace AllKorrect
         /// </summary>
         public void CopyBlob2File(string blob, string file)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.CopyBlob2File,
                 OldName = blob,
                 NewName = file
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -124,16 +104,13 @@ namespace AllKorrect
         /// </summary>
         public void CopyBlob2Blob(string blob1, string blob2)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.CopyBlob2Blob,
                 OldName = blob1,
                 NewName = blob2
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -141,16 +118,13 @@ namespace AllKorrect
         /// </summary>
         public void CopyFile2File(string file1, string file2)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.CopyFile2File,
                 OldName = file1,
                 NewName = file2
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -158,16 +132,13 @@ namespace AllKorrect
         /// </summary>
         public void CopyFile2Blob(string file, string blob)
         {
-            new CopyMove
+            session.Send(new CopyMove
             {
                 MsgType = MessageType.CopyFile2Blob,
                 OldName = file,
                 NewName = blob
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("移动或复制失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -187,13 +158,9 @@ namespace AllKorrect
                     Body = mem.ToArray()
                 };
                 msg.Size = msg.Body.Length;
-                msg.Send(writer);
+                session.Send(msg);
 
-                Message reply = new Message(reader);
-                if (reply.Type != MessageType.HasBlobReply)
-                {
-                    throw new Exception("错误的的消息回应类型");
-                }
+                Message reply = session.Receive(MessageType.HasBlobReply);
                 return BitConverter.ToInt32(reply.Body, 0) == 1;
             }
         }
@@ -215,13 +182,9 @@ namespace AllKorrect
                     Body = mem.ToArray()
                 };
                 msg.Size = msg.Body.Length;
-                msg.Send(writer);
+                session.Send(msg);
 
-                Message reply = new Message(reader);
-                if (reply.Type != MessageType.HasFileReply)
-                {
-                    throw new Exception("错误的的消息回应类型");
-                }
+                Message reply = session.Receive(MessageType.HasFileReply);
                 return BitConverter.ToInt32(reply.Body, 0) == 1;
             }
         }
@@ -232,16 +195,13 @@ namespace AllKorrect
         public void PutBlob(string name, byte[] bytes)
         {
             bytes = GzipCompress(bytes);
-            new PutBlob()
+            session.Send(new PutBlob()
             {
                 Name = name,
                 Size = bytes.Length,
                 Bytes = bytes
-            }.ToMessage().Send(writer);
-            if (new Message(reader).Type != MessageType.OK)
-            {
-                throw new Exception("添加Blob失败");
-            }
+            }.ToMessage());
+            session.Receive(MessageType.OK);
         }
 
         /// <summary>
@@ -249,15 +209,11 @@ namespace AllKorrect
         /// </summary>
         public byte[] GetBlob(string name)
         {
-            new GetBlob()
+            session.Send(new GetBlob()
             {
                 Name = name
-            }.ToMessage().Send(writer);
-            var reply = new Message(reader);
-            if (reply.Type != MessageType.GetBlobReply)
-            {
-                throw new Exception("收到错误的消息类型");
-            }
+            }.ToMessage());
+            var reply = session.Receive(MessageType.GetBlobReply);
             return GzipDecompress(reply.Body);
         }
 
@@ -268,17 +224,13 @@ namespace AllKorrect
         /// <param name="top">继续读取最多多少字节</param>
         public byte[] GetBlob(string name, int skip, int top)
         {
-            new GetBlobParticle()
+            session.Send(new GetBlobParticle()
             {
                 Name = name,
                 Skip = skip,
                 Top = top
-            }.ToMessage().Send(writer);
-            var reply = new Message(reader);
-            if (reply.Type != MessageType.GetBlobParticleReply)
-            {
-                throw new Exception("收到错误的消息类型");
-            }
+            }.ToMessage());
+            var reply = session.Receive(MessageType.GetBlobParticleReply);
             return GzipDecompress(reply.Body);
         }
 
@@ -287,15 +239,11 @@ namespace AllKorrect
         /// </summary>
         public int GetBlobLength(string name)
         {
-            new GetBlobLength()
+            session.Send(new GetBlobLength()
             {
                 Name = name
-            }.ToMessage().Send(writer);
-            var reply = new Message(reader);
-            if (reply.Type != MessageType.GetBlobLengthReply)
-            {
-                throw new Exception("收到错误的消息类型");
-            }
+            }.ToMessage());
+            var reply = session.Receive(MessageType.GetBlobLengthReply);
             return BitConverter.ToInt32(reply.Body, 0);
         }
 
@@ -360,7 +308,7 @@ namespace AllKorrect
         /// <returns>程序运行结果</returns>
         public ExecuteResult Execute(string command, IEnumerable<string> argv, long memoryLimit, int timeLimit, long outputLimit, RestrictionLevel restriction, string inputBlob)
         {
-            new Exec()
+            session.Send(new Exec()
             {
                 ArgumentCount = argv.Count(),
                 Arguments = argv,
@@ -370,29 +318,14 @@ namespace AllKorrect
                 OutputLimit = outputLimit,
                 Restriction = restriction,
                 TimeLimit = timeLimit
-            }.ToMessage().Send(writer);
-            var reply = new Message(reader);
-            if (reply.Type != MessageType.ExecuteReply)
-            {
-                throw new Exception("收到错误的消息类型");
-            }
+            }.ToMessage());
+            var reply = session.Receive(MessageType.ExecuteReply);
             return new ExecuteResult(reply);
         }
 
         public void Dispose()
         {
-            if (tcp.Connected && writer.BaseStream.CanWrite)
-            {
-                new Message()
-                {
-                    Type = MessageType.Exit,
-                    Body = new byte[0],
-                    Size = 0
-                }.Send(writer);
-                //Increase the probability of server  to recv the msg
-                Thread.Sleep(500);
-            }
-            tcp.Close();
+            session.Dispose();
         }
 
         /// <summary>
