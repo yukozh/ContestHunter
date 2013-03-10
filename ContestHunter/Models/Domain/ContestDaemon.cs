@@ -103,7 +103,7 @@ namespace ContestHunter.Models.Domain
                             if (!(from r in db.RECORDs
                                   where r.PROBLEM1.CONTEST1.ID == con.ID &&
                                   r.SubmitTime <= con.EndTime &&
-                                  r.Status == (int)Record.StatusType.Pending
+                                  (r.Status == (int)Record.StatusType.Pending || r.Status==(int)Record.StatusType.Running)
                                   select r).Any())
                             {
                                 if (con.IsOfficial)
@@ -115,6 +115,11 @@ namespace ContestHunter.Models.Domain
                     case Contest.ContestType.CF:
                         if (con.Status == (int)Contest.StatusType.BeforeFinalTest)
                         {
+                            if ((from h in db.HUNTs
+                                 where h.RECORD1.PROBLEM1.CONTEST1.ID == con.ID
+                                 && (h.Status == (int)Hunt.StatusType.Pending || h.Status == (int)Hunt.StatusType.Running)
+                                 select h).Any())
+                                break;
                             foreach (TESTDATA test in (from t in db.TESTDATAs
                                                        where t.PROBLEM1.CONTEST1.ID == con.ID && t.Available == false
                                                        select t))
@@ -153,7 +158,7 @@ namespace ContestHunter.Models.Domain
                             if (!(from r in db.RECORDs
                                   where r.PROBLEM1.CONTEST1.ID == con.ID &&
                                   r.SubmitTime <= con.EndTime &&
-                                  r.Status == (int)Record.StatusType.Pending
+                                  (r.Status == (int)Record.StatusType.Pending || r.Status == (int)Record.StatusType.Running)
                                   select r).Any())
                             {
                                 if (con.IsOfficial)
@@ -172,7 +177,7 @@ namespace ContestHunter.Models.Domain
                             if (!(from r in db.RECORDs
                                   where r.PROBLEM1.CONTEST1.ID == con.ID &&
                                   r.SubmitTime <= con.EndTime &&
-                                  r.Status == (int)Record.StatusType.Pending
+                                  (r.Status == (int)Record.StatusType.Pending || r.Status == (int)Record.StatusType.Running)
                                   select r).Any())
                             {
                                 if (con.IsOfficial)
