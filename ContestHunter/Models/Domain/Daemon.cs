@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Threading;
+using System.Diagnostics;
 
 namespace ContestHunter.Models.Domain
 {
@@ -41,7 +42,7 @@ namespace ContestHunter.Models.Domain
                 {
                     Thread.Sleep(Run());
                 }
-                catch
+                catch (Exception e)
                 {
                     if (!running)
                     {
@@ -51,12 +52,13 @@ namespace ContestHunter.Models.Domain
                     {
                         try
                         {
+                            EventLog log = new EventLog("Application");
+                            log.Source = "ContestHunterDaemon";
+                            log.WriteEntry(e.ToString(), EventLogEntryType.Error);
                             //Sleep a while to prevent fill the disk
                             Thread.Sleep(10000);
                         }
-                        catch (ThreadInterruptedException)
-                        {
-                        }
+                        catch { }
                     }
                 }
             }
