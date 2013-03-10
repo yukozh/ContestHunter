@@ -165,13 +165,13 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        public byte[] PreviewData(int startPos, int length)
+        public string PreviewData(int startPos, int length)
         {
             if (!canGetData)
                 return null;
             using (var db = new CHDB())
             {
-                return db.Database.SqlQuery<byte[]>("SELECT SUBSTRING([HuntData],@st,@le) FROM [HUNT] WHERE [ID]=@ID", new SqlParameter("st", startPos), new SqlParameter("le", length), new SqlParameter("ID", ID)).Single();
+                return db.Database.SqlQuery<string>("SELECT SUBSTRING([HuntData],@st,@le) FROM [HUNT] WHERE [ID]=@ID", new SqlParameter("st", startPos), new SqlParameter("le", length), new SqlParameter("ID", ID)).Single();
             }
         }
     }

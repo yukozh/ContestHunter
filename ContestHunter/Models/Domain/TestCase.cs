@@ -57,6 +57,34 @@ namespace ContestHunter.Models.Domain
                 _Data = value;
             }
         }
+        public int InputLen
+        {
+            get
+            {
+                if (inputFromSetter)
+                    return _Input.Length;
+                if (!canGetData)
+                    return 0;
+                using (var db = new CHDB())
+                {
+                    return db.Database.SqlQuery<int>("SELECT LEN([Input]) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("ID", ID)).Single();
+                }
+            }
+        }
+        public int DataLen
+        {
+            get
+            {
+                if (dataFromSetter)
+                    return _Data.Length;
+                if (!canGetData)
+                    return 0;
+                using (var db = new CHDB())
+                {
+                    return db.Database.SqlQuery<int>("SELECT LEN([Data]) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("ID", ID)).Single();
+                }
+            }
+        }
         public int TimeLimit;
         public long MemoryLimit;
         public bool Available;
@@ -120,5 +148,6 @@ namespace ContestHunter.Models.Domain
                 return db.Database.SqlQuery<byte[]>("SELECT SUBSTRING([Data],@st,@le) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("st", startPos), new SqlParameter("le", length), new SqlParameter("ID", ID)).Single();
             }
         }
+
     }
 }
