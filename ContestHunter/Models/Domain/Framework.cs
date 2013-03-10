@@ -11,6 +11,8 @@ namespace ContestHunter.Models.Domain
 {
     public class Framework
     {
+        public static string WebRoot;
+
         public static void DomainInstallation()
         {
             using (var db = new CHDB())

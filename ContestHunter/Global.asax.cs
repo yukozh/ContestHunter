@@ -22,6 +22,7 @@ namespace ContestHunter
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
+            Framework.WebRoot = Server.MapPath("~");
             Framework.DomainStart();
         }
 
