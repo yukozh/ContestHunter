@@ -6,6 +6,7 @@ using AllKorrect;
 using ContestHunter.Database;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 namespace ContestHunter.Models.Domain
 {
     public class AllKorrectDaemon : Daemon
@@ -69,6 +70,7 @@ namespace ContestHunter.Models.Domain
             public Guid hunt;
             public Guid record;
             public AKInfo ak;
+            public Thread t;
         }
 
         static List<AKInfo> aks = new List<AKInfo>()
@@ -171,17 +173,26 @@ namespace ContestHunter.Models.Domain
                         string key = rec.User.ToString() + rec.Problem.ToString();
                         lastHunt = ContestDaemon.HuntLst.ContainsKey(key) ? ContestDaemon.HuntLst[key] : Guid.Empty;
                     }
-                    foreach (TESTDATA test in (from t in db.TESTDATAs
-                                               where t.PROBLEM1.ID == rec.PROBLEM1.ID && (t.Available || t.ID == lastHunt)
-                                               select t))
+                    foreach (var test in (from t in db.TESTDATAs
+                                          where t.PROBLEM1.ID == rec.PROBLEM1.ID && (t.Available || t.ID == lastHunt)
+                                          select new
+                                          {
+                                              t.ID,
+                                              t.MemoryLimit,
+                                              t.TimeLimit
+                                          }))
                     {
                         totalTests++;
                         string inputName = test.ID.ToString() + "input";
                         string outputName = test.ID.ToString() + "output";
                         if (!tester.HasBlob(inputName))
-                            tester.PutBlob(inputName, test.Input);
+                            tester.PutBlob(inputName, (from t in db.TESTDATAs
+                                                       where t.ID == test.ID
+                                                       select t.Input).Single());
                         if (!tester.HasBlob(outputName))
-                            tester.PutBlob(outputName, test.Data);
+                            tester.PutBlob(outputName, (from t in db.TESTDATAs
+                                                        where t.ID == test.ID
+                                                        select t.Data).Single());
                         var result = tester.Execute("./exec", new string[] { }, test.MemoryLimit, test.TimeLimit, -1, RestrictionLevel.Strict, inputName);
                         int Time = result.Time;
                         long Memory_KB = result.Memory / 1024;
@@ -469,21 +480,31 @@ namespace ContestHunter.Models.Domain
                         record = reclist[i]
                     };
                 }
-                Parallel.ForEach(tinf, (TestInfo inf) =>
-                    {
-                        try
+                foreach (var inf in tinf)
+                {
+                    inf.t = new Thread(() =>
                         {
-                            using (var _db = new CHDB())
+                            try
                             {
-                                DealHunt(_db, inf.hunt, inf.ak);
-                                _db.SaveChanges();
-                                DealRecord(_db, inf.record, inf.ak);
-                                _db.SaveChanges();
+                                using (var _db = new CHDB())
+                                {
+                                    DealRecord(_db, inf.record, inf.ak);
+                                    _db.SaveChanges();
+                                    DealHunt(_db, inf.hunt, inf.ak);
+                                    _db.SaveChanges();
+                                }
                             }
-                        }
-                        catch { }
-                    });
-
+                            catch(Exception e)
+                            {
+                                LogHelper.WriteLog(GetType().Name, e.ToString());
+                            }
+                        });
+                    inf.t.Start();
+                }
+                foreach (var inf in tinf)
+                {
+                    inf.t.Join();
+                }
             }
             if (flg)
                 return 0;

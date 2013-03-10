@@ -50,12 +50,7 @@ namespace ContestHunter.Models.Domain
                     }
                     else
                     {
-                        try
-                        {
-                            string logItem=string.Format("LOG:{0} {1}:\r\n{2}\r\n",DateTime.Now,this.GetType().Name,e.ToString());
-                            File.AppendAllText(Path.Combine(Framework.WebRoot, "App_Data\\Daemon.log"), logItem);
-                        }
-                        catch { }
+                        LogHelper.WriteLog(GetType().Name, e.ToString());
                         try
                         {
                             

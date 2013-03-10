@@ -357,15 +357,6 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        /*
-        public override bool Equals(object obj)
-        {
-            if (obj is User)
-                return Name == ((User)obj).Name;
-            return base.Equals(obj);
-        }
-         * */
-
         /// <summary>
         /// 修改用户信息，必须验证当前密码
         /// </summary>
