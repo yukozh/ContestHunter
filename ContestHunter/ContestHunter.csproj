@@ -200,6 +200,7 @@
     <Compile Include="Models\Domain\Contest.cs" />
     <Compile Include="Models\Domain\ContestDaemon.cs" />
     <Compile Include="Models\Domain\Daemon.cs" />
+    <Compile Include="Models\Domain\DispatcherDaemon.cs" />
     <Compile Include="Models\Domain\Exceptions.cs" />
     <Compile Include="Models\Domain\Framework.cs" />
     <Compile Include="Models\Domain\Group.cs" />

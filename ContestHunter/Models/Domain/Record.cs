@@ -44,7 +44,8 @@ namespace ContestHunter.Models.Domain
             Hacked,
             System_Error = -1,
             Pending = -2,
-            Compile_Error = -3
+            Compile_Error = -3,
+            Running = -4
         }
 
         public StatusType? Status;

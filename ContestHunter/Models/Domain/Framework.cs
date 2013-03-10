@@ -45,19 +45,33 @@ namespace ContestHunter.Models.Domain
             }
         }
         static ContestDaemon contest = new ContestDaemon();
-        static AllKorrectDaemon tester = new AllKorrectDaemon();
+        public static List<AllKorrectDaemon> tester = new List<AllKorrectDaemon>();
         static SendMailDaemon email = new SendMailDaemon();
+        static DispatcherDaemon dispatcher = new DispatcherDaemon();
         public static void DomainStart()
         {
             contest.Start();
-            tester.Start();
+            foreach (var akinfo in AllKorrectDaemon.aks)
+            {
+                var ak = new AllKorrectDaemon()
+                {
+                    _ak = akinfo
+                };
+                ak.Start();
+                tester.Add(ak);
+            }
+            dispatcher.Start();
             email.Start();
         }
 
         public static void DomainStop()
         {
             contest.Stop();
-            tester.Stop();
+            foreach (var ak in tester)
+            {
+                ak.Stop();
+            }
+            dispatcher.Stop();
             email.Stop();
         }
     }

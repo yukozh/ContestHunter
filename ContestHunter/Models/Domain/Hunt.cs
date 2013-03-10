@@ -20,7 +20,8 @@ namespace ContestHunter.Models.Domain
             CompileError,
             DataCheckerError,
             HackedByOther,
-            OtherError = -1
+            OtherError = -1,
+            Running = -2
         }
 
         internal bool canGetData;

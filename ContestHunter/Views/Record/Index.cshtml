@@ -113,7 +113,7 @@
                                     break;
                                 case Record.StatusType.Pending:
                                     ViewBag.Label = "label-info";
-                                    ViewBag.Message = "正在评测";
+                                    ViewBag.Message = "等待评测";
                                     break;
                                 case Record.StatusType.Runtime_Error:
                                     ViewBag.Label = "label-important";
@@ -138,6 +138,10 @@
                                 case Record.StatusType.Hacked:
                                     ViewBag.Label = "";
                                     ViewBag.Message = "被猎杀";
+                                    break;
+                                case Record.StatusType.Running:
+                                    ViewBag.Label = "";
+                                    ViewBag.Message = "正在测评";
                                     break;
                                 default:
                                     throw new Exception("错误的类型");
