@@ -57,7 +57,7 @@ namespace ContestHunter.Models.Domain
                 _Data = value;
             }
         }
-        public int InputLen
+        public long InputLen
         {
             get
             {
@@ -67,11 +67,11 @@ namespace ContestHunter.Models.Domain
                     return 0;
                 using (var db = new CHDB())
                 {
-                    return db.Database.SqlQuery<int>("SELECT LEN([Input]) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("ID", ID)).Single();
+                    return db.Database.SqlQuery<long>("SELECT LEN([Input]) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("ID", ID)).Single();
                 }
             }
         }
-        public int DataLen
+        public long DataLen
         {
             get
             {
@@ -81,7 +81,7 @@ namespace ContestHunter.Models.Domain
                     return 0;
                 using (var db = new CHDB())
                 {
-                    return db.Database.SqlQuery<int>("SELECT LEN([Data]) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("ID", ID)).Single();
+                    return db.Database.SqlQuery<long>("SELECT LEN([Data]) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("ID", ID)).Single();
                 }
             }
         }
@@ -123,7 +123,7 @@ namespace ContestHunter.Models.Domain
         /// <param name="startPos"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public byte[] PriviewInput(int startPos, int length)
+        public byte[] InputPreview(int startPos, int length)
         {
             if (!canGetData)
                 return null;
@@ -139,7 +139,7 @@ namespace ContestHunter.Models.Domain
         /// <param name="startPos"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public byte[] PriviewData(int startPos, int length)
+        public byte[] DataPreview(int startPos, int length)
         {
             if (!canGetData)
                 return null;

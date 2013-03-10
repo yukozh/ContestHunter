@@ -7,7 +7,6 @@
 <style type="text/css">
     .table {
         background-color: white;
-        
         margin: 20px auto;
     }
 
@@ -21,7 +20,6 @@
     }
 
     h4 {
-        
         font-weight: normal;
     }
 </style>
@@ -35,8 +33,8 @@
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
-                <th>输入文件 CRC-32/大小</th>
-                <th>输出文件 CRC-32/大小</th>
+                <th>输入文件大小</th>
+                <th>输出文件大小</th>
                 <th>时间限制</th>
                 <th>内存限制</th>
                 @if (Model.ShowEnabled)
@@ -51,10 +49,10 @@
             {
                 <tr>
                     <td data-content="&lt;pre&gt;@info.Input&lt;/pre&gt;" title="输入文件内容预览" class="Preview">
-                        <b>@info.InputHash</b> / <b>@info.InputSize</b>B
+                        <b>@info.InputSize</b>B
                     </td>
                     <td data-content="&lt;pre&gt;@info.Output&lt;/pre&gt;" title="输出文件内容预览" class="Preview">
-                        <b>@info.OutputHash</b> / <b>@info.OutputSize</b>B
+                        <b>@info.OutputSize</b>B
                     </td>
                     <td><span style="color: orange"><b>@Math.Round((double)info.Time, 1)</b></span><span style="color: blue"> s</span></td>
                     <td><span style="color: orange"><b>@Math.Round((double)info.Memory, 1)</b></span><span style="color: blue"> MB</span></td>

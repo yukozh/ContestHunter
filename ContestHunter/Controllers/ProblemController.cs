@@ -342,12 +342,10 @@ namespace ContestHunter.Controllers
                 ID = t.ID,
                 Memory = t.MemoryLimit / (double)(1024 * 1024),
                 Time = t.TimeLimit / 1000.0,
-                InputHash = t.Input == null ? "00000000" : new CRC32().AsString(t.Input),
-                OutputHash = t.Data == null ? "00000000" : new CRC32().AsString(t.Data),
-                InputSize = t.Input == null ? 0 : t.Input.Length,
-                OutputSize = t.Data == null ? 0 : t.Data.Length,
-                Input = t.Input == null ? "" : Encoding.Default.GetString(t.Input.Take(100).ToArray()),
-                Output = t.Input == null ? "" : Encoding.Default.GetString(t.Data.Take(100).ToArray()),
+                InputSize = (int)t.InputLen,
+                OutputSize = (int)t.DataLen,
+                Input = Encoding.ASCII.GetString(t.InputPreview(0,100)),
+                Output = Encoding.ASCII.GetString(t.DataPreview(0,100)),
                 Enabled = t.Available
             };
         }

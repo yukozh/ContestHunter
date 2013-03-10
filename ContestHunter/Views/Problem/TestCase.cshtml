@@ -51,8 +51,8 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>输入文件 CRC-32/大小</th>
-                            <th>输出文件 CRC-32/大小</th>
+                            <th>输入文件大小</th>
+                            <th>输出文件大小</th>
                             <th>时间限制</th>
                             <th>内存限制</th>
                             @if (Model.ShowEnabled)
@@ -68,16 +68,14 @@
                             @Html.HiddenFor(x => x.TestCases[i].ID)
                             <tr>
                                 <td data-content="&lt;pre&gt;@Model.TestCases[i].Input&lt;/pre&gt;" title="输入文件内容预览" class="Preview">
-                                    @Html.HiddenFor(x => x.TestCases[i].InputHash)
                                     @Html.HiddenFor(x => x.TestCases[i].InputSize)
                                     @Html.HiddenFor(x => x.TestCases[i].Input)
-                                    <b>@Model.TestCases[i].InputHash</b> / <b>@Model.TestCases[i].InputSize</b>B
+                                    <b>@Model.TestCases[i].InputSize</b>B
                                 </td>
                                 <td data-content="&lt;pre&gt;@Model.TestCases[i].Output&lt;/pre&gt;" title="输出文件内容预览" class="Preview">
-                                    @Html.HiddenFor(x => x.TestCases[i].OutputHash)
                                     @Html.HiddenFor(x => x.TestCases[i].OutputSize)
                                     @Html.HiddenFor(x => x.TestCases[i].Output)
-                                    <b>@Model.TestCases[i].OutputHash</b> / <b>@Model.TestCases[i].OutputSize</b>B
+                                    <b>@Model.TestCases[i].OutputSize</b>B
                                 </td>
                                 <td class="control-group">
                                     <div class="controls">

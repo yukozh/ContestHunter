@@ -8,8 +8,6 @@ namespace ContestHunter.Models.View
     public class TestCaseInfo
     {
         public Guid ID { get; set; }
-        public string InputHash { get; set; }
-        public string OutputHash { get; set; }
         public int InputSize { get; set; }
         public int OutputSize { get; set; }
         public string Input { get; set; }
