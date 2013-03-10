@@ -415,7 +415,7 @@ namespace ContestHunter.Models.Domain
                 throw new AlreadyAttendedContestException();
             if (DateTime.Now <= RelativeStartTime)
                 throw new ContestNotStartedException();
-            if (DateTime.Now <= startTime)
+            if (DateTime.Now > startTime)
                 throw new VirtualStartTooEarlyException();
             using (var db = new CHDB())
             {
