@@ -92,4 +92,17 @@ namespace ContestHunter.Models.Domain
             }
         }
     }
+
+    static class LogHelper
+    {
+        public static void WriteLog(string Title,string Content)
+        {
+            try
+            {
+                string logItem = string.Format("LOG:{0} {1}:\r\n{2}\r\n", DateTime.Now, Title, Content);
+                File.AppendAllText(Path.Combine(Framework.WebRoot, "App_Data\\Daemon.log"), logItem);
+            }
+            catch { }
+        }
+    }
 }
