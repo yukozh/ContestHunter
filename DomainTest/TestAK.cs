@@ -9,7 +9,7 @@ namespace DomainTest
     [TestClass]
     public class TestAK
     {
-        const string HOST = "192.168.0.100";
+        const string HOST = "192.168.199.131";
         const int PORT = 10010;
 
         [TestMethod]
@@ -17,6 +17,15 @@ namespace DomainTest
         {
             using (NativeRunner runner = new NativeRunner(HOST, PORT))
             {
+            }
+        }
+
+        [TestMethod]
+        public void TestInvalidName()
+        {
+            using (NativeRunner runner = new NativeRunner(HOST, PORT))
+            {
+                runner.PutBlob("$%^&*(", new byte[0]);
             }
         }
 
