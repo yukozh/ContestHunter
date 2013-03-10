@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ContestHunter.Database;
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
 
 namespace ContestHunter.Models.Domain
 {
@@ -20,10 +23,33 @@ namespace ContestHunter.Models.Domain
             OtherError = -1
         }
 
+        internal bool canGetData;
         public string User;
         public string Contest;
         public string Problem;
-        public string Data;
+        internal string _Data;
+        internal bool getFromSetter;
+        public string Data
+        {
+            get
+            {
+                if (getFromSetter)
+                    return _Data;
+                if (!canGetData)
+                    return null;
+                using (var db = new CHDB())
+                {
+                    return (from h in db.HUNTs
+                            where h.ID == ID
+                            select h.HuntData).Single();
+                }
+            }
+            set
+            {
+                getFromSetter = true;
+                _Data = value;
+            }
+        }
         public string UserBeHunted;
         public Guid ID;
 
@@ -110,7 +136,7 @@ namespace ContestHunter.Models.Domain
                             Status = (StatusType)h.Status,
                             User = h.USER1.Name,
                             Time = h.Time,
-                            Data = ( flag ? h.HuntData : null),
+                            canGetData=flag,
                             ID = h.ID,
                             Detail = h.Detail,
                             DataType = (Record.LanguageType)h.DataType,
@@ -136,6 +162,16 @@ namespace ContestHunter.Models.Domain
                  where h.ID == ID
                  select h).Single().Status = (int)StatusType.Pending;
                 db.SaveChanges();
+            }
+        }
+
+        public byte[] PreviewData(int startPos, int length)
+        {
+            if (!canGetData)
+                return null;
+            using (var db = new CHDB())
+            {
+                return db.Database.SqlQuery<byte[]>("SELECT SUBSTRING([HuntData],@st,@le) FROM [HUNT] WHERE [ID]=@ID", new SqlParameter("st", startPos), new SqlParameter("le", length), new SqlParameter("ID", ID)).Single();
             }
         }
     }

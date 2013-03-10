@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using ContestHunter.Models.Domain;
 using ContestHunter.Database;
+using System.Data.SqlTypes;
+using System.Data.SqlClient;
+using System.Data.Sql;
 
 namespace ContestHunter.Models.Domain
 {
@@ -83,6 +86,38 @@ namespace ContestHunter.Models.Domain
                 test.TimeLimit = newTimeLimit;
                 test.Available = newAvailable;
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获得预览Input
+        /// </summary>
+        /// <param name="startPos"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public byte[] PriviewInput(int startPos, int length)
+        {
+            if (!canGetData)
+                return null;
+            using (var db = new CHDB())
+            {
+                return db.Database.SqlQuery<byte[]>("SELECT SUBSTRING([Input],@st,@le) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("st", startPos), new SqlParameter("le", length), new SqlParameter("ID", ID)).Single();
+            }
+        }
+
+        /// <summary>
+        /// 获得预览 Data
+        /// </summary>
+        /// <param name="startPos"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public byte[] PriviewData(int startPos, int length)
+        {
+            if (!canGetData)
+                return null;
+            using (var db = new CHDB())
+            {
+                return db.Database.SqlQuery<byte[]>("SELECT SUBSTRING([Data],@st,@le) FROM [TESTDATA] WHERE [ID]=@ID", new SqlParameter("st", startPos), new SqlParameter("le", length), new SqlParameter("ID", ID)).Single();
             }
         }
     }
