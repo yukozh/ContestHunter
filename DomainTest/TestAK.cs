@@ -21,6 +21,19 @@ namespace DomainTest
         }
 
         [TestMethod]
+        public void TestKeepAlive()
+        {
+            using (NativeRunner runner = new NativeRunner(HOST, PORT))
+            {
+                Thread.Sleep(6000);
+                runner.PutFile("file1", new byte[3]);
+                Thread.Sleep(6000);
+                Assert.AreEqual(3,runner.GetFile("file1").Length);
+                Thread.Sleep(6000);
+            }
+        }
+
+        [TestMethod]
         public void TestEmptyInput()
         {
             using (NativeRunner runner = new NativeRunner(HOST, PORT))

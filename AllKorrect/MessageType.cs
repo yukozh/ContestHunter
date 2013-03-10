@@ -8,6 +8,7 @@ namespace AllKorrect
 {
     enum MessageType 
     {
+        IMAlive,
         Exit,
         Execute,
         ExecuteReply,
