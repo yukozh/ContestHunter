@@ -208,6 +208,7 @@
     <Compile Include="Models\Domain\Problem.cs" />
     <Compile Include="Models\Domain\Rating.cs" />
     <Compile Include="Models\Domain\Record.cs" />
+    <Compile Include="Models\Domain\SendMailDaemon.cs" />
     <Compile Include="Models\Domain\Standing.cs" />
     <Compile Include="Models\Domain\TestCase.cs" />
     <Compile Include="Models\Domain\User.cs" />

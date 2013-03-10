@@ -1018,7 +1018,15 @@ namespace ContestHunter.Models.Domain
                             "本次比赛持续 " + (AbsoluteEndTime - AbsoluteStartTime) + " ，采用 " + Type + " 赛制，由 " + string.Join(",", Owner) + " 举办，<b>" + (IsOfficial ? "" : "不") + "计入</b>能力排名。<br />" +
                             "诚邀您及时报名参加本场比赛。如果您不希望再收到此类邮件，可以在修改个人资料页面取消。<br />" +
                             (string.IsNullOrWhiteSpace(message) ? "" : "管理员留言：<br />" + HttpUtility.HtmlEncode(message));
-                        EmailHelper.Send(Subject, info.Email, Body);
+                        lock (SendMailDaemon.EmailList)
+                        {
+                            SendMailDaemon.EmailList.Add(new SendMailDaemon.Email()
+                            {
+                                subject = Subject,
+                                to = info.Email,
+                                content = Body
+                            });
+                        }
                     }
                     catch { }
                 });

@@ -44,16 +44,19 @@ namespace ContestHunter.Models.Domain
         }
         static ContestDaemon contest = new ContestDaemon();
         static AllKorrectDaemon tester = new AllKorrectDaemon();
+        static SendMailDaemon email = new SendMailDaemon();
         public static void DomainStart()
         {
             contest.Start();
             tester.Start();
+            email.Start();
         }
 
         public static void DomainStop()
         {
             contest.Stop();
             tester.Stop();
+            email.Stop();
         }
     }
 }
