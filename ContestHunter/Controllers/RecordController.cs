@@ -53,7 +53,8 @@ namespace ContestHunter.Controllers
         {
             HuntModel model = new HuntModel()
             {
-                MyLanague=Record.LanguageType.Data
+                MyLanague=Record.LanguageType.Data,
+                Record=id
             };
             try
             {

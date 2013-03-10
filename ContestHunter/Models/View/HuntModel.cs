@@ -8,6 +8,7 @@ namespace ContestHunter.Models.View
 {
     public class HuntModel
     {
+        public Guid Record { get; set; }
         public string HisName { get; set; }
         public string Problem { get; set; }
         public string Contest { get; set; }
