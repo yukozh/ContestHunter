@@ -75,37 +75,37 @@ namespace ContestHunter.Models.Domain
         {
             new AKInfo()
             {
-                desp="CH-Alpaca",
+                desp="SH-Alpaca",
                 ip="222.66.130.13",
                 port=10010
             },
             new AKInfo()
             {
-                desp="CH-Ycat",
+                desp="SH-Ycat",
                 ip="222.66.130.13",
                 port=10011
             },
             new AKInfo()
             {
-                desp="CH-Lumia",
+                desp="SH-Lumia",
                 ip="222.66.130.13",
                 port=10012
             },
             new AKInfo()
             {
-                desp="CH-Metro",
+                desp="SH-Metro",
                 ip="222.66.130.13",
                 port=10013
             },
             new AKInfo()
             {
-                desp="CH-Lagoon",
+                desp="SH-Lagoon",
                 ip="222.66.130.13",
                 port=10014
             },
             new AKInfo()
             {
-                desp="CH-Applepi",
+                desp="SH-Applepi",
                 ip="222.66.130.13",
                 port=10015
             }
