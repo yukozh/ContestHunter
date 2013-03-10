@@ -10,8 +10,8 @@ namespace ContestHunter.Models.Domain
     public class TestCase
     {
         public Guid ID;
-        public byte[] _Input;
-        public byte[] _Data;
+        internal byte[] _Input;
+        internal byte[] _Data;
         bool inputFromSetter;
         bool dataFromSetter;
         public byte[] Input
