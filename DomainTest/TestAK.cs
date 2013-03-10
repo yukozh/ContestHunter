@@ -28,7 +28,7 @@ namespace DomainTest
                 Thread.Sleep(6000);
                 runner.PutFile("file1", new byte[3]);
                 Thread.Sleep(6000);
-                Assert.AreEqual(3,runner.GetFile("file1").Length);
+                Assert.AreEqual(3, runner.GetFile("file1").Length);
                 Thread.Sleep(6000);
             }
         }
@@ -62,10 +62,13 @@ namespace DomainTest
             using (NativeRunner runner = new NativeRunner(HOST, PORT))
             {
                 string src = "#include <cstdio>\n"
+                    + "#include <iostream>\n"
+                    + "using namespace std;"
                     + "int main(){"
+                    + "  ios::sync_with_stdio(false);"
                     + "  int x,y;"
-                    + "  scanf(\"%d%d\",&x,&y);"
-                    + "  printf(\"%d\",x+y);"
+                    + "  cin>>x>>y;"
+                    + "  cout<<x+y;"
                     + "}";
                 string input = "1 2";
 
@@ -250,7 +253,7 @@ namespace DomainTest
                 string input = "1 2";
                 runner.PutFile("code.pas", Encoding.UTF8.GetBytes(src));
                 runner.PutBlob("input", Encoding.UTF8.GetBytes(input));
-                var result = runner.Execute("fpc", new[] { "-O2","-ocode","code.pas" }, 100 * 1024 * 1024, 3000, 10*1024*1024, RestrictionLevel.Loose, null);
+                var result = runner.Execute("fpc", new[] { "-O2", "-ocode", "code.pas" }, 100 * 1024 * 1024, 3000, 10 * 1024 * 1024, RestrictionLevel.Loose, null);
                 Assert.AreEqual(ExecuteResultType.Success, result.Type);
 
                 result = runner.Execute("./code", new string[] { }, 100 * 1024 * 1024, 1000, 10 * 1024 * 1024, RestrictionLevel.Strict, "input");
@@ -285,7 +288,7 @@ namespace DomainTest
                 runner.PutBlob("_part", bytes);
 
                 Assert.IsTrue(runner.GetBlob("_part", 0, 10).SequenceEqual(bytes));
-                
+
                 byte[] res = runner.GetBlob("_part", 1, 3);
                 Assert.AreEqual(3, res.Length);
                 Assert.AreEqual(1, res[0]);
