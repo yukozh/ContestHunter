@@ -37,7 +37,8 @@
                             new SelectListItem{Text="猎杀失败",Value="Fail"},
                             new SelectListItem{Text="数据不合法",Value="BadData"},
                             new SelectListItem{Text="编译错误",Value="CompileError"},
-                            new SelectListItem{Text="正在测评",Value="Pending"},
+                            new SelectListItem{Text="等待测评",Value="Pending"},
+                            new SelectListItem{Text="正在评测",Value="Running"},
                             new SelectListItem{Text="数据校验器崩溃",Value="DataCheckerError"},
                             new SelectListItem{Text="被他人抢先Hunt",Value="HackedByOther"}
                         }, new { @class = "input-small" })
@@ -89,7 +90,12 @@
                                         break;
                                     case Hunt.StatusType.Pending:
                                         ViewBag.Label = "label-warning";
-                                        ViewBag.Text = "正在测评";
+                                        ViewBag.Text = "等待测评";
+                                        ViewBag.Score = 0;
+                                        break;
+                                    case Hunt.StatusType.Running:
+                                        ViewBag.Label = "";
+                                        ViewBag.Text = "正在评测";
                                         ViewBag.Score = 0;
                                         break;
                                     case Hunt.StatusType.Success:

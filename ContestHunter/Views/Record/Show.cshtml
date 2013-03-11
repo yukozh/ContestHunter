@@ -51,6 +51,10 @@
                                 break;
                             case Record.StatusType.Pending:
                                 ViewBag.Label = "label-info";
+                                ViewBag.Message = "等待测评";
+                                break;
+                            case Record.StatusType.Running:
+                                ViewBag.Label = "";
                                 ViewBag.Message = "正在评测";
                                 break;
                             case Record.StatusType.Runtime_Error:

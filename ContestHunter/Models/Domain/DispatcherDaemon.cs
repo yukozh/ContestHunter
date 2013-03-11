@@ -11,44 +11,17 @@ namespace ContestHunter.Models.Domain
     {
         Random rand = new Random();
 
-        void HuntBadWating(CHDB db)
-        {
-            if (!(from t in Framework.tester
-                  where t.HuntList.Count != 0
-                  select t).Any())
-            {
-                foreach (var h in (from h in db.HUNTs
-                                   where h.Status == (int)Hunt.StatusType.Running
-                                   select h))
-                    h.Status = (int)Hunt.StatusType.Pending;
-            }
-            db.SaveChanges();
-        }
-
-        void RecordBadWating(CHDB db)
-        {
-            if (!(from t in Framework.tester
-                  where t.RecList.Count != 0
-                  select t).Any())
-            {
-                foreach (var h in (from h in db.RECORDs
-                                   where h.Status == (int)Record.StatusType.Running
-                                   select h))
-                    h.Status = (int)Record.StatusType.Pending;
-            }
-            db.SaveChanges();
-        }
-
         protected override int Run()
         {
             bool flg = false;
+            int cnt = (from t in Framework.tester
+                       where t.HuntList.Count < 3 && t.RecList.Count < 3
+                       select t).Count();
             using (var db = new CHDB())
             {
-                HuntBadWating(db);
-                RecordBadWating(db);
                 foreach (var r in (from r in db.RECORDs
-                                    where r.Status == (int)Record.StatusType.Pending
-                                    select r).ToArray())
+                                   where r.Status == (int)Record.StatusType.Pending
+                                   select r).Take(cnt).ToArray())
                 {
                     flg = true;
                     r.Status = (int)Record.StatusType.Running;
@@ -56,8 +29,8 @@ namespace ContestHunter.Models.Domain
                     Framework.tester[rand.Next(Framework.tester.Count)].RecList.Add(r.ID);
                 }
                 foreach (var h in (from h in db.HUNTs
-                                    where h.Status == (int)Hunt.StatusType.Pending
-                                    select h).ToArray())
+                                   where h.Status == (int)Hunt.StatusType.Pending
+                                   select h).Take(cnt).ToArray())
                 {
                     flg = true;
                     h.Status = (int)Record.StatusType.Running;
