@@ -51,6 +51,7 @@
                             new SelectListItem{Text="输出过长",Value="Output_Limit_Execeeded"},
                             new SelectListItem{Text="系统错误",Value="System_Error"},
                             new SelectListItem{Text="等待评测",Value="Pending"},
+                            new SelectListItem{Text="正在评测",Value="Running"},
                             new SelectListItem{Text="编译失败",Value="Compile_Error"}
                         }, new { @class = "input-small" })
                     @Html.DropDownListFor(x => x.OrderBy, new SelectListItem[]
