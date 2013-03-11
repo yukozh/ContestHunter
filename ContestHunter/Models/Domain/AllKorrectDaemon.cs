@@ -64,6 +64,7 @@ namespace ContestHunter.Models.Domain
         #region Tester Infomation
         public static List<AKInfo> aks = new List<AKInfo>()
         {
+            /*
             new AKInfo()
             {
                 desp="SH-Alpaca",
@@ -99,6 +100,37 @@ namespace ContestHunter.Models.Domain
                 desp="SH-Applepi",
                 ip="222.66.130.13",
                 port=10015
+            },
+            */
+            new AKInfo()
+            {
+                desp="SH-Intenal",
+                ip="192.168.199.131",
+                port=10010
+            },
+            new AKInfo()
+            {
+                desp="SH-Intenal",
+                ip="192.168.199.131",
+                port=10011
+            },
+            new AKInfo()
+            {
+                desp="SH-Intenal",
+                ip="192.168.199.131",
+                port=10012
+            },
+            new AKInfo()
+            {
+                desp="SH-Intenal",
+                ip="192.168.199.131",
+                port=10013
+            },
+            new AKInfo()
+            {
+                desp="SH-Intenal",
+                ip="192.168.199.131",
+                port=10014
             }
         };
 
@@ -446,13 +478,16 @@ namespace ContestHunter.Models.Domain
 
         protected override int Run()
         {
-            bool flg = RecList.Count > 0 || HuntList.Count > 0;
+            bool flg=false;
+            Guid Record,Hunt;
+            flg |= RecList.TryTake(out Record);
+            flg |= HuntList.TryTake(out Hunt);
             if (!flg)
+            {
                 return 3000;
+            }
             using (var db = new CHDB())
             {
-                Guid Record = RecList.Count > 0 ? RecList.Take() : Guid.Empty;
-                Guid Hunt = HuntList.Count > 0 ? HuntList.Take() : Guid.Empty;
                 try
                 {
                     using (var tester = new NativeRunner(_ak.ip, _ak.port))
@@ -463,23 +498,20 @@ namespace ContestHunter.Models.Domain
                         db.SaveChanges();
                     }
                 }
-                catch (Exception e)
+                catch
                 {
                     if (Record != Guid.Empty)
-                        (from r in db.RECORDs
-                         where r.ID == Record
-                         select r).Single().Status = (int)Domain.Record.StatusType.Running;
+                        (from h in db.RECORDs
+                         where h.ID == Record
+                         select h).Single().Status = (int)Domain.Record.StatusType.Pending;
                     if (Hunt != Guid.Empty)
                         (from h in db.HUNTs
                          where h.ID == Hunt
-                         select h).Single().Status = (int)Domain.Hunt.StatusType.Running;
+                         select h).Single().Status = (int)Domain.Hunt.StatusType.Pending;
                     db.SaveChanges();
-                    throw e;
                 }
-                if (!flg)
-                    return 0;
-                return 3000;
             }
+            return 0;
         }
     }
 }

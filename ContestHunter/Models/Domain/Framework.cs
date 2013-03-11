@@ -44,12 +44,36 @@ namespace ContestHunter.Models.Domain
                 db.SaveChanges();
             }
         }
+
+        static void HuntBadWating(CHDB db)
+        {
+            foreach (var h in (from h in db.HUNTs
+                               where h.Status == (int)Hunt.StatusType.Running
+                               select h))
+                h.Status = (int)Hunt.StatusType.Pending;
+            db.SaveChanges();
+        }
+
+        static void RecordBadWating(CHDB db)
+        {
+            foreach (var h in (from h in db.RECORDs
+                               where h.Status == (int)Record.StatusType.Running
+                               select h).ToArray())
+                h.Status = (int)Record.StatusType.Pending;
+            int x=db.SaveChanges();
+        }
+
         static ContestDaemon contest = new ContestDaemon();
         public static List<AllKorrectDaemon> tester = new List<AllKorrectDaemon>();
         static SendMailDaemon email = new SendMailDaemon();
         static DispatcherDaemon dispatcher = new DispatcherDaemon();
         public static void DomainStart()
         {
+            using (var db = new CHDB())
+            {
+                HuntBadWating(db);
+                RecordBadWating(db);
+            }
             contest.Start();
             foreach (var akinfo in AllKorrectDaemon.aks)
             {
