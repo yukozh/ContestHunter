@@ -64,73 +64,46 @@ namespace ContestHunter.Models.Domain
         #region Tester Infomation
         public static List<AKInfo> aks = new List<AKInfo>()
         {
-            /*
             new AKInfo()
             {
-                desp="SH-Alpaca",
+                desp="SH-Alpha",
                 ip="222.66.130.13",
                 port=10010
             },
             new AKInfo()
             {
-                desp="SH-Ycat",
+                desp="SH-Beta",
                 ip="222.66.130.13",
                 port=10011
             },
             new AKInfo()
             {
-                desp="SH-Lumia",
+                desp="SH-Gamma",
                 ip="222.66.130.13",
                 port=10012
             },
             new AKInfo()
             {
-                desp="SH-Metro",
+                desp="SH-Delta",
                 ip="222.66.130.13",
                 port=10013
             },
             new AKInfo()
             {
-                desp="SH-Lagoon",
+                desp="SH-Epsilon",
                 ip="222.66.130.13",
                 port=10014
             },
             new AKInfo()
             {
-                desp="SH-Applepi",
+                desp="SH-Zeta",
                 ip="222.66.130.13",
                 port=10015
             },
-            */
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
+            new AKInfo(){
+                desp="Ezoj-68",
+                ip="192.168.13.168",
                 port=10010
-            },
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10011
-            },
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10012
-            },
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10013
-            },
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10014
             }
         };
 
