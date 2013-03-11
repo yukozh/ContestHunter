@@ -104,33 +104,15 @@ namespace ContestHunter.Models.Domain
             */
             new AKInfo()
             {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
+                desp="EZ-163",
+                ip="192.168.13.163",
                 port=10010
             },
             new AKInfo()
             {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10011
-            },
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10012
-            },
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10013
-            },
-            new AKInfo()
-            {
-                desp="SH-Intenal",
-                ip="192.168.199.131",
-                port=10014
+                desp="EZ-168",
+                ip="192.168.13.168",
+                port=10010
             }
         };
 
