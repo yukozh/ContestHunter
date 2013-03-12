@@ -43,6 +43,16 @@
     <WarningLevel>4</WarningLevel>
     <PrecompileBeforePublish>true</PrecompileBeforePublish>
     <EnableUpdateable>false</EnableUpdateable>
+    <UseMerge>false</UseMerge>
+    <WDPMergeOption>DonotMerge</WDPMergeOption>
+    <SingleAssemblyName>
+    </SingleAssemblyName>
+    <DeleteAppCodeCompiledFiles>false</DeleteAppCodeCompiledFiles>
+    <AssemblyPrefixName>
+    </AssemblyPrefixName>
+    <ContentAssemblyName>
+    </ContentAssemblyName>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AntiXssLibrary, Version=4.2.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
@@ -703,6 +713,7 @@
       <DependentUpon>CHDB.edmx</DependentUpon>
       <LastGenOutput>CHDB.cs</LastGenOutput>
     </Content>
+    <None Include="Properties\PublishProfiles\ToEzoj.pubxml" />
     <None Include="Properties\PublishProfiles\ToLydrainbowcat.pubxml" />
     <None Include="Properties\PublishProfiles\ToMr.Phone.pubxml" />
     <Content Include="Script\ckeditor\CHANGES.md" />
