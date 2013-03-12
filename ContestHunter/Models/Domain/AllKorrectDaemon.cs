@@ -101,12 +101,10 @@ namespace ContestHunter.Models.Domain
                 port=10015
             },
             new AKInfo(){
-                desp="Ezoj-68",
-            /*
-                ip="192.168.13.168",
+                desp="EZ-63",
+                ip="192.168.13.163",
                 port=10010
             }
-             * */
         };
 
         #endregion
