@@ -14,28 +14,33 @@ namespace ContestHunter.Models.Domain
         protected override int Run()
         {
             bool flg = false;
-            int cnt = (from t in Framework.tester
-                       where t.HuntList.Count < 3 && t.RecList.Count < 3
-                       select t).Count();
+            var testers = (from t in Framework.tester
+                           where t.HuntList.Count < 3 && t.RecList.Count < 3
+                           select t).ToArray();
             using (var db = new CHDB())
             {
-                foreach (var r in (from r in db.RECORDs
-                                   where r.Status == (int)Record.StatusType.Pending
-                                   select r).Take(cnt).ToArray())
+                foreach (var tester in testers)
                 {
-                    flg = true;
-                    r.Status = (int)Record.StatusType.Running;
-                    db.SaveChanges();
-                    Framework.tester[rand.Next(Framework.tester.Count)].RecList.Add(r.ID);
-                }
-                foreach (var h in (from h in db.HUNTs
-                                   where h.Status == (int)Hunt.StatusType.Pending
-                                   select h).Take(cnt).ToArray())
-                {
-                    flg = true;
-                    h.Status = (int)Record.StatusType.Running;
-                    db.SaveChanges();
-                    Framework.tester[rand.Next(Framework.tester.Count)].HuntList.Add(h.ID);
+                    var rec = (from r in db.RECORDs
+                             where r.Status == (int)Record.StatusType.Pending
+                             select r).FirstOrDefault();
+                    if (null != rec)
+                    {
+                        flg = true;
+                        rec.Status = (int)Record.StatusType.Running;
+                        db.SaveChanges();
+                        tester.RecList.Add(rec.ID);
+                    }
+                    var hu = (from h in db.HUNTs
+                              where h.Status == (int)Hunt.StatusType.Pending
+                              select h).FirstOrDefault();
+                    if (null != hu)
+                    {
+                        flg = true;
+                        hu.Status = (int)Record.StatusType.Running;
+                        db.SaveChanges();
+                        tester.HuntList.Add(hu.ID);
+                    }
                 }
             }
             if (flg)

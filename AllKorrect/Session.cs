@@ -28,14 +28,16 @@ namespace AllKorrect
             //tcp.SendTimeout = 5000;
 
             //Linger
-            tcp.LingerState = new LingerOption(true, 5);
+            //tcp.LingerState = new LingerOption(true, 5);
 
             //Keep-Alive
+            /*
             byte[] keepAliveValues = new byte[Marshal.SizeOf(typeof(uint))*3];
             BitConverter.GetBytes((uint)1).CopyTo(keepAliveValues,0);
             BitConverter.GetBytes((uint)5000).CopyTo(keepAliveValues,Marshal.SizeOf(typeof(uint)));
             BitConverter.GetBytes((uint)3000).CopyTo(keepAliveValues,Marshal.SizeOf(typeof(uint))*2);
             tcp.Client.IOControl(IOControlCode.KeepAliveValues, keepAliveValues, null);
+            */
 
             reader = new BinaryReader(tcp.GetStream(), Encoding.ASCII, true);
             writer = new BinaryWriter(tcp.GetStream(), Encoding.ASCII, true);
