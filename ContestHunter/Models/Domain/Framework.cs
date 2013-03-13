@@ -64,7 +64,7 @@ namespace ContestHunter.Models.Domain
         }
 
         static ContestDaemon contest = new ContestDaemon();
-        public static List<AllKorrectDaemon> tester = new List<AllKorrectDaemon>();
+        internal static List<AllKorrectDaemon> tester = new List<AllKorrectDaemon>();
         static SendMailDaemon email = new SendMailDaemon();
         static DispatcherDaemon dispatcher = new DispatcherDaemon();
         public static void DomainStart()

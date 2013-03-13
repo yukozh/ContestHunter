@@ -15,7 +15,7 @@ namespace ContestHunter.Models.Domain
         public enum StatusType
         {
             Running,
-            Stoped,
+            Stopped,
             Crashed
         }
         public volatile StatusType type;
@@ -50,7 +50,7 @@ namespace ContestHunter.Models.Domain
                 {
                     type = StatusType.Running;
                     int toSleep = Run();
-                    type = StatusType.Stoped;
+                    type = StatusType.Stopped;
                     Thread.Sleep(toSleep);
                 }
                 catch (Exception e)
