@@ -1,14 +1,16 @@
-﻿@{
+﻿@model List<ContestHunter.Models.Domain.Daemon>
+@{
     ViewBag.Title = "后台进程";
 }
 
 <style>
     .table {
-        background-color:white;
+        background-color: white;
     }
-    h2, .table td, .table th {
-        text-align: center;
-    }
+
+        h2, .table td, .table th {
+            text-align: center;
+        }
 </style>
 
 <div class="span12">
@@ -27,11 +29,16 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>OrzSJY</td>
-                <td>OrzCYF</td>
-                <td>JuruoLYD</td>
-            </tr>
+            @foreach (var d in Model)
+            {
+                <tr>
+                    <td>@d.GetType().Name</td>
+                    <td>@d.type</td>
+                    <td>
+                        <pre>@d.lastException</pre>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

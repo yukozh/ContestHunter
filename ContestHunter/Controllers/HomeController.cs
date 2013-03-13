@@ -26,9 +26,10 @@ namespace ContestHunter.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult Process()
         {
-            return View();
+            return View(Framework.DaemonList());
         }
     }
 }
