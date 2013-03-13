@@ -64,7 +64,6 @@ namespace ContestHunter.Models.Domain
         #region Tester Infomation
         public static List<AKInfo> aks = new List<AKInfo>()
         {
-            /*
             new AKInfo()
             {
                 desp="SH-Alpha",
@@ -100,13 +99,14 @@ namespace ContestHunter.Models.Domain
                 desp="SH-Zeta",
                 ip="222.66.130.13",
                 port=10015
-            },
-             * */
+            }
+            /*
             new AKInfo(){
                 desp="EZ-63",
                 ip="192.168.13.163",
                 port=10010
             }
+             * */
         };
 
         #endregion
@@ -484,6 +484,7 @@ namespace ContestHunter.Models.Domain
                          where h.ID == Hunt
                          select h).Single().Status = (int)Domain.Hunt.StatusType.Pending;
                     db.SaveChanges();
+                    throw;
                 }
             }
             return 0;

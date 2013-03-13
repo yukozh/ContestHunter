@@ -11,6 +11,14 @@ namespace ContestHunter.Models.Domain
     {
         Thread thread;
         volatile bool running;
+        public volatile Exception lastException;
+        enum StatusType
+        {
+            Running,
+            Stoped,
+            Crashed
+        }
+        public volatile StatusType type;
 
         protected abstract int Run();
 
@@ -40,10 +48,15 @@ namespace ContestHunter.Models.Domain
             {
                 try
                 {
-                    Thread.Sleep(Run());
+                    type = StatusType.Running;
+                    int toSleep = Run();
+                    type = StatusType.Stoped;
+                    Thread.Sleep(toSleep);
                 }
                 catch (Exception e)
                 {
+                    type = StatusType.Crashed;
+                    lastException = e;
                     if (!running)
                     {
                         break;
