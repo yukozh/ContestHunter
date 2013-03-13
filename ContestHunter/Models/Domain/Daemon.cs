@@ -12,7 +12,7 @@ namespace ContestHunter.Models.Domain
         Thread thread;
         volatile bool running;
         public volatile Exception lastException;
-        enum StatusType
+        public enum StatusType
         {
             Running,
             Stoped,
@@ -75,5 +75,6 @@ namespace ContestHunter.Models.Domain
                 }
             }
         }
+
     }
 }

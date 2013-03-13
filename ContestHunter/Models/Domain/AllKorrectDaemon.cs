@@ -106,7 +106,7 @@ namespace ContestHunter.Models.Domain
                 ip="192.168.13.163",
                 port=10010
             }
-             * */
+            */
         };
 
         #endregion

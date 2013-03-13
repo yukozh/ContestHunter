@@ -98,5 +98,15 @@ namespace ContestHunter.Models.Domain
             dispatcher.Stop();
             email.Stop();
         }
+
+        public static List<Daemon> DaemonList()
+        {
+            List<Daemon> ret = new List<Daemon>();
+            ret.AddRange(tester);
+            ret.Add(contest);
+            ret.Add(email);
+            ret.Add(dispatcher);
+            return ret;
+        }
     }
 }
