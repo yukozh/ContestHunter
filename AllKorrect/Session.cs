@@ -33,6 +33,8 @@ namespace AllKorrect
 
             reader = new BinaryReader(tcp.GetStream(), Encoding.ASCII, true);
             writer = new BinaryWriter(tcp.GetStream(), Encoding.ASCII, true);
+
+            writer.Write("POST / HTTP/1.1\r\nHost: www.example.com\r\nUpgrade: AllKorrect\r\n\r\n".ToCharArray());
         }
 
         public void Send(Message msg)

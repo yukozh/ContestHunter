@@ -99,14 +99,17 @@ namespace ContestHunter.Models.Domain
                 desp="SH-Zeta",
                 ip="222.66.130.13",
                 port=10015
-            }
-            /*
+            },
             new AKInfo(){
                 desp="EZ-63",
                 ip="192.168.13.163",
                 port=10010
+            },
+            new AKInfo(){
+                desp="Moo",
+                ip="moo.imeng.de",
+                port=10010
             }
-            */
         };
 
         #endregion
