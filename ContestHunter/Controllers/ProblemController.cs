@@ -344,8 +344,8 @@ namespace ContestHunter.Controllers
                 Time = t.TimeLimit / 1000.0,
                 InputSize = (int)t.InputLen,
                 OutputSize = (int)t.DataLen,
-                Input = Encoding.ASCII.GetString(t.InputPreview(0,100)),
-                Output = Encoding.ASCII.GetString(t.DataPreview(0,100)),
+                Input = Encoding.ASCII.GetString(t.InputPreview(0, 100) ?? new byte[0]),
+                Output = Encoding.ASCII.GetString(t.DataPreview(0, 100) ?? new byte[0]),
                 Enabled = t.Available
             };
         }
