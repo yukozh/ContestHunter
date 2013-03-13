@@ -5,21 +5,18 @@
 }
 
 <style type="text/css">
-    h4, h5
-    {
+    h4, h5 {
         font-weight: normal;
     }
 
     .table th,
-    .table td
-    {
+    .table td {
         text-align: center;
         vertical-align: middle;
         color: black;
     }
 
-    code
-    {
+    code {
         padding: 0 3px 2px;
         font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
         font-size: 12px;
@@ -59,27 +56,30 @@
                         <h5 style="text-align: right">
                             @Html.ActionLink("Ta的提交记录", "Index", "Record", new { UserName = Model.Name }, null)<br />
                             @Html.ActionLink("Ta的比赛记录", "History", "Rating", new { id = Model.Name }, null)<br />
-                            @if (USER.CurrentUserName == Model.Name)
+                            @if (User.Identity.IsAuthenticated)
                             {
-                                @Html.ActionLink("修改我的用户资料", "Edit")<br />
-                            }
-
-                            @if (USER.ByName(USER.CurrentUserName).IsAdmin())
-                            {
-                                if (!Model.IsAdmin())
+                                if (USER.CurrentUserName == Model.Name)
                                 {
-                                    using (Html.BeginForm("SetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
+                                @Html.ActionLink("修改我的用户资料", "Edit")<br />
+                                }
+
+                                if (USER.ByName(USER.CurrentUserName).IsAdmin())
+                                {
+                                    if (!Model.IsAdmin())
                                     {
+                                        using (Html.BeginForm("SetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
+                                        {
                                 @Html.AntiForgeryToken()
                                 <input type="submit" class="btn btn-danger btn-small" value="设为管理员" onclick="return confirm('确实要将其设为管理员吗？');" />
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    using (Html.BeginForm("UnsetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
+                                    else
                                     {
+                                        using (Html.BeginForm("UnsetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
+                                        {
                                 @Html.AntiForgeryToken()
                                 <input type="submit" class="btn btn-danger btn-small" value="取消管理员" onclick="return confirm('确实要取消其管理员身份吗？');" />
+                                        }
                                     }
                                 }
                             }
