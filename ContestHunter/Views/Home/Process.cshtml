@@ -17,15 +17,11 @@
 <div class="span12">
     <h2>后台进程状态</h2>
     <table class="table table-bordered table-striped table-hover">
-        <colgroup>
-            <col>
-            <col>
-            <col>
-        </colgroup>
         <thead>
             <tr>
                 <th>进程名称</th>
                 <th>当前状态</th>
+                <th>上次异常时间</th>
                 <th>上次异常信息</th>
             </tr>
         </thead>
@@ -35,8 +31,9 @@
                 <tr>
                     <td>@d.GetType().Name</td>
                     <td>@d.type</td>
+                    <td>@d.ExceptionTime</td>
                     <td>
-                        <pre style="text-align:left">@d.lastException</pre>
+                        <pre style="text-align:left">@d.LastException</pre>
                     </td>
                 </tr>
             }

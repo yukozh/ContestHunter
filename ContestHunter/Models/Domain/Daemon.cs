@@ -11,8 +11,8 @@ namespace ContestHunter.Models.Domain
     {
         Thread thread;
         volatile bool running;
-        public volatile Exception LastException;
-        public volatile DateTime ExceptionTime;
+        public Exception LastException;
+        public DateTime ExceptionTime;
         public enum StatusType
         {
             Running,

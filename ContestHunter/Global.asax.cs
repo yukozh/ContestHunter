@@ -8,13 +8,28 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using ContestHunter.Models.Domain;
 using USER = ContestHunter.Models.Domain.User;
-using ContestHunter.Models
 namespace ContestHunter
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
+        const string STR_503 = "<html><head><title>Slow Down Please</title></head><body><pre>"
+            +"struct Hunter {\r\n"
+            +"\tbool AreTired() {\r\n"
+            +"\t\treturn true;\r\n"
+            +"\t}\r\n"
+            +"} you;\r\n"
+            +"\r\n"
+            + "int main() {\r\n"
+            +"\tif (you.AreTired())\r\n"
+            + "\t\tgoto 3839;\r\n"
+            + "3839:\r\n"
+            + "\t\"<a href='http://www.3839.com/'>http://www.3839.com/</a>\";\r\n"
+            +"}"
+            + "</pre></body></html>";
+
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -49,11 +64,14 @@ namespace ContestHunter
             }
             try
             {
-                ContestHunter.Models.Domain.AccessRestriction.CheckRestriction(Request.Headers["X-Forwarded-For"] ?? Request.UserHostAddress);
+                AccessRestriction.CheckRestriction(Request.Headers["X-Forwarded-For"] ?? Request.UserHostAddress);
             }
-            catch(Exception e)
+            catch
             {
-                throw new NotImplementedException();
+                Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
+                Response.Write(STR_503);
+                Response.End();
+                //Response.Redirect("http://www.3839.com/");
             }
         }
     }
