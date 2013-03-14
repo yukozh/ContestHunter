@@ -73,6 +73,9 @@ namespace ContestHunter.Models.Domain
             {
                 HuntBadWating(db);
                 RecordBadWating(db);
+                Group.AdministratorID = (from g in db.GROUPs
+                                         where g.Name == "Administrators"
+                                         select g.ID).Single();
             }
             contest.Start();
             foreach (var akinfo in AllKorrectDaemon.aks)

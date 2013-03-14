@@ -8,6 +8,7 @@ namespace ContestHunter.Models.Domain
     public class Group
     {
         public string Name;
+        internal static Guid AdministratorID;
         internal Guid ID;
         internal static void CheckPriviledge()
         {

@@ -18,5 +18,6 @@ namespace ContestHunter.Database
         public string Name { get; set; }
         public string Motto { get; set; }
         public Nullable<int> Rating { get; set; }
+        public int IsAdmin { get; set; }
     }
 }

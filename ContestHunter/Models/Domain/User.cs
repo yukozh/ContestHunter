@@ -9,6 +9,9 @@ using System.Security.Cryptography;
 using System.Text;
 using ContestHunter.Database;
 using System.Threading;
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
 
 namespace ContestHunter.Models.Domain
 {
@@ -27,6 +30,25 @@ namespace ContestHunter.Models.Domain
         public string Password;
         public string Motto;
         public bool AcceptEmail;
+        internal int _isAdmin = -1;
+        public bool IsAdmin
+        {
+            get
+            {
+                if (_isAdmin == -1)
+                {
+                    using (var db = new CHDB())
+                    {
+                        return 0 < (_isAdmin = db.Database.SqlQuery<int>("SELECT COUNT(*) FROM [USER_GROUP] WHERE [User]=@uid and [Group]=@gid", new SqlParameter("uid", ID), new SqlParameter("gid", Group.AdministratorID)).Single());
+                    }
+                }
+                return _isAdmin > 0;
+            }
+            set
+            {
+                _isAdmin = value ? 1 : 0;
+            }
+        }
         internal int _rating = -1;
         public int Rating
         {
@@ -38,7 +60,7 @@ namespace ContestHunter.Models.Domain
                         return _rating = (from r in db.RATINGs
                                           where r.User == ID
                                           orderby r.CONTEST1.EndTime descending
-                                          select r.Rating1).Single();
+                                          select r.Rating1).FirstOrDefault();
                     }
                 else
                     return _rating;
@@ -414,20 +436,7 @@ namespace ContestHunter.Models.Domain
                 }
             }
         }
-
-        /// <summary>
-        /// 返回当前用户是否为Administrators组
-        /// </summary>
-        /// <returns></returns>
-        public bool IsAdmin()
-        {
-            using (var db = new CHDB())
-            {
-                return (from u in db.USERs
-                        where u.ID == ID
-                        select u.GROUPs).Single().Where(x => x.Name == "Administrators").Any();
-            }
-        }
+        
 
         /// <summary>
         /// 按照 Rating 排名返回用户列表
@@ -446,7 +455,8 @@ namespace ContestHunter.Models.Domain
                             Name = u.Name,
                             ID = u.ID,
                             Motto = u.Motto,
-                            _rating = (int)u.Rating
+                            _rating = u.Rating ?? 0,
+                            _isAdmin = u.IsAdmin
                         }).Skip(skip).Take(top).ToList();
             }
         }

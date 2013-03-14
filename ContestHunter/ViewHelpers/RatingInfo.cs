@@ -73,7 +73,7 @@ namespace ContestHunter.ViewHelpers
         public RatingInfo(User user)
             : this(user.Rating)
         {
-            if (user.IsAdmin())
+            if (user.IsAdmin)
             {
                 Caption = "管理员(Administrator)";
                 Color = "#000000";
