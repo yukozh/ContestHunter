@@ -128,4 +128,8 @@ namespace ContestHunter.Models.Domain
     public class VirtualStartTooEarlyException : Exception
     {
     }
+
+    public class AccessTooFrequentlyException : Exception
+    {
+    }
 }

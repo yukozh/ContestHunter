@@ -11,7 +11,8 @@ namespace ContestHunter.Models.Domain
     {
         Thread thread;
         volatile bool running;
-        public volatile Exception lastException;
+        public volatile Exception LastException;
+        public volatile DateTime ExceptionTime;
         public enum StatusType
         {
             Running,
@@ -48,6 +49,7 @@ namespace ContestHunter.Models.Domain
             {
                 try
                 {
+                    LastException = null;
                     type = StatusType.Running;
                     int toSleep = Run();
                     type = StatusType.Stopped;
@@ -56,7 +58,8 @@ namespace ContestHunter.Models.Domain
                 catch (Exception e)
                 {
                     type = StatusType.Crashed;
-                    lastException = e;
+                    LastException = e;
+                    ExceptionTime = DateTime.Now;
                     if (!running)
                     {
                         break;

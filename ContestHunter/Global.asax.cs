@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using ContestHunter.Models.Domain;
 using USER = ContestHunter.Models.Domain.User;
+using ContestHunter.Models
 namespace ContestHunter
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -45,6 +46,14 @@ namespace ContestHunter
                     Response.Redirect("~/Shared/Error?msg=无效的用户凭据，请重新登录");
                     return;
                 }
+            }
+            try
+            {
+                ContestHunter.Models.Domain.AccessRestriction.CheckRestriction(Request.Headers["X-Forwarded-For"] ?? Request.UserHostAddress);
+            }
+            catch(Exception e)
+            {
+                throw new NotImplementedException();
             }
         }
     }

@@ -17,13 +17,20 @@ namespace ContestHunter.Models.Domain
             var testers = (from t in Framework.tester
                            where t.HuntList.Count < 3 && t.RecList.Count < 3
                            select t).ToArray();
+            for (int i = 0; i < testers.Length; i++)
+            {
+                var x = testers[i];
+                int p = rand.Next(testers.Length);
+                testers[i] = testers[p];
+                testers[p] = x;
+            }
             using (var db = new CHDB())
             {
                 foreach (var tester in testers)
                 {
                     var rec = (from r in db.RECORDs
-                             where r.Status == (int)Record.StatusType.Pending
-                             select r).FirstOrDefault();
+                               where r.Status == (int)Record.StatusType.Pending
+                               select r).FirstOrDefault();
                     if (null != rec)
                     {
                         flg = true;
