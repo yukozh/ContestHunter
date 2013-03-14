@@ -149,6 +149,16 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        static public bool CurrentUserIsAdmin
+        {
+            get
+            {
+                if (null == CurrentUser)
+                    return false;
+                return CurrentUser.IsAdmin;
+            }
+        }
+
         static public Record.LanguageType? CurrentUserPreferLanguage
         {
             get

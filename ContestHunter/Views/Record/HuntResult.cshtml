@@ -81,7 +81,7 @@
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Text</span>
                         </td>
                     </tr>
-                    @if (USER.ByName(USER.CurrentUserName).IsAdmin())
+                    @if (USER.ByName(USER.CurrentUserName).IsAdmin)
                     {
                         <tr>
                             <th>操作</th>

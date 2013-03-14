@@ -63,9 +63,9 @@
                                 @Html.ActionLink("修改我的用户资料", "Edit")<br />
                                 }
 
-                                if (USER.ByName(USER.CurrentUserName).IsAdmin())
+                                if (USER.ByName(USER.CurrentUserName).IsAdmin)
                                 {
-                                    if (!Model.IsAdmin())
+                                    if (!Model.IsAdmin)
                                     {
                                         using (Html.BeginForm("SetAdmin", "User", new { id = Model.Name }, FormMethod.Post))
                                         {

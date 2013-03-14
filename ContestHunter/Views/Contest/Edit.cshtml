@@ -96,7 +96,7 @@
                 <div class="controls">
                     @{
             USER currentUser = USER.ByName(USER.CurrentUserName);
-            bool canEditOfficial = currentUser.IsAdmin() || currentUser.Rating >= 2100;
+            bool canEditOfficial = currentUser.IsAdmin || currentUser.Rating >= 2100;
                     }
                     @Html.CheckBoxFor(x => x.IsOfficial, new { id = "chkOfficial" }.DisabledIf(!canEditOfficial))
                     @Html.ValidationMessageFor(x => x.IsOfficial)
@@ -106,7 +106,7 @@
             <div class="control-group">
                 @Html.LabelFor(x => x.Weight, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.TextBoxFor(x => x.Weight, new { id = "txtWeight", @class = "input-small" }.DisabledIf(!currentUser.IsAdmin()))
+                    @Html.TextBoxFor(x => x.Weight, new { id = "txtWeight", @class = "input-small" }.DisabledIf(!currentUser.IsAdmin))
                     @Html.ValidationMessageFor(x => x.Weight)
                     @Html.DescriptionFor(x => x.Weight, new { @class = "help-block" })
                 </div>
