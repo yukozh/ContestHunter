@@ -27,6 +27,27 @@ namespace ContestHunter.Models.Domain
         public string Password;
         public string Motto;
         public bool AcceptEmail;
+        internal int _rating = -1;
+        public int Rating
+        {
+            get
+            {
+                if (_rating <= 0)
+                    using (var db = new CHDB())
+                    {
+                        return _rating = (from r in db.RATINGs
+                                          where r.User == ID
+                                          orderby r.CONTEST1.EndTime descending
+                                          select r.Rating1).Single();
+                    }
+                else
+                    return _rating;
+            }
+            set
+            {
+                _rating = value;
+            }
+        }
 
         internal Guid ID;
         internal class OnlineUser : IIdentity
@@ -395,22 +416,6 @@ namespace ContestHunter.Models.Domain
         }
 
         /// <summary>
-        /// 获得用户 Rating
-        /// </summary>
-        /// <returns></returns>
-        public int Rating()
-        {
-            using (var db = new CHDB())
-            {
-                var rating = (from r in db.RATINGs
-                              where r.USER1.ID == ID
-                              orderby r.CONTEST1.EndTime descending
-                              select r.Rating1).FirstOrDefault();
-                return rating;
-            }
-        }
-
-        /// <summary>
         /// 返回当前用户是否为Administrators组
         /// </summary>
         /// <returns></returns>
@@ -434,14 +439,14 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                return (from u in db.USERs
-                        let rating = u.RATINGs.OrderByDescending(x => x.CONTEST1.EndTime).Select(x => x.Rating1).FirstOrDefault()
-                        orderby rating descending
+                return (from u in db.RankLists
+                        orderby u.Rating descending
                         select new User()
                         {
                             Name = u.Name,
+                            ID = u.ID,
                             Motto = u.Motto,
-                            ID = u.ID
+                            _rating = (int)u.Rating
                         }).Skip(skip).Take(top).ToList();
             }
         }
@@ -454,7 +459,6 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                int _rating = Rating();
                 return (from u in db.USERs
                         let rating = u.RATINGs.OrderByDescending(x => x.CONTEST1.EndTime).Select(x => x.Rating1).FirstOrDefault()
                         where rating > _rating

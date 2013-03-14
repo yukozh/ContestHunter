@@ -37,6 +37,7 @@ namespace ContestHunter.Database
         public DbSet<RECORD> RECORDs { get; set; }
         public DbSet<TESTDATA> TESTDATAs { get; set; }
         public DbSet<USER> USERs { get; set; }
+        public DbSet<RankList> RankLists { get; set; }
     
         public virtual ObjectResult<GetACMStanding_Result> GetACMStanding(Nullable<System.Guid> conID, Nullable<System.DateTime> relativeNow, Nullable<int> skip, Nullable<int> top, Nullable<bool> hasVirtual, Nullable<bool> hasNotSubmit)
         {

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="19f51383a2d8492688fe75c8f90b7894" Name="Diagram1">
+      <Diagram DiagramId="6ba1359a7c1a41cba510bb8518f7c0e5" Name="Diagram1">
         <EntityTypeShape EntityType="ContestHunterDbgModel.CONTEST" Width="1.5" PointX="0.75" PointY="7.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterDbgModel.CONTEST_ATTEND" Width="1.5" PointX="3" PointY="8.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterDbgModel.GROUP" Width="1.5" PointX="9" PointY="4.75" IsExpanded="true" />
@@ -14,6 +14,7 @@
         <EntityTypeShape EntityType="ContestHunterDbgModel.RECORD" Width="1.5" PointX="8.25" PointY="7.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterDbgModel.TESTDATA" Width="1.5" PointX="8.25" PointY="13" IsExpanded="true" />
         <EntityTypeShape EntityType="ContestHunterDbgModel.USER" Width="1.5" PointX="11.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="ContestHunterDbgModel.RankList" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="ContestHunterDbgModel.FK_CONTEST_ATTEND_CONTEST" ManuallyRouted="false" />
         <AssociationConnector Association="ContestHunterDbgModel.FK_PROBLEM_CONTEST1" ManuallyRouted="false" />
         <AssociationConnector Association="ContestHunterDbgModel.FK_Rating_CONTEST" ManuallyRouted="false" />

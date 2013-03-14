@@ -18,6 +18,14 @@
           <EntitySet Name="TESTDATA" EntityType="ContestHunterDbgModel.Store.TESTDATA" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="USER" EntityType="ContestHunterDbgModel.Store.USER" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="USER_GROUP" EntityType="ContestHunterDbgModel.Store.USER_GROUP" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RankList" EntityType="ContestHunterDbgModel.Store.RankList" store:Type="Views" store:Schema="dbo" store:Name="RankList">
+            <DefiningQuery>SELECT 
+      [RankList].[ID] AS [ID], 
+      [RankList].[Name] AS [Name], 
+      [RankList].[Motto] AS [Motto], 
+      [RankList].[Rating] AS [Rating]
+      FROM [dbo].[RankList] AS [RankList]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_CONTEST_ATTEND_CONTEST" Association="ContestHunterDbgModel.Store.FK_CONTEST_ATTEND_CONTEST">
             <End Role="CONTEST" EntitySet="CONTEST" />
             <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
@@ -227,6 +235,19 @@
           </Key>
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Group" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <!--生成过程中发现错误:
+      警告 6002: 表/视图“ContestHunterDbg.dbo.RankList”未定义主键。已推断出该键，并将定义创建为只读的表/视图。
+      -->
+        <EntityType Name="RankList">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="Motto" Type="nvarchar" MaxLength="100" />
+          <Property Name="Rating" Type="int" />
         </EntityType>
         <Association Name="FK_CONTEST_ATTEND_CONTEST">
           <End Role="CONTEST" Type="ContestHunterDbgModel.Store.CONTEST" Multiplicity="1">
@@ -505,6 +526,7 @@
           <EntitySet Name="RECORDs" EntityType="ContestHunterDbgModel.RECORD" />
           <EntitySet Name="TESTDATAs" EntityType="ContestHunterDbgModel.TESTDATA" />
           <EntitySet Name="USERs" EntityType="ContestHunterDbgModel.USER" />
+          <EntitySet Name="RankLists" EntityType="ContestHunterDbgModel.RankList" />
           <AssociationSet Name="FK_CONTEST_ATTEND_CONTEST" Association="ContestHunterDbgModel.FK_CONTEST_ATTEND_CONTEST">
             <End Role="CONTEST" EntitySet="CONTESTs" />
             <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
@@ -742,6 +764,16 @@
           <NavigationProperty Name="CONTESTs" Relationship="ContestHunterDbgModel.CONTEST_OWNER" FromRole="USER" ToRole="CONTEST" />
           <NavigationProperty Name="LOCKs" Relationship="ContestHunterDbgModel.LOCK" FromRole="USER" ToRole="PROBLEM" />
           <NavigationProperty Name="GROUPs" Relationship="ContestHunterDbgModel.USER_GROUP" FromRole="USER" ToRole="GROUP" />
+        </EntityType>
+        <EntityType Name="RankList">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Motto" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="Rating" Type="Int32" />
         </EntityType>
         <Association Name="FK_CONTEST_ATTEND_CONTEST">
           <End Role="CONTEST" Type="ContestHunterDbgModel.CONTEST" Multiplicity="1">
@@ -1062,6 +1094,16 @@
                 <ScalarProperty Name="LastLoginIP" ColumnName="LastLoginIP" />
                 <ScalarProperty Name="Motto" ColumnName="Motto" />
                 <ScalarProperty Name="AcceptEmail" ColumnName="AcceptEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RankLists">
+            <EntityTypeMapping TypeName="ContestHunterDbgModel.RankList">
+              <MappingFragment StoreEntitySet="RankList">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Motto" ColumnName="Motto" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

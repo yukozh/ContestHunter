@@ -188,6 +188,9 @@
     <Compile Include="Database\PROBLEM.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\RankList.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\RATING.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
