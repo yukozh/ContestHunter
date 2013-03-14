@@ -96,7 +96,7 @@
                 <div class="controls">
                     @{
             USER currentUser = USER.ByName(USER.CurrentUserName);
-            bool canEditOfficial = currentUser.IsAdmin() || currentUser.Rating() >= 2100;
+            bool canEditOfficial = currentUser.IsAdmin() || currentUser.Rating >= 2100;
                     }
                     @Html.CheckBoxFor(x => x.IsOfficial, new { id = "chkOfficial" }.DisabledIf(!canEditOfficial))
                     @Html.ValidationMessageFor(x => x.IsOfficial)

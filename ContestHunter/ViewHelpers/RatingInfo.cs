@@ -71,7 +71,7 @@ namespace ContestHunter.ViewHelpers
         }
 
         public RatingInfo(User user)
-            : this(user.Rating())
+            : this(user.Rating)
         {
             if (user.IsAdmin())
             {

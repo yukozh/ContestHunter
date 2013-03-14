@@ -253,7 +253,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 if (contest.IsOfficial && !User.CurrentUser.IsAdmin
-                    && User.ByName(User.CurrentUser.name).Rating() < 2100)
+                    && User.ByName(User.CurrentUser.name).Rating < 2100)
                     throw new PermissionDeniedException();
                 contest.Name = Helper.GetLegalName(contest.Name);
                 if ((from c in db.CONTESTs
@@ -304,7 +304,7 @@ namespace ContestHunter.Models.Domain
                            where c.ID==ID
                            select c).Single();
                 if (IsOfficial != con.IsOfficial && !User.CurrentUser.IsAdmin &&
-                    User.ByName(User.CurrentUser.name).Rating() < 2100)
+                    User.ByName(User.CurrentUser.name).Rating < 2100)
                     throw new PermissionDeniedException();
                 Name = Helper.GetLegalName(Name);
                 if (con.Name != Helper.GetLegalName(Name))
