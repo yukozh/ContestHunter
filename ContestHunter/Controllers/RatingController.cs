@@ -25,6 +25,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult History(string id)
         {
             RatingHistoryModel model = new RatingHistoryModel
@@ -44,6 +45,7 @@ namespace ContestHunter.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Graph(string id)
         {
             Response.ContentType = "image/svg+xml";

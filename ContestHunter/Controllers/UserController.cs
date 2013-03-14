@@ -166,6 +166,7 @@ namespace ContestHunter.Controllers
         }
         #endregion
 
+        [AllowAnonymous]
         public ActionResult Show(string id)
         {
             User user;
