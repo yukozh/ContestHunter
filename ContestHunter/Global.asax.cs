@@ -64,7 +64,7 @@ namespace ContestHunter
             }
             try
             {
-                //AccessRestriction.CheckRestriction(Request.Headers["X-Forwarded-For"] ?? Request.UserHostAddress);
+                AccessRestriction.CheckRestriction(Request.Headers["X-Forwarded-For"] ?? Request.UserHostAddress);
             }
             catch
             {
