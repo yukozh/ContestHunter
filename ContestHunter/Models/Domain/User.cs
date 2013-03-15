@@ -12,6 +12,7 @@ using System.Threading;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.Collections.Concurrent;
 
 namespace ContestHunter.Models.Domain
 {
@@ -112,7 +113,7 @@ namespace ContestHunter.Models.Domain
             }
         }
 
-        static Dictionary<Guid, OnlineUser> OnlineUsers = new Dictionary<Guid, OnlineUser>();
+        static ConcurrentDictionary<Guid, OnlineUser> OnlineUsers = new ConcurrentDictionary<Guid, OnlineUser>();
 
         static internal OnlineUser CurrentUser
         {
@@ -181,20 +182,17 @@ namespace ContestHunter.Models.Domain
         /// <exception cref="BadTokenException"></exception>
         public static void Authenticate(string Token, string ip)
         {
-            lock (OnlineUsers)
-            {
-                string[] tokens = Token.Split(new char[] { '|' });
-                if (tokens.Length != 2)
-                    throw new BadTokenException();
-                Guid uid = Guid.Parse(tokens[0]), tk = Guid.Parse(tokens[1]);
-                if (!OnlineUsers.ContainsKey(uid))
-                    throw new BadTokenException();
-                if (OnlineUsers[uid].Token != tk)
-                    throw new BadTokenException();
-                if (OnlineUsers[uid].ip != ip)
-                    throw new BadTokenException();
-                CurrentUser = OnlineUsers[uid];
-            }
+            string[] tokens = Token.Split(new char[] { '|' });
+            if (tokens.Length != 2)
+                throw new BadTokenException();
+            Guid uid = Guid.Parse(tokens[0]), tk = Guid.Parse(tokens[1]);
+            if (!OnlineUsers.ContainsKey(uid))
+                throw new BadTokenException();
+            if (OnlineUsers[uid].Token != tk)
+                throw new BadTokenException();
+            if (OnlineUsers[uid].ip != ip)
+                throw new BadTokenException();
+            CurrentUser = OnlineUsers[uid];
         }
 
         /// <summary>
@@ -325,13 +323,7 @@ namespace ContestHunter.Models.Domain
                             ip = ip,
                             IsAdmin = currentUser.GROUPs.Where(x => x.Name == "Administrators").Any()
                         };
-                    lock (OnlineUsers)
-                    {
-                        if (OnlineUsers.ContainsKey(currentUser.ID))
-                            OnlineUsers[currentUser.ID] = newToken;
-                        else
-                            OnlineUsers.Add(currentUser.ID, newToken);
-                    }
+                    OnlineUsers.AddOrUpdate(currentUser.ID, newToken, (Guid id, OnlineUser oldv) => newToken);
                     db.SaveChanges();
                     return currentUser.ID.ToString() + "|" + newToken.Token.ToString();
                 }
@@ -345,11 +337,8 @@ namespace ContestHunter.Models.Domain
         /// <param name="token"></param>
         public static void Logout()
         {
-            lock (OnlineUsers)
-            {
-                OnlineUsers.Remove(CurrentUser.ID);
-                CurrentUser = null;
-            }
+            OnlineUser tmp;
+            OnlineUsers.TryRemove(CurrentUser.ID, out tmp);
         }
 
         /// <summary>
