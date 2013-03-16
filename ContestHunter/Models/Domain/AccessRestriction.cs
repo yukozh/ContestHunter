@@ -17,6 +17,7 @@ namespace ContestHunter.Models.Domain
         static ConcurrentDictionary<string, Accession> accessTable = new ConcurrentDictionary<string, Accession>();
         public static void CheckRestriction(string ip)
         {
+            /*
             string key = ip;
             if (null != User.CurrentUser)
                 key = User.CurrentUserName;
@@ -37,6 +38,7 @@ namespace ContestHunter.Models.Domain
             }
             if (ac.Pressure > 10)
                 throw new AccessTooFrequentlyException();
+             * */
         }
     }
 }
