@@ -14,20 +14,19 @@ namespace ContestHunter
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-        const string STR_503 = "<html><head><title>Slow Down Please</title></head><body><pre>"
-            +"struct Hunter {\r\n"
-            +"\tbool AreTired() {\r\n"
-            +"\t\treturn true;\r\n"
-            +"\t}\r\n"
-            +"} you;\r\n"
-            +"\r\n"
-            + "int main() {\r\n"
-            +"\tif (you.AreTired())\r\n"
-            + "\t\tgoto 3839;\r\n"
-            + "3839:\r\n"
-            + "\t\"<a href='http://www.3839.com/'>http://www.3839.com/</a>\";\r\n"
-            +"}"
-            + "</pre></body></html>";
+        const string STR_503 = "<html><head><title>手速太快了</title></head><body>"
+            + "<style>"
+                + ".m{font-size:80px;}"
+                + ".l{font-size:100px;}"
+                + ".xl{font-size:150px;}"
+                + ".y{font-family:微软雅黑;}"
+            + "</style>"
+            + "<div style=\"text-align:center;\">"
+                + "<div class=\"l\">别<span class=\"xl y\">刷</span>了</div>"
+                + "<div class=\"m\">越<span class=\"l y\">刷</span>越<span class=\"l y\">慢</span></div>"
+                + "<div class=\"m\"><span class=\"l y\">再</span>刷<span class=\"l y\">关</span>站</div>"
+            + "</div>"
+            + "</body></html>";
 
 
         protected void Application_Start()
