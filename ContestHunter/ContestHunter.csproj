@@ -736,6 +736,7 @@
     <Content Include="Views\Home\BadBrowser.cshtml" />
     <Content Include="Views\Contest\SendInviteEmail.cshtml" />
     <Content Include="Views\Home\Process.cshtml" />
+    <Content Include="Views\Home\Captcha.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

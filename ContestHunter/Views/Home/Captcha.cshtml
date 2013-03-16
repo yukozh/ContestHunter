@@ -1,0 +1,80 @@
+﻿@model List<string>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <meta charset="utf-8" />
+    <title>Captcha</title>
+</head>
+<body>
+    <div>
+        <style>
+            #text span {
+                background: lightblue;
+                margin: 5px;
+                padding: 5px;
+                cursor: pointer;
+            }
+
+            .placeholder {
+                border: blue dotted 2px;
+            }
+        </style>
+        @if (ViewBag.Last != null)
+        {
+            <fieldset>
+                <legend>上次检测结果</legend>
+                @if (ViewBag.Last=="yes")
+                {
+                    <span style="color: green;">正确</span>
+                }
+                else
+                {
+                    <span style="color: red;">错误</span>
+                }
+            </fieldset>
+        }
+        @using (Html.BeginForm())
+        {
+            @Html.Hidden("id", (Guid)ViewBag.ID)
+            @Html.Hidden("answer")
+            <div>
+                请用鼠标拖动，将下面文字的顺序复原，以证明您是人类。<br />
+                (以下内容摘自性 情)
+            </div>
+            <fieldset id="text" style="padding-left:20px;">
+                <legend>操作区</legend>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <span data-id="@i">@Model[i]</span>
+                }
+            </fieldset>
+            <input type="button" onclick="location.href = location.href;" value="换一个" />
+            <input type="submit" value="检测正确性" />
+            <script>
+                $(function () {
+                    $('#text').sortable({
+                        'placeholder': 'placeholder'
+                    }).disableSelection();
+                    $('form').submit(function () {
+                        var answer = '';
+                        var spans = $('#text span');
+                        for (var i = 0; i < spans.length; i++) {
+                            answer += $(spans[i]).attr('data-id') + '|';
+                        }
+                        $('#answer').val(answer);
+                    });
+                })
+            </script>
+        }
+    </div>
+</body>
+</html>
