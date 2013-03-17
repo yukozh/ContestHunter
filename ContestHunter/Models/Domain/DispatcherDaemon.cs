@@ -44,7 +44,7 @@ namespace ContestHunter.Models.Domain
                     if (null != hu)
                     {
                         flg = true;
-                        hu.Status = (int)Record.StatusType.Running;
+                        hu.Status = (int)Hunt.StatusType.Running;
                         db.SaveChanges();
                         tester.HuntList.Add(hu.ID);
                     }
