@@ -81,7 +81,7 @@
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Text</span>
                             @if (USER.ByName(USER.CurrentUserName).IsAdmin || Contest.ByName(Model.Contest).Owners.Contains(USER.CurrentUserName))
                             {
-                                using (Html.BeginForm("Rejudge", "Record", new { id = Model.ID }, FormMethod.Post, new { style = "margin:0; float:right;" }))
+                                using (Html.BeginForm("RejudgeHunt", "Record", new { id = Model.ID }, FormMethod.Post, new { style = "margin:0; float:right;" }))
                                 {
                                     @Html.AntiForgeryToken()
                                     <input type="submit" class="btn btn-warning btn-small" value="重测"/>
