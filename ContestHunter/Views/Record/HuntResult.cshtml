@@ -49,11 +49,11 @@
                                     break;
                                 case Hunt.StatusType.Pending:
                                     ViewBag.Label = "label-warning";
-                                    ViewBag.Text = "等待测评";
+                                    ViewBag.Text = "等待评测";
                                     ViewBag.Score = 0;
                                     break;
                                 case Hunt.StatusType.Running:
-                                    ViewBag.Label = "";
+                                    ViewBag.Label = "label-warning";
                                     ViewBag.Text = "正在评测";
                                     ViewBag.Score = 0;
                                     break;
@@ -79,21 +79,16 @@
                                     break;
                             }
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Text</span>
-                        </td>
-                    </tr>
-                    @if (USER.ByName(USER.CurrentUserName).IsAdmin)
-                    {
-                        <tr>
-                            <th>操作</th>
-                            <td>
-                                @using (Html.BeginForm("RejudgeHunt", "Record", new { id = Model.ID }, FormMethod.Post, new { style="margin:0"}))
+                            @if (USER.ByName(USER.CurrentUserName).IsAdmin || Contest.ByName(Model.Contest).Owners.Contains(USER.CurrentUserName))
+                            {
+                                using (Html.BeginForm("Rejudge", "Record", new { id = Model.ID }, FormMethod.Post, new { style = "margin:0; float:right;" }))
                                 {
                                     @Html.AntiForgeryToken()
-                                    <input type="submit" class="btn btn-warning btn-small" value="重测" />
+                                    <input type="submit" class="btn btn-warning btn-small" value="重测"/>
                                 }
-                            </td>
-                        </tr>
-                    }
+                            }
+                        </td>
+                    </tr>
                     <tr>
                         <th>得分</th>
                         <td>

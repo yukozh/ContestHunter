@@ -410,10 +410,14 @@ namespace ContestHunter.Models.Domain
         {
             if (null == Domain.User.CurrentUser)
                 throw new UserNotLoginException();
-            if (!Domain.User.CurrentUser.IsAdmin)
-                throw new PermissionDeniedException();
             using (var db = new CHDB())
             {
+                var curRecord = (from r in db.RECORDs
+                                 where r.ID == ID
+                                 select r).Single();
+                var curContest = Domain.Contest.ByName(curRecord.PROBLEM1.CONTEST1.Name);
+                if (!Domain.User.CurrentUser.IsAdmin && !curContest.Owners.Contains(Domain.User.CurrentUser.Name))
+                    throw new PermissionDeniedException();
                 (from r in db.RECORDs
                  where r.ID == ID
                  select r).Single().Status = (int)StatusType.Pending;
@@ -425,7 +429,7 @@ namespace ContestHunter.Models.Domain
         {
             var con = Domain.Contest.ByName(Contest);
             if (con.RelativeNow <= con.RelativeEndTime && !Domain.User.CurrentUser.IsAdmin
-                && !con.Owner.Contains(Domain.User.CurrentUserName) && (null == Domain.User.CurrentUser || User!=Domain.User.CurrentUserName))
+                && !con.Owner.Contains(Domain.User.CurrentUserName) && (null == Domain.User.CurrentUser || User != Domain.User.CurrentUserName))
                 return true;
             return false;
 

@@ -23,7 +23,13 @@
                     </tr>
                     <tr>
                         <td><b>提交者</b></td>
-                        <td>@Html.UserLink(Model.User)</td>
+                        <td>
+                            @Html.UserLink(Model.User)
+                            @if (Model.CanHunt())
+                            {
+                                @Html.ActionLink("Hunt!", "Hunt", new { id = Model.ID }, new { @class = "btn btn-danger btn-small", style = "float: right;font-weight:bold" })
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td><b>评测结果</b></td>
@@ -51,10 +57,10 @@
                                 break;
                             case Record.StatusType.Pending:
                                 ViewBag.Label = "label-info";
-                                ViewBag.Message = "等待测评";
+                                ViewBag.Message = "等待评测";
                                 break;
                             case Record.StatusType.Running:
-                                ViewBag.Label = "";
+                                ViewBag.Label = "label-info";
                                 ViewBag.Message = "正在评测";
                                 break;
                             case Record.StatusType.Runtime_Error:
@@ -86,25 +92,16 @@
                         }
                         <td>
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Message</span>
-                            @if (Model.CanHunt())
+                            @if (USER.ByName(USER.CurrentUserName).IsAdmin || Contest.ByName(Model.Contest).Owners.Contains(USER.CurrentUserName))
                             {
-                                @Html.ActionLink("Hunt!", "Hunt", new { id = Model.ID }, new { @class = "btn btn-danger btn-small", style = "float: right;font-weight:bold" })
+                                using (Html.BeginForm("Rejudge", "Record", new { id = Model.ID }, FormMethod.Post, new { style = "margin:0; float:right;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="submit" class="btn btn-warning btn-small" value="重测"/>
+                                }
                             }
                         </td>
                     </tr>
-                    @if (USER.ByName(USER.CurrentUserName).IsAdmin)
-                    {
-                        <tr>
-                            <th>操作</th>
-                            <td>
-                                @using (Html.BeginForm("Rejudge", "Record", new { id = Model.ID }, FormMethod.Post, new { style = "margin:0" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <input type="submit" class="btn btn-warning btn-small" value="重测" />
-                                }
-                            </td>
-                        </tr>
-                    }
                     @if (Model.Score.HasValue)
                     {
                         <tr>
