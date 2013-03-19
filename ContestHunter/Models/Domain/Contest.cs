@@ -1018,8 +1018,8 @@ namespace ContestHunter.Models.Domain
                         {
                             string Body = info.Name + "：<br />&nbsp;&nbsp;&nbsp;&nbsp;您好。" + HttpUtility.HtmlEncode(Name) + " 将于 " + AbsoluteStartTime + " 在ContestHunter举办。欢迎您访问 <a href=\"" + HttpUtility.HtmlAttributeEncode(link) + "\">" + HttpUtility.HtmlEncode(link) + "</a> 报名参加。<br />" +
                                 "本次比赛持续 " + (AbsoluteEndTime - AbsoluteStartTime) + " ，采用 " + Type + " 赛制，由 " + string.Join(",", Owner) + " 举办，<b>" + (IsOfficial ? "" : "不") + "计入</b>能力排名。<br />" +
-                                "诚邀您及时报名参加本场比赛。如果您不希望再收到此类邮件，可以在修改个人资料页面取消。<br />" +
-                                (string.IsNullOrWhiteSpace(message) ? "" : "管理员留言：<br />" + HttpUtility.HtmlEncode(message));
+                                "<br />&nbsp;&nbsp;&nbsp;&nbsp;诚邀您及时报名参加本场比赛。如果您不希望再收到此类邮件，可以在修改个人资料页面取消。" +
+                                (string.IsNullOrWhiteSpace(message) ? "" : HttpUtility.HtmlEncode(message));
                             SendMailDaemon.EmailList.Add(new SendMailDaemon.Email()
                             {
                                 subject = Subject,
