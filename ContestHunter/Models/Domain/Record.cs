@@ -274,7 +274,8 @@ namespace ContestHunter.Models.Domain
                                 Problem = result.PROBLEM1.Name,
                                 Status = (StatusType)result.Status,
                                 SubmitTime = result.SubmitTime,
-                                User = result.USER1.Name
+                                User = result.USER1.Name,
+                                Detail=result.Detail
                             };
                         default:
                             throw new NotImplementedException();
