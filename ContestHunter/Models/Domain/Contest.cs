@@ -19,14 +19,17 @@ namespace ContestHunter.Models.Domain
         }
         public ContestType Type;
         public DateTime AbsoluteStartTime, AbsoluteEndTime;
+        DateTime? _RelativeStartTime,_RelativeEndTime;
         public DateTime RelativeStartTime
         {
             get
             {
+                if (null != _RelativeStartTime)
+                    return (DateTime)_RelativeStartTime;
                 try
                 {
                     if (GetAttendType() == AttendType.Virtual)
-                        return VirtualStartTime();
+                        return (DateTime)(_RelativeStartTime = VirtualStartTime());
                 }
                 catch
                 {
@@ -42,10 +45,12 @@ namespace ContestHunter.Models.Domain
         {
             get
             {
+                if (null != _RelativeEndTime)
+                    return (DateTime)_RelativeEndTime;
                 try
                 {
-                    if (GetAttendType()==AttendType.Virtual)
-                        return VirtualEndTime();
+                    if (GetAttendType() == AttendType.Virtual)
+                        return (DateTime)(_RelativeEndTime = VirtualEndTime());
                 }
                 catch
                 {

@@ -50,27 +50,7 @@ namespace ContestHunter.Models.Domain
                 _isAdmin = value ? 1 : 0;
             }
         }
-        internal int _rating = -1;
-        public int Rating
-        {
-            get
-            {
-                if (_rating <= 0)
-                    using (var db = new CHDB())
-                    {
-                        return _rating = (from r in db.RATINGs
-                                          where r.User == ID
-                                          orderby r.CONTEST1.EndTime descending
-                                          select r.Rating1).FirstOrDefault();
-                    }
-                else
-                    return _rating;
-            }
-            set
-            {
-                _rating = value;
-            }
-        }
+        public int Rating;
 
         internal Guid ID;
         internal class OnlineUser : IIdentity
@@ -372,7 +352,8 @@ namespace ContestHunter.Models.Domain
                     School = result.School,
                     LastLoginTime = privillege ? result.LastLoginTime : null,
                     LastLoginIP = privillege ? result.LastLoginIP : null,
-                    AcceptEmail = result.AcceptEmail
+                    AcceptEmail = result.AcceptEmail,
+                    Rating = result.Rating ?? 0
                 };
             }
         }
@@ -454,7 +435,7 @@ namespace ContestHunter.Models.Domain
                             Name = u.Name,
                             ID = u.ID,
                             Motto = u.Motto,
-                            _rating = u.Rating ?? 0,
+                            Rating = u.Rating ?? 0,
                             _isAdmin = u.IsAdmin
                         }).Skip(skip).Take(top).ToList();
             }
@@ -470,7 +451,7 @@ namespace ContestHunter.Models.Domain
             {
                 return (from u in db.USERs
                         let rating = u.RATINGs.OrderByDescending(x => x.CONTEST1.EndTime).Select(x => x.Rating1).FirstOrDefault()
-                        where rating > _rating
+                        where rating > Rating
                         select u).Count();
             }
         }

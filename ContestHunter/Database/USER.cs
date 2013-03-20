@@ -30,6 +30,7 @@ namespace ContestHunter.Database
         public string Name { get; set; }
         public byte[] Password { get; set; }
         public string Email { get; set; }
+        public Nullable<int> Rating { get; set; }
         public Nullable<int> PreferLanguage { get; set; }
         public string RealName { get; set; }
         public string Country { get; set; }
