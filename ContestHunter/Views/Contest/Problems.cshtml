@@ -82,7 +82,7 @@
                                 <td>
                                     <div class="btn-group">
                                         @Html.ActionLink("编辑", "Edit", "Problem", new { id = Model.Problems[i].Name, contest = Model.Contest }, new { @class = "btn btn-danger", style = "display:inline-block;" })
-                                        <input type="submit" value="删除" class="btn btn-inverse" onclick="javascript:if(confirm(您确定要删除这道题目吗？)) $('#ProblemIndex').val(@i) else return false;"/>
+                                        <input type="submit" value="删除" class="btn btn-inverse" onclick="javascript:$('#ProblemIndex').val(@i); return confirm('您确定要删除这道题目吗？');"/>
                                     </div>
                                 </td>
                             </tr>
