@@ -44,6 +44,39 @@ namespace DomainTest
         }
 
         [TestMethod]
+        public void TestTLE()
+        {
+            using (NativeRunner runner = new NativeRunner(HOST, PORT))
+            {
+                /*
+                //Sleep
+                runner.PutFile("code.cpp", Encoding.ASCII.GetBytes("#include <unistd.h>\r\n"
+                    + "int main(){"
+                    + "  while(1)"
+                    + "    sleep(10);"
+                    + "}"));
+                var result=runner.Execute("g++", new string[] { "-o", "exec", "code.cpp" }, 1024 * 1024 * 100, 5000, 1024 * 1024 * 100, RestrictionLevel.Loose, null);
+                Assert.AreEqual(ExecuteResultType.Success, result.Type);
+
+                result=runner.Execute("./exec", new string[] { }, 1024 * 1024 * 10, 1000, 1024 * 1024 * 10, RestrictionLevel.Strict, null);
+                Assert.AreEqual(ExecuteResultType.TimeLimitExceeded, result.Type);
+                 * */
+
+                //While 1
+                runner.PutFile("code.cpp", Encoding.ASCII.GetBytes("#include <unistd.h>\r\n"
+                    + "int main(){"
+                    + "  while(1)"
+                    + "    ;"
+                    + "}"));
+                result = runner.Execute("g++", new string[] { "-o", "exec", "code.cpp" }, 1024 * 1024 * 100, 5000, 1024 * 1024 * 100, RestrictionLevel.Loose, null);
+                Assert.AreEqual(ExecuteResultType.Success, result.Type);
+
+                result = runner.Execute("./exec", new string[] { }, 1024 * 1024 * 10, 1000, 1024 * 1024 * 10, RestrictionLevel.Strict, null);
+                Assert.AreEqual(ExecuteResultType.TimeLimitExceeded, result.Type);
+            }
+        }
+
+        [TestMethod]
         public void TestEmptyInput()
         {
             using (NativeRunner runner = new NativeRunner(HOST, PORT))
