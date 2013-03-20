@@ -125,6 +125,8 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         public byte[] InputPreview(int startPos, int length)
         {
+            if (inputFromSetter)
+                return _Input.Skip(startPos).Take(length).ToArray();
             if (!canGetData)
                 return null;
             using (var db = new CHDB())
@@ -141,6 +143,8 @@ namespace ContestHunter.Models.Domain
         /// <returns></returns>
         public byte[] DataPreview(int startPos, int length)
         {
+            if (dataFromSetter)
+                return _Data.Skip(startPos).Take(length).ToArray();
             if (!canGetData)
                 return null;
             using (var db = new CHDB())
