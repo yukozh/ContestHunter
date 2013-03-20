@@ -6,11 +6,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using System.IO.Compression;
 using System.Configuration;
 using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.Tar;
+using ICSharpCode.SharpZipLib.BZip2;
 using ContestHunter.Models.Domain;
 using ContestHunter.Models.View;
 using USER = ContestHunter.Models.Domain.User;
+
 
 namespace ContestHunter.Controllers
 {
@@ -440,6 +444,52 @@ namespace ContestHunter.Controllers
                         if (!DealEntry(entry.Name, bytes, inputFiles, outputFiles))
                         {
                             return null;
+                        }
+                    }
+                }
+            }
+            else if (file.FileName.EndsWith(".tgz") || file.FileName.EndsWith(".tar.gz"))
+            {
+                using (GZipStream stream = new GZipStream(file.InputStream, CompressionMode.Decompress))
+                {
+                    using (TarInputStream tar = new TarInputStream(stream))
+                    {
+                        TarEntry entry;
+                        while ((entry = tar.GetNextEntry()) != null)
+                        {
+                            byte[] bytes;
+                            using (MemoryStream mem = new MemoryStream())
+                            {
+                                tar.CopyTo(mem);
+                                bytes = mem.ToArray();
+                            }
+                            if (!DealEntry(entry.Name, bytes, inputFiles, outputFiles))
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (file.FileName.EndsWith(".tar.bz2"))
+            {
+                using (BZip2InputStream stream = new BZip2InputStream(file.InputStream))
+                {
+                    using (TarInputStream tar = new TarInputStream(stream))
+                    {
+                        TarEntry entry;
+                        while ((entry = tar.GetNextEntry()) != null)
+                        {
+                            byte[] bytes;
+                            using (MemoryStream mem = new MemoryStream())
+                            {
+                                tar.CopyTo(mem);
+                                bytes = mem.ToArray();
+                            }
+                            if (!DealEntry(entry.Name, bytes, inputFiles, outputFiles))
+                            {
+                                return null;
+                            }
                         }
                     }
                 }
