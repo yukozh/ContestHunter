@@ -96,7 +96,7 @@
                                 {
                                     <td>
                                         <div class="controls">
-                                            @Html.CheckBoxFor(x => x.TestCases[i].Enabled, new { @class="Pretest" })
+                                            @Html.CheckBoxFor(x => x.TestCases[i].Enabled, new { @class = "Pretest" })
                                             @Html.ValidationMessageFor(x => x.TestCases[i].Enabled)
                                         </div>
                                     </td>
@@ -131,6 +131,38 @@
                         </tr>
                     </tbody>
                 </table>
+                <script>
+                    function TestCase(number,inputsize,outputsize)
+                    {
+                        this.num=number;
+                        this.ins=inputsize;
+                        this.ous=outputsize;
+                    }
+                    var arr = new Array();
+                        @for (int i = 0; i < Model.TestCases.Count; i++)
+                        {
+                            @:arr.push(new TestCase(@i,@Model.TestCases[i].InputSize,@Model.TestCases[i].OutputSize));
+                        }
+                    for(var i=0;i<arr.length;i++)
+                        for(var j=i+1;j<arr.length;j++)
+                            if(arr[i].ins>arr[j].ins || (arr[i].ins==arr[j].ins && arr[i].ous>arr[j].ous))
+                            {
+                                var k;
+                                k=arr[i].num; arr[i].num=arr[j].num; arr[j].num=k;
+                                k=arr[i].ins; arr[i].ins=arr[j].ins; arr[j].ins=k;
+                                k=arr[i].out; arr[i].ous=arr[j].ous; arr[j].ous=k;
+                            }
+                    var newtrArray=document.getElementsByTagName("tbody")[0].rows;
+                    var trArray=new Array();
+                    for(var i=0;i<arr.length;i++)
+                    {
+                        trArray.push(newtrArray[i].innerHTML);
+                    }
+                    for(var i=0;i<arr.length;i++)
+                    {
+                        newtrArray[i].innerHTML=trArray[arr[i].num];
+                    }
+                </script>
                 <script>
                     $('td.Preview').popover();
                 </script>
