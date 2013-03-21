@@ -402,7 +402,11 @@ namespace ContestHunter.Models.Domain
                         rec.Status = (int)Hunt.StatusType.Success;
                         lock (ContestDaemon.HuntLst)
                         {
-                            ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                            string key=rec.User.ToString() + rec.RECORD1.Problem.ToString();
+                            if (!ContestDaemon.HuntLst.ContainsKey(key))
+                                ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                            else
+                                ContestDaemon.HuntLst[key] = newid;
                         }
                         return true;
                     }
@@ -442,7 +446,11 @@ namespace ContestHunter.Models.Domain
                     rec.Status = (int)Hunt.StatusType.Success;
                     lock (ContestDaemon.HuntLst)
                     {
-                        ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                        string key = rec.User.ToString() + rec.RECORD1.Problem.ToString();
+                        if (!ContestDaemon.HuntLst.ContainsKey(key))
+                            ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                        else
+                            ContestDaemon.HuntLst[key] = newid;
                     }
                     return true;
                 }
