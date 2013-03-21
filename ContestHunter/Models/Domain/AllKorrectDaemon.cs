@@ -227,6 +227,8 @@ namespace ContestHunter.Models.Domain
                                         Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>比较器错误:{1}</b></span> ({2} ms / {3} KB)<br />", totalTests, Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)), Time, Memory_KB);
                                         break;
                                 }
+                                if (rec.PROBLEM1.CONTEST1.Type != (int)Contest.ContestType.OI)
+                                    break;
                                 break;
                             default:
                                 rec.Status = (int)Record.StatusType.CMP_Error;
@@ -391,14 +393,6 @@ namespace ContestHunter.Models.Domain
                             Input = tester.GetFile(HuntData)
                         });
                         rec.RECORD1.Status = (int)Record.StatusType.Hacked;
-                        foreach (var hunt in (from h in db.HUNTs
-                                              where h.RECORD1.ID == rec.RECORD1.ID
-                                              && h.Status == (int)Hunt.StatusType.Pending
-                                              && h.ID != rec.ID
-                                              select h))
-                        {
-                            hunt.Status = (int)Hunt.StatusType.HackedByOther;
-                        }
                         rec.Status = (int)Hunt.StatusType.Success;
                         lock (ContestDaemon.HuntLst)
                         {
@@ -435,14 +429,6 @@ namespace ContestHunter.Models.Domain
                         Input = tester.GetFile(HuntData)
                     });
                     rec.RECORD1.Status = (int)Record.StatusType.Hacked;
-                    foreach (var hunt in (from h in db.HUNTs
-                                          where h.RECORD1.ID == rec.RECORD1.ID
-                                          && h.Status == (int)Hunt.StatusType.Pending
-                                          && h.ID != rec.ID
-                                          select h))
-                    {
-                        hunt.Status = (int)Hunt.StatusType.HackedByOther;
-                    }
                     rec.Status = (int)Hunt.StatusType.Success;
                     lock (ContestDaemon.HuntLst)
                     {
