@@ -80,14 +80,14 @@
                                 </td>
                                 <td class="control-group">
                                     <div class="controls">
-                                        @Html.TextBoxFor(x => x.TestCases[i].Time, new { @class = "inputmini" })
+                                        @Html.TextBoxFor(x => x.TestCases[i].Time, new { @class = "TimeLimit inputmini" })
                                         @Html.DescriptionFor(x => x.TestCases[i].Time)
                                         @Html.ValidationMessageFor(x => x.TestCases[i].Time)
                                     </div>
                                 </td>
                                 <td>
                                     <div class="controls">
-                                        @Html.TextBoxFor(x => x.TestCases[i].Memory, new { @class = "inputmini" })
+                                        @Html.TextBoxFor(x => x.TestCases[i].Memory, new { @class = "MemoryLimit inputmini" })
                                         @Html.DescriptionFor(x => x.TestCases[i].Memory)
                                         @Html.ValidationMessageFor(x => x.TestCases[i].Memory)
                                     </div>
@@ -96,7 +96,7 @@
                                 {
                                     <td>
                                         <div class="controls">
-                                            @Html.CheckBoxFor(x => x.TestCases[i].Enabled)
+                                            @Html.CheckBoxFor(x => x.TestCases[i].Enabled, new { @class="Pretest" })
                                             @Html.ValidationMessageFor(x => x.TestCases[i].Enabled)
                                         </div>
                                     </td>
@@ -107,6 +107,28 @@
                                 </td>
                             </tr>
                         }
+                        <script>
+                            function FillAll()
+                            {
+                                $('.TimeLimit').val($('#TimeLimitAll').val());
+                                $('.MemoryLimit').val($('#MemoryLimitAll').val());
+                            }
+                        </script>
+                        <tr>
+                            <td colspan="2">快捷设置 - 对于全部测试点：</td>
+                            <td>
+                                <input type="text" id="TimeLimitAll" name="TimeLimitAll" class="inputmini" />
+                                s 
+                            </td>
+                            <td>
+                                <input type="text" id="MemoryLimitAll" name="MemoryLimitAll" class="inputmini" />
+                                MB 
+                            </td>
+                            <td></td>
+                            <td>
+                                <input type="button" value="全部填充" class="btn btn-small btn-success" onclick="FillAll()">
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <script>
