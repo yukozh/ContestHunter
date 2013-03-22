@@ -12,31 +12,71 @@ namespace ContestHunter.Models.Domain
         void CalcRating(CONTEST con, CHDB db)
         {
             List<string> Rank = new List<string>();
-            List<int> Rating=new List<int>();
+            List<int> Rating = new List<int>();
             double[] exp;
             int probs;
+            int[] dat1;
+            int[] dat2;
+
             switch ((Contest.ContestType)con.Type)
             {
                 case Contest.ContestType.OI:
-                    var tmp_oi = db.GetOIStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).Select(x=>x.User).ToArray();
-                    probs=con.PROBLEMs.Count;
+                    var tmp_oi = db.GetOIStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).ToArray();
+                    dat1 = new int[con.CONTEST_ATTEND.Count + 100];
+                    dat2 = new int[con.CONTEST_ATTEND.Count + 100];
+                    probs = con.PROBLEMs.Count;
                     for (int i = 0; i < tmp_oi.Length; i += probs)
-                        Rank.Add(tmp_oi[i]);
+                    {
+                        Rank.Add(tmp_oi[i].User);
+                        int k = i / probs;
+                        dat1[k] = dat2[k] = 0;
+                        for (int j = i; j < i + probs; j++)
+                        {
+                            dat1[k] += tmp_oi[j].Score ?? 0;
+                            dat2[k] += tmp_oi[j].ExecuteTime ?? 0;
+                        }
+                    }
                     break;
                 case Contest.ContestType.CF:
-                    var tmp_cf = db.GetCFStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).Select(x => x.User).ToArray();
+                    var tmp_cf = db.GetCFStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).ToArray();
+                    dat1 = new int[con.CONTEST_ATTEND.Count + 100];
+                    dat2 = new int[con.CONTEST_ATTEND.Count + 100];
                     probs = con.PROBLEMs.Count;
                     for (int i = 0; i < tmp_cf.Length; i += probs)
-                        Rank.Add(tmp_cf[i]);
-                        break;
+                    {
+                        Rank.Add(tmp_cf[i].User);
+                        int k = i / probs;
+                        dat1[k] = dat2[k] = 0;
+                        for (int j = i; j < i + probs; j++)
+                        {
+                            dat1[k] += (tmp_cf[j].Rating ?? 0) + (tmp_cf[j].SuccessfulHunt ?? 0) * 100 - (tmp_cf[j].FailedHunt ?? 0) * 25;
+                        }
+                    }
+                    break;
                 case Contest.ContestType.ACM:
-                    var tmp_acm = db.GetACMStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).Select(x => x.User).ToArray();
+                    var tmp_acm = db.GetACMStanding(con.ID, DateTime.Now, 0, con.CONTEST_ATTEND.Count, false, false).ToArray();
+                    dat1 = new int[con.CONTEST_ATTEND.Count + 100];
+                    dat2 = new int[con.CONTEST_ATTEND.Count + 100];
                     probs = con.PROBLEMs.Count;
                     for (int i = 0; i < tmp_acm.Length; i += probs)
-                        Rank.Add(tmp_acm[i]);
-                        break;
+                    {
+                        Rank.Add(tmp_acm[i].User);
+                        int k = i / probs;
+                        dat1[k] = dat2[k] = 0;
+                        for (int j = i; j < i + probs; j++)
+                        {
+                            dat1[k] += (tmp_acm[j].IsAC ?? false) ? 1 : 0;
+                            dat2[k] += (tmp_acm[j].ACTime ?? 0) + (tmp_acm[j].FailedTimes ?? 0) * 20;
+                        }
+                    }
+                    break;
                 default:
                     throw new NotImplementedException();
+            }
+            for (int i = 0, j; i < con.CONTEST_ATTEND.Count; i=j)
+            {
+                for (j = i + 1; j < con.CONTEST_ATTEND.Count && dat1[j] == dat1[i] && dat2[j] == dat2[i]; j++) ;
+                for (int k = i; k < j; k++) dat1[k] = (i + j - 1) / 2;
             }
             foreach (var u in Rank)
             {
@@ -60,8 +100,7 @@ namespace ContestHunter.Models.Domain
             int weight = con.Weight;
             for (int i = 0; i < n; i++)
             {
-                double k = (double)weight / m * Math.Abs(i + 1 - m) + 1;
-                Rating[i] += (int)Math.Round((exp[i] - Rating[i]) * Math.Pow(n, 1.0 / 8.0) / k);
+                Rating[i] += (int)Math.Round((exp[dat1[i]] - Rating[i]) * Math.Pow(n, 1.0 / 8.0) / weight);
                 Rating[i] = Math.Max(Rating[i], 1);
                 Rating[i] = Math.Min(Rating[i], 3000);
             }
@@ -79,7 +118,6 @@ namespace ContestHunter.Models.Domain
                     });
                 }
             }
-
         }
 
         protected override int Run()
@@ -87,7 +125,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 var con = (from c in db.CONTESTs
-                           where c.EndTime < DateTime.Now && c.Status!=(int)Contest.StatusType.Done
+                           where c.EndTime < DateTime.Now && c.Status != (int)Contest.StatusType.Done
                            select c).FirstOrDefault();
                 if (null == con)
                     return 300000;
@@ -103,7 +141,7 @@ namespace ContestHunter.Models.Domain
                             if (!(from r in db.RECORDs
                                   where r.PROBLEM1.CONTEST1.ID == con.ID &&
                                   r.SubmitTime <= con.EndTime &&
-                                  (r.Status == (int)Record.StatusType.Pending || r.Status==(int)Record.StatusType.Running)
+                                  (r.Status == (int)Record.StatusType.Pending || r.Status == (int)Record.StatusType.Running)
                                   select r).Any())
                             {
                                 if (con.IsOfficial)
@@ -139,7 +177,7 @@ namespace ContestHunter.Models.Domain
                             {
                                 foreach (string key in HuntLst.Keys.ToArray())
                                 {
-                                    bool flg=false;
+                                    bool flg = false;
                                     foreach (string prob in probs)
                                         if (key.EndsWith(prob))
                                         {

@@ -993,7 +993,7 @@ namespace ContestHunter.Models.Domain
                     db.RATINGs.Remove(r);
                 (from c in db.CONTESTs
                  where c.ID == ID
-                 select c).Single().Status = (int)StatusType.BeforeFinalTest;
+                 select c).Single().Status = (int)StatusType.FinalTesting;
                 db.SaveChanges();
             }
         }
