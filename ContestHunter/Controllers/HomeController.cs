@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Configuration;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,7 +19,8 @@ namespace ContestHunter.Controllers
         {
             HomeIndexModel model = new HomeIndexModel
             {
-                Rating = USER.List(0, 10)
+                Rating = USER.List(0, 10),
+                News = ConfigurationManager.AppSettings["News"]
             };
             return View(model);
         }
