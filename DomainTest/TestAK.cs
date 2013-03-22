@@ -68,7 +68,7 @@ namespace DomainTest
                     + "  while(1)"
                     + "    ;"
                     + "}"));
-                result = runner.Execute("g++", new string[] { "-o", "exec", "code.cpp" }, 1024 * 1024 * 100, 5000, 1024 * 1024 * 100, RestrictionLevel.Loose, null);
+                var result = runner.Execute("g++", new string[] { "-o", "exec", "code.cpp" }, 1024 * 1024 * 100, 5000, 1024 * 1024 * 100, RestrictionLevel.Loose, null);
                 Assert.AreEqual(ExecuteResultType.Success, result.Type);
 
                 result = runner.Execute("./exec", new string[] { }, 1024 * 1024 * 10, 1000, 1024 * 1024 * 10, RestrictionLevel.Strict, null);
@@ -289,9 +289,10 @@ namespace DomainTest
                 string src = ""
                     + "var\r\n"
                     + "  x,y:longint;\r\n"
+                    +"  mem:array[0..10*1024*1024]of longint;\r\n"
                     + "begin\r\n"
-                    + "  readln(x,y);\r\n"
-                    + "  writeln(x+y);\r\n"
+                    + "  readln(mem[0],mem[1]);\r\n"
+                    + "  writeln(mem[0]+mem[1]);\r\n"
                     + "end.\r\n";
                 string input = "1 2";
                 runner.PutFile("code.pas", Encoding.UTF8.GetBytes(src));
@@ -303,6 +304,7 @@ namespace DomainTest
                 var output = Encoding.ASCII.GetString(runner.GetBlob(result.OutputBlob));
                 Assert.AreEqual(ExecuteResultType.Success, result.Type);
                 Assert.AreEqual("3\n", output);
+                Assert.IsTrue(result.Memory > 4 * 1024 * 1024 * 10);
             }
         }
 

@@ -246,7 +246,14 @@ namespace ContestHunter.Controllers
                 model.Minute = (con.AbsoluteEndTime - con.AbsoluteStartTime).Minutes;
                 model.IsOfficial = con.IsOfficial;
                 model.Name = con.Name;
-                model.Owner1 = USER.CurrentUserName;
+                if (USER.CurrentUserIsAdmin)
+                {
+                    model.Owner1 = USER.CurrentUserName;
+                }
+                else
+                {
+                    model.Owner1 = USER.CurrentUserName;
+                }
                 var otherOwners = con.Owners.Where(u => u != USER.CurrentUserName);
                 model.Owner2 = otherOwners.FirstOrDefault();
                 model.Owner3 = otherOwners.Skip(1).FirstOrDefault();

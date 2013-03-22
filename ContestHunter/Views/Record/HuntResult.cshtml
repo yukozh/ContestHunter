@@ -79,7 +79,7 @@
                                     break;
                             }
                             <span class="label @ViewBag.Label" style="font-size: 15px">@ViewBag.Text</span>
-                            @if (USER.ByName(USER.CurrentUserName).IsAdmin || Contest.ByName(Model.Contest).Owners.Contains(USER.CurrentUserName))
+                            @if (USER.CurrentUserIsAdmin || Contest.ByName(Model.Contest).Owners.Contains(USER.CurrentUserName))
                             {
                                 using (Html.BeginForm("RejudgeHunt", "Record", new { id = Model.ID }, FormMethod.Post, new { style = "margin:0; float:right;" }))
                                 {

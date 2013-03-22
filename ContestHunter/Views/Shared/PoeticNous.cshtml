@@ -87,7 +87,7 @@
                                     <li>@Html.ActionLink("我的用户信息", "Show", "User", new { id = USER.CurrentUserName }, null)</li>
                                     <li>@Html.ActionLink("修改个人资料", "Edit", "User", null, null)</li>
                                     <li>@Html.ActionLink("我举办的比赛", "Mine", "Contest", null, null)</li>
-                                    @if (USER.ByName(USER.CurrentUserName).IsAdmin)
+                                    @if (USER.CurrentUserIsAdmin)
                                     {
                                         <li>@Html.ActionLink("控制台", "Process", "Home")</li>
                                     }

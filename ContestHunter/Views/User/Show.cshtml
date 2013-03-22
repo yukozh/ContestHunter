@@ -63,7 +63,7 @@
                                 @Html.ActionLink("修改我的用户资料", "Edit")<br />
                                 }
 
-                                if (USER.ByName(USER.CurrentUserName).IsAdmin)
+                                if (USER.CurrentUserIsAdmin)
                                 {
                                     if (!Model.IsAdmin)
                                     {
