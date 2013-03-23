@@ -185,7 +185,8 @@ namespace ContestHunter.Models.Domain
         public static void SendValidationEmail(string name, string password, string email, string url)
         {
             string encryptedPassword = Convert.ToBase64String(DESHelper.Encrypt(Encoding.UTF8.GetBytes(password)));
-            string emailHash = Convert.ToBase64String(DESHelper.Encrypt(Encoding.UTF8.GetBytes(email.Trim().ToLower())));
+            email = email.Trim().ToLower();
+            string emailHash = Convert.ToBase64String(DESHelper.Encrypt(Encoding.UTF8.GetBytes(email)));
 
             url += "?name=" + HttpUtility.UrlEncode(name);
             url += "&password=" + HttpUtility.UrlEncode(encryptedPassword);
@@ -209,6 +210,7 @@ namespace ContestHunter.Models.Domain
         public static void Register(string name, string originalPassword, string encryptedPassword, string email, string emailHash,
             string country, string province, string city, string school, string motto, string realName)
         {
+            email = email.Trim().ToLower();
             if (originalPassword != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(encryptedPassword))))
                 throw new PasswordMismatchException();
             if (email != Encoding.UTF8.GetString(DESHelper.Decrypt(Convert.FromBase64String(emailHash))))
