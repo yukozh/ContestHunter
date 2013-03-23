@@ -77,16 +77,16 @@ namespace ContestHunter.Models.Domain
         {
             using (MailMessage msg = new MailMessage())
             {
-                msg.From = new MailAddress("contesthunter@163.com");
+                msg.From = new MailAddress("contesthunter@tyvj.cn");
                 msg.To.Add(To);
                 msg.Subject = Subject;
                 msg.Body = Content;
                 msg.IsBodyHtml = true;
 
                 SmtpClient client = new SmtpClient();
-                client.Credentials = new System.Net.NetworkCredential("contesthunter@163.com", "AppleStore123");
+                client.Credentials = new System.Net.NetworkCredential("contesthunter@tyvj.cn", "AppleStore123");
                 client.Port = 25;
-                client.Host = "smtp.163.com";
+                client.Host = "smtp.exmail.qq.com";
                 //client.EnableSsl = true;
                 client.Send(msg);
             }

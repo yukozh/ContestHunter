@@ -10,5 +10,6 @@ namespace ContestHunter.Models.View
     public class HomeIndexModel
     {
         public List<User> Rating { get; set; }
+        public string News { get; set; }
     }
 }

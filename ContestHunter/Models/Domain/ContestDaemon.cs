@@ -73,11 +73,6 @@ namespace ContestHunter.Models.Domain
                 default:
                     throw new NotImplementedException();
             }
-            for (int i = 0, j; i < con.CONTEST_ATTEND.Count; i=j)
-            {
-                for (j = i + 1; j < con.CONTEST_ATTEND.Count && dat1[j] == dat1[i] && dat2[j] == dat2[i]; j++) ;
-                for (int k = i; k < j; k++) dat1[k] = (i + j - 1) / 2;
-            }
             foreach (var u in Rank)
             {
                 var Rat = (from r in db.RATINGs
@@ -90,6 +85,11 @@ namespace ContestHunter.Models.Domain
             if (n < 1)
                 return;
             int m = (n + 1) / 2;
+            for (int i = 0, j; i < n; i = j)
+            {
+                for (j = i + 1; j < n && dat1[j] == dat1[i] && dat2[j] == dat2[i]; j++) ;
+                for (int k = i; k < j; k++) dat1[k] = (i + j - 1) / 2;
+            }
             exp = new double[n];
             double mid = (double)Rating.Sum() / n;
             for (int i = 0; i < n / 2; i++)

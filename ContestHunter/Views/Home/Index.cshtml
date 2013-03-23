@@ -24,6 +24,12 @@
 </style>
 
 <div class="span12">
+    @if(Model.News!="")
+    {
+        <div class="alert alert-info" style="margin-top:10px; margin-bottom:-10px">
+            <b>公告</b>：@Model.News
+        </div>
+    }
     <div style="margin: 20px auto">
         <img src="~/Image/Keyboard-Clone-Invasion-Make.jpg" style="width:940px; height:495px;">
     </div>
