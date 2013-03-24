@@ -342,12 +342,21 @@ namespace ContestHunter.Models.Domain
                 var curProbelm = curContest.ProblemByName(curRecord.PROBLEM1.Name);
                 if (!curProbelm.IsLock())
                     throw new ProblemNotLockedException();
+                /*
                 if (!(from r in db.RECORDs
                       where r.USER1.ID == Domain.User.CurrentUser.ID
                       && r.PROBLEM1.ID == curProbelm.ID
                       && r.Status == (int)Record.StatusType.Accept
                       select r).Any())
                     throw new ProblemNotPassedException();
+                 * */
+                if ((from h in db.HUNTs
+                     where h.User == Domain.User.CurrentUser.ID &&
+                     h.RECORD1 == curRecord &&
+                     (h.Status == (int)Domain.Hunt.StatusType.Running ||
+                     h.Status == (int)Domain.Hunt.StatusType.Pending)
+                     select h).Any())
+                    throw new LastHuntNotTestException();
                 Guid newid = Guid.NewGuid();
                 db.HUNTs.Add(new HUNT()
                 {

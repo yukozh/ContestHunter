@@ -132,4 +132,8 @@ namespace ContestHunter.Models.Domain
     public class AccessTooFrequentlyException : Exception
     {
     }
+
+    public class LastHuntNotTestException : Exception
+    {
+    }
 }
