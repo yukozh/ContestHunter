@@ -710,7 +710,7 @@ namespace ContestHunter.Controllers
                         bytes = Encoding.UTF8.GetBytes(testCase.TimeLimit.ToString());
                         zip.Write(bytes, 0, bytes.Length);
                     }
-                    return File(mem.ToArray(), "application/zip", "TestCase" + testCase.ID);
+                    return File(mem.ToArray(), "application/zip", "TestCase" + testCase.ID + ".zip");
                 }
             }
             catch (ContestNotFoundException)
