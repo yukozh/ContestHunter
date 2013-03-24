@@ -34,7 +34,11 @@ namespace AllKorrect
         /// <summary>
         /// 程序执行的用户态时间，以毫秒为单位
         /// </summary>
-        public int Time;
+        public int UserTime;
+        /// <summary>
+        /// 程序执行的实际时间，以毫秒为单位
+        /// </summary>
+        public int RealTime;
 
         internal ExecuteResult(Message msg)
         {
@@ -47,7 +51,8 @@ namespace AllKorrect
                     OutputBlob = reader.ReadString();
                     ErrorBlob = reader.ReadString();
                     Memory = reader.ReadInt64();
-                    Time = reader.ReadInt32();
+                    UserTime = reader.ReadInt32();
+                    RealTime = reader.ReadInt32();
                 }
             }
         }
