@@ -350,13 +350,6 @@ namespace ContestHunter.Models.Domain
                       select r).Any())
                     throw new ProblemNotPassedException();
                  * */
-                if ((from h in db.HUNTs
-                     where h.User == Domain.User.CurrentUser.ID &&
-                     h.RECORD1 == curRecord &&
-                     (h.Status == (int)Domain.Hunt.StatusType.Running ||
-                     h.Status == (int)Domain.Hunt.StatusType.Pending)
-                     select h).Any())
-                    throw new LastHuntNotTestException();
                 Guid newid = Guid.NewGuid();
                 db.HUNTs.Add(new HUNT()
                 {

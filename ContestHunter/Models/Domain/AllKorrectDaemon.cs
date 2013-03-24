@@ -198,7 +198,8 @@ namespace ContestHunter.Models.Domain
                                                     where t.ID == test.ID
                                                     select t.Data).Single());
                     var result = tester.Execute("./exec", new string[] { }, test.MemoryLimit, test.TimeLimit, -1, RestrictionLevel.Strict, inputName);
-                    int Time = result.Time;
+                    int Time = result.UserTime;
+                    int RealTime = result.RealTime;
                     long Memory_KB = result.Memory / 1024;
                     long Memory = result.Memory;
                     if (result.Type == ExecuteResultType.Success)
@@ -268,7 +269,7 @@ namespace ContestHunter.Models.Domain
                                 break;
                             case ExecuteResultType.TimeLimitExceeded:
                                 rec.Status = (int)Record.StatusType.Time_Limit_Execeeded;
-                                Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>超时</b></span> ({1} ms / {2} KB)<br />", totalTests, Time, Memory_KB);
+                                Detail.AppendFormat("#{0}：<span class=\"score_0\"><b>超时</b></span> (Usertime={1} ms, Realtime={3} ms / {2} KB)<br />", totalTests, Time, Memory_KB,RealTime);
                                 break;
                             case ExecuteResultType.OutputLimitExceeded:
                                 rec.Status = (int)Record.StatusType.Output_Limit_Execeeded;
