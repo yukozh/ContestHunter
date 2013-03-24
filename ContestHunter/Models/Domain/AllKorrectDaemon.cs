@@ -152,7 +152,7 @@ namespace ContestHunter.Models.Domain
                 if (ret.Type != ExecuteResultType.Success)
                 {
                     rec.Status = (int)Record.StatusType.Compile_Error;
-                    Detail.AppendFormat("<h5>编译失败：</h5>\r\n<pre style=\"padding-left: 10px\">\r\n{0}{1}</pre>", ret.Type.ToString(), Encoding.UTF8.GetString(tester.GetBlob(ret.ErrorBlob, 0, 10240)) + Encoding.UTF8.GetString(tester.GetBlob(ret.OutputBlob, 0, 10240)));
+                    Detail.AppendFormat("<h5>编译失败：</h5>\r\n<pre style=\"padding-left: 10px\">\r\n{0}:{1}</pre>", ret.Type.ToString(), Encoding.UTF8.GetString(tester.GetBlob(ret.ErrorBlob, 0, 10240)) + Encoding.UTF8.GetString(tester.GetBlob(ret.OutputBlob, 0, 10240)));
                     return true;
                 }
                 tester.MoveFile2File(commands[(Record.LanguageType)rec.Language]["execname"][0], "exec");
@@ -348,12 +348,10 @@ namespace ContestHunter.Models.Domain
                 if (result.Type != ExecuteResultType.Success)
                 {
                     if (result.Type == ExecuteResultType.Failure && result.ExitStatus == 1)
-                    {
                         rec.Status = (int)Hunt.StatusType.BadData;
-                        Detail.Append(Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)));
-                    }
                     else
                         rec.Status = (int)Hunt.StatusType.DataCheckerError;
+                    Detail.Append(result.Type.ToString() + Encoding.UTF8.GetString(tester.GetBlob(result.OutputBlob)));
                     return true;
                 }
                 string stdout = result.OutputBlob;
@@ -397,9 +395,9 @@ namespace ContestHunter.Models.Domain
                         rec.Status = (int)Hunt.StatusType.Success;
                         lock (ContestDaemon.HuntLst)
                         {
-                            string key=rec.User.ToString() + rec.RECORD1.Problem.ToString();
+                            string key = rec.RECORD1.User.ToString() + rec.RECORD1.Problem.ToString();
                             if (!ContestDaemon.HuntLst.ContainsKey(key))
-                                ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                                ContestDaemon.HuntLst.Add(key, newid);
                             else
                                 ContestDaemon.HuntLst[key] = newid;
                         }
@@ -433,9 +431,9 @@ namespace ContestHunter.Models.Domain
                     rec.Status = (int)Hunt.StatusType.Success;
                     lock (ContestDaemon.HuntLst)
                     {
-                        string key = rec.User.ToString() + rec.RECORD1.Problem.ToString();
+                        string key = rec.RECORD1.User.ToString() + rec.RECORD1.Problem.ToString();
                         if (!ContestDaemon.HuntLst.ContainsKey(key))
-                            ContestDaemon.HuntLst.Add(rec.User.ToString() + rec.RECORD1.Problem.ToString(), newid);
+                            ContestDaemon.HuntLst.Add(key, newid);
                         else
                             ContestDaemon.HuntLst[key] = newid;
                     }
