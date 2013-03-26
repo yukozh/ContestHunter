@@ -34,7 +34,7 @@ namespace ContestHunter.Models.Domain
             {
                 return (from r in db.MESSAGEs
                         where r.Session == Guid.Empty
-                        && r.Time <= Before
+                        && r.Time < Before
                         orderby r.Time descending
                         select new Message()
                         {

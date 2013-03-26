@@ -59,14 +59,16 @@
         });
 
         getCommon(new Date, INITIAL_MSG_COUNT, function (data) {
-            latest = new Date(data[0].Time);
-            earliest = new Date(data[data.length - 1].Time);
+            if (data.length) {
+                latest = new Date(data[0].Time);
+                earliest = new Date(data[data.length - 1].Time);
 
-            data = data.map(msg2Div);
+                data = data.map(msg2Div);
 
-            data.forEach(function (line) {
-                $('#msgs').append(line);
-            });
+                data.forEach(function (line) {
+                    $('#msgs').append(line);
+                });
+            }
         });
     }
     window.Chat = {
