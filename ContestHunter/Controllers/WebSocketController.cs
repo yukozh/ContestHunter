@@ -27,7 +27,16 @@ namespace ContestHunter.Controllers
     class MyWebSocket : WebSocketHandler
     {
         [ThreadStatic]
-        public static JavaScriptSerializer JSON = new JavaScriptSerializer();
+        static JavaScriptSerializer json;
+
+        public static JavaScriptSerializer JSON
+        {
+            get
+            {
+                if (json == null) json = new JavaScriptSerializer();
+                return json;
+            }
+        }
 
         static Dictionary<string, MyWebSocket> Clients = new Dictionary<string, MyWebSocket>();
         public string User;

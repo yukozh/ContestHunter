@@ -6,6 +6,7 @@
     var currentUser;
     var earliest, latest;
     var noEarlier = false, gettingEarlier = false;
+    var socket;
 
     function getCommon(before, top, callback) {
         $.getJSON('/api/CommonChat?before=' + encodeURIComponent(before.toISOString()) + '&top=' + top, callback);
@@ -85,6 +86,27 @@
         $('#txtContent').attr('disabled', true);
     }
 
+    function socketOnMessage(e) {
+        var msg = JSON.parse(e.data);
+        console.log(msg);
+        switch (msg.Type) {
+            case 'CommonMessage':
+                var div = msg2Div(msg.Message);
+                $('#msgs').prepend(div);
+                div.hide().fadeIn();
+                break;
+        }
+    }
+
+    function socketOnError(e) {
+    }
+
+    function socketOnClose(e) {
+    }
+
+    function socketOnOpen(e) {
+    }
+
     function chatInit() {
         currentUser = Chat.currentUser;
         $('#msgWrapper').scroll(function () {
@@ -113,10 +135,19 @@
                 });
             }
         });
+
+        if (Chat.currentUser) {
+            socket = new WebSocket(Chat.socketURL);
+            socket.onopen = socketOnOpen;
+            socket.onmessage = socketOnMessage;
+            socket.onerror = socketOnError;
+            socket.onclose = socketOnClose;
+        }
     }
     window.Chat = {
         currentUser: '',
+        socketURL:'',
         init: chatInit,
-        post: chatPost
+        post: chatPost,
     };
 })();

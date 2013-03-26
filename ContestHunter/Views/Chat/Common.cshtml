@@ -1,4 +1,5 @@
 ﻿@using USER = ContestHunter.Models.Domain.User
+@using System.Configuration;
 @{
     ViewBag.Title = "版聊";
 }
@@ -73,6 +74,7 @@
 <script src="~/Script/chat.js"></script>
 <script>$(function () {
     Chat.currentUser = '@(User.Identity.IsAuthenticated ? USER.CurrentUserName : "")';
+    Chat.socketURL = '@(ConfigurationManager.AppSettings["Website"].TrimEnd('/') + Url.Content("~") + "api/WebSocket")'.replace('http://', 'ws://');
     Chat.init();
 });</script>
 <div class="span12">
@@ -99,10 +101,10 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>当前聊天区中在线用户</th>
+                    <th>在线用户</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="lstOnline">
                 <tr>
                     <td>
                         <img src="~/Image/Myself.png" height="16" width="16">

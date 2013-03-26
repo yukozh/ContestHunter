@@ -28,12 +28,16 @@ namespace ContestHunter.Controllers
         {
             Chat.PostCommon(msg);
 
-            var notify=MyWebSocket.JSON.Serialize(new
+            var notify = MyWebSocket.JSON.Serialize(new
             {
-                Content = msg.Content,
-                Time = DateTime.UtcNow,
-                User = USER.CurrentUserName,
-                UserImg = Gravatar.GetAvatarURL(USER.ByName(USER.CurrentUserName).Email, 50)
+                Type = "CommonMessage",
+                Message = new
+                {
+                    Content = msg.Content,
+                    Time = DateTime.UtcNow.ToString("o"),
+                    User = USER.CurrentUserName,
+                    UserImg = Gravatar.GetAvatarURL(USER.ByName(USER.CurrentUserName).Email, 50)
+                }
             });
 
             MyWebSocket.Broadcast(notify).Wait();
