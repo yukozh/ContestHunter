@@ -1,8 +1,34 @@
 ﻿@{
     ViewBag.Title = "Dbg";
 }
-<script src="~/Scripts/chat.js"></script>
+<script src="~/Script/chat.js"></script>
+<style>
+    #msgWrapper {
+        height: 400px;
+        background: lightblue;
+        overflow: auto;
+    }
+
+    .msg {
+        background: black;
+        color: white;
+        margin: 10px;
+    }
+
+    #txtContent {
+        display: block;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        height: 100px;
+    }
+</style>
 <h2>Dbg</h2>
+<textarea id="txtContent" placeholder="填入你想说的内容 Ctrl-Enter发送"></textarea>
+<div id="msgWrapper">
+    <div id="msgs">
+    </div>
+</div>
 <script>
-    Chat.init();
+    $(function () { Chat.init(); });
 </script>

@@ -20,7 +20,7 @@ namespace ContestHunter.Models.Domain
             using (var db = new CHDB())
             {
                 return (from r in db.CHAT_COMMON
-                        where r.Time <= Before
+                        where r.Time < Before
                         select new Message()
                         {
                             Content = r.Content,
