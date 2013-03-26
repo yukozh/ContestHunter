@@ -163,6 +163,12 @@ namespace DomainTest
         public void TestEF()
         {
         }
+
+        [TestMethod]
+        public void TestChat()
+        {
+
+        }
     }
 }
 

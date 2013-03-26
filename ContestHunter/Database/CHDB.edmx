@@ -13,12 +13,15 @@
           <EntitySet Name="GROUP" EntityType="ContestHunterDbgModel.Store.GROUP" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="HUNT" EntityType="ContestHunterDbgModel.Store.HUNT" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="LOCK" EntityType="ContestHunterDbgModel.Store.LOCK" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MESSAGE" EntityType="ContestHunterDbgModel.Store.MESSAGE" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PROBLEM" EntityType="ContestHunterDbgModel.Store.PROBLEM" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RATING" EntityType="ContestHunterDbgModel.Store.RATING" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RECORD" EntityType="ContestHunterDbgModel.Store.RECORD" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SESSION" EntityType="ContestHunterDbgModel.Store.SESSION" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TESTDATA" EntityType="ContestHunterDbgModel.Store.TESTDATA" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="USER" EntityType="ContestHunterDbgModel.Store.USER" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="USER_GROUP" EntityType="ContestHunterDbgModel.Store.USER_GROUP" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="USER_SESSION" EntityType="ContestHunterDbgModel.Store.USER_SESSION" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="RankList" EntityType="ContestHunterDbgModel.Store.RankList" store:Type="Views" store:Schema="dbo" store:Name="RankList">
             <DefiningQuery>SELECT 
       [RankList].[ID] AS [ID], 
@@ -55,6 +58,14 @@
           <AssociationSet Name="FK_HACK_USER" Association="ContestHunterDbgModel.Store.FK_HACK_USER">
             <End Role="USER" EntitySet="USER" />
             <End Role="HUNT" EntitySet="HUNT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MESSAGE_SESSION" Association="ContestHunterDbgModel.Store.FK_MESSAGE_SESSION">
+            <End Role="SESSION" EntitySet="SESSION" />
+            <End Role="MESSAGE" EntitySet="MESSAGE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MESSAGE_USER" Association="ContestHunterDbgModel.Store.FK_MESSAGE_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="MESSAGE" EntitySet="MESSAGE" />
           </AssociationSet>
           <AssociationSet Name="FK_PROBLEM_CONTEST1" Association="ContestHunterDbgModel.Store.FK_PROBLEM_CONTEST1">
             <End Role="CONTEST" EntitySet="CONTEST" />
@@ -99,6 +110,14 @@
           <AssociationSet Name="FK_USER_LOCK_USER" Association="ContestHunterDbgModel.Store.FK_USER_LOCK_USER">
             <End Role="USER" EntitySet="USER" />
             <End Role="LOCK" EntitySet="LOCK" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USER_SESSION_SESSION" Association="ContestHunterDbgModel.Store.FK_USER_SESSION_SESSION">
+            <End Role="SESSION" EntitySet="SESSION" />
+            <End Role="USER_SESSION" EntitySet="USER_SESSION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USER_SESSION_USER" Association="ContestHunterDbgModel.Store.FK_USER_SESSION_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="USER_SESSION" EntitySet="USER_SESSION" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="CHAT_COMMON">
@@ -170,6 +189,16 @@
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Problem" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="MESSAGE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Session" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="User" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="PROBLEM">
           <Key>
             <PropertyRef Name="ID" />
@@ -212,6 +241,14 @@
           <Property Name="Score" Type="int" />
           <Property Name="Detail" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="SESSION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
         <EntityType Name="TESTDATA">
           <Key>
             <PropertyRef Name="ID" />
@@ -251,6 +288,14 @@
           </Key>
           <Property Name="User" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Group" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USER_SESSION">
+          <Key>
+            <PropertyRef Name="User" />
+            <PropertyRef Name="Session" />
+          </Key>
+          <Property Name="User" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Session" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--生成过程中发现错误:
       警告 6002: 表/视图“ContestHunterDbg.dbo.RankList”未定义主键。已推断出该键，并将定义创建为只读的表/视图。
@@ -355,6 +400,30 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="HUNT">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MESSAGE_SESSION">
+          <End Role="SESSION" Type="ContestHunterDbgModel.Store.SESSION" Multiplicity="1" />
+          <End Role="MESSAGE" Type="ContestHunterDbgModel.Store.MESSAGE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SESSION">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGE">
+              <PropertyRef Name="Session" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MESSAGE_USER">
+          <End Role="USER" Type="ContestHunterDbgModel.Store.USER" Multiplicity="1" />
+          <End Role="MESSAGE" Type="ContestHunterDbgModel.Store.MESSAGE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGE">
               <PropertyRef Name="User" />
             </Dependent>
           </ReferentialConstraint>
@@ -505,6 +574,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_USER_SESSION_SESSION">
+          <End Role="SESSION" Type="ContestHunterDbgModel.Store.SESSION" Multiplicity="1" />
+          <End Role="USER_SESSION" Type="ContestHunterDbgModel.Store.USER_SESSION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SESSION">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="USER_SESSION">
+              <PropertyRef Name="Session" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USER_SESSION_USER">
+          <End Role="USER" Type="ContestHunterDbgModel.Store.USER" Multiplicity="1" />
+          <End Role="USER_SESSION" Type="ContestHunterDbgModel.Store.USER_SESSION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="USER_SESSION">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="GetACMStanding" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ConID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="RelativeNow" Type="datetime" Mode="In" />
@@ -552,9 +645,11 @@
           <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterDbgModel.CONTEST_ATTEND" />
           <EntitySet Name="GROUPs" EntityType="ContestHunterDbgModel.GROUP" />
           <EntitySet Name="HUNTs" EntityType="ContestHunterDbgModel.HUNT" />
+          <EntitySet Name="MESSAGEs" EntityType="ContestHunterDbgModel.MESSAGE" />
           <EntitySet Name="PROBLEMs" EntityType="ContestHunterDbgModel.PROBLEM" />
           <EntitySet Name="RATINGs" EntityType="ContestHunterDbgModel.RATING" />
           <EntitySet Name="RECORDs" EntityType="ContestHunterDbgModel.RECORD" />
+          <EntitySet Name="SESSIONs" EntityType="ContestHunterDbgModel.SESSION" />
           <EntitySet Name="TESTDATAs" EntityType="ContestHunterDbgModel.TESTDATA" />
           <EntitySet Name="USERs" EntityType="ContestHunterDbgModel.USER" />
           <EntitySet Name="RankLists" EntityType="ContestHunterDbgModel.RankList" />
@@ -586,6 +681,14 @@
             <End Role="USER" EntitySet="USERs" />
             <End Role="HUNT" EntitySet="HUNTs" />
           </AssociationSet>
+          <AssociationSet Name="FK_MESSAGE_SESSION" Association="ContestHunterDbgModel.FK_MESSAGE_SESSION">
+            <End Role="SESSION" EntitySet="SESSIONs" />
+            <End Role="MESSAGE" EntitySet="MESSAGEs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MESSAGE_USER" Association="ContestHunterDbgModel.FK_MESSAGE_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="MESSAGE" EntitySet="MESSAGEs" />
+          </AssociationSet>
           <AssociationSet Name="FK_PROBLEM_USER" Association="ContestHunterDbgModel.FK_PROBLEM_USER">
             <End Role="USER" EntitySet="USERs" />
             <End Role="PROBLEM" EntitySet="PROBLEMs" />
@@ -616,6 +719,10 @@
           </AssociationSet>
           <AssociationSet Name="USER_GROUP" Association="ContestHunterDbgModel.USER_GROUP">
             <End Role="GROUP" EntitySet="GROUPs" />
+            <End Role="USER" EntitySet="USERs" />
+          </AssociationSet>
+          <AssociationSet Name="USER_SESSION" Association="ContestHunterDbgModel.USER_SESSION">
+            <End Role="SESSION" EntitySet="SESSIONs" />
             <End Role="USER" EntitySet="USERs" />
           </AssociationSet>
           <FunctionImport Name="GetACMStanding" ReturnType="Collection(ContestHunterDbgModel.GetACMStanding_Result)">
@@ -718,6 +825,18 @@
           <NavigationProperty Name="RECORD1" Relationship="ContestHunterDbgModel.FK_HACK_RECORD" FromRole="HUNT" ToRole="RECORD" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterDbgModel.FK_HACK_USER" FromRole="HUNT" ToRole="USER" />
         </EntityType>
+        <EntityType Name="MESSAGE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="Session" Type="Guid" Nullable="false" />
+          <Property Name="User" Type="Guid" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="SESSION1" Relationship="ContestHunterDbgModel.FK_MESSAGE_SESSION" FromRole="MESSAGE" ToRole="SESSION" />
+          <NavigationProperty Name="USER1" Relationship="ContestHunterDbgModel.FK_MESSAGE_USER" FromRole="MESSAGE" ToRole="USER" />
+        </EntityType>
         <EntityType Name="PROBLEM">
           <Key>
             <PropertyRef Name="ID" />
@@ -770,6 +889,16 @@
           <NavigationProperty Name="PROBLEM1" Relationship="ContestHunterDbgModel.FK_RECORD_PROBLEM" FromRole="RECORD" ToRole="PROBLEM" />
           <NavigationProperty Name="USER1" Relationship="ContestHunterDbgModel.FK_RECORD_USER" FromRole="RECORD" ToRole="USER" />
         </EntityType>
+        <EntityType Name="SESSION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MESSAGEs" Relationship="ContestHunterDbgModel.FK_MESSAGE_SESSION" FromRole="SESSION" ToRole="MESSAGE" />
+          <NavigationProperty Name="USERs" Relationship="ContestHunterDbgModel.USER_SESSION" FromRole="SESSION" ToRole="USER" />
+        </EntityType>
         <EntityType Name="TESTDATA">
           <Key>
             <PropertyRef Name="ID" />
@@ -805,12 +934,14 @@
           <NavigationProperty Name="CHAT_COMMON" Relationship="ContestHunterDbgModel.FK_CHAT_COMMON_USER" FromRole="USER" ToRole="CHAT_COMMON" />
           <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterDbgModel.FK_CONTEST_ATTEND_USER" FromRole="USER" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="HUNTs" Relationship="ContestHunterDbgModel.FK_HACK_USER" FromRole="USER" ToRole="HUNT" />
+          <NavigationProperty Name="MESSAGEs" Relationship="ContestHunterDbgModel.FK_MESSAGE_USER" FromRole="USER" ToRole="MESSAGE" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterDbgModel.FK_PROBLEM_USER" FromRole="USER" ToRole="PROBLEM" />
           <NavigationProperty Name="RATINGs" Relationship="ContestHunterDbgModel.FK_Rating_USER" FromRole="USER" ToRole="RATING" />
           <NavigationProperty Name="RECORDs" Relationship="ContestHunterDbgModel.FK_RECORD_USER" FromRole="USER" ToRole="RECORD" />
           <NavigationProperty Name="CONTESTs" Relationship="ContestHunterDbgModel.CONTEST_OWNER" FromRole="USER" ToRole="CONTEST" />
           <NavigationProperty Name="LOCKs" Relationship="ContestHunterDbgModel.LOCK" FromRole="USER" ToRole="PROBLEM" />
           <NavigationProperty Name="GROUPs" Relationship="ContestHunterDbgModel.USER_GROUP" FromRole="USER" ToRole="GROUP" />
+          <NavigationProperty Name="SESSIONs" Relationship="ContestHunterDbgModel.USER_SESSION" FromRole="USER" ToRole="SESSION" />
         </EntityType>
         <EntityType Name="RankList">
           <Key>
@@ -914,6 +1045,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MESSAGE_SESSION">
+          <End Role="SESSION" Type="ContestHunterDbgModel.SESSION" Multiplicity="1" />
+          <End Role="MESSAGE" Type="ContestHunterDbgModel.MESSAGE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SESSION">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGE">
+              <PropertyRef Name="Session" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MESSAGE_USER">
+          <End Role="USER" Type="ContestHunterDbgModel.USER" Multiplicity="1" />
+          <End Role="MESSAGE" Type="ContestHunterDbgModel.MESSAGE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MESSAGE">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PROBLEM_USER">
           <End Role="USER" Type="ContestHunterDbgModel.USER" Multiplicity="1" />
           <End Role="PROBLEM" Type="ContestHunterDbgModel.PROBLEM" Multiplicity="*" />
@@ -990,6 +1145,10 @@
         </Association>
         <Association Name="USER_GROUP">
           <End Role="GROUP" Type="ContestHunterDbgModel.GROUP" Multiplicity="*" />
+          <End Role="USER" Type="ContestHunterDbgModel.USER" Multiplicity="*" />
+        </Association>
+        <Association Name="USER_SESSION">
+          <End Role="SESSION" Type="ContestHunterDbgModel.SESSION" Multiplicity="*" />
           <End Role="USER" Type="ContestHunterDbgModel.USER" Multiplicity="*" />
         </Association>
         <ComplexType Name="GetACMStanding_Result">
@@ -1091,6 +1250,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MESSAGEs">
+            <EntityTypeMapping TypeName="ContestHunterDbgModel.MESSAGE">
+              <MappingFragment StoreEntitySet="MESSAGE">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Session" ColumnName="Session" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="PROBLEMs">
             <EntityTypeMapping TypeName="ContestHunterDbgModel.PROBLEM">
               <MappingFragment StoreEntitySet="PROBLEM">
@@ -1132,6 +1302,15 @@
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Score" ColumnName="Score" />
                 <ScalarProperty Name="Detail" ColumnName="Detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SESSIONs">
+            <EntityTypeMapping TypeName="ContestHunterDbgModel.SESSION">
+              <MappingFragment StoreEntitySet="SESSION">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1199,6 +1378,14 @@
           <AssociationSetMapping Name="USER_GROUP" TypeName="ContestHunterDbgModel.USER_GROUP" StoreEntitySet="USER_GROUP">
             <EndProperty Name="GROUP">
               <ScalarProperty Name="ID" ColumnName="Group" />
+            </EndProperty>
+            <EndProperty Name="USER">
+              <ScalarProperty Name="ID" ColumnName="User" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="USER_SESSION" TypeName="ContestHunterDbgModel.USER_SESSION" StoreEntitySet="USER_SESSION">
+            <EndProperty Name="SESSION">
+              <ScalarProperty Name="ID" ColumnName="Session" />
             </EndProperty>
             <EndProperty Name="USER">
               <ScalarProperty Name="ID" ColumnName="User" />

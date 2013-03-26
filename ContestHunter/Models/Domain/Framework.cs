@@ -41,6 +41,12 @@ namespace ContestHunter.Models.Domain
                     where g.Name == "Administrators"
                     select g).Single()
                 );
+                db.SESSIONs.Add(new SESSION()
+                {
+                    ID = Guid.Empty,
+                    Name = "公共版聊",
+                    Type = (int)Chat.SessionType.CommonChat
+                });
                 db.SaveChanges();
             }
         }

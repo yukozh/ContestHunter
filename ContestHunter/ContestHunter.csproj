@@ -188,6 +188,9 @@
     <Compile Include="Database\HUNT.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\MESSAGE.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\PROBLEM.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
@@ -201,6 +204,9 @@
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\RecordList_Result.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\SESSION.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\TESTDATA.cs">
