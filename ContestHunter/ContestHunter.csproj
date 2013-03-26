@@ -140,7 +140,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ChatApiController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\CKEditorController.cs" />
     <Compile Include="Controllers\ContestController.cs" />
@@ -326,9 +325,11 @@
     <Content Include="Image\Error.gif" />
     <Content Include="Image\Keyboard-Clone-Invasion-Make.jpg" />
     <Content Include="Image\Login.png" />
+    <Content Include="Image\Myself.png" />
+    <Content Include="Image\Offline.png" />
+    <Content Include="Image\Online.png" />
     <Content Include="Script\bootstrap-popover.js" />
     <Content Include="Script\bootstrap.js" />
-    <Content Include="Script\chat.js" />
     <Content Include="Script\ckeditor\build-config.js" />
     <Content Include="Script\ckeditor\ckeditor.js" />
     <Content Include="Script\ckeditor\config.js" />
@@ -745,7 +746,6 @@
     <Content Include="Views\Home\Process.cshtml" />
     <Content Include="Views\Home\Captcha.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
-    <Content Include="Views\Chat\Dbg.cshtml" />
     <Content Include="Views\Chat\Public.cshtml" />
   </ItemGroup>
   <PropertyGroup>
