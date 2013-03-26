@@ -20,13 +20,23 @@ namespace ContestHunter.Controllers
                 Content = x.Content,
                 Time = x.Time.ToUniversalTime(),
                 User = x.Username,
-                UserImg = Gravatar.GetAvatarURL(USER.ByName(x.Username).Email,50)
+                UserImg = Gravatar.GetAvatarURL(USER.ByName(x.Username).Email, 50)
             });
         }
 
         public void Post(Chat.Message msg)
         {
             Chat.PostCommon(msg);
+
+            var notify=MyWebSocket.JSON.Serialize(new
+            {
+                Content = msg.Content,
+                Time = DateTime.UtcNow,
+                User = USER.CurrentUserName,
+                UserImg = Gravatar.GetAvatarURL(USER.ByName(USER.CurrentUserName).Email, 50)
+            });
+
+            MyWebSocket.Broadcast(notify).Wait();
         }
     }
 }
