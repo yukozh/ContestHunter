@@ -13,17 +13,7 @@ namespace ContestHunter.ViewHelpers
 {
     public static class MvcHtmlHelperExt
     {
-        public static string ToHexString(byte[] bytes)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in bytes)
-            {
-                string tmp = Convert.ToString(b, 16);
-                if (tmp.Length == 1) sb.Append('0').Append(tmp);
-                else sb.Append(tmp);
-            }
-            return sb.ToString();
-        }
+        
         public static MvcHtmlString Sanitized<TModel>(this HtmlHelper<TModel> self, string html)
         {
             if (html == null) return new MvcHtmlString("");
@@ -32,8 +22,7 @@ namespace ContestHunter.ViewHelpers
 
         public static MvcHtmlString Gravatar<TModel>(this HtmlHelper<TModel> self, string email, int size)
         {
-            string md5 = ToHexString(MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(email)));
-            string url = string.Format("http://www.gravatar.com/avatar/{0}?s={1}&d=mm", md5, size);
+            string url = ContestHunter.ViewHelpers.Gravatar.GetAvatarURL(email, size);
             string tag = string.Format("<img src='{0}' style='width:{1}px;height:{1}px;' />", HttpUtility.HtmlAttributeEncode(url), size);
             return new MvcHtmlString(tag);
         }

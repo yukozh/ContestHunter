@@ -1,0 +1,131 @@
+﻿@using USER = ContestHunter.Models.Domain.User
+@{
+    ViewBag.Title = "版聊";
+}
+
+<style type="text/css">
+    .table {
+        background-color: white;
+        color: black;
+        margin: 0px;
+    }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table th {
+            text-align: center;
+        }
+
+    .alert {
+        padding: 5px;
+    }
+
+    .short {
+        margin-bottom: 3px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .inner {
+        margin: 5px 0px;
+        width: 650px;
+    }
+
+    .image-inner {
+        width: 50px;
+        margin-left: 5px;
+    }
+
+    .fieldset-inner {
+        width: 590px;
+    }
+
+    .legend-inner {
+        font-size: small;
+        margin: 0px;
+        border: 0px;
+        line-height: normal;
+        color: gray;
+    }
+
+    .left {
+        float: left;
+    }
+
+    .right {
+        float: right;
+    }
+
+    .right-text {
+        text-align: right;
+    }
+
+    #msgWrapper {
+        height: 400px;
+        overflow: auto;
+        background: whitesmoke;
+        color: black;
+    }
+</style>
+<script src="~/Script/chat.js"></script>
+<script>$(function () {
+    Chat.currentUser = '@(User.Identity.IsAuthenticated ? USER.CurrentUserName : "")';
+    Chat.init();
+});</script>
+<div class="span12">
+    <div class="alert alert-info" style="margin-top: 20px">
+        <div style="width: 670px; float: left;">
+            <div id="msgWrapper">
+                <div id="msgs">
+                    Loading...
+                </div>
+            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div style="margin-top: 10px;">
+                    <textarea id="txtContent" style="width: 660px; height: 50px;" placeholder="输入您想说的内容"></textarea>
+                    <div style="text-align: right; position: relative; top: -40px; right: 10px;">
+                        <input type="button" onclick="Chat.post();" class="btn btn-small btn-primary" value="Ctrl-Enter 发送">
+                    </div>
+                </div>
+            }
+        </div>
+        <table class="table table-bordered table-striped table-hover" style="width: 250px; float: right">
+            <colgroup>
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>当前聊天区中在线用户</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <img src="~/Image/Myself.png" height="16" width="16">
+                        VariantF
+                        <a href="#" style="float: right; margin-top: 3px">私聊</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="~/Image/Online.png" height="16" width="16">
+                        lydrainbowcat
+                        <a href="#" style="float: right; margin-top: 3px">私聊</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="~/Image/Online.png" height="16" width="16">
+                        onetwogoo
+                        <a href="#" style="float: right; margin-top: 3px">私聊</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="clear: both"></div>
+    </div>
+</div>

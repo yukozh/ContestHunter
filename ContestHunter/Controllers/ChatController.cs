@@ -16,12 +16,7 @@ namespace ContestHunter.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Dbg()
-        {
-            return View();
-        }
-
-        public ActionResult Public()
+        public ActionResult Common()
         {
             return View();
         }

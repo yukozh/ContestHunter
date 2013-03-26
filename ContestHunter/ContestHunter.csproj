@@ -151,6 +151,7 @@
     <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\WebSocketController.cs" />
     <Compile Include="Database\CHAT_COMMON.cs">
       <DependentUpon>CHDB.tt</DependentUpon>
     </Compile>
@@ -271,6 +272,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewHelpers\Gravatar.cs" />
     <Compile Include="ViewHelpers\HtmlFilter.cs" />
     <Compile Include="ViewHelpers\MvcHtmlHelperExt.cs" />
     <Compile Include="ViewHelpers\RatingInfo.cs" />
@@ -753,7 +755,7 @@
     <Content Include="Views\Home\Process.cshtml" />
     <Content Include="Views\Home\Captcha.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
-    <Content Include="Views\Chat\Public.cshtml" />
+    <Content Include="Views\Chat\Common.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

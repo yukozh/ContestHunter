@@ -3,6 +3,7 @@
     var INITIAL_MSG_COUNT = 20;
     var EACH_SCROLL_COUNT = 10;
 
+    var currentUser;
     var earliest, latest;
     var noEarlier = false, gettingEarlier = false;
 
@@ -11,8 +12,35 @@
     }
 
     function msg2Div(msg) {
-        return $('<div class="msg"/>')
-                    .text('By ' + msg.User + '(' + new Date(msg.Time).toLocaleString() + '): ' + msg.Content);
+        if (currentUser != msg.User) {
+            return $('<div class="inner"/>')
+                .append($('<div class="image-inner left"/>')
+                    .append($('<img alt="" style="width:50px; height:50px;"/>')
+                        .attr('src', msg.UserImg)))
+                .append($('<fieldset class="fieldset-inner right"/>')
+                    .append($('<legend class="legend-inner"/>')
+                        .append($('<a/>')
+                            .attr('href', '/User/Show/' + msg.User)
+                            .text(msg.User))
+                        .append(' ')
+                        .append(new Date(msg.Time).toLocaleString()))
+                    .append($('<div/>').text(msg.Content)))
+                .append('<div style="clear: both;"/>');
+        } else {
+            return $('<div class="inner"/>')
+                .append($('<div class="image-inner right"/>')
+                    .append($('<img alt="" style="width:50px; height:50px;"/>')
+                        .attr('src', msg.UserImg)))
+                .append($('<fieldset class="fieldset-inner right-text"/>')
+                    .append($('<legend class="legend-inner right-text"/>')
+                        .append($('<a/>')
+                            .attr('href', '/User/Show/' + msg.User)
+                            .text(msg.User))
+                        .append(' ')
+                        .append(new Date(msg.Time).toLocaleString()))
+                    .append($('<div/>').text(msg.Content)))
+                .append('<div style="clear: both;"/>');
+        }
     }
 
     function getEarlier() {
@@ -37,13 +65,28 @@
     }
 
     function postCommon(content) {
-        $.post('/api/CommonChat/', { Content: content }, function () {
-            $('#txtCommon').val('');
-            $('#txtCommon').removeAttr('disabled');
-        },'json');
+        $.ajax({
+            url: '/api/CommonChat',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ Content: content }),
+            success: function () {
+                $('#txtContent').val('');
+                $('#txtContent').removeAttr('disabled');
+            },
+            error: function () {
+                alert('发送消息时出错');
+            }
+        });
+    }
+
+    function chatPost() {
+        postCommon($('#txtContent').val());
+        $('#txtContent').attr('disabled', true);
     }
 
     function chatInit() {
+        currentUser = Chat.currentUser;
         $('#msgWrapper').scroll(function () {
             if ($('#msgs').height() - $('#msgWrapper').height() - $('#msgWrapper').scrollTop() <= 50) {
                 getEarlier();
@@ -51,9 +94,8 @@
         });
 
         $('#txtContent').keypress(function (e) {
-            if(e.ctrlKey && (e.keyCode==10 || e.keCode==13)){
-                postCommon($(this).val());
-                $(this).attr('disabled',true);
+            if (e.ctrlKey && (e.keyCode == 10 || e.keCode == 13)) {
+                chatPost();
                 return false;
             }
         });
@@ -64,7 +106,8 @@
                 earliest = new Date(data[data.length - 1].Time);
 
                 data = data.map(msg2Div);
-
+                $('#msgs').html($('<div style="text-align:center; color:gray;"/>')
+                    .text('以下是历史信息'))
                 data.forEach(function (line) {
                     $('#msgs').append(line);
                 });
@@ -72,6 +115,8 @@
         });
     }
     window.Chat = {
-        init: chatInit
+        currentUser: '',
+        init: chatInit,
+        post: chatPost
     };
 })();
