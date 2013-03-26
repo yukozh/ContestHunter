@@ -167,7 +167,13 @@ namespace DomainTest
         [TestMethod]
         public void TestChat()
         {
-
+            User.Authenticate(User.Login("VariantF", "07070078899", "1.1.1.1"), "1.1.1.1");
+            Chat.PostCommon(new Chat.Message()
+            {
+                Content = "blabla"
+            });
+            var lst = Chat.GetCommon(DateTime.Now, 10);
+            Assert.Inconclusive(lst[0].Content);
         }
     }
 }

@@ -28,6 +28,12 @@ namespace ContestHunter.Models.Domain
             PrivateChat
         };
 
+        /// <summary>
+        /// 获取公共聊天区内容
+        /// </summary>
+        /// <param name="Before"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
         public static List<Message> GetCommon(DateTime Before,int top)
         {
             using (var db = new CHDB())
@@ -45,6 +51,10 @@ namespace ContestHunter.Models.Domain
             }
         }
 
+        /// <summary>
+        /// 发送消息至公共聊天区 只需要填充 Content
+        /// </summary>
+        /// <param name="Msg"></param>
         public static void PostCommon(Message Msg)
         {
             using (var db = new CHDB())
