@@ -145,7 +145,7 @@ namespace ContestHunter.Models.Domain
                                 if (!(from r in db.RECORDs
                                       where r.USER1.ID == Domain.User.CurrentUser.ID
                                       && r.PROBLEM1.ID == result.PROBLEM1.ID
-                                      && r.Status == (int)Record.StatusType.Accept
+                                      && (r.Status == (int)Record.StatusType.Accept || r.Status==(int)Record.StatusType.Hacked)
                                       select r).Any())
                                     throw new ProblemNotPassedException();
                             }
@@ -398,7 +398,7 @@ namespace ContestHunter.Models.Domain
                 if (!(from r in db.RECORDs
                       where r.USER1.ID == Domain.User.CurrentUser.ID
                       && r.PROBLEM1.ID == curProbelm.ID
-                      && r.Status == (int)Record.StatusType.Accept
+                      && (r.Status == (int)Record.StatusType.Accept || r.Status == (int)Record.StatusType.Hacked)
                       select r).Any())
                     return false;
             }

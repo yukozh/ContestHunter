@@ -15,12 +15,27 @@ namespace ContestHunter.Models.Domain
             public DateTime Time;
         }
 
+        public class Session
+        {
+            public string Name;
+            public SessionType Type;
+        }
+
+        public enum SessionType
+        {
+            CommonChat,
+            GroupChat,
+            PrivateChat
+        };
+
         public static List<Message> GetCommon(DateTime Before,int top)
         {
             using (var db = new CHDB())
             {
-                return (from r in db.CHAT_COMMON
-                        where r.Time < Before
+                return (from r in db.MESSAGEs
+                        where r.Session == Guid.Empty
+                        && r.Time <= Before
+                        orderby r.Time descending
                         select new Message()
                         {
                             Content = r.Content,
@@ -34,9 +49,9 @@ namespace ContestHunter.Models.Domain
         {
             using (var db = new CHDB())
             {
-                db.CHAT_COMMON.Add(new CHAT_COMMON()
+                db.MESSAGEs.Add(new MESSAGE()
                 {
-                    ID = Guid.NewGuid(),
+                    ID = Guid.Empty,
                     Content = Msg.Content,
                     User = User.CurrentUser.ID,
                     Time = DateTime.Now

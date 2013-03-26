@@ -19,12 +19,14 @@ namespace ContestHunter.Database
             this.CHAT_COMMON = new HashSet<CHAT_COMMON>();
             this.CONTEST_ATTEND = new HashSet<CONTEST_ATTEND>();
             this.HUNTs = new HashSet<HUNT>();
+            this.MESSAGEs = new HashSet<MESSAGE>();
             this.PROBLEMs = new HashSet<PROBLEM>();
             this.RATINGs = new HashSet<RATING>();
             this.RECORDs = new HashSet<RECORD>();
             this.CONTESTs = new HashSet<CONTEST>();
             this.LOCKs = new HashSet<PROBLEM>();
             this.GROUPs = new HashSet<GROUP>();
+            this.SESSIONs = new HashSet<SESSION>();
         }
     
         public System.Guid ID { get; set; }
@@ -46,11 +48,13 @@ namespace ContestHunter.Database
         public virtual ICollection<CHAT_COMMON> CHAT_COMMON { get; set; }
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<HUNT> HUNTs { get; set; }
+        public virtual ICollection<MESSAGE> MESSAGEs { get; set; }
         public virtual ICollection<PROBLEM> PROBLEMs { get; set; }
         public virtual ICollection<RATING> RATINGs { get; set; }
         public virtual ICollection<RECORD> RECORDs { get; set; }
         public virtual ICollection<CONTEST> CONTESTs { get; set; }
         public virtual ICollection<PROBLEM> LOCKs { get; set; }
         public virtual ICollection<GROUP> GROUPs { get; set; }
+        public virtual ICollection<SESSION> SESSIONs { get; set; }
     }
 }
