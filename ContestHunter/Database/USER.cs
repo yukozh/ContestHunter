@@ -16,6 +16,7 @@ namespace ContestHunter.Database
     {
         public USER()
         {
+            this.CHAT_COMMON = new HashSet<CHAT_COMMON>();
             this.CONTEST_ATTEND = new HashSet<CONTEST_ATTEND>();
             this.HUNTs = new HashSet<HUNT>();
             this.PROBLEMs = new HashSet<PROBLEM>();
@@ -42,6 +43,7 @@ namespace ContestHunter.Database
         public string Motto { get; set; }
         public bool AcceptEmail { get; set; }
     
+        public virtual ICollection<CHAT_COMMON> CHAT_COMMON { get; set; }
         public virtual ICollection<CONTEST_ATTEND> CONTEST_ATTEND { get; set; }
         public virtual ICollection<HUNT> HUNTs { get; set; }
         public virtual ICollection<PROBLEM> PROBLEMs { get; set; }

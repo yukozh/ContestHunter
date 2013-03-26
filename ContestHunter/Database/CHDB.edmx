@@ -6,6 +6,7 @@
     <edmx:StorageModels>
       <Schema Namespace="ContestHunterDbgModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ContestHunterDbgModelStoreContainer">
+          <EntitySet Name="CHAT_COMMON" EntityType="ContestHunterDbgModel.Store.CHAT_COMMON" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CONTEST" EntityType="ContestHunterDbgModel.Store.CONTEST" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterDbgModel.Store.CONTEST_ATTEND" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CONTEST_OWNER" EntityType="ContestHunterDbgModel.Store.CONTEST_OWNER" store:Type="Tables" Schema="dbo" />
@@ -27,6 +28,10 @@
       [RankList].[IsAdmin] AS [IsAdmin]
       FROM [dbo].[RankList] AS [RankList]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_CHAT_COMMON_USER" Association="ContestHunterDbgModel.Store.FK_CHAT_COMMON_USER">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="CHAT_COMMON" EntitySet="CHAT_COMMON" />
+          </AssociationSet>
           <AssociationSet Name="FK_CONTEST_ATTEND_CONTEST" Association="ContestHunterDbgModel.Store.FK_CONTEST_ATTEND_CONTEST">
             <End Role="CONTEST" EntitySet="CONTEST" />
             <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
@@ -96,6 +101,15 @@
             <End Role="LOCK" EntitySet="LOCK" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="CHAT_COMMON">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="User" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="CONTEST">
           <Key>
             <PropertyRef Name="ID" />
@@ -253,6 +267,18 @@
           <Property Name="Rating" Type="int" />
           <Property Name="IsAdmin" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_CHAT_COMMON_USER">
+          <End Role="USER" Type="ContestHunterDbgModel.Store.USER" Multiplicity="1" />
+          <End Role="CHAT_COMMON" Type="ContestHunterDbgModel.Store.CHAT_COMMON" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CHAT_COMMON">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CONTEST_ATTEND_CONTEST">
           <End Role="CONTEST" Type="ContestHunterDbgModel.Store.CONTEST" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -521,6 +547,7 @@
     <edmx:ConceptualModels>
       <Schema Namespace="ContestHunterDbgModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="CHDB" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="CHAT_COMMON" EntityType="ContestHunterDbgModel.CHAT_COMMON" />
           <EntitySet Name="CONTESTs" EntityType="ContestHunterDbgModel.CONTEST" />
           <EntitySet Name="CONTEST_ATTEND" EntityType="ContestHunterDbgModel.CONTEST_ATTEND" />
           <EntitySet Name="GROUPs" EntityType="ContestHunterDbgModel.GROUP" />
@@ -531,6 +558,10 @@
           <EntitySet Name="TESTDATAs" EntityType="ContestHunterDbgModel.TESTDATA" />
           <EntitySet Name="USERs" EntityType="ContestHunterDbgModel.USER" />
           <EntitySet Name="RankLists" EntityType="ContestHunterDbgModel.RankList" />
+          <AssociationSet Name="FK_CHAT_COMMON_USER" Association="ContestHunterDbgModel.FK_CHAT_COMMON_USER">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="CHAT_COMMON" EntitySet="CHAT_COMMON" />
+          </AssociationSet>
           <AssociationSet Name="FK_CONTEST_ATTEND_CONTEST" Association="ContestHunterDbgModel.FK_CONTEST_ATTEND_CONTEST">
             <End Role="CONTEST" EntitySet="CONTESTs" />
             <End Role="CONTEST_ATTEND" EntitySet="CONTEST_ATTEND" />
@@ -624,6 +655,16 @@
             <Parameter Name="UID" Mode="In" Type="Guid" />
           </FunctionImport>
         </EntityContainer>
+        <EntityType Name="CHAT_COMMON">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="User" Type="Guid" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="USER1" Relationship="ContestHunterDbgModel.FK_CHAT_COMMON_USER" FromRole="CHAT_COMMON" ToRole="USER" />
+        </EntityType>
         <EntityType Name="CONTEST">
           <Key>
             <PropertyRef Name="ID" />
@@ -761,6 +802,7 @@
           <Property Name="LastLoginIP" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Motto" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="AcceptEmail" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CHAT_COMMON" Relationship="ContestHunterDbgModel.FK_CHAT_COMMON_USER" FromRole="USER" ToRole="CHAT_COMMON" />
           <NavigationProperty Name="CONTEST_ATTEND" Relationship="ContestHunterDbgModel.FK_CONTEST_ATTEND_USER" FromRole="USER" ToRole="CONTEST_ATTEND" />
           <NavigationProperty Name="HUNTs" Relationship="ContestHunterDbgModel.FK_HACK_USER" FromRole="USER" ToRole="HUNT" />
           <NavigationProperty Name="PROBLEMs" Relationship="ContestHunterDbgModel.FK_PROBLEM_USER" FromRole="USER" ToRole="PROBLEM" />
@@ -782,6 +824,18 @@
           <Property Name="Rating" Type="Int32" />
           <Property Name="IsAdmin" Type="Int32" Nullable="false" />
         </EntityType>
+        <Association Name="FK_CHAT_COMMON_USER">
+          <End Role="USER" Type="ContestHunterDbgModel.USER" Multiplicity="1" />
+          <End Role="CHAT_COMMON" Type="ContestHunterDbgModel.CHAT_COMMON" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CHAT_COMMON">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CONTEST_ATTEND_CONTEST">
           <End Role="CONTEST" Type="ContestHunterDbgModel.CONTEST" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -980,6 +1034,16 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ContestHunterDbgModelStoreContainer" CdmEntityContainer="CHDB">
+          <EntitySetMapping Name="CHAT_COMMON">
+            <EntityTypeMapping TypeName="ContestHunterDbgModel.CHAT_COMMON">
+              <MappingFragment StoreEntitySet="CHAT_COMMON">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CONTESTs">
             <EntityTypeMapping TypeName="ContestHunterDbgModel.CONTEST">
               <MappingFragment StoreEntitySet="CONTEST">

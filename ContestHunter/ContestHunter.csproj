@@ -149,6 +149,9 @@
     <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Database\CHAT_COMMON.cs">
+      <DependentUpon>CHDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\CHDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -211,6 +214,7 @@
     </Compile>
     <Compile Include="Models\Domain\AccessRestriction.cs" />
     <Compile Include="Models\Domain\AllKorrectDaemon.cs" />
+    <Compile Include="Models\Domain\Chat.cs" />
     <Compile Include="Models\Domain\Contest.cs" />
     <Compile Include="Models\Domain\ContestDaemon.cs" />
     <Compile Include="Models\Domain\Daemon.cs" />
