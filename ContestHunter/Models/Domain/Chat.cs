@@ -51,10 +51,11 @@ namespace ContestHunter.Models.Domain
             {
                 db.MESSAGEs.Add(new MESSAGE()
                 {
-                    ID = Guid.Empty,
+                    Session = Guid.Empty,
                     Content = Msg.Content,
                     User = User.CurrentUser.ID,
-                    Time = DateTime.Now
+                    Time = DateTime.Now,
+                    ID = Guid.NewGuid()
                 });
                 db.SaveChanges();
             }
