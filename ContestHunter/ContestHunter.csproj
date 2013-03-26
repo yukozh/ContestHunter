@@ -140,6 +140,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CommonChatController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\CKEditorController.cs" />
     <Compile Include="Controllers\ContestController.cs" />

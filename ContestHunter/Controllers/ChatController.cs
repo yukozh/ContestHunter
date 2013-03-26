@@ -12,15 +12,11 @@ namespace ContestHunter.Controllers
         // GET: /Chat/
 
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Dbg()
         {
             return View();
         }
 
-        [AllowAnonymous] //便于调试
-        public ActionResult Public()
-        {
-            return View();
-        }
+
     }
 }
