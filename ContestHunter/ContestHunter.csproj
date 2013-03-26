@@ -140,6 +140,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\CKEditorController.cs" />
     <Compile Include="Controllers\ContestController.cs" />
     <Compile Include="Controllers\CRC32.cs" />
@@ -741,6 +742,8 @@
     <Content Include="Views\Contest\SendInviteEmail.cshtml" />
     <Content Include="Views\Home\Process.cshtml" />
     <Content Include="Views\Home\Captcha.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
+    <Content Include="Views\Chat\Public.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
