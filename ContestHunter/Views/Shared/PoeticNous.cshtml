@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    @if (ViewBag.NoIndex!=null)
+    @if (ViewBag.NoIndex != null)
     {
         <meta name="robots" content="noindex" />
     }
@@ -75,7 +75,7 @@
                         <li id="navContest">@Html.ActionLink("比赛", "Index", "Contest")</li>
                         <li id="navRating">@Html.ActionLink("能力排名", "Index", "Rating")</li>
                         <li id="navRecord">@Html.ActionLink("提交记录", "Index", "Record")</li>
-                        <li id="navCommonChat">@Html.ActionLink("公共版聊(临时)","Common","Chat")</li>
+                        <li id="navCommonChat">@Html.ActionLink("公共版聊(临时)", "Common", "Chat")</li>
                     </ul>
                 </div>
                 <div class="nav-collapse" style="float: right">
@@ -158,6 +158,26 @@
         Server time: @DateTimeOffset.Now<br />
     </div>
 
+    @{
+#if !DEBUG
+    }
+    @if (ViewBag.NoIndex == null)
+    {
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-39655411-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function () {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    }
+    @{ 
+#endif
+    }
     <script>
         (function () {
             @*
