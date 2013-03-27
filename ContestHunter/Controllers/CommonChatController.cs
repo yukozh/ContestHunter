@@ -15,7 +15,7 @@ namespace ContestHunter.Controllers
         [AllowAnonymous]
         public object Get(DateTime before, int top)
         {
-            return Chat.GetCommon(before, top).Select(x => new
+            return Chat.GetHistory(new Chat.Session() { ID = Guid.Empty }, before, top).Select(x => new
             {
                 Content = x.Content,
                 Time = x.Time.ToUniversalTime(),
@@ -26,7 +26,7 @@ namespace ContestHunter.Controllers
 
         public void Post(Chat.Message msg)
         {
-            Chat.PostCommon(msg);
+            Chat.PostMessage(new Chat.Session() { ID = Guid.Empty }, msg);
 
             var notify = MyWebSocket.JSON.Serialize(new
             {
