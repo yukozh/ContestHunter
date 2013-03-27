@@ -22,6 +22,12 @@ namespace ContestHunter.Controllers
             HttpContext.Current.AcceptWebSocketRequest(new MyWebSocket() { User = USER.CurrentUserName });
             return new HttpResponseMessage(HttpStatusCode.SwitchingProtocols);
         }
+
+        [AllowAnonymous]
+        public IEnumerable<string> GetOnlineList(string onlineList)
+        {
+            return MyWebSocket.OnlineList;
+        }
     }
 
     class MyWebSocket : WebSocketHandler
@@ -111,6 +117,14 @@ namespace ContestHunter.Controllers
                 c.WebSocketContext.WebSocket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, System.Threading.CancellationToken.None)
             );
             await Task.WhenAll(toWait);
+        }
+
+        public static IEnumerable<string> OnlineList
+        {
+            get
+            {
+                return Clients.Keys;
+            }
         }
     }
 }

@@ -77,13 +77,7 @@ namespace ContestHunter.Models.Domain
         /// 获取公共聊天区会话信息
         /// </summary>
         /// <returns></returns>
-        public static Session GetCommonSession()
-        {
-            return new Session()
-            {
-                ID = Guid.Empty
-            };
-        }
+        public static Session CommonSession = new Session() { ID = Guid.Empty };
 
         /// <summary>
         /// 获取私聊会话
@@ -111,7 +105,7 @@ namespace ContestHunter.Models.Domain
                                      }).FirstOrDefault();
                 if (null == ret)
                 {
-                    var session=db.SESSIONs.Add(new SESSION()
+                    var session = db.SESSIONs.Add(new SESSION()
                     {
                         ID = Guid.NewGuid(),
                         Name = "",
