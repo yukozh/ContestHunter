@@ -340,6 +340,7 @@
     <Content Include="Image\Online.png" />
     <Content Include="Script\bootstrap-popover.js" />
     <Content Include="Script\bootstrap.js" />
+    <Content Include="Script\chat.js" />
     <Content Include="Script\ckeditor\build-config.js" />
     <Content Include="Script\ckeditor\ckeditor.js" />
     <Content Include="Script\ckeditor\config.js" />

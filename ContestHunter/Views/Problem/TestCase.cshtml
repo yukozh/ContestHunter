@@ -124,7 +124,10 @@
                                 <input type="text" id="MemoryLimitAll" name="MemoryLimitAll" class="inputmini" />
                                 MB 
                             </td>
-                            <td></td>
+                            @if (Model.ShowEnabled)
+                            {
+                                <td></td>
+                            }
                             <td>
                                 <input type="button" value="全部填充" class="btn btn-small btn-success" onclick="FillAll()">
                             </td>
