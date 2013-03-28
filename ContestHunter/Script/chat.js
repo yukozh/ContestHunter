@@ -12,6 +12,10 @@
         $.getJSON('/api/CommonChat?before=' + encodeURIComponent(before.toISOString()) + '&top=' + top, callback);
     }
 
+    function getOnlineList(callback) {
+        $.getJSON('/api/WebSocket?onlineList=', callback);
+    }
+
     function msg2Div(msg) {
         if (currentUser != msg.User) {
             return $('<div class="inner"/>')
@@ -25,7 +29,8 @@
                             .text(msg.User))
                         .append(' ')
                         .append(new Date(msg.Time).toLocaleString()))
-                    .append($('<div/>').text(msg.Content)))
+                    .append($('<div/>')
+                        .append($('<pre style="display:inline-block; border:none; text-align:left;"/>').text(msg.Content))))
                 .append('<div style="clear: both;"/>');
         } else {
             return $('<div class="inner"/>')
@@ -39,7 +44,8 @@
                             .text(msg.User))
                         .append(' ')
                         .append(new Date(msg.Time).toLocaleString()))
-                    .append($('<div/>').text(msg.Content)))
+                    .append($('<div/>')
+                        .append($('<pre style="display:inline-block; border:none; text-align:left;"/>').text(msg.Content))))
                 .append('<div style="clear: both;"/>');
         }
     }
@@ -48,10 +54,12 @@
         if (noEarlier || gettingEarlier) {
             return;
         }
+        $('#msgs').append('<progress style="width:100%;"/>');
         gettingEarlier = true;
         getCommon(earliest, EACH_SCROLL_COUNT, function (data) {
             if (EACH_SCROLL_COUNT != data.length)
                 noEarlier = true;
+            $('#msgs progress').remove();
             if (data.length) {
                 earliest = new Date(data[data.length - 1].Time);
                 data = data.map(msg2Div);
@@ -95,6 +103,12 @@
                 $('#msgs').prepend(div);
                 div.hide().fadeIn();
                 break;
+            case 'Login':
+                $('#lstOnline').append(user2online(msg.User));
+                break;
+            case 'Logout':
+                $('#lstOnline tr').filter(function () { return $(this).attr('data-user') == msg.User; }).remove();
+                break;
         }
     }
 
@@ -105,6 +119,26 @@
     }
 
     function socketOnOpen(e) {
+    }
+
+    function user2online(user) {
+        if (user == currentUser) {
+            return $('<tr/>')
+                    .attr('data-user',user)
+                    .append($('<td/>')
+                        .append('<img src="/Image/Myself.png" style="height:16px; width:16px;"/>')
+                        .append($('<a/>')
+                            .text(user)
+                            .attr('href', '/User/Show/' + user)));
+        } else {
+            return $('<tr/>')
+                    .attr('data-user', user)
+                    .append($('<td/>')
+                        .append('<img src="/Image/Online.png" style="height:16px; width:16px;"/>')
+                        .append($('<a/>')
+                            .text(user)
+                            .attr('href', '/User/Show/' + user)));
+        }
     }
 
     function chatInit() {
@@ -122,7 +156,9 @@
             }
         });
 
+        $('#msgs').append('<progress style="width:100%;"/>');
         getCommon(new Date, INITIAL_MSG_COUNT, function (data) {
+            $('#msgs progress').remove();
             if (data.length) {
                 latest = new Date(data[0].Time);
                 earliest = new Date(data[data.length - 1].Time);
@@ -136,8 +172,15 @@
             }
         });
 
+        getOnlineList(function (list) {
+            list = list.map(user2online);
+            list.forEach(function(div){
+                $('#lstOnline').append(div);
+            });
+        });
+
         if (Chat.currentUser) {
-            socket = new WebSocket(Chat.socketURL);
+            socket = new WebSocket(Chat.socketURL+'?forceLogin=true');
             socket.onopen = socketOnOpen;
             socket.onmessage = socketOnMessage;
             socket.onerror = socketOnError;

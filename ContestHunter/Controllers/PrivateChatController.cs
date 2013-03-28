@@ -10,12 +10,12 @@ using USER = ContestHunter.Models.Domain.User;
 namespace ContestHunter.Controllers
 {
     [Authorize]
-    public class CommonChatController : ApiController
+    public class PrivateChatController : ApiController
     {
         [AllowAnonymous]
-        public object Get(DateTime before, int top)
+        public object Get(string user,DateTime before, int top)
         {
-            return Chat.GetHistory(Chat.CommonSession, before, top).Select(x => new
+            return Chat.GetHistory(Chat.GetPrivateSession(user), before, top).Select(x => new
             {
                 Content = x.Content,
                 Time = x.Time.ToUniversalTime(),

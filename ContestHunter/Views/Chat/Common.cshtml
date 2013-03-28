@@ -2,6 +2,7 @@
 @using System.Configuration;
 @{
     ViewBag.Title = "版聊";
+    ViewBag.NoIndex = true;
 }
 
 <style type="text/css">
@@ -80,20 +81,19 @@
 <div class="span12">
     <div class="alert alert-info" style="margin-top: 20px">
         <div style="width: 670px; float: left;">
-            <div id="msgWrapper">
-                <div id="msgs">
-                    Loading...
-                </div>
-            </div>
             @if (User.Identity.IsAuthenticated)
             {
                 <div style="margin-top: 10px;">
-                    <textarea id="txtContent" style="width: 660px; height: 50px;" placeholder="输入您想说的内容"></textarea>
-                    <div style="text-align: right; position: relative; top: -40px; right: 10px;">
+                    <textarea id="txtContent" autofocus="autofocus" style="width: 660px; height: 50px;" placeholder="输入您想说的内容"></textarea>
+                    <div style="text-align: right; height: 0; position: relative; top: -40px; right: 10px;">
                         <input type="button" onclick="Chat.post();" class="btn btn-small btn-primary" value="Ctrl-Enter 发送">
                     </div>
                 </div>
             }
+            <div id="msgWrapper">
+                <div id="msgs">
+                </div>
+            </div>
         </div>
         <table class="table table-bordered table-striped table-hover" style="width: 250px; float: right">
             <colgroup>
@@ -105,27 +105,6 @@
                 </tr>
             </thead>
             <tbody id="lstOnline">
-                <tr>
-                    <td>
-                        <img src="~/Image/Myself.png" height="16" width="16">
-                        VariantF
-                        <a href="#" style="float: right; margin-top: 3px">私聊</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="~/Image/Online.png" height="16" width="16">
-                        lydrainbowcat
-                        <a href="#" style="float: right; margin-top: 3px">私聊</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="~/Image/Online.png" height="16" width="16">
-                        onetwogoo
-                        <a href="#" style="float: right; margin-top: 3px">私聊</a>
-                    </td>
-                </tr>
             </tbody>
         </table>
         <div style="clear: both"></div>
