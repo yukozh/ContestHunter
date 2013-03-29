@@ -90,13 +90,13 @@
     }
 
     function chatPost() {
+        if (!$('#txtContent').val().trim()) return;
         postCommon($('#txtContent').val());
         $('#txtContent').attr('disabled', true);
     }
 
     function socketOnMessage(e) {
         var msg = JSON.parse(e.data);
-        console.log(msg);
         switch (msg.Type) {
             case 'CommonMessage':
                 var div = msg2Div(msg.Message);
@@ -150,7 +150,7 @@
         });
 
         $('#txtContent').keypress(function (e) {
-            if (e.ctrlKey && (e.keyCode == 10 || e.keCode == 13)) {
+            if (e.ctrlKey && (e.keyCode == 10 || e.keyCode == 13)) {
                 chatPost();
                 return false;
             }
