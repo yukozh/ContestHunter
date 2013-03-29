@@ -126,7 +126,7 @@
             return $('<tr/>')
                     .attr('data-user',user)
                     .append($('<td/>')
-                        .append('<img src="/Image/Myself.png" style="height:16px; width:16px;"/>')
+                        .append('<img src="/Image/Myself.png" style="height:16px; width:16px; margin-right:2px;"/>')
                         .append($('<a/>')
                             .text(user)
                             .attr('href', '/User/Show/' + user)));
@@ -134,7 +134,7 @@
             return $('<tr/>')
                     .attr('data-user', user)
                     .append($('<td/>')
-                        .append('<img src="/Image/Online.png" style="height:16px; width:16px;"/>')
+                        .append('<img src="/Image/Online.png" style="height:16px; width:16px; margin-right:2px;"/>')
                         .append($('<a/>')
                             .text(user)
                             .attr('href', '/User/Show/' + user)));
