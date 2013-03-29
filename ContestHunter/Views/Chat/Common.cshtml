@@ -75,7 +75,7 @@
 <script src="~/Script/chat.js"></script>
 <script>$(function () {
     Chat.currentUser = '@(User.Identity.IsAuthenticated ? USER.CurrentUserName : "")';
-    Chat.socketURL = location.origin.replace(/^http/,'ws') + '@(Url.Content("~") + "api/WebSocket")'.replace('http://', 'ws://');
+    Chat.socketURL = location.protocol.replace(/^http/, 'ws') + '//' + location.host + '@(Url.Content("~") + "api/WebSocket")'.replace('http://', 'ws://');
     Chat.init();
 });</script>
 <div class="span12">

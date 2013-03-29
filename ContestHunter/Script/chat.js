@@ -25,6 +25,8 @@
                 .append($('<fieldset class="fieldset-inner right"/>')
                     .append($('<legend class="legend-inner"/>')
                         .append($('<a/>')
+                            .css('color', msg.UserColor)
+                            .attr('title', msg.UserCaption)
                             .attr('href', '/User/Show/' + msg.User)
                             .text(msg.User))
                         .append(' ')
@@ -40,6 +42,8 @@
                 .append($('<fieldset class="fieldset-inner right-text"/>')
                     .append($('<legend class="legend-inner right-text"/>')
                         .append($('<a/>')
+                            .css('color', msg.UserColor)
+                            .attr('title', msg.UserCaption)
                             .attr('href', '/User/Show/' + msg.User)
                             .text(msg.User))
                         .append(' ')
@@ -104,7 +108,7 @@
                 div.hide().fadeIn();
                 break;
             case 'Login':
-                $('#lstOnline').append(user2online(msg.User));
+                $('#lstOnline').append(user2online(msg));
                 break;
             case 'Logout':
                 $('#lstOnline tr').filter(function () { return $(this).attr('data-user') == msg.User; }).remove();
@@ -124,19 +128,23 @@
     function user2online(user) {
         if (user == currentUser) {
             return $('<tr/>')
-                    .attr('data-user',user)
+                    .attr('data-user', user.User)
                     .append($('<td/>')
                         .append('<img src="/Image/Myself.png" style="height:16px; width:16px;"/>')
                         .append($('<a/>')
-                            .text(user)
+                            .text(user.User)
+                            .attr('title', user.UserCaption)
+                            .css('color', user.UserColor)
                             .attr('href', '/User/Show/' + user)));
         } else {
             return $('<tr/>')
-                    .attr('data-user', user)
+                    .attr('data-user', user.User)
                     .append($('<td/>')
                         .append('<img src="/Image/Online.png" style="height:16px; width:16px;"/>')
                         .append($('<a/>')
-                            .text(user)
+                            .text(user.User)
+                            .attr('title', user.UserCaption)
+                            .css('color', user.UserColor)
                             .attr('href', '/User/Show/' + user)));
         }
     }
@@ -174,13 +182,13 @@
 
         getOnlineList(function (list) {
             list = list.map(user2online);
-            list.forEach(function(div){
+            list.forEach(function (div) {
                 $('#lstOnline').append(div);
             });
         });
 
         if (Chat.currentUser) {
-            socket = new WebSocket(Chat.socketURL+'?forceLogin=true');
+            socket = new WebSocket(Chat.socketURL + '?forceLogin=true');
             socket.onopen = socketOnOpen;
             socket.onmessage = socketOnMessage;
             socket.onerror = socketOnError;
@@ -189,7 +197,7 @@
     }
     window.Chat = {
         currentUser: '',
-        socketURL:'',
+        socketURL: '',
         init: chatInit,
         post: chatPost,
     };

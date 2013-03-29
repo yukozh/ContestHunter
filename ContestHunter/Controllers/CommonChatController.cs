@@ -15,12 +15,18 @@ namespace ContestHunter.Controllers
         [AllowAnonymous]
         public object Get(DateTime before, int top)
         {
-            return Chat.GetHistory(Chat.CommonSession, before, top).Select(x => new
+            return Chat.GetHistory(Chat.CommonSession, before, top).Select(x =>
             {
-                Content = x.Content,
-                Time = x.Time.ToUniversalTime(),
-                User = x.Username,
-                UserImg = Gravatar.GetAvatarURL(USER.ByName(x.Username).Email, 50)
+                RatingInfo rating = new RatingInfo(x.Username);
+                return new
+                {
+                    Content = x.Content,
+                    Time = x.Time.ToUniversalTime(),
+                    User = x.Username,
+                    UserImg = Gravatar.GetAvatarURL(USER.ByName(x.Username).Email, 50),
+                    UserColor = rating.Color,
+                    UserCaption = rating.Caption
+                };
             });
         }
 

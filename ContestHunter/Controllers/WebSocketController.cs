@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Script.Serialization;
 using System.Net.WebSockets;
 using Microsoft.Web.WebSockets;
+using ContestHunter.ViewHelpers;
 using ContestHunter.Models.Domain;
 using USER = ContestHunter.Models.Domain.User;
 namespace ContestHunter.Controllers
@@ -24,9 +25,18 @@ namespace ContestHunter.Controllers
         }
 
         [AllowAnonymous]
-        public IEnumerable<string> GetOnlineList(string onlineList)
+        public IEnumerable<object> GetOnlineList(string onlineList)
         {
-            return MyWebSocket.OnlineList;
+            return MyWebSocket.OnlineList.Select(u =>
+            {
+                RatingInfo rating = new RatingInfo(u);
+                return new
+                {
+                    User = u,
+                    UserColor = rating.Color,
+                    UserCaption = rating.Caption
+                };
+            });
         }
     }
 
@@ -86,7 +96,14 @@ namespace ContestHunter.Controllers
             if (toWait != null)
                 toWait.Wait();
             //Broadcast
-            Broadcast(JSON.Serialize(new { Type = "Login", User = User })).Wait();
+            var rating = new RatingInfo(User);
+            Broadcast(JSON.Serialize(new
+            {
+                Type = "Login",
+                User = User,
+                UserColor = rating.Color,
+                UserCaption = rating.Caption
+            })).Wait();
         }
         public override void OnClose()
         {

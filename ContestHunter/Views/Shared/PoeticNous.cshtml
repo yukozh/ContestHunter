@@ -83,7 +83,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@USER.CurrentUserName<span class="caret" /></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@USER.CurrentUserName<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li>@Html.ActionLink("我的用户信息", "Show", "User", new { id = USER.CurrentUserName }, null)</li>
                                     <li>@Html.ActionLink("修改个人资料", "Edit", "User", null, null)</li>
@@ -105,7 +105,7 @@
                         else
                         {
                             <li id="navLogin" class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">登录<span class="caret" /></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">登录<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     @using (Html.BeginForm("Login", "User"))
                                     {
@@ -156,6 +156,7 @@
         Contest Hunter 信息学自助比赛平台 - Alpha<br />
         Developed by lydrainbowcat, VariantF and onetwogoo<br />
         Server time: @DateTimeOffset.Now<br />
+        <a href="http://www.miibeian.gov.cn/" style="color:#404040;" target="_blank">苏ICP备13006782号</a>
     </div>
 
     @{
